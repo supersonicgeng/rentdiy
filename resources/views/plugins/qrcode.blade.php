@@ -1,0 +1,1 @@
+<script src="/js/jquery.qrcode.min.js"></script>

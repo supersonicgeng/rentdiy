@@ -1,0 +1,208 @@
+<?php
+/**
+ * 用户服务层
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2017/12/1 0001
+ * Time: 下午 4:25
+ */
+
+namespace App\Services;
+
+
+use App\Lib\Util\QueryPager;
+use App\Model\AliPay\AliPayClient;
+use App\Model\AliPay\AliPayTransfer;
+use App\Model\CheckBuilding;
+use App\Model\Config;
+use App\Model\Driver;
+use App\Model\DriverTakeOver;
+use App\Model\Level;
+use App\Model\Order;
+use App\Model\Passport;
+use App\Model\PassportReward;
+use App\Model\PassportStore;
+use App\Model\Plant;
+use App\Model\PlantOperateLog;
+use App\Model\RouteItems;
+use App\Model\ScoreLog;
+use App\Model\SignLog;
+use App\Model\SysSign;
+use App\Model\Tenement;
+use App\Model\UserEvaluate;
+use App\Model\UserEvaluateTag;
+use App\Model\Verify;
+use App\Model\VerifyLog;
+use App\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+
+class TenementService extends CommonService
+{
+    /**
+     * @description:租户增加个人信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addTenementInformation(array $input)
+    {
+        //dd($input);
+        $user_info = User::where('id',$input['user_id'])->first();
+        if($user_info->user_role <4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
+            if($tenement_info){
+                return $this->error('3','you already add the tenement information');
+            }else{
+                $tenement_data = [
+                    'user_id'                   => $input['user_id'],
+                    'headimg'                   => @$input['headimg'],
+                    'first_name'                => $input['first_name'],
+                    'middle_name'               => $input['middle_name'],
+                    'last_name'                 => $input['last_name'],
+                    'tel'                       => $input['tel'],
+                    'phone'                     => $input['phone'],
+                    'email'                     => $input['email'],
+                    'birthday'                  => $input['birthday'],
+                    'address'                   => $input['address'],
+                    'mail_code'                 => $input['mail_code'],
+                    'bank_no'                   => $input['bank_no'],
+                    'contact_name'              => $input['contact_name'],
+                    'first_credentials_name'    => $input['first_credentials_name'],
+                    'second_credentials_name'   => $input['second_credentials_name'],
+                    'contact_phone'             => $input['contact_phone'],
+                    'contact_address'           => $input['contact_address'],
+                    'company'                   => $input['company'],
+                    'job_title'                 => $input['job_title'],
+                    'instruction'               => $input['instruction'],
+                    'first_credentials_code'    => $input['first_credentials_code'],
+                    'first_credentials_pic'     => $input['first_credentials_pic'],
+                    'second_credentials_code'   => $input['second_credentials_code'],
+                    'second_credentials_pic'    => $input['second_credentials_pic'],
+                    'created_at'                => date('Y-m-d H:i:s',time()),
+                ];
+                $model = new Tenement();
+                $res = $model->insert($tenement_data);
+                if(!$res){
+                    return $this->error('4','tenement information add failed');
+                }else{
+                    return $this->success('tenement information add success');
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @description:租户修改个人信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editTenementInformation(array $input)
+    {
+        //dd($input);
+        $user_info = User::where('id',$input['user_id'])->first();
+        if($user_info->user_role <4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $tenement_info = Tenement::where('user_id',$input['user_id'])->first();
+            if(!$tenement_info){
+                return $this->error('3','you not  add the tenement information');
+            }else{
+                if($tenement_info['id'] != $input['tenement_id']){
+                    return $this->error('4','update wrong tenement information');
+                }
+                $tenement_data = [
+                    'headimg'                   => @$input['headimg']?$input['headimg']:$tenement_info->headimg,
+                    'first_name'                => @$input['first_name']?$input['first_name']:$tenement_info->first_name,
+                    'middle_name'               => @$input['middle_name']?$input['middle_name']:$tenement_info->middle_name,
+                    'last_name'                 => @$input['last_name']?$input['last_name']:$tenement_info->last_name,
+                    'tel'                       => @$input['tel']?$input['tel']:$tenement_info->tel,
+                    'phone'                     => @$input['phone']?$input['phone']:$tenement_info->phone,
+                    'email'                     => @$input['email']?$input['email']:$tenement_info->email,
+                    'birthday'                  => @$input['birthday']?$input['birthday']:$tenement_info->birthday,
+                    'address'                   => @$input['address']?$input['address']:$tenement_info->address,
+                    'mail_code'                 => @$input['mail_code']?$input['mail_code']:$tenement_info->mail_code,
+                    'bank_no'                   => @$input['bank_no']?$input['bank_no']:$tenement_info->bank_no,
+                    'contact_name'              => @$input['contact_name']?$input['contact_name']:$tenement_info->contact_name,
+                    'first_credentials_name'    => @$input['first_credentials_name']?$input['first_credentials_name']:$tenement_info->first_credentials_name,
+                    'second_credentials_name'   => @$input['second_credentials_name']?$input['second_credentials_name']:$tenement_info->second_credentials_name,
+                    'contact_phone'             => @$input['contact_phone']?$input['contact_phone']:$tenement_info->contact_phone,
+                    'contact_address'           => @$input['contact_address']?$input['contact_address']:$tenement_info->contact_address,
+                    'company'                   => @$input['company']?$input['company']:$tenement_info->company,
+                    'job_title'                 => @$input['job_title']?$input['job_title']:$tenement_info->job_title,
+                    'instruction'               => @$input['instruction']?$input['instruction']:$tenement_info->instruction,
+                    'first_credentials_code'    => @$input['first_credentials_code']?$input['first_credentials_code']:$tenement_info->first_credentials_code,
+                    'first_credentials_pic'     => @$input['first_credentials_pic']?$input['first_credentials_pic']:$tenement_info->first_credentials_pic,
+                    'second_credentials_code'   => @$input['second_credentials_code']?$input['second_credentials_code']:$tenement_info->second_credentials_code,
+                    'second_credentials_pic'    => @$input['second_credentials_pic']?$input['second_credentials_pic']:$tenement_info->second_credentials_pic,
+                    'updated_at'                => date('Y-m-d H:i:s',time()),
+                ];
+                $model = new Tenement();
+                $res = $model->where('user_id',$input['user_id'])->update($tenement_data);
+                if(!$res){
+                    return $this->error('4','tenement information add failed');
+                }else{
+                    return $this->success('tenement information add success');
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @description:租户获得个人信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementSelfInformation(array $input)
+    {
+        $user_info = User::where('id',$input['user_id'])->first();
+        if($user_info->user_role <4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
+            if($tenement_info){
+                return $this->success('get tenement information success',$tenement_info);
+            }else{
+                return $this->error('3','get tenement information failed');
+            }
+        }
+    }
+
+
+    /**
+     * @description:删除租户信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteTenementInformation(array $input)
+    {
+        $user_info = User::where('id',$input['user_id'])->first();
+        if($user_info->user_role <4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $res = Tenement::where('user_id',$input['user_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+            if($res){
+                return $this->success('deleted tenement information success');
+            }else{
+                return $this->error('3','deleted tenement information failed');
+            }
+        }
+    }
+}
