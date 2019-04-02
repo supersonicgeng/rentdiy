@@ -84,6 +84,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('rentHouseApplicationList', 'RentController@rentHouseApplicationList'); // 租户租房申请列表（房东查看） 3.30
         $router->post('rentTenementApplicationList', 'RentController@rentTenementApplicationList'); // 租户租房申请列表（租户查看） 3.30
         $router->post('rentTenementApplicationDetail', 'RentController@rentTenementApplicationDetail'); // 租户租房申请详情（租户查看） 3.30
+        $router->post('rentContactAdd','RentController@rentContactAdd'); // 添加租约 4.1
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {
@@ -115,6 +116,12 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('editOperatorInformation', 'OperatorController@editOperatorInformation'); // 编辑操作员 3.28
         $router->post('getOperatorList', 'OperatorController@getOperatorList'); // 获得操作员列表 3.29
         $router->post('changeOperatorStatus', 'OperatorController@changeOperatorStatus'); // 修改操作员是否禁用 3.29
+    });
+    // 服务商市场
+    $router->group(['prefix' => 'providersMarket'], function (Router $router) {
+        $router->post('landlordOrderAdd', 'ProvidersMarketController@landlordOrderAdd'); // 添加订单 4.2
+        $router->post('getOrderList', 'ProvidersMarketController@getOrderList'); // 获得订单列表 4.2
+        $router->post('getOrderDetail', 'ProvidersMarketController@getOrderDetail'); // 获得订单详情 4.2
     });
 });
 

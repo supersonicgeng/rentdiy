@@ -463,4 +463,19 @@ class RentService extends CommonService
             }
         }
     }
+
+
+    /**
+     * @description:添加租约
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactAdd(array $input)
+    {
+        //dd($input);
+
+    }
 }
