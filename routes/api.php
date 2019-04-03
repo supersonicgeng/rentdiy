@@ -17,20 +17,20 @@ use Illuminate\Routing\Router;
 /*Router::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });*/
-Router::post('/imageUploader', 'Api\UploaderController@imageUploader');
-Router::post('/imageUploaderBase64', 'Api\UploaderController@imageUploaderBase64');
-Router::any('/address', 'Api\AddressController@address');
-Router::get('/adminData', 'Api\DataController@adminInfo');
-Router::get('/qrcode/{passport_id}', 'Api\PublicController@qrcode');
-Router::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detailCode');
-Router::get('/system/announcement', 'Api\PublicController@announcement');
-Router::get('/system/rewardRate', 'Api\PublicController@rewardRate');
+Route::post('/imageUploader', 'Api\UploaderController@imageUploader');
+Route::post('/imageUploaderBase64', 'Api\UploaderController@imageUploaderBase64');
+Route::any('/address', 'Api\AddressController@address');
+Route::get('/adminData', 'Api\DataController@adminInfo');
+Route::get('/qrcode/{passport_id}', 'Api\PublicController@qrcode');
+Route::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detailCode');
+Route::get('/system/announcement', 'Api\PublicController@announcement');
+Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
 
 
 
 
 //不需要登录的路由写在这里
-Router::group(['namespace' => 'Api'], function (Router $router) {
+Route::group(['namespace' => 'Api'], function (Router $router) {
     // 用户模块
     $router->group(['prefix' => 'user'], function (Router $router){
         $router->post('userRegister','UserController@userRegister'); // 用户注册
@@ -59,7 +59,7 @@ Router::group(['namespace' => 'Api'], function (Router $router) {
 
 
 //需要登录的路由写在这里
-Router::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Router $router) {
+Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Router $router) {
     // 用户模块
     $router->group(['prefix' => 'user'], function (Router $router){
         $router->post('getUserRoleId','UserController@getUserRoleId'); // 用户获得各角色下的角色id 3.27
@@ -127,7 +127,7 @@ Router::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rou
 
 
 //需要登录的路由写在这里
-Router::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
+Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
     // 操作员模块
 
 });
