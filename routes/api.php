@@ -14,9 +14,9 @@ use Illuminate\Routing\Router;
 |
 */
 
-Router::middleware('auth:api')->get('/user', function (Request $request) {
+/*Router::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 Router::post('/imageUploader', 'Api\UploaderController@imageUploader');
 Router::post('/imageUploaderBase64', 'Api\UploaderController@imageUploaderBase64');
 Router::any('/address', 'Api\AddressController@address');
