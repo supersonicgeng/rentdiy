@@ -30,7 +30,7 @@ Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
 
 
 //不需要登录的路由写在这里
-Route::group(['namespace' => 'Api'], function (Router $router) {
+/*Route::group(['namespace' => 'Api'], function (Router $router) {
     // 用户模块
     $router->group(['prefix' => 'user'], function (Router $router){
         $router->post('userRegister','UserController@userRegister'); // 用户注册
@@ -55,11 +55,11 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'operator'], function (Router $router){
         $router->post('login','OperatorController@login'); // 操作员登录 3.28
     });
-});
+});*/
 
 
 //需要登录的路由写在这里
-Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Router $router) {
+/*Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Router $router) {
     // 用户模块
     $router->group(['prefix' => 'user'], function (Router $router){
         $router->post('getUserRoleId','UserController@getUserRoleId'); // 用户获得各角色下的角色id 3.27
@@ -130,4 +130,4 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
     // 操作员模块
 
-});
+});*/
