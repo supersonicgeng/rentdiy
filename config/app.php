@@ -180,7 +180,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class, //图片处理插件
-        
+
 
         Zizaco\Entrust\EntrustServiceProvider::class,//RBAC权限管理
 
