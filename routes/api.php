@@ -14,7 +14,7 @@ use Illuminate\Routing\Router;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/imageUploader', 'Api\UploaderController@imageUploader');
@@ -24,7 +24,7 @@ Route::get('/adminData', 'Api\DataController@adminInfo');
 Route::get('/qrcode/{passport_id}', 'Api\PublicController@qrcode');
 Route::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detailCode');
 Route::get('/system/announcement', 'Api\PublicController@announcement');
-Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
+Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');*/
 
 
 
