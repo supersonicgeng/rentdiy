@@ -119,7 +119,7 @@ class HouseService extends CommonService
                 foreach ($contact_name as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $rent_house_id,
-                        'contact_name'  => $v,
+                        'contact_name'  => $value,
                         'contact_role'  => $input['contact_role'][$key],
                         'e_mail'        => $input['e_mail'][$key],
                         'phone'         => $input['phone'][$key],
@@ -209,7 +209,7 @@ class HouseService extends CommonService
                         foreach ($contact_name as $key => $value){
                             $contact_data = [
                                 'rent_house_id' => $rent_house_id,
-                                'contact_name'  => $v,
+                                'contact_name'  => $value,
                                 'contact_role'  => $input['contact_role'][$key],
                                 'e_mail'        => $input['e_mail'][$key],
                                 'phone'         => $input['phone'][$key],
@@ -281,7 +281,7 @@ class HouseService extends CommonService
                 foreach ($contact_name as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $rent_house_id,
-                        'contact_name'  => $v,
+                        'contact_name'  => $value,
                         'contact_role'  => $input['contact_role'][$key],
                         'e_mail'        => $input['e_mail'][$key],
                         'phone'         => $input['phone'][$key],
