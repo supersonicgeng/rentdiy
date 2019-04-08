@@ -89,9 +89,9 @@ class HelpService extends CommonService
      */
     public function getRegion()
     {
-        $res = DB::table('region')->where('level',1)->get(['region_name','region_number']);
+        $res = DB::table('region')->where('level',1)->get(['region_name','region_number as region_id']);
         if($res){
-            return $this->success('',$res);
+            return $this->success('region get success',$res);
         }else{
             return $this->error('2','region get failed');
         }
@@ -108,11 +108,11 @@ class HelpService extends CommonService
      */
     public function getTa($region_id)
     {
-        $res = DB::table('region')->where('level',2)->where('super_number',$region_id)->get(['region_name','region_number']);
+        $res = DB::table('region')->where('level',2)->where('super_number',$region_id)->get(['region_name as ta_name','region_number as ta_id']);
         if($res){
-            return $this->success('',$res);
+            return $this->success('ta get success',$res);
         }else{
-            return $this->error('2','region get failed');
+            return $this->error('2','ta get failed');
         }
     }
 
@@ -126,11 +126,11 @@ class HelpService extends CommonService
      */
     public function getDistrict($ta_id)
     {
-        $res = DB::table('region')->where('level',3)->where('super_number',$ta_id)->get(['region_name','region_number']);
+        $res = DB::table('region')->where('level',3)->where('super_number',$ta_id)->get(['region_name as district_name','region_number as district_id']);
         if($res){
-            return $this->success('',$res);
+            return $this->success('district get success',$res);
         }else{
-            return $this->error('2','region get failed');
+            return $this->error('2','district get failed');
         }
     }
 
