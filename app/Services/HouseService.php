@@ -37,24 +37,24 @@ class HouseService extends CommonService
     {
         $user_id = $input['user_id'];
         $rent_category = $input['rent_category'];
-        if($input['rent_period'] == 1){
-            $rent_fee_pre_week = $input['rent_fee']*7;
-        }elseif ($input['rent_period'] == 2){
-            $rent_fee_pre_week = $input['rent_fee'];
-        }elseif ($input['rent_period'] == 3){
-            $rent_fee_pre_week = $input['rent_fee']/4;
-        }elseif ($input['rent_period'] == 4){
-            $rent_fee_pre_week = $input['rent_fee']/13;
-        }elseif ($input['rent_period'] == 5){
-            $rent_fee_pre_week = $input['rent_fee']/26;
-        }elseif ($input['rent_period'] == 6){
-            $rent_fee_pre_week = $input['rent_fee']/52;
-        }
         $model = new RentHouse();
         $user_role = \App\Model\User::where('id',$user_id)->first()['user_role'];
         $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
         if($user_role == 1 || $user_role ==3 || $user_role == 5 || $user_role == 7){
             if($rent_category == 1){ // 新建整租房屋主档
+                if($input['rent_period'] == 1){
+                    $rent_fee_pre_week = $input['rent_fee']*7;
+                }elseif ($input['rent_period'] == 2){
+                    $rent_fee_pre_week = $input['rent_fee'];
+                }elseif ($input['rent_period'] == 3){
+                    $rent_fee_pre_week = $input['rent_fee']/4;
+                }elseif ($input['rent_period'] == 4){
+                    $rent_fee_pre_week = $input['rent_fee']/13;
+                }elseif ($input['rent_period'] == 5){
+                    $rent_fee_pre_week = $input['rent_fee']/26;
+                }elseif ($input['rent_period'] == 6){
+                    $rent_fee_pre_week = $input['rent_fee']/52;
+                }
                 $data = [
                     'user_id'               => $user_id,
                     'group_id'              => $group_id+1,
@@ -73,7 +73,7 @@ class HouseService extends CommonService
                     'insurance_end_time'    => $input['insurance_end_time'],
                     'Region'                => $input['Region'],
                     'TA'                    => $input['TA'],
-                    'Desc'                  => $input['Desc'],
+                    'District'              => $input['District'],
                     'address'               => $input['address'],
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
@@ -139,6 +139,19 @@ class HouseService extends CommonService
                 $room_name = $input['room_name'];
                 static $error = 0;
                 foreach ($room_name as $k => $v){
+                    if($input['rent_period'] == 1){
+                        $rent_fee_pre_week = $input['rent_fee'][$k]*7;
+                    }elseif ($input['rent_period'] == 2){
+                        $rent_fee_pre_week = $input['rent_fee'][$k];
+                    }elseif ($input['rent_period'] == 3){
+                        $rent_fee_pre_week = $input['rent_fee'][$k]/4;
+                    }elseif ($input['rent_period'] == 4){
+                        $rent_fee_pre_week = $input['rent_fee'][$k]/13;
+                    }elseif ($input['rent_period'] == 5){
+                        $rent_fee_pre_week = $input['rent_fee'][$k]/26;
+                    }elseif ($input['rent_period'] == 6){
+                        $rent_fee_pre_week = $input['rent_fee'][$k]/52;
+                    }
                     $data = [
                         'user_id'               => $user_id,
                         'group_id'              => $group_id+1,
@@ -157,7 +170,7 @@ class HouseService extends CommonService
                         'insurance_end_time'    => $input['insurance_end_time'],
                         'Region'                => $input['Region'],
                         'TA'                    => $input['TA'],
-                        'Desc'                  => $input['Desc'],
+                        'District'              => $input['District'],
                         'address'               => $input['address'],
                         'lat'                   => $input['lat'],
                         'lon'                   => $input['lon'],
@@ -248,7 +261,7 @@ class HouseService extends CommonService
                     'insurance_end_time'    => $input['insurance_end_time'],
                     'Region'                => $input['Region'],
                     'TA'                    => $input['TA'],
-                    'Desc'                  => $input['Desc'],
+                    'District'              => $input['District'],
                     'address'               => $input['address'],
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
@@ -325,9 +338,9 @@ class HouseService extends CommonService
         // 地区筛选
         $region = @$input['region'];
         $ta     = @$input['ta'];
-        $desc   = @$input['desc'];
-        if($desc){
-            $model = $model->where('Desc',$desc);
+        $district   = @$input['district'];
+        if($district){
+            $model = $model->where('District',$district);
         }elseif ($ta){
             $model = $model->where('TA',$ta);
         }elseif ($region){
@@ -367,10 +380,10 @@ class HouseService extends CommonService
             $offset = ($input['page']-1)*5;
             $count = $model->count();
             $total_page = ceil($count/5);
-            $res = $model->offset($offset)->limit(5)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','Desc','TA','Region','available_date')->get()->toArray();
+            $res = $model->offset($offset)->limit(5)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
-                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['Desc']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
+                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
             }
             $res['total_page'] = $total_page;
             $res['current_page'] = $input['page'];
@@ -378,10 +391,10 @@ class HouseService extends CommonService
             $offset = ($input['page']-1)*9;
             $count = $model->count();
             $total_page = ceil($count/9);
-            $res = $model->offset($offset)->limit(9)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','Desc','TA','Region','available_date')->get()->toArray();
+            $res = $model->offset($offset)->limit(9)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
-                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['Desc']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
+                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
             }
             $res['total_page'] = $total_page;
             $res['current_page'] = $input['page'];
@@ -480,7 +493,7 @@ class HouseService extends CommonService
                     'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
                     'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
                     'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
-                    'Desc'                  => @$input['Desc']?$input['Desc']:$rent_house_info->Desc,
+                    'District'              => @$input['District']?$input['District']:$rent_house_info->District,
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
@@ -579,7 +592,7 @@ class HouseService extends CommonService
                         'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
                         'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
                         'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
-                        'Desc'                  => @$input['Desc']?$input['Desc']:$rent_house_info->Desc,
+                        'District'              => @$input['District']?$input['District']:$rent_house_info->District,
                         'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                         'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                         'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
@@ -671,7 +684,7 @@ class HouseService extends CommonService
                     'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
                     'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
                     'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
-                    'Desc'                  => @$input['Desc']?$input['Desc']:$rent_house_info->Desc,
+                    'District'              => @$input['District']?$input['District']:$rent_house_info->District,
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
