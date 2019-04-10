@@ -125,7 +125,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     });
     // 钥匙管理
     $router->group(['prefix' => 'key'], function (Router $router) {
-        $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.2
+        $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
+        $router->post('keyReturn', 'KeyController@keyReturn'); // 归还钥匙 4.10
+        $router->post('keyList', 'KeyController@keyList'); // 钥匙列表 4.10
     });
 });
 
