@@ -104,9 +104,9 @@ class ProvidersMarketService extends CommonService
     {
         //dd($input);
         $model = new LandlordOrder();
-        $Desc = @$input['Desc'];
+        $Desc = @$input['District'];
         if($Desc){
-            $model = $model->where('Desc',$Desc);
+            $model = $model->where('District',$Desc);
         }
         $TA = @$input['TA'];
         if($TA){

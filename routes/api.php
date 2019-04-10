@@ -123,8 +123,22 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('getOrderList', 'ProvidersMarketController@getOrderList'); // 获得订单列表 4.2
         $router->post('getOrderDetail', 'ProvidersMarketController@getOrderDetail'); // 获得订单详情 4.2
     });
+    // 钥匙管理
+    $router->group(['prefix' => 'key'], function (Router $router) {
+        $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.2
+    });
 });
 
+
+//授权登陆
+
+Route::group(['middleware' => ['auth']], function ($api) {
+    Route::get('redirect/{service}','Auth\SocialAuthController@redirectToProvider');
+    Route::get('callback/{service}','Auth\SocialAuthController@handleProviderCallback');
+});
+
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 //需要登录的路由写在这里
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {

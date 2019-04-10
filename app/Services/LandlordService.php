@@ -53,7 +53,7 @@ class LandlordService extends CommonService
     public function addLandlordInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
@@ -102,7 +102,7 @@ class LandlordService extends CommonService
     public function editLandlordInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
@@ -149,7 +149,7 @@ class LandlordService extends CommonService
     public function getLandlordList(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
@@ -174,7 +174,7 @@ class LandlordService extends CommonService
     public function getLandlordInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
@@ -199,7 +199,7 @@ class LandlordService extends CommonService
     public function deleteLandlordInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{

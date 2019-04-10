@@ -58,7 +58,7 @@ class RentService extends CommonService
     public function rentApplication(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -102,7 +102,7 @@ class RentService extends CommonService
     public function outRentApplicationAdd(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -186,7 +186,7 @@ class RentService extends CommonService
     public function outRentApplicationInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -212,7 +212,7 @@ class RentService extends CommonService
     public function rentApplicationOutList(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -238,7 +238,7 @@ class RentService extends CommonService
     public function rentApplicationOutEdit(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -323,7 +323,7 @@ class RentService extends CommonService
     public function rentApplicationOutDelete(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -348,7 +348,7 @@ class RentService extends CommonService
     public function rentHouseApplicationList(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role % 2){
             $model = new RentApplication();
             $application_start_date = $input['application_start_time'];
@@ -399,7 +399,7 @@ class RentService extends CommonService
     {
         //dd($input);
         $page = $input['page'];
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role < 4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -450,7 +450,7 @@ class RentService extends CommonService
     public function rentTenementApplicationDetail(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role < 4){
             return $this->error('2','this account is not a tenement role');
         }else{

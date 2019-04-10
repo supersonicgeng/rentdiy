@@ -189,6 +189,7 @@ return [
         Orangehill\Iseed\IseedServiceProvider::class, //Iseed
 
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,//二维码
+        Laravel\Socialite\SocialiteServiceProvider::class // socialite  授权登陆
     ],
 
     /*
@@ -242,6 +243,7 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Excel'    => Maatwebsite\Excel\Facades\Excel::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'Socialite' => \Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];
