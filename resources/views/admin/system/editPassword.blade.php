@@ -19,7 +19,7 @@
                     <form class="form-horizontal m-t" id="wxSetForm" method="post"
                           action="{{url('manage/editPwdAction')}}">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">原密码：</label>
+                            <label class="col-sm-3 control-label">原密码1122：</label>
                             <div class="col-sm-8">
                                 <input name="opassword" class="form-control" type="password">
                             </div>
