@@ -37,7 +37,7 @@ class HelpService extends CommonService
     {
         $model = new Verify();
         @$expire_time = $model->where('account',$input['account'])->where('verify_type',$input['verify_type'])->orderBy('id','desc')->first()->expire_time;
-        if(0 <strtotime($expire_time)-time() && strtotime($expire_time)-time() <7200){
+        if(0 <strtotime($expire_time)-time() && strtotime($expire_time)-time() <10){
             return $this->error('2','the verify is send to you email pls check your email');
         }
         $to = $input['account']; //接受验证码邮箱
