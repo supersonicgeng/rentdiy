@@ -56,7 +56,7 @@ class HelpService extends CommonService
             Mail::send('email.verify',['code' => $code],function($code) use($to,$subject){
                 $code->to($to)->subject($subject);
             });
-            return $this->success('verify_code send success');
+            return $this->success('verify_code send success',['code' => $code]);
         }else{
             return $this->error('3','send verify failed pls try again');
         }
