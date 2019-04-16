@@ -66,6 +66,18 @@ class UserService extends CommonService
         if($password != $r_password){
             return $this->error('2','the confirm_password is not match password ,pls try again');
         }
+        // 验证账号唯一
+        if(strpos($account,'@') ){ // 邮箱注册
+            $register = $model->where('e_mail',$account)->get();
+            if($register){
+                return $this->error('3','this account already register');
+            }
+        }else{ // 手机注册
+            $register = $model->where('phone',$account)->get();
+            if($register){
+                return $this->error('3','this account already register');
+            }
+        }
         // 验证验证码
         $verify = $this->verify($account,$verify_code,1);
         if($verify['code'] != 0){
