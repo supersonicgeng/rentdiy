@@ -349,8 +349,8 @@ class UserService extends CommonService
         if($user_info->user_role % 2){
             return $this->error('3','you already a landlord role');
         }
-        $house_no = $input['house_no'];
-        $user_info->house_no = $house_no;
+        $house_number = $input['house_number'];
+        $user_info->house_number = $house_number;
         $user_info->user_role = $user_info->user_role+1;
         $user_info->save();
         return $this->success('become landlord success');
