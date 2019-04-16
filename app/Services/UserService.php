@@ -62,6 +62,7 @@ class UserService extends CommonService
         $user_role = $input['user_role'];
         $house_number = $input['house_number'];
         $jobs = $input['jobs'];
+        $jobs = implode(',',$jobs);
         // 确认密码和密码一致性
         if($password != $r_password){
             return $this->error('2','the confirm_password is not match password ,pls try again');
