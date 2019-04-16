@@ -372,6 +372,7 @@ class UserService extends CommonService
             return $this->error('3','you already a providers role');
         }
         $jobs = $input['jobs'];
+        $jobs = implode(',',$jobs);
         $user_info->jobs = $jobs;
         $user_info->user_role = $user_info->user_role+2;
         $user_info->save();
