@@ -73,4 +73,40 @@ class UserController extends CommonController
     {
         return service('User')->getUserRoleId($request->all());
     }
+    /**
+     * @description:成为房东
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeLandlord(Request $request)
+    {
+        return service('User')->becomeLandlord($request->all());
+    }
+    /**
+     * @description:成为服务商
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeProviders(Request $request)
+    {
+        return service('User')->becomeProviders($request->all());
+    }
+    /**
+     * @description:成为租客
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeTenement(Request $request)
+    {
+        return service('User')->becomeTenement($request->all());
+    }
 }

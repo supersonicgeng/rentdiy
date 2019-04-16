@@ -63,6 +63,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     // 用户模块
     $router->group(['prefix' => 'user'], function (Router $router){
         $router->post('getUserRoleId','UserController@getUserRoleId'); // 用户获得各角色下的角色id 3.27
+        $router->post('becomeLandlord','UserController@becomeLandlord'); // 成为房东 4.16
+        $router->post('becomeProviders','UserController@becomeProviders'); // 成为服务商 4.16
+        $router->post('becomeTenement','UserController@becomeTenement'); // 成为租客 4.16
     });
     //房屋主档系统
     $router->group(['prefix' => 'house'], function (Router $router) {
@@ -85,6 +88,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('rentTenementApplicationList', 'RentController@rentTenementApplicationList'); // 租户租房申请列表（租户查看） 3.30
         $router->post('rentTenementApplicationDetail', 'RentController@rentTenementApplicationDetail'); // 租户租房申请详情（租户查看） 3.30
         $router->post('rentContactAdd','RentController@rentContactAdd'); // 添加租约 4.1
+        $router->post('rentContactList','RentController@rentContactList'); // 租约列表 4.13
+        $router->post('rentContactDetail', 'RentController@rentContactDetail'); // 租约详情 4.13
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {
@@ -128,6 +133,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
         $router->post('keyReturn', 'KeyController@keyReturn'); // 归还钥匙 4.10
         $router->post('keyList', 'KeyController@keyList'); // 钥匙列表 4.10
+    });
+    // 房屋检查
+    $router->group(['prefix' => 'inspect'], function (Router $router) {
+        $router->post('inspectAdd', 'InspectController@inspectAdd'); // 添加检查 4.12
     });
 });
 

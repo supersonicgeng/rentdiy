@@ -308,16 +308,81 @@ class UserService extends CommonService
     public function getUserRoleId(array $input)
     {
         $user_id = $input['user_id'];
-        $user_role = \App\Model\User::where('id',$user_id);
-        if($user_role % 2){
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->user_role % 2){
             $res['landlord_info'] = Landlord::where('user_id',$user_id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
         }
-        if($user_role >= 4){
+        if($user_info->user_role >= 4){
             $res['tenement_info'] = Tenement::where('user_id',$user_id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
         }
-        if($user_role == 2 || $user_role == 3 || $user_role == 6 || $user_role == 7){
+        if($user_info->user_role == 2 || $user_info->user_role == 3 || $user_info->user_role == 6 || $user_info->user_role == 7){
             $res['providers_info'] = Providers::where('user_id',$user_id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
         }
         return $this->success('get role id success',$res);
+    }
+
+
+    /**
+     * @description:成为房东
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeLandlord(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->user_role % 2){
+            return $this->error('3','you already a landlord role');
+        }
+        $house_no = $input['house_no'];
+        $user_info->house_no = $house_no;
+        $user_info->user_role = $user_info->user_role+1;
+        $user_info->save();
+        return $this->success('become landlord success');
+    }
+
+    /**
+     * @description:成为服务商
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeProviders(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->user_role == 2 || $user_info->user_role == 3 || $user_info->user_role == 6 || $user_info->user_rolee == 7){
+            return $this->error('3','you already a providers role');
+        }
+        $jobs = $input['jobs'];
+        $user_info->jobs = $jobs;
+        $user_info->user_role = $user_info->user_role+2;
+        $user_info->save();
+        return $this->success('become providers success');
+    }
+
+    /**
+     * @description:成为租客
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function becomeTenement(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->user_role >= 4){
+            return $this->error('3','you already a tenement role');
+        }
+        $user_info->user_role = $user_info->user_role+4;
+        $user_info->save();
+        return $this->success('become tenement success');
     }
 }
