@@ -68,12 +68,12 @@ class UserService extends CommonService
         }
         // 验证账号唯一
         if(strpos($account,'@') ){ // 邮箱注册
-            $register = $model->where('e_mail',$account)->get();
+            $register = $model->where('e_mail',$account)->first();
             if($register){
                 return $this->error('3','this account already register');
             }
         }else{ // 手机注册
-            $register = $model->where('phone',$account)->get();
+            $register = $model->where('phone',$account)->first();
             if($register){
                 return $this->error('3','this account already register');
             }
