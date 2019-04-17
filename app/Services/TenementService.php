@@ -57,7 +57,7 @@ class TenementService extends CommonService
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
-            $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
+            $tenement_info = Tenement::where('user_id',$input['user_id'])->first();
             if($tenement_info){
                 return $this->error('3','you already add the tenement information');
             }else{
