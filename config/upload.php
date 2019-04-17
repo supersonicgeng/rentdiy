@@ -6,14 +6,14 @@
  * Time: 17:05
  */
 return [
-   'driver'=>'local', //local本地存储   oss存储
+   'driver'=>'oss', //local本地存储   oss存储
     'oss'=>[
-        'city' => '深圳',
+        'city' => '硅谷',
         'networkType' => '经典网络',
         'isInternal' => false,
-        'accessId' => 'LTAIqxqb8V97xObW',
-        'accessKey' => 'ZTnTR3SNovwLeV78ZhsZnURe5tZVMC',
-         'bucket' => 'hisums',
-        'imgUrl' => 'http://hisums.oss-cn-shenzhen.aliyuncs.com',
+        'accessId' => 'LTAI20EtYk31ZJLS',
+        'accessKey' => 'Yrn3I1j1iB9qvWPMJvzZF8kgmbNRpr',
+        'bucket' => 'rentdi',
+        'imgUrl' => 'http://rentdi.oss-us-west-1.aliyuncs.com',
     ],
 ];
