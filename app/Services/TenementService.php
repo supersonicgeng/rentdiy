@@ -67,7 +67,7 @@ class TenementService extends CommonService
                     'first_name'                => $input['first_name'],
                     'middle_name'               => $input['middle_name'],
                     'last_name'                 => $input['last_name'],
-                    'tel'                       => $input['tel'],
+                    'mobile'                    => $input['mobile'],
                     'phone'                     => $input['phone'],
                     'email'                     => $input['email'],
                     'birthday'                  => $input['birthday'],
