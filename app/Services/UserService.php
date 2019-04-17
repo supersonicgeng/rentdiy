@@ -411,7 +411,7 @@ class UserService extends CommonService
 
 
     /**
-     * @description:成为租客
+     * @description:更新头像
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -425,5 +425,67 @@ class UserService extends CommonService
         $user_info->head_img = $input['head_img'];
         $user_info->save();
         return $this->success('update head img success');
+    }
+
+
+    /**
+     * @description:增加手机
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addPhone(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->phone){
+            return $this->error('2','you account already have a phone');
+        }
+        $phone = $input['phone'];
+        if(\App\Model\User::where('phone',$phone)->first()){
+            return $this->error('3','this phone already register');
+        }
+        $verify_code = $input['verify_code'];
+        // 验证验证码
+        $verify = $this->verify($phone,$verify_code,1);
+        if($verify['code'] != 0){
+            return $this->error($verify['code'],$verify['msg']);
+        }
+        $user_info->phone = $phone;
+        $user_info->save();
+        return $this->success('add phone success');
+    }
+
+
+    /**
+     * @description:增加邮箱
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addEmail(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        if($user_info->e_mail){
+            return $this->error('2','you account already have a phone');
+        }
+        $e_mail = $input['e_mail'];
+        if(\App\Model\User::where('e_mail',$e_mail)->first()){
+            return $this->error('3','this phone already register');
+        }
+        $verify_code = $input['verify_code'];
+        // 验证验证码
+        $verify = $this->verify($e_mail,$verify_code,1);
+        if($verify['code'] != 0){
+            return $this->error($verify['code'],$verify['msg']);
+        }
+        $user_info->e_mail = $e_mail;
+        $user_info->save();
+        return $this->success('add e_mail success');
     }
 }

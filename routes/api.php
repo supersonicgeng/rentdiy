@@ -38,7 +38,6 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('userLogin','UserController@userLogin'); // 用户登录
         $router->post('changePassword','UserController@changePassword'); // 修改密码
         $router->post('forgetPassword','UserController@forgetPassword'); // 找回密码
-        $router->post('updateHeadImg','UserController@updateHeadImg'); // 更新头像
     });
     // 公共模块
     $router->group(['prefix' => 'public'], function (Router $router){
@@ -68,6 +67,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('becomeLandlord','UserController@becomeLandlord'); // 成为房东 4.16
         $router->post('becomeProviders','UserController@becomeProviders'); // 成为服务商 4.16
         $router->post('becomeTenement','UserController@becomeTenement'); // 成为租客 4.16
+        $router->post('updateHeadImg','UserController@updateHeadImg'); // 更新头像 4.17
+        $router->post('addPhone','UserController@addPhone'); // 增加手机 4.17
+        $router->post('addEmail','UserController@addEmail'); // 增加邮箱 4.17
     });
     //房屋主档系统
     $router->group(['prefix' => 'house'], function (Router $router) {
