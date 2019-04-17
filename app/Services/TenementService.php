@@ -53,7 +53,7 @@ class TenementService extends CommonService
     public function addTenementInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -124,7 +124,7 @@ class TenementService extends CommonService
     public function editTenementInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -197,7 +197,7 @@ class TenementService extends CommonService
      */
     public function getTenementSelfInformation(array $input)
     {
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
@@ -229,7 +229,7 @@ class TenementService extends CommonService
      */
     public function deleteTenementInformation(array $input)
     {
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
