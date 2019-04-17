@@ -63,6 +63,7 @@ class TenementService extends CommonService
             }else{
                 $tenement_data = [
                     'user_id'                   => $input['user_id'],
+                    'tenement_id'               => tenementId(),
                     'headimg'                   => @$input['headimg'],
                     'first_name'                => $input['first_name'],
                     'middle_name'               => $input['middle_name'],
