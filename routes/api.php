@@ -38,6 +38,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('userLogin','UserController@userLogin'); // 用户登录
         $router->post('changePassword','UserController@changePassword'); // 修改密码
         $router->post('forgetPassword','UserController@forgetPassword'); // 找回密码
+        $router->post('updateHeadImg','UserController@updateHeadImg'); // 更新头像
     });
     // 公共模块
     $router->group(['prefix' => 'public'], function (Router $router){

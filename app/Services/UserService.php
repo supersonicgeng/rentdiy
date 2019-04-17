@@ -353,6 +353,9 @@ class UserService extends CommonService
         $house_number = $input['house_number'];
         $user_info->house_number = $house_number;
         $user_info->user_role = $user_info->user_role+1;
+        if($user_info->user_role > 7){
+            return $this->error('4','update wrong');
+        }
         $user_info->save();
         return $this->success('become landlord success');
     }
@@ -376,6 +379,9 @@ class UserService extends CommonService
         $jobs = implode(',',$jobs);
         $user_info->jobs = $jobs;
         $user_info->user_role = $user_info->user_role+2;
+        if($user_info->user_role > 7){
+            return $this->error('4','update wrong');
+        }
         $user_info->save();
         return $this->success('become providers success');
     }
@@ -396,7 +402,28 @@ class UserService extends CommonService
             return $this->error('3','you already a tenement role');
         }
         $user_info->user_role = $user_info->user_role+4;
+        if($user_info->user_role > 7){
+            return $this->error('4','update wrong');
+        }
         $user_info->save();
         return $this->success('become tenement success');
+    }
+
+
+    /**
+     * @description:成为租客
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateHeadImg(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        $user_info->head_img = $input['head_img'];
+        $user_info->save();
+        return $this->success('update head img success');
     }
 }
