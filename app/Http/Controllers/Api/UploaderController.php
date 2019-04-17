@@ -48,7 +48,7 @@ class UploaderController extends CommonController
             $oss->uploadFile($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
             //$url = $oss->getPublicUrl($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
             $dirs =  substr($dir,0,strlen($dir)-1);
-            $url = config('upload.oss.imgUrl').$dirs.$storage_file_name.'.'.$ext;
+            $url = config('upload.oss.imgUrl').'/'.$dirs.'/'.$storage_file_name.'.'.$ext;
             $data = [
                 'img'       => $url,
             ];
