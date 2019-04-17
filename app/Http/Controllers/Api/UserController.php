@@ -109,4 +109,17 @@ class UserController extends CommonController
     {
         return service('User')->becomeTenement($request->all());
     }
+
+    /**
+     * @description:更新头像
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateHeadImg(Request $request)
+    {
+        return service('User')->updateHeadImg($request->all());
+    }
 }
