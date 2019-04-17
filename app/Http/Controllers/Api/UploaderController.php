@@ -48,7 +48,7 @@ class UploaderController extends CommonController
             $oss->uploadFile($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
             //$url = $oss->getPublicUrl($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
             $dirs =  substr($dir,0,strlen($dir)-1);
-            $url = config('upload.oss.imgUrl').'%5c'.$dirs.'%5c'.$storage_file_name.'.'.$ext;
+            $url = config('upload.oss.imgUrl').'/'.$dirs.'%5C'.$storage_file_name.'.'.$ext;
             $data = [
                 'img'       => $url,
             ];
@@ -86,4 +86,53 @@ class UploaderController extends CommonController
         }
 
     }
+
+
+
+    public function fileUploader(Request $request){
+        if (!$request->hasFile('file')) {
+            return $this->error(1,'上传文件不存在');
+        }
+        $file = $request->file('file');
+        if (!$file->isValid()) {
+            return $this->error(2,'文件上传过程中出错,请重新上传!');
+        }
+        if ($file->getClientOriginalExtension() && !in_array($file->getClientOriginalExtension(), Img::$FILE_EXT)) {
+            return $this->error(3,'文件格式不正确');
+        }
+        $ext                     = $file->getClientOriginalExtension();
+        $dir = $request->get('dir')?$request->get('dir').DIRECTORY_SEPARATOR:'';
+        $save_path               = storage_path(Img::$SAVE_PATH).$dir . date('Y-m-d');
+        $storage_file_name       = md5_file($file->getRealPath());
+        $storage_file_name_thumb = 'thumb_'.$storage_file_name;
+
+        if(config('upload.driver') == 'local'){
+            /*if ($file->move($save_path, $storage_file_name . '.' . $ext)) {
+                Image::make($save_path . DIRECTORY_SEPARATOR . $storage_file_name . '.' . $ext)->resize(100, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($save_path . DIRECTORY_SEPARATOR . $storage_file_name_thumb . '.' . $ext);
+                $data = [
+                    'img'       => $dir . date('Y-m-d') . DIRECTORY_SEPARATOR . $storage_file_name . '.' . $ext,
+                    'img_thumb' => $dir . date('Y-m-d') . DIRECTORY_SEPARATOR . $storage_file_name_thumb . '.' . $ext
+                ];
+                return $this->success('文件上传成功',$data);
+            } else {
+                return $this->error(4,'文件上传失败');
+            }*/
+        }else if(config('upload.driver') == 'oss'){
+            $oss = AliyunOSS::boot(config('upload.oss.city'),config('upload.oss.networkType'),config('upload.oss.isInternal'),config('upload.oss.accessId'),config('upload.oss.accessKey'));
+            $oss = $oss->setBucket(config('upload.oss.bucket'));
+            $oss->uploadFile($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
+            //$url = $oss->getPublicUrl($dir.$storage_file_name . '.' . $ext, $file->getRealPath(),['ContentType' => $file->getMimeType()]);
+            $dirs =  substr($dir,0,strlen($dir)-1);
+            $url = config('upload.oss.imgUrl').'/'.$dirs.'%5C'.$storage_file_name.'.'.$ext;
+            $data = [
+                'url'       => $url,
+            ];
+            return $this->success('文件上传成功',$data);
+        }
+
+
+    }
+
 }

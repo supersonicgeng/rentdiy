@@ -18,6 +18,7 @@ use Illuminate\Routing\Router;
     return $request->user();
 });*/
 Route::post('/imageUploader', 'Api\UploaderController@imageUploader');
+Route::post('/fileUploader', 'Api\UploaderController@fileUploader');
 Route::post('/imageUploaderBase64', 'Api\UploaderController@imageUploaderBase64');
 Route::any('/address', 'Api\AddressController@address');
 Route::get('/adminData', 'Api\DataController@adminInfo');
