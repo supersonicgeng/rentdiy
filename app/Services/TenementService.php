@@ -29,6 +29,7 @@ use App\Model\ScoreLog;
 use App\Model\SignLog;
 use App\Model\SysSign;
 use App\Model\Tenement;
+use App\Model\TenementCertificate;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
@@ -74,24 +75,37 @@ class TenementService extends CommonService
                     'mail_code'                 => $input['mail_code'],
                     'bank_no'                   => $input['bank_no'],
                     'contact_name'              => $input['contact_name'],
-                    'first_credentials_name'    => $input['first_credentials_name'],
-                    'second_credentials_name'   => $input['second_credentials_name'],
                     'contact_phone'             => $input['contact_phone'],
                     'contact_address'           => $input['contact_address'],
                     'company'                   => $input['company'],
                     'job_title'                 => $input['job_title'],
                     'instruction'               => $input['instruction'],
-                    'first_credentials_code'    => $input['first_credentials_code'],
-                    'first_credentials_pic'     => $input['first_credentials_pic'],
-                    'second_credentials_code'   => $input['second_credentials_code'],
-                    'second_credentials_pic'    => $input['second_credentials_pic'],
                     'created_at'                => date('Y-m-d H:i:s',time()),
                 ];
                 $model = new Tenement();
-                $res = $model->insert($tenement_data);
+                $res = $model->insertGetId($tenement_data);
                 if(!$res){
                     return $this->error('4','tenement information add failed');
                 }else{
+                    static $error = 0;
+                    $certificate_model = new TenementCertificate();
+                    foreach ($input['certificate_category'] as $k => $v){
+                        $certificate_data = [
+                            'tenement_id'   => $res,
+                            'certificate_category'  => $v,
+                            'certificate_no'        => $input['certificate_no'][$k],
+                            'certificate_pic1'      => $input['certificate_pic1'][$k],
+                            'certificate_pic2'      => $input['certificate_pic2'][$k],
+                            'created_at'            => date('Y-m-d H:i:s',time()),
+                        ];
+                        $certificate_res = $certificate_model->insert($certificate_data);
+                        if(!$certificate_res){
+                            $error = $error+1;
+                        }
+                    }
+                    if($error){
+                        return $this->error('4','tenement information add failed');
+                    }
                     return $this->success('tenement information add success');
                 }
             }
@@ -134,17 +148,11 @@ class TenementService extends CommonService
                     'mail_code'                 => @$input['mail_code']?$input['mail_code']:$tenement_info->mail_code,
                     'bank_no'                   => @$input['bank_no']?$input['bank_no']:$tenement_info->bank_no,
                     'contact_name'              => @$input['contact_name']?$input['contact_name']:$tenement_info->contact_name,
-                    'first_credentials_name'    => @$input['first_credentials_name']?$input['first_credentials_name']:$tenement_info->first_credentials_name,
-                    'second_credentials_name'   => @$input['second_credentials_name']?$input['second_credentials_name']:$tenement_info->second_credentials_name,
                     'contact_phone'             => @$input['contact_phone']?$input['contact_phone']:$tenement_info->contact_phone,
                     'contact_address'           => @$input['contact_address']?$input['contact_address']:$tenement_info->contact_address,
                     'company'                   => @$input['company']?$input['company']:$tenement_info->company,
                     'job_title'                 => @$input['job_title']?$input['job_title']:$tenement_info->job_title,
                     'instruction'               => @$input['instruction']?$input['instruction']:$tenement_info->instruction,
-                    'first_credentials_code'    => @$input['first_credentials_code']?$input['first_credentials_code']:$tenement_info->first_credentials_code,
-                    'first_credentials_pic'     => @$input['first_credentials_pic']?$input['first_credentials_pic']:$tenement_info->first_credentials_pic,
-                    'second_credentials_code'   => @$input['second_credentials_code']?$input['second_credentials_code']:$tenement_info->second_credentials_code,
-                    'second_credentials_pic'    => @$input['second_credentials_pic']?$input['second_credentials_pic']:$tenement_info->second_credentials_pic,
                     'updated_at'                => date('Y-m-d H:i:s',time()),
                 ];
                 $model = new Tenement();
@@ -152,7 +160,27 @@ class TenementService extends CommonService
                 if(!$res){
                     return $this->error('4','tenement information add failed');
                 }else{
-                    return $this->success('tenement information add success');
+                    static $error = 0;
+                    $certificate_model = new TenementCertificate();
+                    $certificate_model->where('tenement_id',$input['tenement_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                    foreach ($input['certificate_category'] as $k => $v){
+                        $certificate_data = [
+                            'tenement_id'   => $res,
+                            'certificate_category'  => $v,
+                            'certificate_no'        => $input['certificate_no'][$k],
+                            'certificate_pic1'      => $input['certificate_pic1'][$k],
+                            'certificate_pic2'      => $input['certificate_pic2'][$k],
+                            'created_at'            => date('Y-m-d H:i:s',time()),
+                        ];
+                        $certificate_res = $certificate_model->insert($certificate_data);
+                        if(!$certificate_res){
+                            $error = $error+1;
+                        }
+                    }
+                    if($error){
+                        return $this->error('4','tenement information edit failed');
+                    }
+                    return $this->success('tenement information edit success');
                 }
             }
         }
@@ -175,6 +203,14 @@ class TenementService extends CommonService
         }else{
             $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
             if($tenement_info){
+                $certificate_model = new TenementCertificate();
+                $certificate_data = $certificate_model->where('tenement_id',$tenement_info['id'])->get()->toArray();
+                foreach ($certificate_data as $k => $v){
+                    $tenement_info['certificate_category'][$k] = $v['certificate_category'];
+                    $tenement_info['certificate_no'][$k] = $v['certificate_no'];
+                    $tenement_info['certificate_pic1'][$k] = $v['certificate_pic1'];
+                    $tenement_info['certificate_pic2'][$k] = $v['certificate_pic2'];
+                }
                 return $this->success('get tenement information success',$tenement_info);
             }else{
                 return $this->error('3','get tenement information failed');
