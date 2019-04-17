@@ -122,4 +122,30 @@ class UserController extends CommonController
     {
         return service('User')->updateHeadImg($request->all());
     }
+
+    /**
+     * @description:增加手机
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addPhone(Request $request)
+    {
+        return service('User')->addPhone($request->all());
+    }
+
+    /**
+     * @description:增加邮箱
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addEmail(Request $request)
+    {
+        return service('User')->addEmail($request->all());
+    }
 }
