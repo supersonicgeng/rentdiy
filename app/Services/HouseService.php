@@ -334,6 +334,7 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $model = $model->where('is_put',2);
+        $model = $model->where('rent_status',1);
         // 房屋主档类型筛选
         $rent_category = @$input['rent_category'];
         if($rent_category){
@@ -427,7 +428,7 @@ class HouseService extends CommonService
         $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->get();
         if($res){
             $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_At',null)->pluck('house_pic')->toArray();
-            $res['short_word'] = explode(',',$res['short_word']);
+            $res['short_words'] = explode(',',$res['short_words']);
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house info failed');
