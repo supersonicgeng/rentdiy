@@ -93,6 +93,7 @@ class HouseService extends CommonService
                     'margin_rent'           => $input['margin_rent'],
                     'margin_rent_fee'       => $input['margin_rent_fee'],
                     'total_need_fee'        => $input['total_need_fee'],
+                    'require_renter'        => $input['require_renter'],
                     'can_party'             => $input['can_party'],
                     'can_pet'               => $input['can_pet'],
                     'can_smoke'             => $input['can_smoke'],
@@ -196,6 +197,9 @@ class HouseService extends CommonService
                         'margin_rent'           => $input['margin_rent'][$k],
                         'margin_rent_fee'       => $input['margin_rent_fee'][$k],
                         'total_need_fee'        => $input['total_need_fee'][$k],
+                        'can_party'             => $input['can_party'],
+                        'can_pet'               => $input['can_pet'],
+                        'can_smoke'             => $input['can_smoke'],
                         'other_rule'            => $input['other_rule'],
                         'created_at'            => date('Y-m-d H:i:s',time()),
                     ]; // 房屋主档数据
