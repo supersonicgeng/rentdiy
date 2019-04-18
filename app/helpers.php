@@ -19,20 +19,27 @@ function service($name = '')
 
 function tenementId()
 {
-    $tenement_id = 'tene'.date('Ymd') . substr(implode(NULL, array_map('tene', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    $tenement_id = 'tene'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     return $tenement_id;
 }
 
 function orderId()
 {
-    $tenement_id = 'ord'.date('Ymd') . substr(implode(NULL, array_map('tene', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    $tenement_id = 'ord'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     return $tenement_id;
 }
 
 function operatorAccount()
 {
-    $operatorAccount = 'oper'.date('Ymd') . substr(implode(NULL, array_map('tene', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    $operatorAccount = 'oper'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     return $operatorAccount;
+}
+
+
+function contractId()
+{
+    $tenement_id = 'ord'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    return $tenement_id;
 }
 
 /**
