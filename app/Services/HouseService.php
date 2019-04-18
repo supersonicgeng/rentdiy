@@ -335,14 +335,14 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $model = $model->where('is_put',2);
         // 房屋主档类型筛选
-        $house_category = @$input['house_category'];
-        if($house_category){
-            $model = $model->where('house_category',$house_category);
+        $rent_category = @$input['rent_category'];
+        if($rent_category){
+            $model = $model->where('rent_category',$rent_category);
         }
         // 地区筛选
-        $region = @$input['region'];
-        $ta     = @$input['ta'];
-        $district   = @$input['district'];
+        $region = @$input['Region'];
+        $ta     = @$input['TA'];
+        $district   = @$input['District'];
         if($district){
             $model = $model->where('District',$district);
         }elseif ($ta){
@@ -354,28 +354,28 @@ class HouseService extends CommonService
         $bedroom_least = @$input['bedroom_least'];
         $bedroom_most  = @$input['bedroom_most'];
         if($bedroom_least){
-            $model = $model->where('bedroom_no','>',$bedroom_least);
+            $model = $model->where('bedroom_no','>=',$bedroom_least);
         }
         if($bedroom_most){
-            $model = $model->where('bedroom_no','<',$bedroom_most);
+            $model = $model->where('bedroom_no','<=',$bedroom_most);
         }
         // 洗手间筛选
         $bathroom_least = @$input['bathroom_least'];
         $bathroom_most  = @$input['bathroom_most'];
         if($bathroom_least){
-            $model = $model->where('bathroom_no','>',$bathroom_least);
+            $model = $model->where('bathroom_no','>=',$bathroom_least);
         }
         if($bathroom_most){
-            $model = $model->where('bathroom_no','<',$bathroom_most);
+            $model = $model->where('bathroom_no','<=',$bathroom_most);
         }
         // 租金筛选
         $rent_fee_least = @$input['rent_fee_least'];
         $rent_fee_most  = @$input['rent_fee_most'];
         if($rent_fee_least){
-            $model = $model->where('rent_fee_pre_week','>',$rent_fee_least);
+            $model = $model->where('rent_fee_pre_week','>=',$rent_fee_least);
         }
         if($rent_fee_most){
-            $model = $model->where('rent_fee_pre_week','>',$rent_fee_least);
+            $model = $model->where('rent_fee_pre_week','>=',$rent_fee_least);
         }
         if($input['sort_order'] == 1){
             $model = $model->orderBy('rent_fee_pre_week','desc');
@@ -389,8 +389,9 @@ class HouseService extends CommonService
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
             }
-            $res['total_page'] = $total_page;
-            $res['current_page'] = $input['page'];
+            $data['house_info'] = $res;
+            $data['total_page'] = $total_page;
+            $data['current_page'] = $input['page'];
         }else{
             $offset = ($input['page']-1)*9;
             $count = $model->count();
@@ -400,11 +401,12 @@ class HouseService extends CommonService
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
             }
-            $res['total_page'] = $total_page;
-            $res['current_page'] = $input['page'];
+            $data['house_info'] = $res;
+            $data['total_page'] = $total_page;
+            $data['current_page'] = $input['page'];
         }
         if($res){
-            return $this->success('rent_house_list get success',$res);
+            return $this->success('rent_house_list get success',$data);
         }else{
             return $this->error('2','rent_house_list get failed');
         }
