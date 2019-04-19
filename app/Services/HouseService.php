@@ -803,12 +803,13 @@ class HouseService extends CommonService
         $res = $model->where('user_id',$user_id)->select('id','group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->groupBy('group_id')->offset(($page-1)*9)->limit(9)->get();
         if($res){
             foreach ($res as $k => $v){
-                $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();
+                $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
             }
-            $res['current_page'] = $page;
+            $data['house_list'] = $res;
+            $data['current_page'] = $page;
             $total_page = ceil($count/9);
-            $res['total_page'] = $total_page;
-            return $this->success('get house list success',$res);
+            $data['total_page'] = $total_page;
+            return $this->success('get house list success',$data);
         }else{
             return $this->error('2','get house list failed');
         }
