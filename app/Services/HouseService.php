@@ -446,11 +446,15 @@ class HouseService extends CommonService
     public function houseListPut(array $input)
     {
         $model = new RentHouse();
-        $rent_house_id = $input['rent_house_id'];
-        $res = $model->where('id',$rent_house_id)->first();
-        $res->is_put = 2;
+        $group_id = $input['group_id'];
+        $update_data = [
+            'is_put'            => 2,
+            'available_date'    => $input['available_date']
+        ];
+        $res = $model->where('group_id',$group_id)->update($update_data);
+        /*$res->is_put = 2;
         $res->available_date = $input['available_date'];
-        $res->save();
+        $res->save();*/
         return $this->success('put the house list success');
     }
 
@@ -524,6 +528,7 @@ class HouseService extends CommonService
                     'can_pet'               => @$input['can_pet']?$input['can_pet']:$rent_house_info->cna_pet,
                     'can_smoke'             => @$input['can_smoke']?$input['can_smoke']:$rent_house_info->can_smoke,
                     'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
+                    'is_put'                => 1,
                     'updated_at'            => date('Y-m-d H:i:s',time()),
                 ]; // 房屋主档数据
                 $res = $model->where('id',$input['rent_house_id'])->update($data); //获取房屋主档id
@@ -626,6 +631,7 @@ class HouseService extends CommonService
                         'margin_rent_fee'       => @$input['margin_rent_fee'][$k]?$input['margin_rent_fee'][$k]:$rent_house_info->margin_rent_fee,
                         'total_need_fee'        => @$input['total_need_fee'][$k]?$input['total_need_fee'][$k]:$rent_house_info->total_need_fee,
                         'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
+                        'is_put'                => 1,
                         'updated_at'            => date('Y-m-d H:i:s',time()),
                     ]; // 房屋主档数据
                     $res = $model->where('id',$v)->update($data); //获取房屋主档id
@@ -702,6 +708,7 @@ class HouseService extends CommonService
                     'rent_least_fee'        => @$input['rent_least_fee']?$input['rent_least_fee']:$rent_house_info->rent_least_fee,
                     'rent_detail'           => @$input['rent_detail']?$input['rent_detail']:$rent_house_info->rent_detail,
                     'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
+                    'is_put'                => 1,
                     'updated_at'            => date('Y-m-d H:i:s',time()),
                 ]; // 房屋主档数据
                 $res = $model->where('id',$input['rent_house_id'])->update($data); //获取房屋主档id
