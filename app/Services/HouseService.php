@@ -378,7 +378,7 @@ class HouseService extends CommonService
         if($rent_fee_most){
             $model = $model->where('rent_fee_pre_week','>=',$rent_fee_least);
         }
-        if($input['sort_order'] == 1){
+        if($input['sort_order'] == 2){
             $model = $model->orderBy('rent_fee_pre_week','desc');
         }
         if($input['show_method'] == 1){ // 列表
