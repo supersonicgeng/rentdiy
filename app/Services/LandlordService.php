@@ -162,7 +162,8 @@ class LandlordService extends CommonService
             if(!$landlord_list){
                 return $this->error('3','you not add a landlord ');
             }else{
-                return $this->success('get landlord success',$landlord_list);
+                $data['landlord_list'] = $landlord_list;
+                return $this->success('get landlord success',$data);
             }
         }
     }
