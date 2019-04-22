@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class LadnlordController extends Controller
+class LandlordController extends CommonController
 {
     /**
      * @description:房东增加房东信息
