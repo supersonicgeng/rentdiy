@@ -116,14 +116,14 @@ class HouseService extends CommonService
                     }
                 }
                 // 添加联系人
-                $contact_name = $input['contact_name'];
-                foreach ($contact_name as $key => $value){
+                $contact_info = $input['contact_info'];
+                foreach ($contact_info as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $rent_house_id,
-                        'contact_name'  => $value,
-                        'contact_role'  => $input['contact_role'][$key],
-                        'e_mail'        => $input['e_mail'][$key],
-                        'phone'         => $input['phone'][$key],
+                        'contact_name'  => $value['contact_name'],
+                        'contact_role'  => $value['contact_role'],
+                        'e_mail'        => $value['e_mail'],
+                        'phone'         => $value['phone'],
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $res = RentContact::insert($contact_data);
@@ -222,14 +222,14 @@ class HouseService extends CommonService
                         }
 
                         // 添加联系人
-                        $contact_name = $input['contact_name'];
-                        foreach ($contact_name as $key => $value){
+                        $contact_info = $input['contact_info'];
+                        foreach ($contact_info as $key => $value){
                             $contact_data = [
                                 'rent_house_id' => $rent_house_id,
-                                'contact_name'  => $value,
-                                'contact_role'  => $input['contact_role'][$key],
-                                'e_mail'        => $input['e_mail'][$key],
-                                'phone'         => $input['phone'][$key],
+                                'contact_name'  => $value['contact_name'],
+                                'contact_role'  => $value['contact_role'],
+                                'e_mail'        => $value['e_mail'],
+                                'phone'         => $value['phone'],
                                 'created_at'    => date('Y-m-d H:i:s',time()),
                             ];
                             $res = RentContact::insert($contact_data);
@@ -294,14 +294,14 @@ class HouseService extends CommonService
                     }
                 }
                 // 添加联系人
-                $contact_name = $input['contact_name'];
-                foreach ($contact_name as $key => $value){
+                $contact_info = $input['contact_info'];
+                foreach ($contact_info as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $rent_house_id,
-                        'contact_name'  => $value,
-                        'contact_role'  => $input['contact_role'][$key],
-                        'e_mail'        => $input['e_mail'][$key],
-                        'phone'         => $input['phone'][$key],
+                        'contact_name'  => $value['contact_name'],
+                        'contact_role'  => $value['contact_role'],
+                        'e_mail'        => $value['e_mail'],
+                        'phone'         => $value['phone'],
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $res = RentContact::insert($contact_data);
@@ -551,14 +551,14 @@ class HouseService extends CommonService
                 // 添加联系人
                 // 删除之前联系人
                 RentContact::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
-                $contact_name = $input['contact_name'];
-                foreach ($contact_name as $key => $value){
+                $contact_info = $input['contact_info'];
+                foreach ($contact_info as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $input['rent_house_id'],
-                        'contact_name'  => $v,
-                        'contact_role'  => $input['contact_role'][$key],
-                        'e_mail'        => $input['e_mail'][$key],
-                        'phone'         => $input['phone'][$key],
+                        'contact_name'  => $value['contact_name'],
+                        'contact_role'  => $value['contact_role'],
+                        'e_mail'        => $value['e_mail'],
+                        'phone'         => $value['phone'],
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $res = RentContact::insert($contact_data);
@@ -656,14 +656,14 @@ class HouseService extends CommonService
                         // 删除之前联系人
                         RentContact::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
                         // 添加联系人
-                        $contact_name = $input['contact_name'];
-                        foreach ($contact_name as $key => $value){
+                        $contact_info = $input['contact_info'];
+                        foreach ($contact_info as $key => $value){
                             $contact_data = [
-                                'rent_house_id' => $v,
-                                'contact_name'  => $value,
-                                'contact_role'  => $input['contact_role'][$key],
-                                'e_mail'        => $input['e_mail'][$key],
-                                'phone'         => $input['phone'][$key],
+                                'rent_house_id' => $input['rent_house_id'],
+                                'contact_name'  => $value['contact_name'],
+                                'contact_role'  => $value['contact_role'],
+                                'e_mail'        => $value['e_mail'],
+                                'phone'         => $value['phone'],
                                 'created_at'    => date('Y-m-d H:i:s',time()),
                             ];
                             $res = RentContact::insert($contact_data);
@@ -731,14 +731,14 @@ class HouseService extends CommonService
                 // 添加联系人
                 // 删除之前联系人
                 RentContact::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
-                $contact_name = $input['contact_name'];
-                foreach ($contact_name as $key => $value){
+                $contact_info = $input['contact_info'];
+                foreach ($contact_info as $key => $value){
                     $contact_data = [
                         'rent_house_id' => $input['rent_house_id'],
-                        'contact_name'  => $v,
-                        'contact_role'  => $input['contact_role'][$key],
-                        'e_mail'        => $input['e_mail'][$key],
-                        'phone'         => $input['phone'][$key],
+                        'contact_name'  => $value['contact_name'],
+                        'contact_role'  => $value['contact_role'],
+                        'e_mail'        => $value['e_mail'],
+                        'phone'         => $value['phone'],
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $res = RentContact::insert($contact_data);
