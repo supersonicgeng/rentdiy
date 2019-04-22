@@ -387,7 +387,7 @@ class HouseService extends CommonService
             $total_page = ceil($count/5);
             $res = $model->offset($offset)->limit(5)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->get()->toArray();
             foreach ($res as $k => $v){
-                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
+                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
             }
             $data['house_info'] = $res;
@@ -399,7 +399,7 @@ class HouseService extends CommonService
             $total_page = ceil($count/9);
             $res = $model->offset($offset)->limit(9)->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->get()->toArray();
             foreach ($res as $k => $v){
-                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
+                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
             }
             $data['house_info'] = $res;
@@ -427,7 +427,7 @@ class HouseService extends CommonService
         $rent_house_id = $input['rent_house_id'];
         $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->first()->toArray();
         if($res){
-            $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_At',null)->pluck('house_pic')->toArray();
+            $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
             //$res['short_words'] = explode(',',$res['short_words']);
             return $this->success('get house info success',$res);
         }else{
@@ -775,7 +775,7 @@ class HouseService extends CommonService
         $rent_house_id = $input['rent_house_id'];
         $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->get();
         if($res){
-            $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_At',null)->pluck('house_pic')->toArray();
+            $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
             $res['short_word'] = explode(',',$res['short_word']);
             return $this->success('get house info success',$res);
         }else{
