@@ -104,10 +104,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     });
     // 房东管理
     $router->group(['prefix' => 'landlord'], function (Router $router) {
-        $router->post('addLandlordInformation', 'LandlordController@addLandlordInformation'); // 添加房东联系人 3.21
+        $router->post('addLandlordInformation', 'LandlordController@addLandlordInformation'); // 添加房东联系人 3.21 //接口done
         $router->post('getLandlordList','LandlordController@getLandlordList'); // 房东获得当前已经存入的房东联系人列表 3.22
-        $router->post('getLandlordInformation', 'LandlordController@getTenementInformation'); // 获得房东联系人信息 3.22
-        $router->post('editLandlordInformation', 'LandlordController@editTenementInformation'); // 修改房东联系人 3.22
+        $router->post('getLandlordInformation', 'LandlordController@getLandlordInformation'); // 获得房东联系人信息 3.22
+        $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22
         $router->post('deleteLandlordInformation', 'LandlordController@deleteLandlordInformation'); // 删除房东联系人 3.27
     });
     // 服务商管理
