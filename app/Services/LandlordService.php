@@ -158,7 +158,7 @@ class LandlordService extends CommonService
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
-            $landlord_list = Landlord::where('user_id',$input['user_id'])->where('deleted_at',null)->select('id','landlord_name')->get()->toArray();
+            $landlord_list = Landlord::where('user_id',$input['user_id'])->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
             if(!$landlord_list){
                 return $this->error('3','you not add a landlord ');
             }else{
