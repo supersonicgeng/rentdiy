@@ -82,7 +82,7 @@ class HouseService extends CommonService
                     'school'                => $input['school'],
                     'supermarket'           => $input['supermarket'],
                     'hospital'              => $input['hospital'],
-                    'available_time'        => $input['available_time'],
+                    /*'available_time'        => $input['available_time'],*/
                     'rent_period'           => $input['rent_period'],
                     'rent_fee'              => $input['rent_fee'],
                     'rent_fee_pre_week'     => @$rent_fee_pre_week,
@@ -180,7 +180,7 @@ class HouseService extends CommonService
                         'school'                => $input['school'],
                         'supermarket'           => $input['supermarket'],
                         'hospital'              => $input['hospital'],
-                        'available_time'        => $input['available_time'][$k],
+                        /*'available_time'        => $input['available_time'][$k],*/
                         'room_name'             => $v,
                         'room_description'      => $input['room_description'][$k],
                         'bed_no'                => $input['bed_no'][$k],
@@ -270,7 +270,7 @@ class HouseService extends CommonService
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
                     'short_words'           => implode(',',$input['short_words']),
-                    'available_time'        => $input['available_time'],
+                    /*'available_time'        => $input['available_time'],*/
                     'rent_period'           => $input['rent_period'],
                     'rent_fee'              => $input['rent_fee'],
                     'rent_least_fee'        => $input['rent_least_fee'],
