@@ -274,7 +274,7 @@ class HouseService extends CommonService
                     'rent_period'           => $input['rent_period'],
                     'rent_fee'              => $input['rent_fee'],
                     'rent_least_fee'        => $input['rent_least_fee'],
-                    'rent_detail'           => $input['rent_detail'],
+                    'rent_fee_detail'       => $input['rent_fee_detail'],
                     'other_rule'            => $input['other_rule'],
                     'created_at'            => date('Y-m-d H:i:s',time()),
                 ]; // 房屋主档数据
@@ -729,7 +729,7 @@ class HouseService extends CommonService
                     'rent_period'           => @$input['rent_period']?$input['rent_period']:$rent_house_info->rent_period,
                     'rent_fee'              => @$input['rent_fee']?$input['rent_fee']:$rent_house_info->rent_fee,
                     'rent_least_fee'        => @$input['rent_least_fee']?$input['rent_least_fee']:$rent_house_info->rent_least_fee,
-                    'rent_detail'           => @$input['rent_detail']?$input['rent_detail']:$rent_house_info->rent_detail,
+                    'rent_fee_detail'       => @$input['rent_fee_detail']?$input['rent_fee_detail']:$rent_house_info->rent_fee_detail,
                     'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
                     'is_put'                => 1,
                     'updated_at'            => date('Y-m-d H:i:s',time()),
