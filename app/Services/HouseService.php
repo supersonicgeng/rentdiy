@@ -137,21 +137,21 @@ class HouseService extends CommonService
                     return $this->error('2','rent_house_list add failed, Pls try again');
                 }
             }elseif ($rent_category == 2 || $rent_category == 3){ // 新建分租/室友房屋主档
-                $room_name = $input['room_name'];
+                $room_info = $input['room_info'];
                 static $error = 0;
-                foreach ($room_name as $k => $v){
+                foreach ($room_info as $k => $v){
                     if($input['rent_period'] == 1){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]*7;
+                        $rent_fee_pre_week = $v['rent_fee']*7;
                     }elseif ($input['rent_period'] == 2){
-                        $rent_fee_pre_week = $input['rent_fee'][$k];
+                        $rent_fee_pre_week = $v['rent_fee'];
                     }elseif ($input['rent_period'] == 3){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/4;
+                        $rent_fee_pre_week = $v['rent_fee']/4;
                     }elseif ($input['rent_period'] == 4){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/13;
+                        $rent_fee_pre_week = $v['rent_fee']/13;
                     }elseif ($input['rent_period'] == 5){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/26;
+                        $rent_fee_pre_week = $v['rent_fee']/26;
                     }elseif ($input['rent_period'] == 6){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/52;
+                        $rent_fee_pre_week = $v['rent_fee']/52;
                     }
                     $data = [
                         'user_id'               => $user_id,
@@ -181,22 +181,22 @@ class HouseService extends CommonService
                         'supermarket'           => $input['supermarket'],
                         'hospital'              => $input['hospital'],
                         /*'available_time'        => $input['available_time'][$k],*/
-                        'room_name'             => $v,
-                        'room_description'      => $input['room_description'][$k],
-                        'bed_no'                => $input['bed_no'][$k],
-                        'shower_room'           => $input['shower_room'][$k],
-                        'require_renter'        => $input['require_renter'][$k],
-                        'room_short_words'      => implode(',',$input['room_short_words']),
-                        'rent_period'           => $input['rent_period'][$k],
-                        'rent_fee'              => $input['rent_fee'][$k],
+                        'room_name'             => $v['room_name'],
+                        'room_description'      => $v['room_description'],
+                        'bed_no'                => $v['bed_no'],
+                        'shower_room'           => $v['shower_room'],
+                        'require_renter'        => $v['require_renter'],
+                        'room_short_words'      => implode(',',$v['room_short_words']),
+                        'rent_period'           => $v['rent_period'],
+                        'rent_fee'              => $v['rent_fee'],
                         'rent_fee_pre_week'     => @$rent_fee_pre_week,
-                        'least_rent_time'       => $input['least_rent_time'][$k],
-                        'least_rent_method'     => $input['least_rent_method'][$k],
-                        'pre_rent'              => $input['pre_rent'][$k],
-                        'pre_rent_fee'          => $input['pre_rent_fee'][$k],
-                        'margin_rent'           => $input['margin_rent'][$k],
-                        'margin_rent_fee'       => $input['margin_rent_fee'][$k],
-                        'total_need_fee'        => $input['total_need_fee'][$k],
+                        'least_rent_time'       => $v['least_rent_time'],
+                        'least_rent_method'     => $v['least_rent_method'],
+                        'pre_rent'              => $v['pre_rent'],
+                        'pre_rent_fee'          => $v['pre_rent_fee'],
+                        'margin_rent'           => $v['margin_rent'],
+                        'margin_rent_fee'       => $v['margin_rent_fee'],
+                        'total_need_fee'        => $v['total_need_fee'],
                         'can_party'             => $input['can_party'],
                         'can_pet'               => $input['can_pet'],
                         'can_smoke'             => $input['can_smoke'],
