@@ -254,8 +254,8 @@ class HouseService extends CommonService
                     'property_name'         => $input['property_name'],
                     'details'               => $input['details'],
                     'property_type'         => $input['property_type'],
-                    'bathroom_no'           => $input['bathroom_no'],
-                    'bedroom_no'            => $input['bedroom_no'],
+                    /*'bathroom_no'           => $input['bathroom_no'],
+                    'bedroom_no'            => $input['bedroom_no'],*/
                     'building_area'         => $input['building_area'],
                     'actual_area'           => $input['actual_area'],
                     'parking_no'            => $input['parking_no'],
@@ -709,8 +709,8 @@ class HouseService extends CommonService
                     'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
                     'details'               => @$input['details']?$input['details']:$rent_house_info->details,
                     'property_type'         => @$input['property_type']?$input['property_type']:$rent_house_info->property_type,
-                    'bathroom_no'           => @$input['bathroom_no']?$input['bathroom_no']:$rent_house_info->bathroom_no,
-                    'bedroom_no'            => @$input['bedroom_no']?$input['bedroom_no']:$rent_house_info->bedroom_no,
+                   /* 'bathroom_no'           => @$input['bathroom_no']?$input['bathroom_no']:$rent_house_info->bathroom_no,
+                    'bedroom_no'            => @$input['bedroom_no']?$input['bedroom_no']:$rent_house_info->bedroom_no,*/
                     'building_area'         => @$input['building_area']?$input['building_area']:$rent_house_info->building_area,
                     'actual_area'           => @$input['actual_area']?$input['actual_area']:$rent_house_info->actual_area,
                     'parking_no'            => @$input['parking_no']?$input['parking_no']:$rent_house_info->packing_no,
