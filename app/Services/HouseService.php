@@ -473,7 +473,7 @@ class HouseService extends CommonService
         $group_id = $input['group_id'];
         $update_data = [
             'is_put'            => 1,
-            'available_date'    => $input['available_date']
+            'available_date'    => null,
         ];
         $res = $model->where('group_id',$group_id)->update($update_data);
         /*$res->is_put = 2;
