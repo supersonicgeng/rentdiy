@@ -269,7 +269,7 @@ class HouseService extends CommonService
                     'address'               => $input['address'],
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
-                    'short_words'           => implode(',',$input['short_words']),
+                    'short_words'           => $input['short_words'],
                     /*'available_time'        => $input['available_time'],*/
                     'rent_period'           => $input['rent_period'],
                     'rent_fee'              => $input['rent_fee'],
@@ -724,7 +724,7 @@ class HouseService extends CommonService
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                    'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
+                    'short_words'           => @$input['short_words']?$input['short_words']:$rent_house_info->short_words,
                     'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,
                     'rent_period'           => @$input['rent_period']?$input['rent_period']:$rent_house_info->rent_period,
                     'rent_fee'              => @$input['rent_fee']?$input['rent_fee']:$rent_house_info->rent_fee,
