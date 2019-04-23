@@ -77,7 +77,7 @@ class HouseService extends CommonService
                     'address'               => $input['address'],
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
-                    'short_words'           => $input['short_words'],
+                    'short_words'           => implode(',',$input['short_words']),
                     'bus_station'           => $input['bus_station'],
                     'school'                => $input['school'],
                     'supermarket'           => $input['supermarket'],
@@ -175,7 +175,7 @@ class HouseService extends CommonService
                         'address'               => $input['address'],
                         'lat'                   => $input['lat'],
                         'lon'                   => $input['lon'],
-                        'short_words'           => $input['short_words'],
+                        'short_words'           => implode(',',$input['short_words']),
                         'bus_station'           => $input['bus_station'],
                         'school'                => $input['school'],
                         'supermarket'           => $input['supermarket'],
@@ -186,7 +186,7 @@ class HouseService extends CommonService
                         'bed_no'                => $input['bed_no'][$k],
                         'shower_room'           => $input['shower_room'][$k],
                         'require_renter'        => $input['require_renter'][$k],
-                        'room_short_words'      => $input['room_short_words'][$k],
+                        'room_short_words'      => implode(',',$input['room_short_words']),
                         'rent_period'           => $input['rent_period'][$k],
                         'rent_fee'              => $input['rent_fee'][$k],
                         'rent_fee_pre_week'     => @$rent_fee_pre_week,
@@ -269,7 +269,7 @@ class HouseService extends CommonService
                     'address'               => $input['address'],
                     'lat'                   => $input['lat'],
                     'lon'                   => $input['lon'],
-                    'short_words'           => $input['short_words'],
+                    'short_words'           => implode(',',$input['short_words']),
                     'available_time'        => $input['available_time'],
                     'rent_period'           => $input['rent_period'],
                     'rent_fee'              => $input['rent_fee'],
@@ -428,7 +428,7 @@ class HouseService extends CommonService
         $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->first()->toArray();
         if($res){
             $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
-            //$res['short_words'] = explode(',',$res['short_words']);
+            $res['short_words'] = explode(',',$res['short_words']);
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house info failed');
@@ -508,7 +508,7 @@ class HouseService extends CommonService
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                    'short_words'           => @$input['short_words']?$input['short_words']:$rent_house_info->short_words,
+                    'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
                     'bus_station'           => @$input['bus_station']?$input['bus_station']:$rent_house_info->bus_station,
                     'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                     'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
@@ -608,7 +608,7 @@ class HouseService extends CommonService
                         'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                         'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                         'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                        'short_words'           => @$input['short_words']?$input['short_words']:$rent_house_info->short_words,
+                        'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
                         'bus_station'           => @$input['bus_station']?$input['bus_station']:$rent_house_info->bus_station,
                         'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                         'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
@@ -619,7 +619,7 @@ class HouseService extends CommonService
                         'bed_no'                => @$input['bed_no'][$k]?$input['room_description'][$k]:$rent_house_info->room_description,
                         'shower_room'           => @$input['shower_room'][$k]?$input['shower_room'][$k]:$rent_house_info->shower_room,
                         'require_renter'        => @$input['require_renter'][$k]?$input['require_renter'][$k]:$rent_house_info->require_renter,
-                        'room_short_words'      => @$input['room_short_words'][$k]?$input['room_short_words'][$k]:$rent_house_info->room_short_words,
+                        'room_short_words'      => @$input['room_short_words'][$k]?implode(',',$input['room_short_words'][$k]:$rent_house_info->room_short_words,
                         'rent_period'           => @$input['rent_period'][$k]?$input['rent_period'][$k]:$rent_house_info->rent_period,
                         'rent_fee'              => @$input['rent_fee'][$k]?$input['rent_fee'][$k]:$rent_house_info->rent_fee,
                         'rent_fee_pre_week'     => @$rent_fee_pre_week,
@@ -701,7 +701,7 @@ class HouseService extends CommonService
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                    'short_words'           => @$input['short_words']?$input['short_words']:$rent_house_info->short_words,
+                    'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
                     'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,
                     'rent_period'           => @$input['rent_period']?$input['rent_period']:$rent_house_info->rent_period,
                     'rent_fee'              => @$input['rent_fee']?$input['rent_fee']:$rent_house_info->rent_fee,
