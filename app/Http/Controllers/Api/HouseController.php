@@ -61,6 +61,19 @@ class HouseController extends CommonController
     }
 
     /**
+     * @description:房屋主档下架
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function houseListDown(Request $request)
+    {
+        return service('House')->houseListDown($request->all());
+    }
+
+    /**
      * @description:修改房屋主档
      * @author: syg <13971394623@163.com>
      * @param $code

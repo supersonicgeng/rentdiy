@@ -75,6 +75,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     $router->group(['prefix' => 'house'], function (Router $router) {
         $router->post('addHouseList', 'HouseController@addHouseList'); // 添加房屋主档 // 接口done
         $router->post('houseListPut','HouseController@houseListPut'); // 房屋主档上架 3.21 // 接口done
+        $router->post('houseListDown','HouseController@houseListDown'); // 房屋主档上架 4.23 // 接口done
         $router->post('getSelfHouseList','HouseController@getSelfHouseList'); // 获得房屋主档信息列表 3.25 // 接口done
         $router->post('getHouseGroupDetail','HouseController@getHouseGroupDetail'); // 获得房屋主档信息 房东编辑用 3.25
         $router->post('editHouseList', 'HouseController@editHouseList'); // 修改房屋主档 3.22 // 接口done
@@ -105,9 +106,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     // 房东管理
     $router->group(['prefix' => 'landlord'], function (Router $router) {
         $router->post('addLandlordInformation', 'LandlordController@addLandlordInformation'); // 添加房东联系人 3.21 //接口done
-        $router->post('getLandlordList','LandlordController@getLandlordList'); // 房东获得当前已经存入的房东联系人列表 3.22
-        $router->post('getLandlordInformation', 'LandlordController@getLandlordInformation'); // 获得房东联系人信息 3.22
-        $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22
+        $router->post('getLandlordList','LandlordController@getLandlordList'); // 房东获得当前已经存入的房东联系人列表 3.22 //接口done
+        $router->post('getLandlordInformation', 'LandlordController@getLandlordInformation'); // 获得房东联系人信息 3.22  // 接口 done
+        $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22 // 接口 done
         $router->post('deleteLandlordInformation', 'LandlordController@deleteLandlordInformation'); // 删除房东联系人 3.27
     });
     // 服务商管理

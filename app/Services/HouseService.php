@@ -460,6 +460,29 @@ class HouseService extends CommonService
 
 
     /**
+     * @description:房屋主档下架
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function houseListDown(array $input)
+    {
+        $model = new RentHouse();
+        $group_id = $input['group_id'];
+        $update_data = [
+            'is_put'            => 1,
+            'available_date'    => $input['available_date']
+        ];
+        $res = $model->where('group_id',$group_id)->update($update_data);
+        /*$res->is_put = 2;
+        $res->available_date = $input['available_date'];
+        $res->save();*/
+        return $this->success('down the house list success');
+    }
+
+    /**
      * @description:编辑房屋主档
      * @author: syg <13971394623@163.com>
      * @param $code
@@ -619,7 +642,7 @@ class HouseService extends CommonService
                         'bed_no'                => @$input['bed_no'][$k]?$input['room_description'][$k]:$rent_house_info->room_description,
                         'shower_room'           => @$input['shower_room'][$k]?$input['shower_room'][$k]:$rent_house_info->shower_room,
                         'require_renter'        => @$input['require_renter'][$k]?$input['require_renter'][$k]:$rent_house_info->require_renter,
-                        'room_short_words'      => @$input['room_short_words'][$k]?implode(',',$input['room_short_words'][$k]:$rent_house_info->room_short_words,
+                        'room_short_words'      => @$input['room_short_words'][$k]?implode(',',$input['room_short_words'][$k]):$rent_house_info->room_short_words,
                         'rent_period'           => @$input['rent_period'][$k]?$input['rent_period'][$k]:$rent_house_info->rent_period,
                         'rent_fee'              => @$input['rent_fee'][$k]?$input['rent_fee'][$k]:$rent_house_info->rent_fee,
                         'rent_fee_pre_week'     => @$rent_fee_pre_week,
@@ -800,7 +823,7 @@ class HouseService extends CommonService
         if($count < ($page-1)*9){
             return $this->error('3','the page number is not right');
         }
-        $res = $model->where('user_id',$user_id)->select('id','group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->groupBy('group_id')->offset(($page-1)*9)->limit(9)->get();
+        $res = $model->where('user_id',$user_id)->select('id','group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put')->groupBy('group_id')->offset(($page-1)*9)->limit(9)->get();
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
