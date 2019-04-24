@@ -62,7 +62,7 @@ class ProvidersService extends CommonService
             return $this->error('2','this account is not a provider role');
         }else{
             $provider_info = Providers::where('user_id',$input['user_id'])->count();
-            if($provider_info >3){
+            if($provider_info >= 3){
                 return $this->error('3','you only can add 3 provider information');
             }else{
                 $provider_data = [
@@ -70,12 +70,12 @@ class ProvidersService extends CommonService
                     'providers_sn'  => providersId(),
                     'headimg'       => $input['headimg'],
                     'service_name'  => $input['service_name'],
-                    'jobs'          => $input['jobs'],
+                    'jobs'          => implode(',',$input['jobs']),
                     'first_name'    => $input['first_name'],
                     'middle_name'   => $input['middle_name'],
                     'last_name'     => $input['last_name'],
                     'tax_no'        => $input['tax_no'],
-                    'mobile'        => $input['mobile'],
+                    /*'mobile'        => $input['mobile'],*/
                     'phone'         => $input['phone'],
                     'email'         => $input['email'],
                     'address'       => $input['address'],
@@ -165,12 +165,12 @@ class ProvidersService extends CommonService
                 $provider_data = [
                     'headimg'       => @$input['headimg']?$input['headimg']:$provider_info->headimg,
                     'service_name'  => @$input['service_name']?$input['service_name']:$provider_info->service_name,
-                    'jobs'          => @$input['jobs']?$input['jobs']:$provider_info->jobs,
+                    'jobs'          => @$input['jobs']?implode(',',$input['jobs']):$provider_info->jobs,
                     'first_name'    => @$input['first_name']?$input['first_name']:$provider_info->first_name,
                     'middle_name'   => @$input['middle_name']?$input['middle_name']:$provider_info->middle_name,
                     'last_name'     => @$input['last_name']?$input['last_name']:$provider_info->last_name,
                     'tax_no'        => @$input['tax_no']?$input['tax_no']:$provider_info->tax_no,
-                    'mobile'        => @$input['mobile']?$input['mobile']:$provider_info->mobile,
+                    /*'mobile'        => @$input['mobile']?$input['mobile']:$provider_info->mobile,*/
                     'phone'         => @$input['phone']?$input['phone']:$provider_info->phone,
                     'email'         => @$input['email']?$input['email']:$provider_info->email,
                     'address'       => @$input['address']?$input['address']:$provider_info->address,
@@ -288,6 +288,7 @@ class ProvidersService extends CommonService
             }else{
                 $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
                 $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
+                $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$input['service_id'])->where('deleted_at',null)->get()->toArray();
                 return $this->success('get providers success',$provider_info);
             }
         }
