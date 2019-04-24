@@ -257,7 +257,12 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $provider_list = Providers::where('user_id',$input['user_id'])->where('deleted_at',null)->select('id','service_name')->get()->toArray();
+            $provider_list = Providers::where('user_id',$input['user_id'])->where('deleted_at',null)->get()->toArray();
+            foreach ($provider_list as $k => $v){
+                $provider_list[$k]['service_company_pic'] = ProvidersCompanyPic::where('service_id',$v['id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
+                $provider_list[$k]['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$v['id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
+                $provider_list[$k]['service_introduce'] = ServiceIntroduce::where('service_id',$v['id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
+            }
             if(!$provider_list){
                 return $this->error('3','you not add a  providers information');
             }else{
