@@ -140,17 +140,17 @@ class HouseService extends CommonService
                 $room_info = $input['room_info'];
                 static $error = 0;
                 foreach ($room_info as $k => $v){
-                    if($input['rent_period'] == 1){
+                    if($v['rent_period'] == 1){
                         $rent_fee_pre_week = $v['rent_fee']*7;
-                    }elseif ($input['rent_period'] == 2){
+                    }elseif ($v['rent_period'] == 2){
                         $rent_fee_pre_week = $v['rent_fee'];
-                    }elseif ($input['rent_period'] == 3){
+                    }elseif ($v['rent_period'] == 3){
                         $rent_fee_pre_week = $v['rent_fee']/4;
-                    }elseif ($input['rent_period'] == 4){
+                    }elseif ($v['rent_period'] == 4){
                         $rent_fee_pre_week = $v['rent_fee']/13;
-                    }elseif ($input['rent_period'] == 5){
+                    }elseif ($v['rent_period'] == 5){
                         $rent_fee_pre_week = $v['rent_fee']/26;
-                    }elseif ($input['rent_period'] == 6){
+                    }elseif ($v['rent_period'] == 6){
                         $rent_fee_pre_week = $v['rent_fee']/52;
                     }
                     $data = [
@@ -599,18 +599,18 @@ class HouseService extends CommonService
                 static $error = 0;
                 foreach ($rent_house_id as $k => $v){
                     $rent_house_info = $model->where('id',$v)->first();
-                    if($input['rent_period'] == 1){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]*7;
-                    }elseif ($input['rent_period'] == 2){
-                        $rent_fee_pre_week = $input['rent_fee'][$k];
-                    }elseif ($input['rent_period'] == 3){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/4;
-                    }elseif ($input['rent_period'] == 4){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/13;
-                    }elseif ($input['rent_period'] == 5){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/26;
-                    }elseif ($input['rent_period'] == 6){
-                        $rent_fee_pre_week = $input['rent_fee'][$k]/52;
+                    if($v['rent_period'] == 1){
+                        $rent_fee_pre_week = $v['rent_fee'][$k]*7;
+                    }elseif ($v['rent_period'] == 2){
+                        $rent_fee_pre_week = $v['rent_fee'][$k];
+                    }elseif ($v['rent_period'] == 3){
+                        $rent_fee_pre_week = $v['rent_fee'][$k]/4;
+                    }elseif ($v['rent_period'] == 4){
+                        $rent_fee_pre_week = $v['rent_fee'][$k]/13;
+                    }elseif ($v['rent_period'] == 5){
+                        $rent_fee_pre_week = $v['rent_fee'][$k]/26;
+                    }elseif ($v['rent_period'] == 6){
+                        $rent_fee_pre_week = $v['rent_fee'][$k]/52;
                     }
                     $data = [
                         'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
@@ -636,23 +636,26 @@ class HouseService extends CommonService
                         'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                         'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
                         'hospital'              => @$input['hospital']?$input['hospital']:$rent_house_info->hospital,
-                        'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,
-                        'room_name'             => @$input['room_name'][$k]?$input['room_name'][$k]:$rent_house_info->room_name,
-                        'room_description'      => @$input['room_description'][$k]?$input['room_description'][$k]:$rent_house_info->room_description,
-                        'bed_no'                => @$input['bed_no'][$k]?$input['room_description'][$k]:$rent_house_info->room_description,
-                        'shower_room'           => @$input['shower_room'][$k]?$input['shower_room'][$k]:$rent_house_info->shower_room,
-                        'require_renter'        => @$input['require_renter'][$k]?$input['require_renter'][$k]:$rent_house_info->require_renter,
-                        'room_short_words'      => @$input['room_short_words'][$k]?implode(',',$input['room_short_words'][$k]):$rent_house_info->room_short_words,
-                        'rent_period'           => @$input['rent_period'][$k]?$input['rent_period'][$k]:$rent_house_info->rent_period,
-                        'rent_fee'              => @$input['rent_fee'][$k]?$input['rent_fee'][$k]:$rent_house_info->rent_fee,
+                        /*'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,*/
+                        'room_name'             => @$v['room_name']?$v['room_name']:$rent_house_info->room_name,
+                        'room_description'      => @$v['room_description']?$v['room_description']:$rent_house_info->room_description,
+                        'bed_no'                => @$v['bed_no']?$input['bed_no']:$rent_house_info->bed_no,
+                        'shower_room'           => @$v['shower_room']?$v['shower_room']:$rent_house_info->shower_room,
+                        'require_renter'        => @$v['require_renter']?$v['require_renter']:$rent_house_info->require_renter,
+                        'room_short_words'      => @$v['room_short_words']?implode(',',$v['room_short_words']):$rent_house_info->room_short_words,
+                        'rent_period'           => @$v['rent_period']?$v['rent_period']:$rent_house_info->rent_period,
+                        'rent_fee'              => @$v['rent_fee']?$v['rent_fee']:$rent_house_info->rent_fee,
                         'rent_fee_pre_week'     => @$rent_fee_pre_week,
-                        'least_rent_time'       => @$input['least_rent_time'][$k]?$input['least_rent_time'][$k]:$rent_house_info->least_rent_time,
-                        'least_rent_method'     => @$input['least_rent_method'][$k]?$input['least_rent_method'][$k]:$rent_house_info->least_rent_method,
-                        'pre_rent'              => @$input['pre_rent'][$k]?$input['pre_rent'][$k]:$rent_house_info->pre_rent,
-                        'pre_rent_fee'          => @$input['pre_rent_fee'][$k]?$input['pre_rent_fee'][$k]:$rent_house_info->pre_rent_fee,
-                        'margin_rent'           => @$input['margin_rent'][$k]?$input['margin_rent'][$k]:$rent_house_info->margin_rent,
-                        'margin_rent_fee'       => @$input['margin_rent_fee'][$k]?$input['margin_rent_fee'][$k]:$rent_house_info->margin_rent_fee,
-                        'total_need_fee'        => @$input['total_need_fee'][$k]?$input['total_need_fee'][$k]:$rent_house_info->total_need_fee,
+                        'least_rent_time'       => @$v['least_rent_time']?$v['least_rent_time']:$rent_house_info->least_rent_time,
+                        'least_rent_method'     => @$v['least_rent_method']?$v['least_rent_method']:$rent_house_info->least_rent_method,
+                        'pre_rent'              => @$v['pre_rent']?$v['pre_rent']:$rent_house_info->pre_rent,
+                        'pre_rent_fee'          => @$v['pre_rent_fee']?$v['pre_rent_fee']:$rent_house_info->pre_rent_fee,
+                        'margin_rent'           => @$v['margin_rent']?$v['margin_rent']:$rent_house_info->margin_rent,
+                        'margin_rent_fee'       => @$v['margin_rent_fee']?$v['margin_rent_fee']:$rent_house_info->margin_rent_fee,
+                        'total_need_fee'        => @$v['total_need_fee']?$v['total_need_fee']:$rent_house_info->total_need_fee,
+                        'can_party'             => @$input['can_party']?$input['can_party']:$rent_house_info->can_party,
+                        'can_pet'               => @$input['can_pet']?$input['can_pet']:$rent_house_info->cna_pet,
+                        'can_smoke'             => @$input['can_smoke']?$input['can_smoke']:$rent_house_info->can_smoke,
                         'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
                         'is_put'                => 1,
                         'updated_at'            => date('Y-m-d H:i:s',time()),
