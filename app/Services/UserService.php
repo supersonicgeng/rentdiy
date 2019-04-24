@@ -443,7 +443,7 @@ class UserService extends CommonService
         if($user_info->phone){
             return $this->error('2','you account already have a phone');
         }
-        $phone = $input['phone'];
+        $phone = $input['account'];
         if(\App\Model\User::where('phone',$phone)->first()){
             return $this->error('3','this phone already register');
         }
@@ -474,7 +474,7 @@ class UserService extends CommonService
         if($user_info->e_mail){
             return $this->error('2','you account already have a phone');
         }
-        $e_mail = $input['e_mail'];
+        $e_mail = $input['account'];
         if(\App\Model\User::where('e_mail',$e_mail)->first()){
             return $this->error('3','this phone already register');
         }
