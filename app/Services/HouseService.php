@@ -208,8 +208,8 @@ class HouseService extends CommonService
                         $error += 1;
                     }else{
                         // 添加图片
-                        $rent_pic = $input['house_pic'][$k];
-                        foreach ($rent_pic as $key=> $value){
+                        /*$rent_pic = $input['house_pic'][$k];*/
+                        foreach ($v['house_pic'] as $key=> $value){
                             $pic_data = [
                                 'rent_house_id' => $rent_house_id,
                                 'house_pic'     => $value,
@@ -667,8 +667,8 @@ class HouseService extends CommonService
                         // 删除之前图片
                         RentPic::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
                         // 添加图片
-                        $rent_pic = $input['house_pic'][$k];
-                        foreach ($rent_pic as $key=> $value){
+                        /*$rent_pic = $input['house_pic'][$k];*/
+                        foreach ($v['house_pic'] as $key=> $value){
                             $pic_data = [
                                 'rent_house_id' => $v,
                                 'house_pic'     => $value,
