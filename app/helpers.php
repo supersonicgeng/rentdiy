@@ -23,7 +23,11 @@ function tenementId()
     return $tenement_id;
 }
 
-
+function providersId()
+{
+    $landlord_id = 'pro'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    return $landlord_id;
+}
 
 function landlordId()
 {

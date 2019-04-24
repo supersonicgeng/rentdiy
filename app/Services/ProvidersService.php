@@ -30,6 +30,7 @@ use App\Model\ProvidersCompanyPic;
 use App\Model\ProvidersCompanyPromoPic;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
+use App\Model\ServiceIntroduce;
 use App\Model\SignLog;
 use App\Model\SysSign;
 use App\Model\Tenement;
@@ -66,14 +67,15 @@ class ProvidersService extends CommonService
             }else{
                 $provider_data = [
                     'user_id'       => $input['user_id'],
+                    'providers_sn'  => providersId(),
                     'headimg'       => $input['headimg'],
                     'service_name'  => $input['service_name'],
                     'jobs'          => $input['jobs'],
                     'first_name'    => $input['first_name'],
                     'middle_name'   => $input['middle_name'],
                     'last_name'     => $input['last_name'],
-                    'tex_no'        => $input['tex_no'],
-                    'tel'           => $input['tel'],
+                    'tax_no'        => $input['tax_no'],
+                    'mobile'        => $input['mobile'],
                     'phone'         => $input['phone'],
                     'email'         => $input['email'],
                     'address'       => $input['address'],
@@ -115,6 +117,21 @@ class ProvidersService extends CommonService
                             $error += 1;
                         }
                     }
+                    $service_introduce = $input['service_introduce'];
+                    foreach ($service_introduce as $key => $value){
+                        $service_introduce_data = [
+                            'service_id'    => $res,
+                            'service_name'  => $value['service_name'],
+                            'price'         => $value['price'],
+                            'is_gts'        => $value['is_gts'],
+                            'details'       => $value['details'],
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $service_introduce_res = ServiceIntroduce::insert($service_introduce_data);
+                        if(!$service_introduce_res){
+                            $error += 1;
+                        }
+                    }
                     if(!$error){
                         return $this->success('provider information add success');
                     }else{
@@ -127,7 +144,7 @@ class ProvidersService extends CommonService
 
 
     /**
-     * @description:房东增加房东信息
+     * @description:房东编辑房东信息
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -152,8 +169,8 @@ class ProvidersService extends CommonService
                     'first_name'    => @$input['first_name']?$input['first_name']:$provider_info->first_name,
                     'middle_name'   => @$input['middle_name']?$input['middle_name']:$provider_info->middle_name,
                     'last_name'     => @$input['last_name']?$input['last_name']:$provider_info->last_name,
-                    'tex_no'        => @$input['tex_no']?$input['tex_no']:$provider_info->tex_no,
-                    'tel'           => @$input['tel']?$input['tel']:$provider_info->tel,
+                    'tax_no'        => @$input['tax_no']?$input['tax_no']:$provider_info->tax_no,
+                    'mobile'        => @$input['mobile']?$input['mobile']:$provider_info->mobile,
                     'phone'         => @$input['phone']?$input['phone']:$provider_info->phone,
                     'email'         => @$input['email']?$input['email']:$provider_info->email,
                     'address'       => @$input['address']?$input['address']:$provider_info->address,
@@ -173,6 +190,7 @@ class ProvidersService extends CommonService
                     static $error = 0;
                     ProvidersCompanyPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
                     ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
+                    ServiceIntroduce::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
                     $service_company_pic = $input['service_company_pic'];
                     foreach ($service_company_pic as $k => $v){
                         $service_company_pic_data = [
@@ -194,6 +212,21 @@ class ProvidersService extends CommonService
                         ];
                         $add_company_promo_res = ProvidersCompanyPromoPic::insert($service_company_promo_pic_data);
                         if(!$add_company_promo_res){
+                            $error += 1;
+                        }
+                    }
+                    $service_introduce = $input['service_introduce'];
+                    foreach ($service_introduce as $key => $value){
+                        $service_introduce_data = [
+                            'service_id'    => $res,
+                            'service_name'  => $value['service_name'],
+                            'price'         => $value['price'],
+                            'is_gts'        => $value['is_gts'],
+                            'details'       => $value['details'],
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $service_introduce_res = ServiceIntroduce::insert($service_introduce_data);
+                        if(!$service_introduce_res){
                             $error += 1;
                         }
                     }
