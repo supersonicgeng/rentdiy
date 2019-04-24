@@ -57,7 +57,7 @@ class ProvidersService extends CommonService
     public function addProvidersInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
@@ -154,7 +154,7 @@ class ProvidersService extends CommonService
     public function editProvidersInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
@@ -253,7 +253,7 @@ class ProvidersService extends CommonService
     public function getProvidersSelfList(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
@@ -278,7 +278,7 @@ class ProvidersService extends CommonService
     public function getProvidersInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
@@ -305,7 +305,7 @@ class ProvidersService extends CommonService
     public function deleteProvidersInformation(array $input)
     {
         //dd($input);
-        $user_info = User::where('id',$input['user_id'])->first();
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
