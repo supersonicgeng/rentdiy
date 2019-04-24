@@ -175,7 +175,7 @@ class HouseService extends CommonService
                         'address'               => $input['address'],
                         'lat'                   => $input['lat'],
                         'lon'                   => $input['lon'],
-                        'short_words'           => implode(',',$input['short_words']),
+                        /*'short_words'           => implode(',',$v['short_words']),*/
                         'bus_station'           => $input['bus_station'],
                         'school'                => $input['school'],
                         'supermarket'           => $input['supermarket'],
@@ -631,7 +631,7 @@ class HouseService extends CommonService
                         'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                         'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                         'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                        'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
+                        /*'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,*/
                         'bus_station'           => @$input['bus_station']?$input['bus_station']:$rent_house_info->bus_station,
                         'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                         'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
