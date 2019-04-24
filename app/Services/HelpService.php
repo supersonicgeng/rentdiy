@@ -74,7 +74,32 @@ class HelpService extends CommonService
      */
     public function sendPhoneVerify(array $input)
     {
-
+        $model = new Verify();
+        @$expire_time = $model->where('account',$input['account'])->where('verify_type',$input['verify_type'])->orderBy('id','desc')->first()->expire_time;
+        if(0 <strtotime($expire_time)-time() && strtotime($expire_time)-time() <10){
+            return $this->error('2','the verify is send to you email pls check your email');
+        }
+        // TODO 手机发送验证码
+        //$to = $input['account']; //接受验证码邮箱
+        $code = rand_string(4,1); //生成验证码
+        //将验证码信息存入verify表中
+        $data = [
+            'account'       => $input['account'],
+            'verify_type'   => $input['verify_type'],
+            'code'          => $code,
+            'verify_status' => 1,
+            'expire_time'   => date('Y-m-d H:i:s',time()+300),
+        ];
+        $res = Verify::insert($data);
+        if($res){
+            /*$subject = 'Verify mail';
+            Mail::send('email.verify',['code' => $code],function($code) use($to,$subject){
+                $code->to($to)->subject($subject);
+            });*/
+            return $this->success('verify_code send success',['code' => $code]);
+        }else{
+            return $this->error('3','send verify failed pls try again');
+        }
     }
 
 
