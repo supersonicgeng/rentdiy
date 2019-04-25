@@ -960,13 +960,17 @@ class HouseService extends CommonService
             'hospital','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
             'can_party','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
         if($res['rent_category'] == 1 || $res['rent_category'] == 4){
+            dump($res);
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
             $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic');
             $data = (array)$data;
+            dump($data);
             foreach ($data as $k => $v){
                 $datas[]['url'] = $v;
             }
+            dump($datas);
             $res['house_pic'] = $datas;
+            dd($res);
             return $this->success('get house info success',$res);
         }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
