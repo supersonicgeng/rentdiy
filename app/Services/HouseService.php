@@ -976,15 +976,14 @@ class HouseService extends CommonService
             foreach ($res['room_info'] as $key => $value){
                 $res['room_info'][$key]->room_short_words = explode(',',$value->room_short_words);
                 $data= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
-                dump($data);
                 $data = (array)$data;
                 foreach ($data as $k => $v){
                     $ress['room_info'][$key]['house_pic']['url'] = $v;
                 }
             }
-            dump($res['room_info']);
-            dd($ress);
             $res['room_info'] = $res['room_info']->toArray();
+            $res = array_merge($res,$ress);
+            dd($res);
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house list failed');
