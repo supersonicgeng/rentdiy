@@ -971,6 +971,7 @@ class HouseService extends CommonService
             $res['room_info'] = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','bed_no','bus_station','school','supermarket',
                 'hospital','room_name','room_description','shower_room','bed_no','require_renter','room_short_words', 'rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
                 'can_party','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
+            dd($res['room_info']);
             foreach ($res['room_info'] as $key => $value){
                 $res['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);
                 $data= RentPic::where('rent_house_id',$value['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
