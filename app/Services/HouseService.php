@@ -977,13 +977,13 @@ class HouseService extends CommonService
                 $res['room_info'][$key]->room_short_words = explode(',',$value->room_short_words);
                 $data= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
                 dump($data);
-                $info = json_decode($value['house_pic']['url'],true);//定义一个中间变量，操作这个变量，结果赋值给$list[$key]['info']
-                foreach($info as $k =>$i){
-                    $info[$k]= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->select('house_pic')->toArray();
+                $data = (array)$data;
+                foreach ($data as $k => $v){
+                    $ress['room_info'][$key]['house_pic']['url'] = $v;
                 }
-                $res[$key]['house_pic']['url'] = $info;
             }
             dump($res['room_info']);
+            dd($ress);
             $res['room_info'] = $res['room_info']->toArray();
             return $this->success('get house info success',$res);
         }else{
