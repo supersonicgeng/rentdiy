@@ -966,7 +966,7 @@ class HouseService extends CommonService
             $data = (array)$data;
             dump($data);
             foreach ($data as $k => $v){
-                $datas[]['url'] = $v;
+                $datas[$k]['url'] = $v;
             }
             dump($datas);
             $res['house_pic'] = $datas;
