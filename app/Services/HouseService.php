@@ -961,7 +961,7 @@ class HouseService extends CommonService
             'can_party','can_pet','can_smoke','other_rule','rent_method')->first();
         if($res['rent_category'] == 1 || $res['rent_category'] == 4){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
-            $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
+            $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic');
             $data = (array)$data;
             foreach ($data as $k => $v){
                 $data['house_pic']['url'] = $v;
@@ -972,7 +972,7 @@ class HouseService extends CommonService
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
             $res['room_info'] = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','bed_no','bus_station','school','supermarket',
                 'hospital','room_name','room_description','shower_room','bed_no','require_renter','room_short_words', 'rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
-                'can_party','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
+                'can_party','can_pet','can_smoke','other_rule','rent_method')->get();
             $res['room_info'] = (array)$res['room_info'];
             foreach ($res['room_info'] as $key => $value){
                 $ress['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);
@@ -984,7 +984,7 @@ class HouseService extends CommonService
                 $res['room_info'][$key]['room_short_words'] = $ress['room_info'][$key]['room_short_words'];
                 $res['room_info'][$key]['house_pic']['url'] = $ress['room_info'][$key]['house_pic']['url'];
             }
-
+            $res['room_info'] = $res['room_info']->toArray();
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house list failed');
