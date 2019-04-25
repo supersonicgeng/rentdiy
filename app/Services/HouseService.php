@@ -955,7 +955,7 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $user_id = $input['user_id'];
         $group_id = $input['group_id'];
-        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_rent','short_words',
+        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_renter','short_words',
             'actual_area','building_area','parking_no','garage_no','insurance_company','insurance_start_time','insurance_end_time','address','District','TA','Region','lat','lon','bus_station','school','supermarket',
             'hospital','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
             'can_party','can_pet','can_smoke','other_rule','rent_method')->first();
