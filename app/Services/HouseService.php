@@ -980,7 +980,7 @@ class HouseService extends CommonService
                 foreach ($data as $k => $v){
                     $datas['url'][] = $v;
                 }
-                $res['room_info'][$key]['house_pic'] = $datas
+                $res['room_info'][$key]['house_pic'] = $datas;
             }
             return $this->success('get house info success',$res);
         }else{
