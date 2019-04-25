@@ -425,7 +425,7 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $rent_house_id = $input['rent_house_id'];
-        $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->first()->toArray();
+        $res = $model->where('id',$rent_house_id)->select('group_id','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->first();
         if($res){
             $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
             $res['short_words'] = explode(',',$res['short_words']);
@@ -595,109 +595,210 @@ class HouseService extends CommonService
                     return $this->error('2','rent_house_list edit failed, Pls try again');
                 }
             }elseif ($rent_category == 2 || $rent_category == 3){ // 新建分租/室友房屋主档
-                $rent_house_id = $input['rent_house_id'];
+                $room_info = $input['room_info'];
                 static $error = 0;
-                foreach ($rent_house_id as $k => $v){
-                    $rent_house_info = $model->where('id',$v)->first();
-                    if($v['rent_period'] == 1){
-                        $rent_fee_pre_week = $v['rent_fee'][$k]*7;
-                    }elseif ($v['rent_period'] == 2){
-                        $rent_fee_pre_week = $v['rent_fee'][$k];
-                    }elseif ($v['rent_period'] == 3){
-                        $rent_fee_pre_week = $v['rent_fee'][$k]/4;
-                    }elseif ($v['rent_period'] == 4){
-                        $rent_fee_pre_week = $v['rent_fee'][$k]/13;
-                    }elseif ($v['rent_period'] == 5){
-                        $rent_fee_pre_week = $v['rent_fee'][$k]/26;
-                    }elseif ($v['rent_period'] == 6){
-                        $rent_fee_pre_week = $v['rent_fee'][$k]/52;
-                    }
-                    $data = [
-                        'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
-                        'details'               => @$input['details']?$input['details']:$rent_house_info->details,
-                        'property_type'         => @$input['property_type']?$input['property_type']:$rent_house_info->property_type,
-                        'bathroom_no'           => @$input['bathroom_no']?$input['bathroom_no']:$rent_house_info->bathroom_no,
-                        'bedroom_no'            => @$input['bedroom_no']?$input['bedroom_no']:$rent_house_info->bedroom_no,
-                        'building_area'         => @$input['building_area']?$input['building_area']:$rent_house_info->building_area,
-                        'actual_area'           => @$input['actual_area']?$input['actual_area']:$rent_house_info->actual_area,
-                        'parking_no'            => @$input['parking_no']?$input['parking_no']:$rent_house_info->packing_no,
-                        'garage_no'             => @$input['garage_no']?$input['garage_no']:$rent_house_info->garage_no,
-                        'insurance_company'     => @$input['insurance_company']?$input['insurance_company']:$rent_house_info->insurance_company,
-                        'insurance_start_time'  => @$input['insurance_start_time']?$input['insurance_start_time']:$rent_house_info->insurance_start_time,
-                        'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
-                        'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
-                        'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
-                        'District'              => @$input['District']?$input['District']:$rent_house_info->District,
-                        'address'               => @$input['address']?$input['address']:$rent_house_info->address,
-                        'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
-                        'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                        /*'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,*/
-                        'bus_station'           => @$v['bus_station']?$v['bus_station']:$rent_house_info->bus_station,
-                        'school'                => @$v['school']?$v['school']:$rent_house_info->school,
-                        'supermarket'           => @$v['supermarket']?$v['supermarket']:$rent_house_info->supermarket,
-                        'hospital'              => @$v['hospital']?$v['hospital']:$rent_house_info->hospital,
-                        /*'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,*/
-                        'room_name'             => @$v['room_name']?$v['room_name']:$rent_house_info->room_name,
-                        'room_description'      => @$v['room_description']?$v['room_description']:$rent_house_info->room_description,
-                        'bed_no'                => @$v['bed_no']?$input['bed_no']:$rent_house_info->bed_no,
-                        'shower_room'           => @$v['shower_room']?$v['shower_room']:$rent_house_info->shower_room,
-                        'require_renter'        => @$v['require_renter']?$v['require_renter']:$rent_house_info->require_renter,
-                        'room_short_words'      => @$v['room_short_words']?implode(',',$v['room_short_words']):$rent_house_info->room_short_words,
-                        'rent_period'           => @$v['rent_period']?$v['rent_period']:$rent_house_info->rent_period,
-                        'rent_fee'              => @$v['rent_fee']?$v['rent_fee']:$rent_house_info->rent_fee,
-                        'rent_fee_pre_week'     => @$rent_fee_pre_week,
-                        'least_rent_time'       => @$v['least_rent_time']?$v['least_rent_time']:$rent_house_info->least_rent_time,
-                        'least_rent_method'     => @$v['least_rent_method']?$v['least_rent_method']:$rent_house_info->least_rent_method,
-                        'pre_rent'              => @$v['pre_rent']?$v['pre_rent']:$rent_house_info->pre_rent,
-                        'pre_rent_fee'          => @$v['pre_rent_fee']?$v['pre_rent_fee']:$rent_house_info->pre_rent_fee,
-                        'margin_rent'           => @$v['margin_rent']?$v['margin_rent']:$rent_house_info->margin_rent,
-                        'margin_rent_fee'       => @$v['margin_rent_fee']?$v['margin_rent_fee']:$rent_house_info->margin_rent_fee,
-                        'total_need_fee'        => @$v['total_need_fee']?$v['total_need_fee']:$rent_house_info->total_need_fee,
-                        'can_party'             => @$input['can_party']?$input['can_party']:$rent_house_info->can_party,
-                        'can_pet'               => @$input['can_pet']?$input['can_pet']:$rent_house_info->cna_pet,
-                        'can_smoke'             => @$input['can_smoke']?$input['can_smoke']:$rent_house_info->can_smoke,
-                        'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
-                        'is_put'                => 1,
-                        'updated_at'            => date('Y-m-d H:i:s',time()),
-                    ]; // 房屋主档数据
-                    $res = $model->where('id',$v)->update($data); //获取房屋主档id
-                    if(!$res){ // 没有修改主档成功
-                        $error += 1;
+                foreach ($room_info as $k => $v){
+                    if(isset($v['rent_house_id'])){
+                        $rent_house_info = $model->where('id',$v['rent_house_id'])->first();
+                        if($v['rent_period'] == 1){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]*7;
+                        }elseif ($v['rent_period'] == 2){
+                            $rent_fee_pre_week = $v['rent_fee'][$k];
+                        }elseif ($v['rent_period'] == 3){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/4;
+                        }elseif ($v['rent_period'] == 4){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/13;
+                        }elseif ($v['rent_period'] == 5){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/26;
+                        }elseif ($v['rent_period'] == 6){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/52;
+                        }
+                        $data = [
+                            'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
+                            'details'               => @$input['details']?$input['details']:$rent_house_info->details,
+                            'property_type'         => @$input['property_type']?$input['property_type']:$rent_house_info->property_type,
+                            'bathroom_no'           => @$input['bathroom_no']?$input['bathroom_no']:$rent_house_info->bathroom_no,
+                            'bedroom_no'            => @$input['bedroom_no']?$input['bedroom_no']:$rent_house_info->bedroom_no,
+                            'building_area'         => @$input['building_area']?$input['building_area']:$rent_house_info->building_area,
+                            'actual_area'           => @$input['actual_area']?$input['actual_area']:$rent_house_info->actual_area,
+                            'parking_no'            => @$input['parking_no']?$input['parking_no']:$rent_house_info->packing_no,
+                            'garage_no'             => @$input['garage_no']?$input['garage_no']:$rent_house_info->garage_no,
+                            'insurance_company'     => @$input['insurance_company']?$input['insurance_company']:$rent_house_info->insurance_company,
+                            'insurance_start_time'  => @$input['insurance_start_time']?$input['insurance_start_time']:$rent_house_info->insurance_start_time,
+                            'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
+                            'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
+                            'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
+                            'District'              => @$input['District']?$input['District']:$rent_house_info->District,
+                            'address'               => @$input['address']?$input['address']:$rent_house_info->address,
+                            'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
+                            'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
+                            /*'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,*/
+                            'bus_station'           => @$v['bus_station']?$v['bus_station']:$rent_house_info->bus_station,
+                            'school'                => @$v['school']?$v['school']:$rent_house_info->school,
+                            'supermarket'           => @$v['supermarket']?$v['supermarket']:$rent_house_info->supermarket,
+                            'hospital'              => @$v['hospital']?$v['hospital']:$rent_house_info->hospital,
+                            /*'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,*/
+                            'room_name'             => @$v['room_name']?$v['room_name']:$rent_house_info->room_name,
+                            'room_description'      => @$v['room_description']?$v['room_description']:$rent_house_info->room_description,
+                            'bed_no'                => @$v['bed_no']?$input['bed_no']:$rent_house_info->bed_no,
+                            'shower_room'           => @$v['shower_room']?$v['shower_room']:$rent_house_info->shower_room,
+                            'require_renter'        => @$v['require_renter']?$v['require_renter']:$rent_house_info->require_renter,
+                            'room_short_words'      => @$v['room_short_words']?implode(',',$v['room_short_words']):$rent_house_info->room_short_words,
+                            'rent_period'           => @$v['rent_period']?$v['rent_period']:$rent_house_info->rent_period,
+                            'rent_fee'              => @$v['rent_fee']?$v['rent_fee']:$rent_house_info->rent_fee,
+                            'rent_fee_pre_week'     => @$rent_fee_pre_week,
+                            'least_rent_time'       => @$v['least_rent_time']?$v['least_rent_time']:$rent_house_info->least_rent_time,
+                            'least_rent_method'     => @$v['least_rent_method']?$v['least_rent_method']:$rent_house_info->least_rent_method,
+                            'pre_rent'              => @$v['pre_rent']?$v['pre_rent']:$rent_house_info->pre_rent,
+                            'pre_rent_fee'          => @$v['pre_rent_fee']?$v['pre_rent_fee']:$rent_house_info->pre_rent_fee,
+                            'margin_rent'           => @$v['margin_rent']?$v['margin_rent']:$rent_house_info->margin_rent,
+                            'margin_rent_fee'       => @$v['margin_rent_fee']?$v['margin_rent_fee']:$rent_house_info->margin_rent_fee,
+                            'total_need_fee'        => @$v['total_need_fee']?$v['total_need_fee']:$rent_house_info->total_need_fee,
+                            'can_party'             => @$input['can_party']?$input['can_party']:$rent_house_info->can_party,
+                            'can_pet'               => @$input['can_pet']?$input['can_pet']:$rent_house_info->cna_pet,
+                            'can_smoke'             => @$input['can_smoke']?$input['can_smoke']:$rent_house_info->can_smoke,
+                            'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
+                            'is_put'                => 1,
+                            'updated_at'            => date('Y-m-d H:i:s',time()),
+                        ]; // 房屋主档数据
+                        $res = $model->where('id',$v)->update($data); //获取房屋主档id
+                        if(!$res){ // 没有修改主档成功
+                            $error += 1;
+                        }else{
+                            // 删除之前图片
+                            RentPic::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
+                            // 添加图片
+                            /*$rent_pic = $input['house_pic'][$k];*/
+                            foreach ($v['house_pic'] as $key=> $value){
+                                $pic_data = [
+                                    'rent_house_id' => $v,
+                                    'house_pic'     => $value,
+                                    'created_at'    => date('Y-m-d H:i:s',time()),
+                                ];
+                                $res = RentPic::insert($pic_data);
+                                if(!$res){ // 没有添加图片成功
+                                    $error +=1;
+                                }
+                            }
+                            // 删除之前联系人
+                            RentContact::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
+                            // 添加联系人
+                            $contact_info = $input['contact_info'];
+                            foreach ($contact_info as $key => $value){
+                                $contact_data = [
+                                    'rent_house_id' => $input['rent_house_id'],
+                                    'contact_name'  => $value['contact_name'],
+                                    'contact_role'  => $value['contact_role'],
+                                    'e_mail'        => $value['e_mail'],
+                                    'phone'         => $value['phone'],
+                                    'created_at'    => date('Y-m-d H:i:s',time()),
+                                ];
+                                $res = RentContact::insert($contact_data);
+                                if(!$res){
+                                    $error +=1;
+                                }
+                            }
+                        }
                     }else{
-                        // 删除之前图片
-                        RentPic::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
-                        // 添加图片
-                        /*$rent_pic = $input['house_pic'][$k];*/
-                        foreach ($v['house_pic'] as $key=> $value){
-                            $pic_data = [
-                                'rent_house_id' => $v,
-                                'house_pic'     => $value,
-                                'created_at'    => date('Y-m-d H:i:s',time()),
-                            ];
-                            $res = RentPic::insert($pic_data);
-                            if(!$res){ // 没有添加图片成功
-                                $error +=1;
-                            }
+                        if($v['rent_period'] == 1){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]*7;
+                        }elseif ($v['rent_period'] == 2){
+                            $rent_fee_pre_week = $v['rent_fee'][$k];
+                        }elseif ($v['rent_period'] == 3){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/4;
+                        }elseif ($v['rent_period'] == 4){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/13;
+                        }elseif ($v['rent_period'] == 5){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/26;
+                        }elseif ($v['rent_period'] == 6){
+                            $rent_fee_pre_week = $v['rent_fee'][$k]/52;
                         }
-                        // 删除之前联系人
-                        RentContact::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
-                        // 添加联系人
-                        $contact_info = $input['contact_info'];
-                        foreach ($contact_info as $key => $value){
-                            $contact_data = [
-                                'rent_house_id' => $input['rent_house_id'],
-                                'contact_name'  => $value['contact_name'],
-                                'contact_role'  => $value['contact_role'],
-                                'e_mail'        => $value['e_mail'],
-                                'phone'         => $value['phone'],
-                                'created_at'    => date('Y-m-d H:i:s',time()),
-                            ];
-                            $res = RentContact::insert($contact_data);
-                            if(!$res){
-                                $error +=1;
+                        $rent_house_info = $model->where('id',$input['rent_house_id'])->first();
+                        $data = [
+                            'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
+                            'details'               => @$input['details']?$input['details']:$rent_house_info->details,
+                            'property_type'         => @$input['property_type']?$input['property_type']:$rent_house_info->property_type,
+                            'bathroom_no'           => @$input['bathroom_no']?$input['bathroom_no']:$rent_house_info->bathroom_no,
+                            'bedroom_no'            => @$input['bedroom_no']?$input['bedroom_no']:$rent_house_info->bedroom_no,
+                            'building_area'         => @$input['building_area']?$input['building_area']:$rent_house_info->building_area,
+                            'actual_area'           => @$input['actual_area']?$input['actual_area']:$rent_house_info->actual_area,
+                            'parking_no'            => @$input['parking_no']?$input['parking_no']:$rent_house_info->packing_no,
+                            'garage_no'             => @$input['garage_no']?$input['garage_no']:$rent_house_info->garage_no,
+                            'insurance_company'     => @$input['insurance_company']?$input['insurance_company']:$rent_house_info->insurance_company,
+                            'insurance_start_time'  => @$input['insurance_start_time']?$input['insurance_start_time']:$rent_house_info->insurance_start_time,
+                            'insurance_end_time'    => @$input['insurance_end_time']?$input['insurance_end_time']:$rent_house_info->insurance_end_time,
+                            'Region'                => @$input['Region']?$input['Region']:$rent_house_info->Region,
+                            'TA'                    => @$input['TA']?$input['TA']:$rent_house_info->TA,
+                            'District'              => @$input['District']?$input['District']:$rent_house_info->District,
+                            'address'               => @$input['address']?$input['address']:$rent_house_info->address,
+                            'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
+                            'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
+                            /*'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,*/
+                            'bus_station'           => @$v['bus_station']?$v['bus_station']:$rent_house_info->bus_station,
+                            'school'                => @$v['school']?$v['school']:$rent_house_info->school,
+                            'supermarket'           => @$v['supermarket']?$v['supermarket']:$rent_house_info->supermarket,
+                            'hospital'              => @$v['hospital']?$v['hospital']:$rent_house_info->hospital,
+                            /*'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,*/
+                            'room_name'             => @$v['room_name']?$v['room_name']:$rent_house_info->room_name,
+                            'room_description'      => @$v['room_description']?$v['room_description']:$rent_house_info->room_description,
+                            'bed_no'                => @$v['bed_no']?$input['bed_no']:$rent_house_info->bed_no,
+                            'shower_room'           => @$v['shower_room']?$v['shower_room']:$rent_house_info->shower_room,
+                            'require_renter'        => @$v['require_renter']?$v['require_renter']:$rent_house_info->require_renter,
+                            'room_short_words'      => @$v['room_short_words']?implode(',',$v['room_short_words']):$rent_house_info->room_short_words,
+                            'rent_period'           => @$v['rent_period']?$v['rent_period']:$rent_house_info->rent_period,
+                            'rent_fee'              => @$v['rent_fee']?$v['rent_fee']:$rent_house_info->rent_fee,
+                            'rent_fee_pre_week'     => @$rent_fee_pre_week,
+                            'least_rent_time'       => @$v['least_rent_time']?$v['least_rent_time']:$rent_house_info->least_rent_time,
+                            'least_rent_method'     => @$v['least_rent_method']?$v['least_rent_method']:$rent_house_info->least_rent_method,
+                            'pre_rent'              => @$v['pre_rent']?$v['pre_rent']:$rent_house_info->pre_rent,
+                            'pre_rent_fee'          => @$v['pre_rent_fee']?$v['pre_rent_fee']:$rent_house_info->pre_rent_fee,
+                            'margin_rent'           => @$v['margin_rent']?$v['margin_rent']:$rent_house_info->margin_rent,
+                            'margin_rent_fee'       => @$v['margin_rent_fee']?$v['margin_rent_fee']:$rent_house_info->margin_rent_fee,
+                            'total_need_fee'        => @$v['total_need_fee']?$v['total_need_fee']:$rent_house_info->total_need_fee,
+                            'can_party'             => @$input['can_party']?$input['can_party']:$rent_house_info->can_party,
+                            'can_pet'               => @$input['can_pet']?$input['can_pet']:$rent_house_info->cna_pet,
+                            'can_smoke'             => @$input['can_smoke']?$input['can_smoke']:$rent_house_info->can_smoke,
+                            'other_rule'            => @$input['other_rule']?$input['other_rule']:$rent_house_info->other_rule,
+                            'is_put'                => 1,
+                            'updated_at'            => date('Y-m-d H:i:s',time()),
+                        ]; // 房屋主档数据
+                        $res = $model->insertGetId($data); //获取房屋主档id
+                        if(!$res){ // 没有修改主档成功
+                            $error += 1;
+                        }else{
+
+                            /*$rent_pic = $input['house_pic'][$k];*/
+                            foreach ($v['house_pic'] as $key=> $value){
+                                $pic_data = [
+                                    'rent_house_id' => $v,
+                                    'house_pic'     => $value,
+                                    'created_at'    => date('Y-m-d H:i:s',time()),
+                                ];
+                                $res = RentPic::insert($pic_data);
+                                if(!$res){ // 没有添加图片成功
+                                    $error +=1;
+                                }
+                            }
+                            // 添加联系人
+                            $contact_info = $input['contact_info'];
+                            foreach ($contact_info as $key => $value){
+                                $contact_data = [
+                                    'rent_house_id' => $input['rent_house_id'],
+                                    'contact_name'  => $value['contact_name'],
+                                    'contact_role'  => $value['contact_role'],
+                                    'e_mail'        => $value['e_mail'],
+                                    'phone'         => $value['phone'],
+                                    'created_at'    => date('Y-m-d H:i:s',time()),
+                                ];
+                                $res = RentContact::insert($contact_data);
+                                if(!$res){
+                                    $error +=1;
+                                }
                             }
                         }
                     }
+                    // 删除不要的房屋主档
+                    $delete_rent_house_id = $input['delete_rent_house_id'];
 
                 }
                 if(!$error){
@@ -854,7 +955,10 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $user_id = $input['user_id'];
         $group_id = $input['group_id'];
-        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->get()->toArray();
+        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->select('id as rent_house_id','group_id','rent_category','propert_name','room_name','details','room_description','shower_room','property_type','bathroom_type','bathroom_no','bedroom_no','bed_no','require_rent','short_words',
+            'actual_area','building_area','parking_no','garage_no','insurance_company','insurance_start_time','insurance_end_time','address','District','TA','Region','lat','lon','bus_station','school','supermarket',
+            'hospital','business_equip','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
+            'can_party','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();
