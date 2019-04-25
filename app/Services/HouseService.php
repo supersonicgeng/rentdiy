@@ -977,7 +977,6 @@ class HouseService extends CommonService
                 /*$res['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);*/
                 $data= RentPic::where('rent_house_id',$value['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
                 $data = (array)$data;
-                dd($data);
                 foreach ($data as $k => $v){
                     $res['room_info'][$key]['house_pic']['url'][] = $v;
                 }
