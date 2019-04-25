@@ -964,9 +964,9 @@ class HouseService extends CommonService
             $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic');
             $data = (array)$data;
             foreach ($data as $k => $v){
-                $data['house_pic']['url'][] = $v;
+                $datas['url'][] = $v;
             }
-            $res['house_pic']['url'] = $data['house_pic']['url'];
+            $res['house_pic'] = $datas;
             return $this->success('get house info success',$res);
         }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
@@ -978,8 +978,9 @@ class HouseService extends CommonService
                 $data= RentPic::where('rent_house_id',$value['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
                 $data = (array)$data;
                 foreach ($data as $k => $v){
-                    $res['room_info'][$key]['house_pic']['url'][] = $v;
+                    $datas['url'][] = $v;
                 }
+                $res['room_info'][$key]['house_pic'] = $datas
             }
             return $this->success('get house info success',$res);
         }else{
