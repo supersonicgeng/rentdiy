@@ -975,14 +975,13 @@ class HouseService extends CommonService
                 'can_party','can_pet','can_smoke','other_rule','rent_method')->get();
             foreach ($res['room_info'] as $key => $value){
                 $res['room_info'][$key]->room_short_words = explode(',',$value->room_short_words);
-               /* $data= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
+                $data= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
                 $data = (array)$data;
                 foreach ($data as $k => $v){
                     $ress['room_info'][$key]['house_pic']['url'] = $v;
                 }
-                $res['room_info'][$key]['house_pic']['url'] = $ress['room_info'][$key]['house_pic']['url'];*/
+                $res['room_info'][$key]->house_pic->url = $ress['room_info'][$key]['house_pic']['url'];
             }
-            dd($res['room_info']);
             $res['room_info'] = $res['room_info']->toArray();
             return $this->success('get house info success',$res);
         }else{
