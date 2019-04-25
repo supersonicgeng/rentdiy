@@ -958,7 +958,7 @@ class HouseService extends CommonService
         $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_renter','short_words',
             'actual_area','building_area','parking_no','garage_no','insurance_company','insurance_start_time','insurance_end_time','address','District','TA','Region','lat','lon','bus_station','school','supermarket',
             'hospital','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
-            'can_party','can_pet','can_smoke','other_rule','rent_method')->first();
+            'can_party','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
         if($res['rent_category'] == 1 || $res['rent_category'] == 4){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
             $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic');
@@ -978,11 +978,10 @@ class HouseService extends CommonService
                 $data= RentPic::where('rent_house_id',$value->rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
                 $data = (array)$data;
                 foreach ($data as $k => $v){
-                    $ress['room_info'][$key]['house_pic']['url'] = $v;
+                    $res['room_info'][$key]['house_pic']['url'] = $v;
                 }
             }
             $res['room_info'] = $res['room_info']->toArray();
-            $res = array_merge($res,$ress);
             dd($res);
             return $this->success('get house info success',$res);
         }else{
