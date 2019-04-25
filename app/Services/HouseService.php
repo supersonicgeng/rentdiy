@@ -985,7 +985,6 @@ class HouseService extends CommonService
             }
             dump($res['room_info']);
             $res['room_info'] = $res['room_info']->toArray();
-            $res['room_info'][]['house_pic']['url']
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house list failed');
