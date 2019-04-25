@@ -472,7 +472,7 @@ class UserService extends CommonService
         $user_id = $input['user_id'];
         $user_info = \App\Model\User::where('id',$user_id)->first();
         if($user_info->e_mail){
-            return $this->error('2','you account already have a phone');
+            return $this->error('2','you account already have a email');
         }
         $e_mail = $input['account'];
         if(\App\Model\User::where('e_mail',$e_mail)->first()){
