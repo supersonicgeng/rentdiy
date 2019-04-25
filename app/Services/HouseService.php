@@ -955,14 +955,22 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $user_id = $input['user_id'];
         $group_id = $input['group_id'];
-        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_renter','short_words',
+        $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_renter','short_words',
             'actual_area','building_area','parking_no','garage_no','insurance_company','insurance_start_time','insurance_end_time','address','District','TA','Region','lat','lon','bus_station','school','supermarket',
             'hospital','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
-            'can_party','can_pet','can_smoke','other_rule','rent_method')->first();
-        dd($res);
-        if($res){
-            foreach ($res as $k => $v){
-                $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();
+            'can_party','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
+        if($res['rent_category'] == 1 || $res['rent_category'] == 4){
+            $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
+            $res['house_pic'] = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
+            return $this->success('get house info success',$res);
+        }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
+            $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
+            $res['room_info'] = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','bed_no','bus_station','school','supermarket',
+                'hospital','room_name','room_description','shower_room','bed_no','require_renter','room_short_words', 'rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
+                'can_party','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
+            foreach ($res['room_info'] as $k => $v){
+                $res['room_info'][$k]['room_short_words'] = explode(',',$v['room_short_words']);
+                $res['room_info'][$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
             }
             return $this->success('get house info success',$res);
         }else{
