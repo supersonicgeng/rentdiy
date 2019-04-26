@@ -965,7 +965,7 @@ class HouseService extends CommonService
             foreach ($data as $k => $v){
                 $datas[]['url'] = $v;
             }
-            $res['house_pic'] = $datas;
+            $res['house_pic'] = @$datas;
             $res['short_words'] = explode(',',$res['short_words']);
             return $this->success('get house info success',$res);
         }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
@@ -981,7 +981,7 @@ class HouseService extends CommonService
                 foreach ($data as $k => $v){
                     $datas[]['url'] = $v;
                 }
-                $res['room_info'][$key]['house_pic'] = $datas;
+                $res['room_info'][$key]['house_pic'] = @$datas;
             }
             return $this->success('get house info success',$res);
         }else{
