@@ -980,7 +980,9 @@ class HouseService extends CommonService
                 }
             }
             $res['house_pic'] = @$datas;
-            $res['short_words'] = explode(',',$res['short_words']);
+            if($res['rent_category'] == 1){
+                $res['short_words'] = explode(',',$res['short_words']);
+            }
             return $this->success('get house info success',$res);
         }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->select('contact_name','contact_role','e_mail','phone')->get()->toArray()?RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->select('contact_name','contact_role','e_mail','phone')->get()->toArray():[];
