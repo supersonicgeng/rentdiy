@@ -556,7 +556,7 @@ class HouseService extends CommonService
                 ]; // 房屋主档数据
                 $res = $model->where('id',$input['rent_house_id'])->update($data); //获取房屋主档id
                 // 删除之前图片
-                RentPic::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                RentPic::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加图片
                 $rent_pic = $input['house_pic'];
                 static $error = 0;
@@ -573,7 +573,7 @@ class HouseService extends CommonService
                 }
                 // 添加联系人
                 // 删除之前联系人
-                RentContact::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                RentContact::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 $contact_info = $input['contact_info'];
                 foreach ($contact_info as $key => $value){
                     $contact_data = [
@@ -666,7 +666,7 @@ class HouseService extends CommonService
                             $error += 1;
                         }else{
                             // 删除之前图片
-                            RentPic::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
+                            RentPic::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                             // 添加图片
                             /*$rent_pic = $input['house_pic'][$k];*/
                             foreach ($v['house_pic'] as $key=> $value){
@@ -681,7 +681,7 @@ class HouseService extends CommonService
                                 }
                             }
                             // 删除之前联系人
-                            RentContact::where('rent_house_id',$v)->update('deleted_at',date('Y-m-d H:i:s',time()));
+                            RentContact::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                             // 添加联系人
                             $contact_info = $input['contact_info'];
                             foreach ($contact_info as $key => $value){
@@ -840,7 +840,7 @@ class HouseService extends CommonService
                 ]; // 房屋主档数据
                 $res = $model->where('id',$input['rent_house_id'])->update($data); //获取房屋主档id
                 // 删除之前图片
-                RentPic::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                RentPic::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加图片
                 $rent_pic = $input['house_pic'];
                 static $error = 0;
@@ -857,7 +857,7 @@ class HouseService extends CommonService
                 }
                 // 添加联系人
                 // 删除之前联系人
-                RentContact::where('rent_house_id',$input['rent_house_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                RentContact::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 $contact_info = $input['contact_info'];
                 foreach ($contact_info as $key => $value){
                     $contact_data = [
@@ -1006,7 +1006,7 @@ class HouseService extends CommonService
         $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->get()->toArray();
         if($res){
             foreach ($res as $k => $v){
-                RentPic::where('rent_house_id',$v['id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                RentPic::where('rent_house_id',$v['id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
             }
             $model->where('user_id',$user_id)->where('group_id',$group_id)->update('deleted_at',date('Y-m-d H:i:s',time()));
             return $this->success('delete house info success',$res);
