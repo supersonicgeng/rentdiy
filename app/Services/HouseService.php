@@ -836,6 +836,7 @@ class HouseService extends CommonService
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
                     'short_words'           => @$input['short_words']?$input['short_words']:$rent_house_info->short_words,
                     'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,
+                    'least_rent_time'       => @$input['least_rent_time']?$input['least_rent_time']:$rent_house_info->least_rent_time,
                     'rent_period'           => @$input['rent_period']?$input['rent_period']:$rent_house_info->rent_period,
                     'rent_fee'              => @$input['rent_fee']?$input['rent_fee']:$rent_house_info->rent_fee,
                     'rent_least_fee'        => @$input['rent_least_fee']?$input['rent_least_fee']:$rent_house_info->rent_least_fee,
