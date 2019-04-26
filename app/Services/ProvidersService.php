@@ -259,6 +259,7 @@ class ProvidersService extends CommonService
         }else{
             $provider_list = Providers::where('user_id',$input['user_id'])->where('deleted_at',null)->get()->toArray();
             foreach ($provider_list as $k => $v){
+                $provider_list[$k]['jobs'] = explode(',',$provider_list[$k]['jobs']);
                 $provider_list[$k]['service_company_pic'] = ProvidersCompanyPic::where('service_id',$v['id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
                 $provider_list[$k]['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$v['id'])->where('deleted_at',null)->pluck('company_promo_pic')->toArray(); // 公司图片
                 $provider_list[$k]['service_introduce'] = ServiceIntroduce::where('service_id',$v['id'])->where('deleted_at',null)->get()->toArray(); // 公司图片
@@ -291,6 +292,7 @@ class ProvidersService extends CommonService
             if(!$provider_info){
                 return $this->error('3','you not add a  providers information');
             }else{
+                $provider_info['jobs'] = explode(',',$provider_info['jobs']);
                 $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
                 $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
                 $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$input['service_id'])->where('deleted_at',null)->get()->toArray();
