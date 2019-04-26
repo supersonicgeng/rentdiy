@@ -560,33 +560,37 @@ class HouseService extends CommonService
                 // 添加图片
                 $rent_pic = $input['house_pic'];
                 static $error = 0;
-                foreach ($rent_pic as $k => $v){
-                    $pic_data = [
-                        'rent_house_id' => $input['rent_house_id'],
-                        'house_pic'     => $v,
-                        'created_at'    => date('Y-m-d H:i:s',time()),
-                    ];
-                    $res = RentPic::insert($pic_data);
-                    if(!$res){
-                        $error +=1;
+                if($rent_pic){
+                    foreach ($rent_pic as $k => $v){
+                        $pic_data = [
+                            'rent_house_id' => $input['rent_house_id'],
+                            'house_pic'     => $v,
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $res = RentPic::insert($pic_data);
+                        if(!$res){
+                            $error +=1;
+                        }
                     }
                 }
                 // 添加联系人
                 // 删除之前联系人
                 RentContact::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 $contact_info = $input['contact_info'];
-                foreach ($contact_info as $key => $value){
-                    $contact_data = [
-                        'rent_house_id' => $input['rent_house_id'],
-                        'contact_name'  => $value['contact_name'],
-                        'contact_role'  => $value['contact_role'],
-                        'e_mail'        => $value['e_mail'],
-                        'phone'         => $value['phone'],
-                        'created_at'    => date('Y-m-d H:i:s',time()),
-                    ];
-                    $res = RentContact::insert($contact_data);
-                    if(!$res){
-                        $error +=1;
+                if($contact_info){
+                    foreach ($contact_info as $key => $value){
+                        $contact_data = [
+                            'rent_house_id' => $input['rent_house_id'],
+                            'contact_name'  => $value['contact_name'],
+                            'contact_role'  => $value['contact_role'],
+                            'e_mail'        => $value['e_mail'],
+                            'phone'         => $value['phone'],
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $res = RentContact::insert($contact_data);
+                        if(!$res){
+                            $error +=1;
+                        }
                     }
                 }
                 if($res && !$error){
@@ -781,18 +785,20 @@ class HouseService extends CommonService
                             }
                             // 添加联系人
                             $contact_info = $input['contact_info'];
-                            foreach ($contact_info as $key => $value){
-                                $contact_data = [
-                                    'rent_house_id' => $input['rent_house_id'],
-                                    'contact_name'  => $value['contact_name'],
-                                    'contact_role'  => $value['contact_role'],
-                                    'e_mail'        => $value['e_mail'],
-                                    'phone'         => $value['phone'],
-                                    'created_at'    => date('Y-m-d H:i:s',time()),
-                                ];
-                                $res = RentContact::insert($contact_data);
-                                if(!$res){
-                                    $error +=1;
+                            if($contact_info){
+                                foreach ($contact_info as $key => $value){
+                                    $contact_data = [
+                                        'rent_house_id' => $input['rent_house_id'],
+                                        'contact_name'  => $value['contact_name'],
+                                        'contact_role'  => $value['contact_role'],
+                                        'e_mail'        => $value['e_mail'],
+                                        'phone'         => $value['phone'],
+                                        'created_at'    => date('Y-m-d H:i:s',time()),
+                                    ];
+                                    $res = RentContact::insert($contact_data);
+                                    if(!$res){
+                                        $error +=1;
+                                    }
                                 }
                             }
                         }
@@ -844,33 +850,37 @@ class HouseService extends CommonService
                 // 添加图片
                 $rent_pic = $input['house_pic'];
                 static $error = 0;
-                foreach ($rent_pic as $k => $v){
-                    $pic_data = [
-                        'rent_house_id' => $input['rent_house_id'],
-                        'house_pic'     => $v,
-                        'created_at'    => date('Y-m-d H:i:s',time()),
-                    ];
-                    $res = RentPic::insert($pic_data);
-                    if(!$res){
-                        $error +=1;
+                if($rent_pic){
+                    foreach ($rent_pic as $k => $v){
+                        $pic_data = [
+                            'rent_house_id' => $input['rent_house_id'],
+                            'house_pic'     => $v,
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $res = RentPic::insert($pic_data);
+                        if(!$res){
+                            $error +=1;
+                        }
                     }
                 }
                 // 添加联系人
                 // 删除之前联系人
                 RentContact::where('rent_house_id',$input['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                 $contact_info = $input['contact_info'];
-                foreach ($contact_info as $key => $value){
-                    $contact_data = [
-                        'rent_house_id' => $input['rent_house_id'],
-                        'contact_name'  => $value['contact_name'],
-                        'contact_role'  => $value['contact_role'],
-                        'e_mail'        => $value['e_mail'],
-                        'phone'         => $value['phone'],
-                        'created_at'    => date('Y-m-d H:i:s',time()),
-                    ];
-                    $res = RentContact::insert($contact_data);
-                    if(!$res){
-                        $error +=1;
+                if($contact_info){
+                    foreach ($contact_info as $key => $value){
+                        $contact_data = [
+                            'rent_house_id' => $input['rent_house_id'],
+                            'contact_name'  => $value['contact_name'],
+                            'contact_role'  => $value['contact_role'],
+                            'e_mail'        => $value['e_mail'],
+                            'phone'         => $value['phone'],
+                            'created_at'    => date('Y-m-d H:i:s',time()),
+                        ];
+                        $res = RentContact::insert($contact_data);
+                        if(!$res){
+                            $error +=1;
+                        }
                     }
                 }
                 if($res && !$error){
