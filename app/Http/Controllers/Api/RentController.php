@@ -30,7 +30,7 @@ class RentController extends CommonController
      */
     public function outRentApplicationAdd(Request $request)
     {
-        return service('Rent')->outRentApplication($request->all());
+        return service('Rent')->outRentApplicationAdd($request->all());
     }
 
     /**
@@ -137,5 +137,32 @@ class RentController extends CommonController
     public function rentContactAdd(Request $request)
     {
         return service('Rent')->rentContactAdd($request->all());
+    }
+
+    /**
+     * @description:租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactList(Request $request)
+    {
+        return service('Rent')->rentContactList($request->all());
+    }
+
+
+    /**
+     * @description:租约详细
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactDetail(Request $request)
+    {
+        return service('Rent')->rentContactDetail($request->all());
     }
 }
