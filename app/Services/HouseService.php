@@ -962,8 +962,12 @@ class HouseService extends CommonService
         if($res['rent_category'] == 1 || $res['rent_category'] == 4){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->get()->toArray();
             $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
-            foreach ($data as $k => $v){
-                $datas[]['url'] = $v;
+            if(!$data){
+                $datas = [];
+            }else{
+                foreach ($data as $k => $v){
+                    $datas[]['url'] = $v;
+                }
             }
             $res['house_pic'] = @$datas;
             $res['short_words'] = explode(',',$res['short_words']);
@@ -977,9 +981,12 @@ class HouseService extends CommonService
             foreach ($res['room_info'] as $key => $value){
                 $res['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);
                 $data= RentPic::where('rent_house_id',$value['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
-                $data = (array)$data;
-                foreach ($data as $k => $v){
-                    $datas[]['url'] = $v;
+                if(!$data){
+                    $datas = [];
+                }else{
+                    foreach ($data as $k => $v){
+                        $datas[]['url'] = $v;
+                    }
                 }
                 $res['room_info'][$key]['house_pic'] = @$datas;
             }
