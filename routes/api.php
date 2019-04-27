@@ -49,7 +49,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     });
     // 租赁市场
     $router->group(['prefix' => 'house'], function (Router $router){
-        $router->post('houseList', 'HouseController@getHouseList'); // 房屋主档列表  // 接口 done
+        $router->post('houseList', 'HouseController@houseList'); // 房屋主档列表  // 接口 done
         $router->post('houseDetail','HouseController@houseDetail'); // 房屋主档具体信息 // 接口 done
     });
     // 操作员模块
@@ -80,6 +80,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('getHouseGroupDetail','HouseController@getHouseGroupDetail'); // 获得房屋主档信息 房东编辑用 3.25
         $router->post('editHouseList', 'HouseController@editHouseList'); // 修改房屋主档 3.22 // 接口done
         $router->post('deleteHouseList', 'HouseController@deleteHouseList'); // 删除房屋主档 3.27
+        $router->post('addWatchList', 'HouseController@addWatchList'); // 租户增加看房收藏 4.27 // 接口done
+        $router->post('deleteWatchList', 'HouseController@deleteWatchList'); // 租户取消看房收藏 4.27 // 接口done
+        $router->post('getHouseList','HouseController@getHouseList'); // 租户获得房屋主档信息列表 4.27 // 接口done
+        $router->post('getWatchList','HouseController@getWatchList'); // 租户获得关注主档信息列表 4.27 // 接口done
     });
     // 租房系统
     $router->group(['prefix' => 'rent'], function (Router $router){
@@ -113,10 +117,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {
-        $router->post('addProvidersInformation', 'ProvidersController@addProvidersInformation'); // 添加服务商主体 3.21
-        $router->post('getProvidersSelfList', 'ProvidersController@getProvidersSelfList'); // 获得服务商主体列表 3.25
-        $router->post('getProvidersInformation', 'ProvidersController@getProvidersInformation'); // 获得房东联系人信息 3.25
-        $router->post('editProvidersInformation', 'ProvidersController@editProvidersInformation'); // 修改服务商主体 3.22
+        $router->post('addProvidersInformation', 'ProvidersController@addProvidersInformation'); // 添加服务商主体 3.21 // 接口done
+        $router->post('getProvidersSelfList', 'ProvidersController@getProvidersSelfList'); // 获得服务商主体列表 3.25 // 接口done
+        $router->post('getProvidersInformation', 'ProvidersController@getProvidersInformation'); // 获得房东联系人信息 3.25 // 接口done
+        $router->post('editProvidersInformation', 'ProvidersController@editProvidersInformation'); // 修改服务商主体 3.22 // 接口done
         $router->post('deleteProvidersInformation', 'ProvidersController@deleteProvidersInformation'); // 删除服务商主体 3.27
     });
     // 操作员管理
