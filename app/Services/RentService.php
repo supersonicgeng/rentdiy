@@ -13,10 +13,13 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\AliPay\AliPayClient;
 use App\Model\AliPay\AliPayTransfer;
+use App\Model\BusinessContract;
 use App\Model\CheckBuilding;
 use App\Model\Config;
+use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\EntireContract;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\OtherRentApplication;
@@ -27,10 +30,12 @@ use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Region;
 use App\Model\RentApplication;
+use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
+use App\Model\SeparateContract;
 use App\Model\SignLog;
 use App\Model\Survey;
 use App\Model\SysSign;
@@ -41,6 +46,7 @@ use App\Model\Verify;
 use App\Model\VerifyLog;
 use App\User;
 use Carbon\Carbon;
+use http\Env\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -129,15 +135,17 @@ class RentService extends CommonService
                 'leave_reason'          => $input['leave_reason'],
                 'current_landlord_name' => $input['current_landlord_name'],
                 'landlord_phone'        => $input['landlord_phone'],
+                'landlord_email'        => $input['landlord_email'],
                 'property_manager_name' => $input['property_manager_name'],
                 'manager_phone'         => $input['manager_phone'],
-                'manager_mobile'        => $input['manager_mobile'],
+                'manager_email'         => $input['manager_email'],
                 'inform_landlord'       => $input['inform_landlord'],
                 'driving_license'       => @$input['driving_license'],
                 'version_num'           => @$input['version_num'],
                 'passport'              => @$input['passport'],
                 'vehicle'               => @$input['vehicle'],
-                'others'                => @$input['others'],
+                'alternative'           => @$input['alternative'],
+                'model'                 => @$input['model'],
                 'work_situation'        => $input['work_situation'],
                 'company_name'          => $input['company_name'],
                 'job_title'             => $input['job_title'],
@@ -266,9 +274,10 @@ class RentService extends CommonService
                 'leave_reason'          => @$input['leave_reason']?$input['leave_reason']:$application_info->leave_reason,
                 'current_landlord_name' => @$input['current_landlord_name']?$input['current_landlord_name']:$application_info->current_landlord_name,
                 'landlord_phone'        => @$input['landlord_phone']?$input['landlord_phone']:$application_info->landlord_phone,
+                'landlord_email'        => @$input['landlord_email']?$input['landlord_email']:$application_info->landlord_email,
                 'property_manager_name' => @$input['property_manager_name']?$input['property_manager_name']:$application_info->property_manager_name,
                 'manager_phone'         => @$input['manager_phone']?$input['manager_phone']:$application_info->manager_phone,
-                'manager_mobile'        => @$input['manager_mobile']?$input['manager_mobile']:$application_info->manager_mobile,
+                'manager_email'         => @$input['manager_email']?$input['manager_email']:$application_info->manager_email,
                 'inform_landlord'       => @$input['inform_landlord']?$input['inform_landlord']:$application_info->inform_landlord,
                 'driving_license'       => @$input['driving_license']?$input['driving_license']:$application_info->driving_license,
                 'version_num'           => @$input['version_num']?$input['version_num']:$application_info->version_num,
@@ -476,6 +485,760 @@ class RentService extends CommonService
     public function rentContactAdd(array $input)
     {
         //dd($input);
+        $user_info = \App\Model\User::where('id', $input['user_id'])->first();
+        if (!$user_info->user_role % 2) {
+            return $this->error('2', 'this account is not a landlord role');
+        } else {
+            $model = new RentContract();
+            $contract_data = [
+                'contract_id'                   => contractId(),
+                'house_id'                      => $input['house_id'],
+                'landlord_id'                   => $input['landlord_id'],
+                'landlord_full_name'            => $input['landlord_full_name'],
+                'landlord_e_mail'               => $input['landlord_e_mail'],
+                'house_address'                 => $input['house_address'],
+                'landlord_mobile_phone'         => $input['landlord_mobile_phone'],
+                'landlord_telephone'            => $input['landlord_telephone'],
+                'landlord_hm'                   => $input['landlord_hm'],
+                'landlord_wk'                   => $input['landlord_wk'],
+                'landlord_other_address'        => $input['landlord_other_address'],
+                'landlord_additional_address'   => $input['landlord_additional_address'],
+                'landlord_wish'                 => $input['landlord_wish'],
+                'contract_type'                 => $input['contract_type'],
+                'created_at'                    => date('Y-m-d H:i:s', time())
+            ];
+            if ($input['contract_type'] == 1) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $entire_model = new EntireContract();
+                    $entire_data = [
+                        'contract_id'                               => $contract_res,
+                        'tenancy_address'                           => $input['tenancy_address'],
+                        'rent_per_week'                             => $input['rent_per_week'],
+                        'pay_method'                                => $input['pay_method'],
+                        'bond_amount'                               => $input['bond_amount'],
+                        'rent_to_be_paid_at'                        => $input['rent_to_be_paid_at'],
+                        'bank_account'                              => $input['bank_account'],
+                        'account_name'                              => $input['account_name'],
+                        'bank'                                      => $input['bank'],
+                        'branch'                                    => $input['branch'],
+                        'effective_date'                            => $input['effective_date'],
+                        'can_periodic_tenancy'                      => $input['can_periodic_tenancy'],
+                        'end_date'                                  => $input['end_date'],
+                        'rule'                                      => $input['rule'],
+                        'rule_upload_url'                           => $input['rule_upload_url'],
+                        'meter_readings'                            => $input['meter_readings'],
+                        'is_ceiling_insulation'                     => $input['is_ceiling_insulation'],
+                        'ceiling_insulation_detail'                 => $input['ceiling_insulation_detail'],
+                        'is_insulation_underfloor_insulation'       => $input['is_insulation_underfloor_insulation'],
+                        'insulation_underfloor_insulation_detail'   => $input['insulation_underfloor_insulation_detail'],
+                        'location_ceiling_insulation'               => $input['location_ceiling_insulation'],
+                        'location_ceiling_insulation_detail'        => $input['location_ceiling_insulation_detail'],
+                        'ceiling_insulation_type'                   => $input['ceiling_insulation_type'],
+                        'ceiling_insulation_type_detail'            => $input['ceiling_insulation_type_detail'],
+                        'R_value'                                   => $input['R_value'],
+                        'minimum_thickness'                         => $input['minimum_thickness'],
+                        'ceiling_insulation_age'                    => $input['ceiling_insulation_age'],
+                        'ceiling_insulation_condition'              => $input['ceiling_insulation_condition'],
+                        'ceiling_insulation_condition_reason'       => $input['ceiling_insulation_condition_reason'],
+                        'location_underfloor_insulation'            => $input['location_underfloor_insulation'],
+                        'location_underfloor_insulation_detail'     => $input['location_underfloor_insulation_detail'],
+                        'underfloor_insulation_type'                => $input['underfloor_insulation_type'],
+                        'underfloor_insulation_type_detail'         => $input['underfloor_insulation_type_detail'],
+                        'underfloor_R_value'                        => $input['underfloor_R_value'],
+                        'underfloor_minimum_thickness'              => $input['underfloor_minimum_thickness'],
+                        'condition'                                 => $input['condition'],
+                        'condition_detail'                          => $input['condition_detail'],
+                        'wall_insulation'                           => $input['wall_insulation'],
+                        'wall_insulation_detail'                    => $input['wall_insulation_detail'],
+                        'supplementary_information'                 => $input['supplementary_information'],
+                        'install_insulation'                        => $input['install_insulation'],
+                        'install_insulation_detail'                 => $input['install_insulation_detail'],
+                        'underfloor_insulation'                     => $input['underfloor_insulation'],
+                        'underfloor_insulation_detail'              => $input['underfloor_insulation_detail'],
+                        'last_upgraded'                             => $input['last_upgraded'],
+                        'professionally_assessed'                   => $input['professionally_assessed'],
+                        'plan'                                      => $input['plan'],
+                        'landlord_state'                            => $input['landlord_state'],
+                        'landlord_signature'                        => $input['landlord_signature'],
+                        'tenement_signature'                        => $input['tenement_signature'],
+                        'rent_end_date'                             => $input['rent_end_date'],
+                        'rent_fee'                                  => $input['rent_fee'],
+                        'created_at'                                => date('Y-m-d H:i:s', time()),
+                    ];
+                    $entire_res = $entire_model->insert($entire_data);
+                    if ($contract_tenement_res && $entire_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            } elseif ($input['contract_type'] == 2 || $input['contract_type'] == 3) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $separate_model = new SeparateContract();
+                    $separate_data = [
+                        'contract_id'                               => $contract_res,
+                        'agent_name'                                => $input['agent_name'],
+                        'agent_address'                             => $input['agent_address'],
+                        'agent_e_mail'                              => $input['agent_e_mail'],
+                        'agent_phone'                               => $input['agent_phone'],
+                        'agent_mobile'                              => $input['agent_mobile'],
+                        'agent_hm'                                  => $input['agent_hm'],
+                        'agent_wk'                                  => $input['agent_wk'],
+                        'agent_other_address'                       => $input['agent_other_address'],
+                        'agent_additional_address'                  => $input['agent_additional_address'],
+                        'tenancy_address'                           => $input['tenancy_address'],
+                        'rent_per_week'                             => $input['rent_per_week'],
+                        'is_house_rule'                             => $input['is_house_rule'],
+                        'is_fire'                                   => $input['is_fire'],
+                        'is_body'                                   => $input['is_body'],
+                        'pay_method'                                => $input['pay_method'],
+                        'bond_amount'                               => $input['bond_amount'],
+                        'to_be_paid'                                => $input['to_be_paid'],
+                        'rent_to_be_paid_at'                        => $input['rent_to_be_paid_at'],
+                        'bank_account'                              => $input['bank_account'],
+                        'account_name'                              => $input['account_name'],
+                        'bank'                                      => $input['bank'],
+                        'branch'                                    => $input['branch'],
+                        'agree_date'                                => $input['agree_date'],
+                        'intended'                                  => $input['intended'],
+                        'is_joint_tenancy'                          => $input['is_joint_tenancy'],
+                        'is_joint_tenancy_detail'                   => $input['is_joint_tenancy_detail'],
+                        'is_not_share'                              => $input['is_not_share'],
+                        'is_share_people'                           => $input['is_share_people'],
+                        'allow_service'                             => $input['allow_service'],
+                        'is_ceiling_insulation'                     => $input['is_ceiling_insulation'],
+                        'ceiling_insulation_detail'                 => $input['ceiling_insulation_detail'],
+                        'is_insulation_underfloor_insulation'       => $input['is_insulation_underfloor_insulation'],
+                        'insulation_underfloor_insulation_detail'   => $input['insulation_underfloor_insulation_detail'],
+                        'location_ceiling_insulation'               => $input['location_ceiling_insulation'],
+                        'location_ceiling_insulation_detail'        => $input['location_ceiling_insulation_detail'],
+                        'ceiling_insulation_type'                   => $input['ceiling_insulation_type'],
+                        'ceiling_insulation_type_detail'            => $input['ceiling_insulation_type_detail'],
+                        'R_value'                                   => $input['R_value'],
+                        'minimum_thickness'                         => $input['minimum_thickness'],
+                        'ceiling_insulation_age'                    => $input['ceiling_insulation_age'],
+                        'ceiling_insulation_condition'              => $input['ceiling_insulation_condition'],
+                        'ceiling_insulation_condition_reason'       => $input['ceiling_insulation_condition_reason'],
+                        'location_underfloor_insulation'            => $input['location_underfloor_insulation'],
+                        'location_underfloor_insulation_detail'     => $input['location_underfloor_insulation_detail'],
+                        'underfloor_insulation_type'                => $input['underfloor_insulation_type'],
+                        'underfloor_insulation_type_detail'         => $input['underfloor_insulation_type_detail'],
+                        'underfloor_R_value'                        => $input['underfloor_R_value'],
+                        'underfloor_minimum_thickness'              => $input['underfloor_minimum_thickness'],
+                        'condition'                                 => $input['condition'],
+                        'condition_detail'                          => $input['condition_detail'],
+                        'wall_insulation'                           => $input['wall_insulation'],
+                        'wall_insulation_detail'                    => $input['wall_insulation_detail'],
+                        'supplementary_information'                 => $input['supplementary_information'],
+                        'install_insulation'                        => $input['install_insulation'],
+                        'install_insulation_detail'                 => $input['install_insulation_detail'],
+                        'underfloor_insulation'                     => $input['underfloor_insulation'],
+                        'underfloor_insulation_detail'              => $input['underfloor_insulation_detail'],
+                        'last_upgraded'                             => $input['last_upgraded'],
+                        'professionally_assessed'                   => $input['professionally_assessed'],
+                        'plan'                                      => $input['plan'],
+                        'landlord_state'                            => $input['landlord_state'],
+                        'landlord_signature'                        => $input['landlord_signature'],
+                        'tenement_signature'                        => $input['tenement_signature'],
+                        'rent_end_date'                             => $input['rent_end_date'],
+                        'rent_fee'                                  => $input['rent_fee'],
+                        'created_at'                                => date('Y-m-d H:i:s', time()),
+                    ];
+                    $separate_res = $separate_model->insert($separate_data);
+                    if ($contract_tenement_res && $separate_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            }
+            elseif ($input['contract_type'] == 4 ) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $business_model = new BusinessContract();
+                    $business_data = [
+                        'contract_id'                           => $contract_res,
+                        'premises'                              => $input['premises'],
+                        'car_parks'                             => $input['car_parks'],
+                        'lease_term'                            => $input['lease_term'],
+                        'term_method'                           => $input['term_method'],
+                        'commencement_date'                     => $input['commencement_date'],
+                        'final_expiry_date'                     => $input['final_expiry_date'],
+                        'renewal_time'                          => $input['renewal_time'],
+                        'annual_rent'                           => $input['annual_rent'],
+                        'premises_pro'                          => $input['premises_pro'],
+                        'premises_gst'                          => $input['premises_gst'],
+                        'car_parks_pro'                         => $input['car_parks_pro'],
+                        'car_gst'                               => $input['car_gst'],
+                        'total'                                 => $input['total'],
+                        'total_gst'                             => $input['total_gst'],
+                        'month_rent'                            => $input['month_rent'],
+                        'rent_payment_date'                     => $input['rent_payment_date'],
+                        'day_each_month'                        => $input['day_each_month'],
+                        'market_rent_assessment_date'           => $input['market_rent_assessment_date'],
+                        'cpi_date'                              => $input['cpi_date'],
+                        'outgoing'                              => $input['outgoing'],
+                        'default_interest_rate'                 => $input['default_interest_rate'],
+                        'commercial_use'                        => $input['commercial_use'],
+                        'business_use'                          => $input['business_use'],
+                        'insurance'                             => $input['insurance'],
+                        'no_access_period'                      => $input['no_access_period'],
+                        'further_term'                          => $input['further_term'],
+                        'tax_apy_local'                         => $input['tax_apy_local'],
+                        'tax_apy_local_detail'                  => $input['tax_apy_local_detail'],
+                        'hydroelectric'                         => $input['hydroelectric'],
+                        'hydroelectric_detail'                  => $input['hydroelectric_detail'],
+                        'garbage_collection'                    => $input['garbage_collection'],
+                        'garbage_collection_detail'             => $input['garbage_collection_detail'],
+                        'fire_service'                          => $input['fire_service'],
+                        'fire_service_detail'                   => $input['fire_service_detail'],
+                        'insurance_excess'                      => $input['insurance_excess'],
+                        'insurance_excess_detail'               => $input['insurance_excess_detail'],
+                        'air_conditioning'                      => $input['air_conditioning'],
+                        'air_conditioning_detail'               => $input['air_conditioning_detail'],
+                        'provide_toilets'                       => $input['provide_toilets'],
+                        'provide_toilets_detail'                => $input['provide_toilets_detail'],
+                        'maintenance_cost_for_garden'           => $input['maintenance_cost_for_garden'],
+                        'maintenance_cost_for_garden_detail'    => $input['maintenance_cost_for_garden_detail'],
+                        'maintenance_cost_for_parks'            => $input['maintenance_cost_for_parks'],
+                        'maintenance_cost_for_parks_detail'     => $input['maintenance_cost_for_parks_detail'],
+                        'management_cost'                       => $input['management_cost'],
+                        'management_cost_detail'                => $input['management_cost_detail'],
+                        'incurred_cost'                         => $input['incurred_cost'],
+                        'incurred_cost_detail'                  => $input['incurred_cost_detail'],
+                        'fixtures_fittings'                     => $input['fixtures_fittings'],
+                        'fixtures_fittings_upload_url'          => $input['fixtures_fittings_upload_url'],
+                        'premises_condition'                    => $input['premises_condition'],
+                        'premises_condition_upload_url'         => $input['premises_condition_upload_url'],
+                        'notes'                                 => $input['notes'],
+                        'notes_upload_url'                      => $input['notes_upload_url'],
+                        'landlord_signature'                    => $input['landlord_signature'],
+                        'tenement_signature'                    => $input['tenement_signature'],
+                        'rent_end_date'                         => $input['rent_end_date'],
+                        'rent_fee'                              => $input['rent_fee'],
+                        'created_at'                            => date('Y-m-d H:i:s', time()),
+                    ];
+                    $business_res = $business_model->insert($business_data);
+                    if ($contract_tenement_res && $business_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            }
+        }
+    }
+
+    /**
+     * @description:租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role % 2){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $model = new RentContract();
+            $contact_status = @$input['contact_status'];
+            if($contact_status){
+                $model = $model->where('status',$contact_status);
+            }
+            $count = $model->count();
+            $page = $input['page'];
+            if($count < ($page-1)*10){
+                return $this->error('3','no contact');
+            }else{
+                $res = $model->offset(($page-1)*10)->limit(10)->get();
+                $res['total_page'] = ceil($count/10);
+                $res['current_page'] = $page;
+                return $this->success('get rent contract list success',$res);
+            }
+        }
+    }
+
+    /**
+     * @description:租约详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactDetail(array $input)
+    {
+        //dd($input);
+        $model = new RentContract();
+        $res = $model->where('id',$input['contract_id'])->first();
+        if($res->contract_contract_type == 1){
+            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
+                ->leftjoin('entire_contract','entire_contract.contract_id','=','id')->first();
+            if($res){
+                return $this->success('get contact success',$res);
+            }else{
+                return $this->error('2','get contact failed');
+            }
+        }elseif($res->contract_contract_type == 2){
+            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
+                ->leftjoin('separate_contract','separate_contract.contract_id','=','id')->first();
+            if($res){
+                return $this->success('get contact success',$res);
+            }else{
+                return $this->error('2','get contact failed');
+            }
+        }elseif($res->contract_contract_type == 3){
+            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
+                ->leftjoin('business_contract','business_contract.contract_id','=','id')->first();
+            if($res){
+                return $this->success('get contact success',$res);
+            }else{
+                return $this->error('2','get contact failed');
+            }
+        }
 
     }
+
+
+
+
+    /**
+     * @description:修改租约
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactEdit(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id', $input['user_id'])->first();
+        if (!$user_info->user_role % 2) {
+            return $this->error('2', 'this account is not a landlord role');
+        } else {
+            $model = new RentContract();
+            $contract_data = [
+                'contract_id'                   => contractId(),
+                'house_id'                      => $input['house_id'],
+                'landlord_id'                   => $input['landlord_id'],
+                'landlord_full_name'            => $input['landlord_full_name'],
+                'landlord_e_mail'               => $input['landlord_e_mail'],
+                'house_address'                 => $input['house_address'],
+                'landlord_mobile_phone'         => $input['landlord_mobile_phone'],
+                'landlord_telephone'            => $input['landlord_telephone'],
+                'landlord_hm'                   => $input['landlord_hm'],
+                'landlord_wk'                   => $input['landlord_wk'],
+                'landlord_other_address'        => $input['landlord_other_address'],
+                'landlord_additional_address'   => $input['landlord_additional_address'],
+                'landlord_wish'                 => $input['landlord_wish'],
+                'contract_type'                 => $input['contract_type'],
+                'created_at'                    => date('Y-m-d H:i:s', time())
+            ];
+            if ($input['contract_type'] == 1) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $entire_model = new EntireContract();
+                    $entire_data = [
+                        'contract_id'                               => $contract_res,
+                        'tenancy_address'                           => $input['tenancy_address'],
+                        'rent_per_week'                             => $input['rent_per_week'],
+                        'pay_method'                                => $input['pay_method'],
+                        'bond_amount'                               => $input['bond_amount'],
+                        'rent_to_be_paid_at'                        => $input['rent_to_be_paid_at'],
+                        'bank_account'                              => $input['bank_account'],
+                        'account_name'                              => $input['account_name'],
+                        'bank'                                      => $input['bank'],
+                        'branch'                                    => $input['branch'],
+                        'effective_date'                            => $input['effective_date'],
+                        'can_periodic_tenancy'                      => $input['can_periodic_tenancy'],
+                        'end_date'                                  => $input['end_date'],
+                        'rule'                                      => $input['rule'],
+                        'rule_upload_url'                           => $input['rule_upload_url'],
+                        'meter_readings'                            => $input['meter_readings'],
+                        'is_ceiling_insulation'                     => $input['is_ceiling_insulation'],
+                        'ceiling_insulation_detail'                 => $input['ceiling_insulation_detail'],
+                        'is_insulation_underfloor_insulation'       => $input['is_insulation_underfloor_insulation'],
+                        'insulation_underfloor_insulation_detail'   => $input['insulation_underfloor_insulation_detail'],
+                        'location_ceiling_insulation'               => $input['location_ceiling_insulation'],
+                        'location_ceiling_insulation_detail'        => $input['location_ceiling_insulation_detail'],
+                        'ceiling_insulation_type'                   => $input['ceiling_insulation_type'],
+                        'ceiling_insulation_type_detail'            => $input['ceiling_insulation_type_detail'],
+                        'R_value'                                   => $input['R_value'],
+                        'minimum_thickness'                         => $input['minimum_thickness'],
+                        'ceiling_insulation_age'                    => $input['ceiling_insulation_age'],
+                        'ceiling_insulation_condition'              => $input['ceiling_insulation_condition'],
+                        'ceiling_insulation_condition_reason'       => $input['ceiling_insulation_condition_reason'],
+                        'location_underfloor_insulation'            => $input['location_underfloor_insulation'],
+                        'location_underfloor_insulation_detail'     => $input['location_underfloor_insulation_detail'],
+                        'underfloor_insulation_type'                => $input['underfloor_insulation_type'],
+                        'underfloor_insulation_type_detail'         => $input['underfloor_insulation_type_detail'],
+                        'underfloor_R_value'                        => $input['underfloor_R_value'],
+                        'underfloor_minimum_thickness'              => $input['underfloor_minimum_thickness'],
+                        'condition'                                 => $input['condition'],
+                        'condition_detail'                          => $input['condition_detail'],
+                        'wall_insulation'                           => $input['wall_insulation'],
+                        'wall_insulation_detail'                    => $input['wall_insulation_detail'],
+                        'supplementary_information'                 => $input['supplementary_information'],
+                        'install_insulation'                        => $input['install_insulation'],
+                        'install_insulation_detail'                 => $input['install_insulation_detail'],
+                        'underfloor_insulation'                     => $input['underfloor_insulation'],
+                        'underfloor_insulation_detail'              => $input['underfloor_insulation_detail'],
+                        'last_upgraded'                             => $input['last_upgraded'],
+                        'professionally_assessed'                   => $input['professionally_assessed'],
+                        'plan'                                      => $input['plan'],
+                        'landlord_state'                            => $input['landlord_state'],
+                        'landlord_signature'                        => $input['landlord_signature'],
+                        'tenement_signature'                        => $input['tenement_signature'],
+                        'rent_end_date'                             => $input['rent_end_date'],
+                        'rent_fee'                                  => $input['rent_fee'],
+                        'created_at'                                => date('Y-m-d H:i:s', time()),
+                    ];
+                    $entire_res = $entire_model->insert($entire_data);
+                    if ($contract_tenement_res && $entire_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            } elseif ($input['contract_type'] == 2 || $input['contract_type'] == 3) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $separate_model = new SeparateContract();
+                    $separate_data = [
+                        'contract_id'                               => $contract_res,
+                        'agent_name'                                => $input['agent_name'],
+                        'agent_address'                             => $input['agent_address'],
+                        'agent_e_mail'                              => $input['agent_e_mail'],
+                        'agent_phone'                               => $input['agent_phone'],
+                        'agent_mobile'                              => $input['agent_mobile'],
+                        'agent_hm'                                  => $input['agent_hm'],
+                        'agent_wk'                                  => $input['agent_wk'],
+                        'agent_other_address'                       => $input['agent_other_address'],
+                        'agent_additional_address'                  => $input['agent_additional_address'],
+                        'tenancy_address'                           => $input['tenancy_address'],
+                        'rent_per_week'                             => $input['rent_per_week'],
+                        'is_house_rule'                             => $input['is_house_rule'],
+                        'is_fire'                                   => $input['is_fire'],
+                        'is_body'                                   => $input['is_body'],
+                        'pay_method'                                => $input['pay_method'],
+                        'bond_amount'                               => $input['bond_amount'],
+                        'to_be_paid'                                => $input['to_be_paid'],
+                        'rent_to_be_paid_at'                        => $input['rent_to_be_paid_at'],
+                        'bank_account'                              => $input['bank_account'],
+                        'account_name'                              => $input['account_name'],
+                        'bank'                                      => $input['bank'],
+                        'branch'                                    => $input['branch'],
+                        'agree_date'                                => $input['agree_date'],
+                        'intended'                                  => $input['intended'],
+                        'is_joint_tenancy'                          => $input['is_joint_tenancy'],
+                        'is_joint_tenancy_detail'                   => $input['is_joint_tenancy_detail'],
+                        'is_not_share'                              => $input['is_not_share'],
+                        'is_share_people'                           => $input['is_share_people'],
+                        'allow_service'                             => $input['allow_service'],
+                        'is_ceiling_insulation'                     => $input['is_ceiling_insulation'],
+                        'ceiling_insulation_detail'                 => $input['ceiling_insulation_detail'],
+                        'is_insulation_underfloor_insulation'       => $input['is_insulation_underfloor_insulation'],
+                        'insulation_underfloor_insulation_detail'   => $input['insulation_underfloor_insulation_detail'],
+                        'location_ceiling_insulation'               => $input['location_ceiling_insulation'],
+                        'location_ceiling_insulation_detail'        => $input['location_ceiling_insulation_detail'],
+                        'ceiling_insulation_type'                   => $input['ceiling_insulation_type'],
+                        'ceiling_insulation_type_detail'            => $input['ceiling_insulation_type_detail'],
+                        'R_value'                                   => $input['R_value'],
+                        'minimum_thickness'                         => $input['minimum_thickness'],
+                        'ceiling_insulation_age'                    => $input['ceiling_insulation_age'],
+                        'ceiling_insulation_condition'              => $input['ceiling_insulation_condition'],
+                        'ceiling_insulation_condition_reason'       => $input['ceiling_insulation_condition_reason'],
+                        'location_underfloor_insulation'            => $input['location_underfloor_insulation'],
+                        'location_underfloor_insulation_detail'     => $input['location_underfloor_insulation_detail'],
+                        'underfloor_insulation_type'                => $input['underfloor_insulation_type'],
+                        'underfloor_insulation_type_detail'         => $input['underfloor_insulation_type_detail'],
+                        'underfloor_R_value'                        => $input['underfloor_R_value'],
+                        'underfloor_minimum_thickness'              => $input['underfloor_minimum_thickness'],
+                        'condition'                                 => $input['condition'],
+                        'condition_detail'                          => $input['condition_detail'],
+                        'wall_insulation'                           => $input['wall_insulation'],
+                        'wall_insulation_detail'                    => $input['wall_insulation_detail'],
+                        'supplementary_information'                 => $input['supplementary_information'],
+                        'install_insulation'                        => $input['install_insulation'],
+                        'install_insulation_detail'                 => $input['install_insulation_detail'],
+                        'underfloor_insulation'                     => $input['underfloor_insulation'],
+                        'underfloor_insulation_detail'              => $input['underfloor_insulation_detail'],
+                        'last_upgraded'                             => $input['last_upgraded'],
+                        'professionally_assessed'                   => $input['professionally_assessed'],
+                        'plan'                                      => $input['plan'],
+                        'landlord_state'                            => $input['landlord_state'],
+                        'landlord_signature'                        => $input['landlord_signature'],
+                        'tenement_signature'                        => $input['tenement_signature'],
+                        'rent_end_date'                             => $input['rent_end_date'],
+                        'rent_fee'                                  => $input['rent_fee'],
+                        'created_at'                                => date('Y-m-d H:i:s', time()),
+                    ];
+                    $separate_res = $separate_model->insert($separate_data);
+                    if ($contract_tenement_res && $separate_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            }
+            elseif ($input['contract_type'] == 4 ) {
+                $contract_res = $model->insertGetId($contract_data);
+                if ($contract_res) {
+                    $contract_tenement_model = new ContractTenement();
+                    $contract_tenement_data = [
+                        'contract_id'               => $contract_res,
+                        'tenement_id'               => @$input['tenement_id'],
+                        'tenement_full_name'        => $input['tenement_full_name'],
+                        'identification_no'         => $input['identification_no'],
+                        'identification_type'       => $input['identification_type'],
+                        'service_physical_address'  => $input['service_physical_address'],
+                        'tenement_e_mail'           => $input['tenement_e_mail'],
+                        'tenement_phone'            => $input['tenement_phone'],
+                        'tenement_mobile'           => $input['tenement_mobile'],
+                        'tenement_hm'               => $input['tenement_hm'],
+                        'tenement_wk'               => $input['tenement_wk'],
+                        'tenement_post_address'     => $input['tenement_post_address'],
+                        'tenement_post_code'        => $input['tenement_post_code'],
+                        'tenement_service_address'  => $input['tenement_service_address'],
+                        'other_contact_address'     => $input['other_contact_address'],
+                        'additional_address'        => $input['additional_address'],
+                        'guarantor_name'            => $input['guarantor_name'],
+                        'occupation'                => $input['occupation'],
+                        'home_address'              => $input['home_address'],
+                        'guarantor_phone'           => $input['guarantor_phone'],
+                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
+                        'is_child'                  => $input['is_child'],
+                        'created_at'                => date('Y-d-m H:i:s', time()),
+                    ];
+                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    $business_model = new BusinessContract();
+                    $business_data = [
+                        'contract_id'                           => $contract_res,
+                        'premises'                              => $input['premises'],
+                        'car_parks'                             => $input['car_parks'],
+                        'lease_term'                            => $input['lease_term'],
+                        'term_method'                           => $input['term_method'],
+                        'commencement_date'                     => $input['commencement_date'],
+                        'final_expiry_date'                     => $input['final_expiry_date'],
+                        'renewal_time'                          => $input['renewal_time'],
+                        'annual_rent'                           => $input['annual_rent'],
+                        'premises_pro'                          => $input['premises_pro'],
+                        'premises_gst'                          => $input['premises_gst'],
+                        'car_parks_pro'                         => $input['car_parks_pro'],
+                        'car_gst'                               => $input['car_gst'],
+                        'total'                                 => $input['total'],
+                        'total_gst'                             => $input['total_gst'],
+                        'month_rent'                            => $input['month_rent'],
+                        'rent_payment_date'                     => $input['rent_payment_date'],
+                        'day_each_month'                        => $input['day_each_month'],
+                        'market_rent_assessment_date'           => $input['market_rent_assessment_date'],
+                        'cpi_date'                              => $input['cpi_date'],
+                        'outgoing'                              => $input['outgoing'],
+                        'default_interest_rate'                 => $input['default_interest_rate'],
+                        'commercial_use'                        => $input['commercial_use'],
+                        'business_use'                          => $input['business_use'],
+                        'insurance'                             => $input['insurance'],
+                        'no_access_period'                      => $input['no_access_period'],
+                        'further_term'                          => $input['further_term'],
+                        'tax_apy_local'                         => $input['tax_apy_local'],
+                        'tax_apy_local_detail'                  => $input['tax_apy_local_detail'],
+                        'hydroelectric'                         => $input['hydroelectric'],
+                        'hydroelectric_detail'                  => $input['hydroelectric_detail'],
+                        'garbage_collection'                    => $input['garbage_collection'],
+                        'garbage_collection_detail'             => $input['garbage_collection_detail'],
+                        'fire_service'                          => $input['fire_service'],
+                        'fire_service_detail'                   => $input['fire_service_detail'],
+                        'insurance_excess'                      => $input['insurance_excess'],
+                        'insurance_excess_detail'               => $input['insurance_excess_detail'],
+                        'air_conditioning'                      => $input['air_conditioning'],
+                        'air_conditioning_detail'               => $input['air_conditioning_detail'],
+                        'provide_toilets'                       => $input['provide_toilets'],
+                        'provide_toilets_detail'                => $input['provide_toilets_detail'],
+                        'maintenance_cost_for_garden'           => $input['maintenance_cost_for_garden'],
+                        'maintenance_cost_for_garden_detail'    => $input['maintenance_cost_for_garden_detail'],
+                        'maintenance_cost_for_parks'            => $input['maintenance_cost_for_parks'],
+                        'maintenance_cost_for_parks_detail'     => $input['maintenance_cost_for_parks_detail'],
+                        'management_cost'                       => $input['management_cost'],
+                        'management_cost_detail'                => $input['management_cost_detail'],
+                        'incurred_cost'                         => $input['incurred_cost'],
+                        'incurred_cost_detail'                  => $input['incurred_cost_detail'],
+                        'fixtures_fittings'                     => $input['fixtures_fittings'],
+                        'fixtures_fittings_upload_url'          => $input['fixtures_fittings_upload_url'],
+                        'premises_condition'                    => $input['premises_condition'],
+                        'premises_condition_upload_url'         => $input['premises_condition_upload_url'],
+                        'notes'                                 => $input['notes'],
+                        'notes_upload_url'                      => $input['notes_upload_url'],
+                        'landlord_signature'                    => $input['landlord_signature'],
+                        'tenement_signature'                    => $input['tenement_signature'],
+                        'rent_end_date'                         => $input['rent_end_date'],
+                        'rent_fee'                              => $input['rent_fee'],
+                        'created_at'                            => date('Y-m-d H:i:s', time()),
+                    ];
+                    $business_res = $business_model->insert($business_data);
+                    if ($contract_tenement_res && $business_res) {
+                        return $this->success('contract add success');
+                    } else {
+                        return $this->error('3', 'add contract failed');
+                    }
+                } else {
+                    return $this->error('3', 'add contract failed');
+                }
+            }
+        }
+    }
+
+
+
 }
