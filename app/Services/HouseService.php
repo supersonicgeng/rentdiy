@@ -602,7 +602,7 @@ class HouseService extends CommonService
                 $room_info = $input['room_info'];
                 static $error = 0;
                 foreach ($room_info as $k => $v){
-                    if(isset($v['rent_house_id'])){
+                    if($v['rent_house_id']){
                         $rent_house_info = $model->where('id',$v['rent_house_id'])->first();
                         if($v['rent_period'] == 1){
                             $rent_fee_pre_week = $v['rent_fee'][$k]*7;
@@ -805,7 +805,15 @@ class HouseService extends CommonService
                     }
                     // 删除不要的房屋主档
                     $delete_rent_house_id = $input['delete_rent_house_id'];
-
+                    foreach ($delete_rent_house_id as $key => $value){
+                        //
+                        $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res2 = RentPic::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res3 = RentContact::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        if(!$res1 || !$res2 || !$res3){
+                            $error += 1;
+                        }
+                    }
                 }
                 if(!$error){
                     return $this->success('rent_house_list edit succcess');
