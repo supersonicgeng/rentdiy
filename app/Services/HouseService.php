@@ -601,6 +601,9 @@ class HouseService extends CommonService
                 }
             }elseif ($rent_category == 2 || $rent_category == 3){ // 新建分租/室友房屋主档
                 $room_info = $input['room_info'];
+                if(!$room_info){
+                    return $this->error('3','you must have a room to be rented');
+                }
                 static $error = 0;
                 foreach ($room_info as $k => $v){
                     if($v['rent_house_id']){
@@ -804,17 +807,16 @@ class HouseService extends CommonService
                             }
                         }
                     }
-                    // 删除不要的房屋主档
-                    $delete_rent_house_id = $input['delete_rent_house_id'];
-                    foreach ($delete_rent_house_id as $key => $value){
-                        //
-                        dd($value);
-                        $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                        $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                        $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                        if(!$res1 || !$res2 || !$res3){
-                            $error += 1;
-                        }
+                }
+                // 删除不要的房屋主档
+                $delete_rent_house_id = $input['delete_rent_house_id'];
+                foreach ($delete_rent_house_id as $key => $value){
+                    //
+                    $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                    $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                    $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                    if(!$res1 || !$res2 || !$res3){
+                        $error += 1;
                     }
                 }
                 if(!$error){
