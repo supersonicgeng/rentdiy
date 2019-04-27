@@ -808,6 +808,7 @@ class HouseService extends CommonService
                     $delete_rent_house_id = $input['delete_rent_house_id'];
                     foreach ($delete_rent_house_id as $key => $value){
                         //
+                        dd($value);
                         $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                         $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                         $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
