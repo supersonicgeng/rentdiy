@@ -29,9 +29,9 @@ class HouseController extends CommonController
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHouseList(Request $request)
+    public function houseList(Request $request)
     {
-        return service('House')->getHouseList($request->all());
+        return service('House')->houseList($request->all());
     }
 
     /**
@@ -139,5 +139,58 @@ class HouseController extends CommonController
     public function deleteHouseList(Request $request)
     {
         return service('House')->deleteHouseList($request->all());
+    }
+
+
+    /**
+     * @description:租户增加看房收藏
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addWatchList(Request $request)
+    {
+        return service('House')->addWatchList($request->all());
+    }
+
+    /**
+     * @description:租户删除看房收藏
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteWatchList(Request $request)
+    {
+        return service('House')->deleteWatchList($request->all());
+    }
+
+    /**
+     * @description:获取房屋主档列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseList(Request $request)
+    {
+        return service('House')->getHouseList($request->all());
+    }
+
+    /**
+     * @description:获取关注主档列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWatchList(Request $request)
+    {
+        return service('House')->getWatchList($request->all());
     }
 }
