@@ -948,7 +948,6 @@ class HouseService extends CommonService
         $page = $input['page'];
         $count = $model->where('user_id',$user_id)->where('deleted_at',null)->groupBy('group_id')->get()->toArray();
         $count = count($count,0);
-        dd($count);
         if($count < ($page-1)*9){
             return $this->error('3','the page number is not right');
         }
