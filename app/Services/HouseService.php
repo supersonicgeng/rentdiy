@@ -11,6 +11,7 @@ namespace App\Services;
 
 
 use App\Lib\Util\QueryPager;
+use App\Model\HouseWatchList;
 use App\Model\Region;
 use App\Model\RentContact;
 use App\Model\RentHouse;
@@ -330,7 +331,7 @@ class HouseService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHouseList(array $input)
+    public function houseList(array $input)
     {
         $model = new RentHouse();
         $model = $model->where('is_put',2);
@@ -665,17 +666,17 @@ class HouseService extends CommonService
                             'is_put'                => 1,
                             'updated_at'            => date('Y-m-d H:i:s',time()),
                         ]; // 房屋主档数据
-                        $res = $model->where('id',$v)->update($data); //获取房屋主档id
+                        $res = $model->where('id',$v['rent_house_id'])->update($data); //获取房屋主档id
                         if(!$res){ // 没有修改主档成功
                             $error += 1;
                         }else{
                             // 删除之前图片
-                            RentPic::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                            RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                             // 添加图片
                             /*$rent_pic = $input['house_pic'][$k];*/
                             foreach ($v['house_pic'] as $key=> $value){
                                 $pic_data = [
-                                    'rent_house_id' => $v,
+                                    'rent_house_id' => $v['rent_house_id'],
                                     'house_pic'     => $value,
                                     'created_at'    => date('Y-m-d H:i:s',time()),
                                 ];
@@ -685,12 +686,12 @@ class HouseService extends CommonService
                                 }
                             }
                             // 删除之前联系人
-                            RentContact::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                            RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                             // 添加联系人
                             $contact_info = $input['contact_info'];
                             foreach ($contact_info as $key => $value){
                                 $contact_data = [
-                                    'rent_house_id' => $input['rent_house_id'],
+                                    'rent_house_id' => $v['rent_house_id'],
                                     'contact_name'  => $value['contact_name'],
                                     'contact_role'  => $value['contact_role'],
                                     'e_mail'        => $value['e_mail'],
@@ -774,7 +775,7 @@ class HouseService extends CommonService
                             /*$rent_pic = $input['house_pic'][$k];*/
                             foreach ($v['house_pic'] as $key=> $value){
                                 $pic_data = [
-                                    'rent_house_id' => $v,
+                                    'rent_house_id' => $v['rent_house_id'],
                                     'house_pic'     => $value,
                                     'created_at'    => date('Y-m-d H:i:s',time()),
                                 ];
@@ -788,7 +789,7 @@ class HouseService extends CommonService
                             if($contact_info){
                                 foreach ($contact_info as $key => $value){
                                     $contact_data = [
-                                        'rent_house_id' => $input['rent_house_id'],
+                                        'rent_house_id' => $v['rent_house_id'],
                                         'contact_name'  => $value['contact_name'],
                                         'contact_role'  => $value['contact_role'],
                                         'e_mail'        => $value['e_mail'],
@@ -808,8 +809,8 @@ class HouseService extends CommonService
                     foreach ($delete_rent_house_id as $key => $value){
                         //
                         $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                        $res2 = RentPic::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                        $res3 = RentContact::where('rent_house_id',$v)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                         if(!$res1 || !$res2 || !$res3){
                             $error += 1;
                         }
@@ -1040,6 +1041,134 @@ class HouseService extends CommonService
             return $this->success('delete house info success',$res);
         }else{
             return $this->error('2','delete house list failed');
+        }
+    }
+
+
+    /**
+     * @description:租户增加看房收藏
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addWatchList(array $input)
+    {
+        $model = new HouseWatchList();
+        $data = [
+            'tenement_id'   => $input['tenement_id'],
+            'rent_house_id' => $input['rent_house_id'],
+            'created_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->insert($data);
+        if($res){
+            return $this->success('add watch list success',$res);
+        }else{
+            return $this->error('2','add watch list failed');
+        }
+    }
+
+
+
+    /**
+     * @description:获得房屋主档列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseList(array $input)
+    {
+        $tenement_id = $input['tenement_id'];
+        $model = new RentHouse();
+        $model = $model->where('is_put',2);
+        $model = $model->where('rent_status',1);
+        // 房屋主档类型筛选
+        $rent_category = @$input['rent_category'];
+        if($rent_category){
+            $model = $model->where('rent_category',$rent_category);
+        }
+        // 地区筛选
+        $region = @$input['Region'];
+        $ta     = @$input['TA'];
+        $district   = @$input['District'];
+        if($district){
+            $model = $model->where('District',$district);
+        }elseif ($ta){
+            $model = $model->where('TA',$ta);
+        }elseif ($region){
+            $model = $model->where('Region',$region);
+        }
+        // 卧室筛选
+        $bedroom_least = @$input['bedroom_least'];
+        $bedroom_most  = @$input['bedroom_most'];
+        if($bedroom_least){
+            $model = $model->where('bedroom_no','>=',$bedroom_least);
+        }
+        if($bedroom_most){
+            $model = $model->where('bedroom_no','<=',$bedroom_most);
+        }
+        // 洗手间筛选
+        $bathroom_least = @$input['bathroom_least'];
+        $bathroom_most  = @$input['bathroom_most'];
+        if($bathroom_least){
+            $model = $model->where('bathroom_no','>=',$bathroom_least);
+        }
+        if($bathroom_most){
+            $model = $model->where('bathroom_no','<=',$bathroom_most);
+        }
+        // 租金筛选
+        $rent_fee_least = @$input['rent_fee_least'];
+        $rent_fee_most  = @$input['rent_fee_most'];
+        if($rent_fee_least){
+            $model = $model->where('rent_fee_pre_week','>=',$rent_fee_least);
+        }
+        if($rent_fee_most){
+            $model = $model->where('rent_fee_pre_week','>=',$rent_fee_least);
+        }
+        if($input['sort_order'] == 2){
+            $model = $model->orderBy('rent_fee_pre_week','desc');
+        }
+        if($input['show_method'] == 1){ // 列表
+            $offset = ($input['page']-1)*5;
+            $count = $model->count();
+            $total_page = ceil($count/5);
+            $res = $model->offset($offset)->limit(5)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
+            foreach ($res as $k => $v){
+                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
+            }
+            $data['house_info'] = $res;
+            $data['total_page'] = $total_page;
+            $data['current_page'] = $input['page'];
+        }else{
+            $offset = ($input['page']-1)*9;
+            $count = $model->count();
+            $total_page = ceil($count/9);
+            $res = $model->offset($offset)->limit(9)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
+            foreach ($res as $k => $v){
+                $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
+            }
+            $watch_id = HouseWatchList::where('tenement_id',$tenement_id)->pluck('rent_house_id');
+            foreach ($res as $k => $v){
+                if(in_array($v['id'],$watch_id)){
+                    $res[$k]['is_watch'] = 1;
+                }else{
+                    $res[$k]['is_watch'] = 2;
+                }
+            }
+            $data['house_info'] = $res;
+            $data['total_page'] = $total_page;
+            $data['current_page'] = $input['page'];
+
+        }
+        if($res){
+            return $this->success('rent_house_list get success',$data);
+        }else{
+            return $this->error('2','rent_house_list get failed');
         }
     }
 }
