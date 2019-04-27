@@ -946,7 +946,7 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $user_id = $input['user_id'];
         $page = $input['page'];
-        $count = $model->groupBy('group_id')->count();
+        $count = $model->where('deleted_at',null)->groupBy('group_id')->count();
         if($count < ($page-1)*9){
             return $this->error('3','the page number is not right');
         }
