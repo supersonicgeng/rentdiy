@@ -1074,15 +1074,38 @@ class HouseService extends CommonService
     }
 
 
-
     /**
-     * @description:获得房屋主档列表
+     * @description:租户增加看房收藏
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
+    public function deleteWatchList(array $input)
+    {
+        $model = new HouseWatchList();
+        $tenement_id = $input['tenement_id'];
+        $rent_house_id = $input['rent_house_id'];
+        $res = $model->where('tenement_id',$tenement_id)->where('rent_house_id',$rent_house_id)->delete();
+        if($res){
+            return $this->success('delete watch list success',$res);
+        }else{
+            return $this->error('2','delete watch list failed');
+        }
+    }
+
+
+
+
+    /**
+ * @description:获得房屋主档列表
+ * @author: syg <13971394623@163.com>
+ * @param $code
+ * @param $message
+ * @param array|null $data
+ * @return \Illuminate\Http\JsonResponse
+ */
     public function getHouseList(array $input)
     {
         $tenement_id = $input['tenement_id'];
@@ -1169,6 +1192,35 @@ class HouseService extends CommonService
             $data['current_page'] = $input['page'];
 
         }
+        if($res){
+            return $this->success('rent_house_list get success',$data);
+        }else{
+            return $this->error('2','rent_house_list get failed');
+        }
+    }
+
+
+
+    /**
+     * @description:获得房屋主档列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWatchList(array $input)
+    {
+        $tenement_id = $input['tenement_id'];
+        $model = new RentHouse();
+        $watch_id = HouseWatchList::where('tenement_id',$tenement_id)->pluck('rent_house_id');
+        $offset = ($input['page']-1)*9;
+        $count = count($watch_id);
+        $total_page = ceil($count/9);
+        $res = $model->whereIn('id',$watch_id)->offset($offset)->limit(5)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
+        $data['house_list'] = $res;
+        $data['total_page'] = $total_page;
+        $data['current_page'] = $input['page'];
         if($res){
             return $this->success('rent_house_list get success',$data);
         }else{
