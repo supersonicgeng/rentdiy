@@ -433,10 +433,10 @@ class RentService extends CommonService
             $res = $model->where('tenement_id',$input['tenement_id'])->limit(9)->offset(($page-1)*9)->get()->toArray();
             if($res){
                 foreach ($res as $k => $v){
-                    $house_info = RentHouse::where('id',$v['rent_house_id'])->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','Desc','TA','Region','available_date')->get()->toArray();;
+                    $house_info = RentHouse::where('id',$v['rent_house_id'])->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->get()->toArray();;
                     $application_res[$k] = $house_info;
                     $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
-                    $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['Desc']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
+                    $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
                     $application_res[$k]['application_id'] = $v['id'];
                 }
                 $application_res['total_page'] = $total_page;
