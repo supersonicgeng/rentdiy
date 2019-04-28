@@ -996,7 +996,7 @@ class HouseService extends CommonService
             $res['house_pic'] = @$datas;
             if($res['rent_category'] == 1){
                 if(!$res['short_words']){
-                    $res['short_words'] = array();
+                    $res['short_words'] = [];
                 }else{
                     $res['short_words'] = explode(',',$res['short_words']);
                 }
@@ -1009,7 +1009,11 @@ class HouseService extends CommonService
                 'hospital','room_name','room_description','shower_room','bed_no','require_renter','room_short_words', 'rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
                 'can_party','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
             foreach ($res['room_info'] as $key => $value){
-                $res['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);
+                if(!$value['room_short_words']){
+                    $res['room_info'][$key]['room_short_words'] = [];
+                }else{
+                    $res['room_info'][$key]['room_short_words'] = explode(',',$value['room_short_words']);
+                }
                 $data= RentPic::where('rent_house_id',$value['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
                 if(!$data){
                     $datas = [];
