@@ -434,9 +434,8 @@ class RentService extends CommonService
             if($sort_order == 1){
                 $res = $model->where('tenement_id',$input['tenement_id'])->orderBy('id','DESC')->offset(($page-1)*9)->limit(9)->get()->toArray();
             }else{
-                $res = $model->where('tenement_id',$input['tenement_id'])->orderBy('id','ASC')->offset(($page-1)*9)->limit(9)->get()->toArray();
+                $res = $model->where('tenement_id',$input['tenement_id'])->offset(($page-1)*9)->limit(9)->get()->toArray();
             }
-
             if($res){
                 foreach ($res as $k => $v){
                     $house_info = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
