@@ -995,9 +995,10 @@ class HouseService extends CommonService
             }
             $res['house_pic'] = @$datas;
             if($res['rent_category'] == 1){
-                $res['short_words'] = explode(',',$res['short_words']);
                 if(!$res['short_words']){
                     $res['short_words'] = array();
+                }else{
+                    $res['short_words'] = explode(',',$res['short_words']);
                 }
             }
             return $this->success('get house info success',$res);
