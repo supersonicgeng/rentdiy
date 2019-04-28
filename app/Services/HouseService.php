@@ -997,7 +997,7 @@ class HouseService extends CommonService
             if($res['rent_category'] == 1){
                 $res['short_words'] = explode(',',$res['short_words']);
                 if(!$res['short_words']){
-                    $res['short_words'] = [];
+                    $res['short_words'] = array();
                 }
             }
             return $this->success('get house info success',$res);
