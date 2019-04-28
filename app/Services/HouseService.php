@@ -537,6 +537,7 @@ class HouseService extends CommonService
                     'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                     'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
                     'hospital'              => @$input['hospital']?$input['hospital']:$rent_house_info->hospital,
+                    'require_renter'        => @$input['require_renter'],
                     'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,
                     'rent_period'           => @$input['rent_period']?$input['rent_period']:$rent_house_info->rent_period,
                     'rent_fee'              => @$input['rent_fee']?$input['rent_fee']:$rent_house_info->rent_fee,
