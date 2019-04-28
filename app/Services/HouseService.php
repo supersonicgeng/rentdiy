@@ -1187,7 +1187,7 @@ class HouseService extends CommonService
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
             }
-            $watch_id = HouseWatchList::where('tenement_id',$tenement_id)->pluck('rent_house_id');
+            $watch_id = HouseWatchList::where('tenement_id',$tenement_id)->pluck('rent_house_id')->toArray();
             foreach ($res as $k => $v){
                 if(in_array($v['id'],$watch_id)){
                     $res[$k]['is_watch'] = 1;
