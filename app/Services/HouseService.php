@@ -532,7 +532,7 @@ class HouseService extends CommonService
                     'address'               => @$input['address']?$input['address']:$rent_house_info->address,
                     'lat'                   => @$input['lat']?$input['lat']:$rent_house_info->lat,
                     'lon'                   => @$input['lon']?$input['lon']:$rent_house_info->lon,
-                    'short_words'           => @$input['short_words']?implode(',',$input['short_words']):$rent_house_info->short_words,
+                    'short_words'           => implode(',',$input['short_words']),
                     'bus_station'           => @$input['bus_station']?$input['bus_station']:$rent_house_info->bus_station,
                     'school'                => @$input['school']?$input['school']:$rent_house_info->school,
                     'supermarket'           => @$input['supermarket']?$input['supermarket']:$rent_house_info->supermarket,
@@ -996,6 +996,9 @@ class HouseService extends CommonService
             $res['house_pic'] = @$datas;
             if($res['rent_category'] == 1){
                 $res['short_words'] = explode(',',$res['short_words']);
+                if(!$res['short_words']){
+                    $res['short_words'] = [];
+                }
             }
             return $this->success('get house info success',$res);
         }elseif($res['rent_category'] == 2 || $res['rent_category'] == 3){
