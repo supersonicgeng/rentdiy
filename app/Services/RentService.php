@@ -431,6 +431,7 @@ class RentService extends CommonService
             }
             $total_page = ceil($count/9);
             $res = $model->where('tenement_id',$input['tenement_id'])->limit(9)->offset(($page-1)*9)->get()->toArray();
+            dd($res);
             if($res){
                 foreach ($res as $k => $v){
                     $house_info = RentHouse::where('id',$v['rent_house_id'])->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
