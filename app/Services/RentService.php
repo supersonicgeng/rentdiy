@@ -413,15 +413,15 @@ class RentService extends CommonService
             return $this->error('2','this account is not a tenement role');
         }else{
             $model = new RentApplication();
-            $application_start_date = $input['application_start_time'];
+            $application_start_date = @$input['application_start_time'];
             if($application_start_date){
                 $model = $model->where('created_at','>',$application_start_date);
             }
-            $application_end_date = $input['application_end_time'];
+            $application_end_date = @$input['application_end_time'];
             if($application_end_date){
                 $model = $model->where('created_at','<',$application_end_date);
             }
-            $application_status = $input['application_status'];
+            $application_status = @$input['application_status'];
             if($application_status){
                 $model = $model->where('status',$application_status);
             }
