@@ -425,12 +425,18 @@ class RentService extends CommonService
             if($application_status){
                 $model = $model->where('status',$application_status);
             }
+            $sort_order = $input['sort_order'];
             $count = $model->where('tenement_id',$input['tenement_id'])->count();
             if($count<($page-1)*9){
                 return $this->error('3','no data');
             }
             $total_page = ceil($count/9);
-            $res = $model->where('tenement_id',$input['tenement_id'])->limit(9)->offset(($page-1)*9)->get()->toArray();
+            if($sort_order == 1){
+                $res = $model->where('tenement_id',$input['tenement_id'])->order('Desc')->limit(9)->offset(($page-1)*9)->get()->toArray();
+            }else{
+                $res = $model->where('tenement_id',$input['tenement_id'])->limit(9)->offset(($page-1)*9)->get()->toArray();
+            }
+
             if($res){
                 foreach ($res as $k => $v){
                     $house_info = RentHouse::where('id',$v['rent_house_id'])->select('id','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
@@ -439,9 +445,10 @@ class RentService extends CommonService
                     $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
                     $application_res[$k]['application_id'] = $v['id'];
                 }
-                $application_res['total_page'] = $total_page;
-                $application_res['current_page'] = $input['page'];
-                return $this->success('get application success',$application_res);
+                $data['house_list'] = $application_res;
+                $data['total_page'] = $total_page;
+                $data['current_page'] = $input['page'];
+                return $this->success('get application success',$data);
             } else{
                 return $this->error('4','get application failed');
             }
