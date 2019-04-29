@@ -208,6 +208,24 @@ class UserService extends CommonService
                 if($res->user_role == 2 || $res->user_role == 3 || $res->user_role == 6 || $res->user_role == 7){
                     $res['providers_info'] = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 }
+                if(!$res['landlord_info']){
+                    $res['landlord_info'] = [
+                        'landlord_id'   => '',
+                        'landlord_name' => '',
+                    ];
+                }
+                if(!$res['tenement_info']){
+                    $res['tenement_info'] = [
+                        'tenement_id'   => '',
+                        'tenement_name' => '',
+                    ];
+                }
+                if(!$res['providers_info']){
+                    $res['providers_info'] = [
+                        'providers_id'   => '',
+                        'providers_name' => '',
+                    ];
+                }
                 $res = $res->toArray();
                 return $this->success('login OK',$res);
             }
