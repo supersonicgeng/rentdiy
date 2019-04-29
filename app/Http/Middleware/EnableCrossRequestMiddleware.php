@@ -16,6 +16,7 @@ class EnableCrossRequestMiddleware
     public function handle($request, Closure $next)
     {
         $response = $next($request);
+        dd(222);
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $allow_origin = [
             'http://localhost:8080',
