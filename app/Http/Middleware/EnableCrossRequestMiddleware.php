@@ -20,7 +20,6 @@ class EnableCrossRequestMiddleware
         $allow_origin = [
             'http://localhost:8080',
         ];
-        dd(111);
         if (in_array($origin, $allow_origin)) {
             $response->header('Access-Control-Allow-Origin', $origin);
             $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN');
