@@ -112,8 +112,15 @@ class KeyService extends CommonService
         }else{
             $model = new Key();
             $house_id = $input['house_id'];
-            $res = $model->where('house_id',$house_id)->get();
+            $page = $input['page'];
+            $count = $model->where('hosue_id',$house_id)->count();
+            if($count < ($page-1)*10){
+                return $this->error('4', 'page num wrong');
+            }
+            $res = $model->where('house_id',$house_id)->offset(($page-1)*10)->limit(10)->get();
             $data['key'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
             if($res){
                 return $this->success('key list get success',$data);
             }else{
