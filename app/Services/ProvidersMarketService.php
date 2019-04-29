@@ -59,19 +59,19 @@ class ProvidersMarketService extends CommonService
     public function landlordOrderAdd(array $input)
     {
         //dd($input);
-        $landlord_id = $input['landlord_id'];
-        $room_id = $input['room_id'];
-        $room_info = RentHouse::where('id',$room_id)->first();
+        $user_id= $input['user_id'];
+        $rent_house_id = $input['rent_house_id'];
+        $room_info = RentHouse::where('id',$rent_house_id)->first();
         $model = new LandlordOrder();
         $order_sn = orderId();
         $order_data = [
             'rent_application_id'   => @$input['rent_application_id'],
             'rent_contract_id'      => @$input['rent_contract_id'],
-            'landlord_id'           => $landlord_id,
-            'tenement_id'           => $$input['tenement_id'],
+            'user_id'               => $user_id,
+            'tenement_id'           => @$input['tenement_id'],
             'order_sn'              => $order_sn,
-            'room_id'               => $room_id,
-            'Desc'                  => $room_info->Desc,
+            'rent_house_id'         => $rent_house_id,
+            'District'              => $room_info->District,
             'TA'                    => $room_info->TA,
             'Region'                => $room_info->Region,
             'order_type'            => $input['order_type'],

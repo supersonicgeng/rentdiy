@@ -123,6 +123,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('getProvidersInformation', 'ProvidersController@getProvidersInformation'); // 获得房东联系人信息 3.25 // 接口done
         $router->post('editProvidersInformation', 'ProvidersController@editProvidersInformation'); // 修改服务商主体 3.22 // 接口done
         $router->post('deleteProvidersInformation', 'ProvidersController@deleteProvidersInformation'); // 删除服务商主体 3.27
+        $router->post('getProvidersList','ProvidersController@getProvidersList'); // 获得所有服务商主体
     });
     // 操作员管理
     $router->group(['prefix' => 'operator'], function (Router $router) {
