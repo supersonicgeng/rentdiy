@@ -119,6 +119,11 @@ class KeyService extends CommonService
                 return $this->error('4', 'page num wrong');
             }
             $res = $model->where('house_id',$house_id)->offset(($page-1)*10)->limit(10)->get();
+            foreach ($res as $k => $v){
+                $res[$k]['borrow_start_time'] = date('m/d/Y',strtotime($res[$k]['borrow_start_time']));
+                $res[$k]['borrow_end_time'] = date('m/d/Y',strtotime($res[$k]['borrow_end_time']));
+            }
+            }
             $data['key'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
