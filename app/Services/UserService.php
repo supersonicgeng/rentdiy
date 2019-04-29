@@ -208,6 +208,7 @@ class UserService extends CommonService
                 if($res->user_role == 2 || $res->user_role == 3 || $res->user_role == 6 || $res->user_role == 7){
                     $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 }
+                dd($res2);
                 if(!$res1){
                     $res['landlord_info'] = [
                         'landlord_id'   => '',
@@ -219,7 +220,6 @@ class UserService extends CommonService
                 if(!$res2){
                     $res['tenement_info'] = [
                         'tenement_id'   => '',
-                        'tenement_name' => '',
                     ];
                 }else{
                     $res['tenement_info'] = $res2;
