@@ -200,31 +200,37 @@ class UserService extends CommonService
                 $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
                 $res->update();
                 if($res->user_role % 2){
-                    $res['landlord_info'] = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                    $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
                 }
                 if($res->user_role >= 4){
-                    $res['tenement_info'] = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                    $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
                 }
                 if($res->user_role == 2 || $res->user_role == 3 || $res->user_role == 6 || $res->user_role == 7){
-                    $res['providers_info'] = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                    $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 }
-                if($res['landlord_info'] == []){
+                if(!$res1){
                     $res['landlord_info'] = [
                         'landlord_id'   => '',
                         'landlord_name' => '',
                     ];
+                }else{
+                    $res['landlord_info'] = $res1;
                 }
-                if($res['tenement_info'] == []){
+                if(!$res2){
                     $res['tenement_info'] = [
                         'tenement_id'   => '',
                         'tenement_name' => '',
                     ];
+                }else{
+                    $res['tenement_info'] = $res2;
                 }
-                if($res['providers_info'] == []){
+                if(!$res3){
                     $res['providers_info'] = [
                         'providers_id'   => '',
                         'providers_name' => '',
                     ];
+                }else{
+                    $res['providers_info'] = $res3;
                 }
                 $res = $res->toArray();
                 return $this->success('login OK',$res);
