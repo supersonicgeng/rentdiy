@@ -199,16 +199,9 @@ class UserService extends CommonService
                 $res->login_token = $token; //生成token
                 $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
                 $res->update();
-                if($res->user_role % 2){
-                    $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
-                }
-                if($res->user_role >= 4){
-                    $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
-                }
-                if($res->user_role == 2 || $res->user_role == 3 || $res->user_role == 6 || $res->user_role == 7){
-                    $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
-                }
-                dd($res2);
+                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 if(!$res1){
                     $res['landlord_info'] = [
                         'landlord_id'   => '',
