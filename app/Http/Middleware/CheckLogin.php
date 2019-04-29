@@ -16,6 +16,7 @@ class CheckLogin
      */
     public function handle($request, Closure $next)
     {
+        dd(222);
         $user_id = $request->user_id;
         $login_token = $request->login_token;
         $user_info = User::where('id',$user_id)->first();
