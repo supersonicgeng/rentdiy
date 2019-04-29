@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'permission'            => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability'               => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'passport'              => \App\Http\Middleware\PassportAuthenticated::class,
+        'cross'                 => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         'CheckLogin'            => CheckLogin::class,
         'CheckOperatorLogin'    => CheckOperatorLogin::class,
     ];
