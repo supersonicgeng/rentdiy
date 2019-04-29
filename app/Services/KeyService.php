@@ -120,8 +120,8 @@ class KeyService extends CommonService
             }
             $res = $model->where('house_id',$house_id)->offset(($page-1)*10)->limit(10)->get();
             foreach ($res as $k => $v){
-                $res[$k]['borrow_start_time'] = date('m/d/Y',strtotime($res[$k]['borrow_start_time']));
-                $res[$k]['borrow_end_time'] = date('m/d/Y',strtotime($res[$k]['borrow_end_time']));
+                $res[$k]['borrow_start_date'] = date('m/d/Y',strtotime($res[$k]['borrow_start_date']));
+                $res[$k]['borrow_end_date'] = date('m/d/Y',strtotime($res[$k]['borrow_end_date']));
             }
             $data['key'] = $res;
             $data['current_page'] = $page;
