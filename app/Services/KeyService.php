@@ -113,7 +113,8 @@ class KeyService extends CommonService
             $model = new Key();
             $house_id = $input['house_id'];
             $page = $input['page'];
-            $count = $model->where('hosue_id',$house_id)->count();
+            $count = $model->where('hosue_id',$house_id)->get()->toArray();
+            $count = count($count);
             if($count < ($page-1)*10){
                 return $this->error('4', 'page num wrong');
             }
