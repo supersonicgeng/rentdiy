@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\HisumsVerify::class,
+        \App\Http\Middleware\EnableCrossRequestMiddleware::class,
     ];
 
     /**
@@ -42,7 +43,6 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
-            \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         ],
     ];
 
@@ -67,7 +67,6 @@ class Kernel extends HttpKernel
         'permission'            => \Zizaco\Entrust\Middleware\EntrustPermission::class,
         'ability'               => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'passport'              => \App\Http\Middleware\PassportAuthenticated::class,
-        'cross'                 => \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         'CheckLogin'            => CheckLogin::class,
         'CheckOperatorLogin'    => CheckOperatorLogin::class,
     ];
