@@ -113,8 +113,9 @@ class KeyService extends CommonService
             $model = new Key();
             $house_id = $input['house_id'];
             $res = $model->where('house_id',$house_id)->get();
+            $data['key'] = $res;
             if($res){
-                return $this->success('key list get success',$res);
+                return $this->success('key list get success',$data);
             }else{
                 return $this->error('3','key list get failed');
             }
