@@ -144,6 +144,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
         $router->post('keyReturn', 'KeyController@keyReturn'); // 归还钥匙 4.10
         $router->post('keyList', 'KeyController@keyList'); // 钥匙列表 4.10
+        $router->post('keyEdit', 'KeyController@keyEdit'); // 钥匙列表 4.10
     });
     // 房屋检查
     $router->group(['prefix' => 'inspect'], function (Router $router) {
