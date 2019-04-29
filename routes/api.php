@@ -84,6 +84,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin'], function (Rout
         $router->post('deleteWatchList', 'HouseController@deleteWatchList'); // 租户取消看房收藏 4.27 // 接口done
         $router->post('getHouseList','HouseController@getHouseList'); // 租户获得房屋主档信息列表 4.27 // 接口done
         $router->post('getWatchList','HouseController@getWatchList'); // 租户获得关注主档信息列表 4.27 // 接口done
+        $router->post('selectSelfHouseList','HouseController@selectSelfHouseList'); // 获得房屋主档信息列表 3.25 // 接口done
     });
     // 租房系统
     $router->group(['prefix' => 'rent'], function (Router $router){

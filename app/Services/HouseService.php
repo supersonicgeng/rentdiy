@@ -1240,4 +1240,56 @@ class HouseService extends CommonService
             return $this->error('2','rent_house_list get failed');
         }
     }
+
+
+    /**
+     * @description:获得房屋主档信息列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function selectSelfHouseList(array $input)
+    {
+        $model = new RentHouse();
+        $user_id = $input['user_id'];
+        $page = $input['page'];
+        // 地区筛选
+        $region = @$input['Region'];
+        $ta     = @$input['TA'];
+        $district   = @$input['District'];
+        if($district){
+            $model = $model->where('District',$district);
+        }elseif ($ta){
+            $model = $model->where('TA',$ta);
+        }elseif ($region){
+            $model = $model->where('Region',$region);
+        }
+        // 分类筛选
+        $rent_category = @$input['rent_category'];
+        if($rent_category){
+            $model = $model->where('rent_category',$rent_category);
+        }
+        // 状态筛选
+        $rent_status = @$input['rent_status'];
+        if($rent_status){
+            $model = $model->where('rent_status',$rent_status);
+        }
+        $count = $model->where('user_id',$user_id)->where('deleted_at',null)->get()->toArray();
+        $count = count($count,0);
+        if($count < ($page-1)*9){
+            return $this->error('3','the page number is not right');
+        }
+        $res = $model->where('user_id',$user_id)->where('deleted_at',null)->select('id as rent_house_id','rent_category','property_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put','rent_status')->offset(($page-1)*9)->offset()->limit(9)->get();
+        if($res){
+            $data['house_list'] = $res;
+            $data['current_page'] = $page;
+            $total_page = ceil($count/9);
+            $data['total_page'] = $total_page;
+            return $this->success('get house list success',$data);
+        }else{
+            return $this->error('2','get house list failed');
+        }
+    }
 }

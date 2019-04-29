@@ -193,4 +193,20 @@ class HouseController extends CommonController
     {
         return service('House')->getWatchList($request->all());
     }
+
+
+
+    /**
+     * @description:获得房屋主档信息列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function selectSelfHouseList(Request $request)
+    {
+        return service('House')->selectSelfHouseList($request->all());
+    }
+
 }
