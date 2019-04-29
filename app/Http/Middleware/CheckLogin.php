@@ -22,6 +22,7 @@ class CheckLogin
         if ($login_token != $user_info->login_token || time() - strtotime($user_info->login_expire_time) >7200) {
             exit(json_encode(['code'=>100,'msg'=>'pls login']));
         }
+        dd(222);
         return $next($request);
     }
 }
