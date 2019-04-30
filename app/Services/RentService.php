@@ -370,7 +370,7 @@ class RentService extends CommonService
             }
             $application_status = @$input['application_status'];
             if($application_status){
-                $model = $model->where('status',$application_status);
+                $model = $model->where('application_status',$application_status);
             }
             $tenement_people = @$input['tenement_people'];
             if($tenement_people){
