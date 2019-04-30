@@ -170,7 +170,7 @@ class ProvidersMarketService extends CommonService
         $order_id = $input['order_id'];
         $res = $model->where('id', $order_id)->first();
         if($res){
-            return $this->success('get order info success'.$res);
+            return $this->success('get order info success',$res);
         }else{
             return $this->error('2','get order info failed');
         }
