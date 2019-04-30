@@ -94,8 +94,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('rentApplicationOutList', 'RentController@rentApplicationOutList'); // 租户租房申请（非本平台）列表 3.26
         $router->post('rentApplicationOutEdit', 'RentController@rentApplicationOutEdit'); // 租户租房申请（非本平台）编辑 3.27
         $router->post('rentApplicationOutDelete', 'RentController@rentApplicationOutDelete'); // 租户租房申请（非本平台）删除 3.27
-        $router->post('rentHouseApplicationList', 'RentController@rentHouseApplicationList'); // 租户租房申请列表（房东查看） 3.30
-        $router->post('rentTenementApplicationList', 'RentController@rentTenementApplicationList'); // 租户租房申请列表（租户查看） 3.30
+        $router->post('rentHouseApplicationList', 'RentController@rentHouseApplicationList'); // 租户租房申请列表（房东查看） 3.30 // 接口done
+        $router->post('rentTenementApplicationList', 'RentController@rentTenementApplicationList'); // 租户租房申请列表（租户查看） 3.30// 接口done
         $router->post('rentTenementApplicationDetail', 'RentController@rentTenementApplicationDetail'); // 租户租房申请详情（租户查看） 3.30
         $router->post('rentContactAdd','RentController@rentContactAdd'); // 添加租约 4.1
         $router->post('rentContactList','RentController@rentContactList'); // 租约列表 4.13
@@ -135,9 +135,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     });
     // 服务商市场
     $router->group(['prefix' => 'providersMarket'], function (Router $router) {
-        $router->post('landlordOrderAdd', 'ProvidersMarketController@landlordOrderAdd'); // 添加订单 4.2
+        $router->post('landlordOrderAdd', 'ProvidersMarketController@landlordOrderAdd'); // 添加订单 4.2 // 接口done
         $router->post('getOrderList', 'ProvidersMarketController@getOrderList'); // 获得订单列表 4.2
         $router->post('getOrderDetail', 'ProvidersMarketController@getOrderDetail'); // 获得订单详情 4.2
+        $router->post('tenderOrder', 'ProvidersMarketController@tenderOrder'); //  服务商报价 4.30
     });
     // 钥匙管理
     $router->group(['prefix' => 'key'], function (Router $router) {

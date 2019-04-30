@@ -35,6 +35,7 @@ use App\Model\ScoreLog;
 use App\Model\SignLog;
 use App\Model\Survey;
 use App\Model\SysSign;
+use App\Model\Tender;
 use App\Model\Tenement;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
@@ -67,6 +68,7 @@ class ProvidersMarketService extends CommonService
         $order_data = [
             'rent_application_id'   => @$input['rent_application_id'],
             'rent_contract_id'      => @$input['rent_contract_id'],
+            'issue_id'              => @$input['issue_id'],
             'user_id'               => $user_id,
             'tenement_id'           => @$input['tenement_id'],
             'order_sn'              => $order_sn,
@@ -178,7 +180,7 @@ class ProvidersMarketService extends CommonService
 
 
     /**
-     * @description:获得订单列表
+     * @description: 报价订单
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -188,13 +190,20 @@ class ProvidersMarketService extends CommonService
     public function tenderOrder(array $input)
     {
         //dd($input);
-        $model = new LandlordOrder();
-        $order_id = $input['order_id'];
-        $res = $model->where('id', $order_id)->first()->toArray();
+        $model = new Tender();
+        $tender_data = [
+            'service_id'    => $input['service_id'],
+            'order_id'      => $input['order_id'],
+            'quota_price'   => $input['quota_price'],
+            'tender_note'   => $input['tender_note'],
+            'created_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->insert($tender_data);
         if($res){
-            return $this->success('get order info success'.$res);
+            LandlordOrder::where('id',$input['order_id'])->increment('total_tender');
+            return $this->success('tender success');
         }else{
-            return $this->error('2','get order info failed');
+            return $this->error('2','tender failed');
         }
     }
 }
