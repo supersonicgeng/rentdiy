@@ -360,19 +360,19 @@ class RentService extends CommonService
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
         if($user_info->user_role % 2){
             $model = new RentApplication();
-            $application_start_date = $input['application_start_time'];
+            $application_start_date = @$input['application_start_time'];
             if($application_start_date){
                 $model = $model->where('created_at','>',$application_start_date);
             }
-            $application_end_date = $input['application_end_time'];
+            $application_end_date = @$input['application_end_time'];
             if($application_end_date){
                 $model = $model->where('created_at','<',$application_end_date);
             }
-            $application_status = $input['application_status'];
+            $application_status = @$input['application_status'];
             if($application_status){
                 $model = $model->where('status',$application_status);
             }
-            $tenement_people = $input['tenement_people'];
+            $tenement_people = @$input['tenement_people'];
             if($tenement_people){
                 $model = $model->where('tenement_people',$tenement_people);
             }
