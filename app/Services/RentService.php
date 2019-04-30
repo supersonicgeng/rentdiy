@@ -376,7 +376,12 @@ class RentService extends CommonService
             if($tenement_people){
                 $model = $model->where('tenement_people',$tenement_people);
             }
-            $res = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->get()->toArray();
+            $page = $input['page'];
+            $count = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->count();
+            if($count < ($page-1)*5){
+                return $this->error('4','page number wrong');
+            }
+            $res = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get()->toArray();
             if($res){
                 foreach ($res as $k => $v){
                     $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
@@ -386,7 +391,10 @@ class RentService extends CommonService
                     $res[$k]['survey_people'] = Survey::where('application_id',$v['id'])->pluck('survey_people')->first();
                     $res[$k]['survey_date'] = Survey::where('application_id',$v['id'])->pluck('survey_date')->first();*/
                 }
-                return $this->success('get application success',$res);
+                $data['application_list'] = $res;
+                $data['total_page'] = ceil($count/5);
+                $data['current_page'] = $page;
+                return $this->success('get application success',$data);
             } else{
                 return $this->error('3','get application failed');
             }
