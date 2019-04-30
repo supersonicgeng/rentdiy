@@ -168,6 +168,28 @@ class ProvidersMarketService extends CommonService
         //dd($input);
         $model = new LandlordOrder();
         $order_id = $input['order_id'];
+        $res = $model->where('id', $order_id)->first();
+        if($res){
+            return $this->success('get order info success'.$res);
+        }else{
+            return $this->error('2','get order info failed');
+        }
+    }
+
+
+    /**
+     * @description:获得订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenderOrder(array $input)
+    {
+        //dd($input);
+        $model = new LandlordOrder();
+        $order_id = $input['order_id'];
         $res = $model->where('id', $order_id)->first()->toArray();
         if($res){
             return $this->success('get order info success'.$res);
