@@ -93,7 +93,7 @@ class ProvidersMarketService extends CommonService
 
 
     /**
-     * @description:获得订单列表
+     * @description:服务商获得订单列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -118,17 +118,17 @@ class ProvidersMarketService extends CommonService
         }
         $start_date = @$input['start_date'];
         if($start_date){
-            $model = $model->where('end_date','>',$start_date);
+            $model = $model->where('end_time','>',$start_date);
         }
         $end_date = @$input['end_date'];
         if($end_date){
-            $model = $model->where('end_date','<',$end_date);
+            $model = $model->where('end_time','<',$end_date);
         }
         $order_type = @$input['order_type'];
         if($order_type){
             $model = $model->where('order_type',$order_type);
         }
-        $model = $model->where('end_date','>=',date('Y-m-d',time()));
+        $model = $model->where('end_time','>=',date('Y-m-d',time()));
         $page = $input['page'];
         $count = $model->where('order_status',1)->count();
         if($count <= ($page-1)*5){
@@ -136,18 +136,19 @@ class ProvidersMarketService extends CommonService
         }
         $res = $model->where('order_status',1)->offset(($page-1)*5)->limit(5)->get()->toArray();
         foreach ($res as $k => $v){
-            $order_res[$k] = RentHouse::where('id',$v['room_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','Desc','TA','Region','available_date')->first()->toArray();
-            $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_At',null)->pluck('house_pic')->toArray();// 图片
-            $order_res[$k]['full_address'] = $v['address'].','.Region::getName($v['Desc']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
+            $order_res[$k] = RentHouse::where('id',$v['rent_house_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();
+            $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+            $order_res[$k]['full_address'] = $v['address'].','.Region::getName($order_res[$k]['District']).','.Region::getName($order_res[$k]['TA']).','.Region::getName($order_res[$k]['Region']); //地址
             $order_res[$k]['order_id'] = $v['id'];
-            $order_res[$k]['order_type']    = $v['type'];
+            $order_res[$k]['order_type'] = $v['type'];
             $order_res[$k]['budget'] = $v['budget'];
             $order_res[$k]['created_at'] = $v['created_at'];
-            $order_res[$k]['room_id'] = $v['room_id'];
+            $order_res[$k]['rent_house_id'] = $v['rent_house_id'];
         }
-        $order_res['total_page'] = ceil($count/5);
-        $order_res['current_page'] = $page;
-        return $this->success('get order list success',$order_res);
+        $data['order_list'] = $order_res;
+        $data['total_page'] = ceil($count/5);
+        $data['current_page'] = $page;
+        return $this->success('get order list success',$data);
     }
 
 
