@@ -376,7 +376,7 @@ class RentService extends CommonService
             if($tenement_people){
                 $model = $model->where('tenement_people',$tenement_people);
             }
-            $res = $model->where('house_id',$input['house_id'])->where('deleted_at',null)->get()->toArray();
+            $res = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->get()->toArray();
             if($res){
                 foreach ($res as $k => $v){
                     $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
