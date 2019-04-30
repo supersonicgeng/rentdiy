@@ -138,7 +138,7 @@ class ProvidersMarketService extends CommonService
         }
         $res = $model->where('order_status',1)->offset(($page-1)*5)->limit(5)->get()->toArray();
         foreach ($res as $k => $v){
-            $order_res[$k] = RentHouse::where('id',$v['rent_house_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();
+            $order_res[$k] = RentHouse::where('id',$v['rent_house_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','require_renter','Region','available_date')->first()->toArray();
             $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
             $order_res[$k]['full_address'] = $order_res[$k]['address'].','.Region::getName($order_res[$k]['District']).','.Region::getName($order_res[$k]['TA']).','.Region::getName($order_res[$k]['Region']); //地址
             $order_res[$k]['order_id'] = $v['id'];
