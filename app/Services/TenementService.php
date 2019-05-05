@@ -246,4 +246,33 @@ class TenementService extends CommonService
             }
         }
     }
+
+
+
+    /**
+     * @description:房东查看租户信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function watchTenementInformation(array $input)
+    {
+        $tenement_info = Tenement::where('id',$input['tenement_id'])->first()->toArray();
+        if($tenement_info){
+            $certificate_model = new TenementCertificate();
+            $certificate_data = $certificate_model->where('tenement_id',$tenement_info['id'])->get()->toArray();
+            foreach ($certificate_data as $k => $v){
+                $tenement_info['certificate_category'][$k] = $v['certificate_category'];
+                $tenement_info['certificate_no'][$k] = $v['certificate_no'];
+                $tenement_info['certificate_pic1'][$k] = $v['certificate_pic1'];
+                $tenement_info['certificate_pic2'][$k] = $v['certificate_pic2'];
+            }
+            return $this->success('get tenement information success',$tenement_info);
+        }else{
+            return $this->error('3','get tenement information failed');
+        }
+
+    }
 }

@@ -50,7 +50,7 @@ class LandlordController extends CommonController
 
 
     /**
-     * @description:房东获得房东列表
+     * @description:房东获得房东信息
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -74,5 +74,19 @@ class LandlordController extends CommonController
     public function deleteLandlordInformation(Request $request)
     {
         return service('Landlord')->deleteLandlordInformation($request->all());
+    }
+
+
+    /**
+     * @description:房东查看租户资料
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function watchTenementInformation(Request $request)
+    {
+        return service('Tenement')->watchTenementInformation($request->all());
     }
 }

@@ -115,6 +115,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getLandlordInformation', 'LandlordController@getLandlordInformation'); // 获得房东联系人信息 3.22  // 接口 done
         $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22 // 接口 done
         $router->post('deleteLandlordInformation', 'LandlordController@deleteLandlordInformation'); // 删除房东联系人 3.27
+        $router->post('watchTenementInformation','LandlordController@watchTenementInformation'); // 房东查看租户信息 5.5
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {
@@ -145,7 +146,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
         $router->post('keyReturn', 'KeyController@keyReturn'); // 归还钥匙 4.10
         $router->post('keyList', 'KeyController@keyList'); // 钥匙列表 4.10
-        $router->post('keyEdit', 'KeyController@keyEdit'); // 钥匙列表 4.10
+        $router->post('keyEdit', 'KeyController@keyEdit'); // 钥匙编辑 4.10
     });
     // 房屋检查
     $router->group(['prefix' => 'inspect'], function (Router $router) {
