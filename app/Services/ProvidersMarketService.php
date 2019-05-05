@@ -143,7 +143,7 @@ class ProvidersMarketService extends CommonService
             $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
             $order_res[$k]['full_address'] = $order_res[$k]['address'].','.Region::getName($order_res[$k]['District']).','.Region::getName($order_res[$k]['TA']).','.Region::getName($order_res[$k]['Region']); //地址
             $order_res[$k]['order_id'] = $v['id'];
-            $order_res[$k]['total_tender'] = 0;
+            $order_res[$k]['total_tender'] = $v['total_tender'];
             $order_res[$k]['order_type'] = $v['order_type'];
             $order_res[$k]['budget'] = $v['budget'];
             $order_res[$k]['created_at'] = $v['created_at'];
