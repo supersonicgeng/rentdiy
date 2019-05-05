@@ -853,6 +853,7 @@ class RentService extends CommonService
             if($contact_status){
                 $model = $model->where('status',$contact_status);
             }
+            $model = $model->where('user_id',$input['user_id']);
             $count = $model->count();
             $page = $input['page'];
             if($count < ($page-1)*10){
