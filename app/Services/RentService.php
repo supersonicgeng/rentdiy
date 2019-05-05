@@ -860,9 +860,10 @@ class RentService extends CommonService
                 return $this->error('3','no contact');
             }else{
                 $res = $model->offset(($page-1)*10)->limit(10)->get();
-                $res['total_page'] = ceil($count/10);
-                $res['current_page'] = $page;
-                return $this->success('get rent contract list success',$res);
+                $data['contract_list'] = $res;
+                $data['total_page'] = ceil($count/10);
+                $data['current_page'] = $page;
+                return $this->success('get rent contract list success',$data);
             }
         }
     }
