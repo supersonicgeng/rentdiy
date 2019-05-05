@@ -202,6 +202,9 @@ class ProvidersMarketService extends CommonService
             'tender_note'   => $input['tender_note'],
             'created_at'    => date('Y-m-d H:i:s',time()),
         ];
+        if($model->where('order_id',$input['order_id'])->where('service_id',$input['service_id'])->first()){
+            return $this->error('3','you already tender this order');
+        }
         $res = $model->insert($tender_data);
         if($res){
             LandlordOrder::where('id',$input['order_id'])->increment('total_tender');
