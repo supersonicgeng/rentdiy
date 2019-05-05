@@ -26,6 +26,7 @@ use App\Model\PassportReward;
 use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
+use App\Model\Providers;
 use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentHouse;
@@ -171,8 +172,11 @@ class ProvidersMarketService extends CommonService
         $model = new LandlordOrder();
         $order_id = $input['order_id'];
         $res = $model->where('id', $order_id)->first();
+        $providers_info = Providers::where('user_id',$input['user_id'])->select('service_name','id as service_id')->get()->toArray();
+        $data['order_info'] = $res;
+        $data['providers_info'] = $providers_info;
         if($res){
-            return $this->success('get order info success',$res);
+            return $this->success('get order info success',$data);
         }else{
             return $this->error('2','get order info failed');
         }
