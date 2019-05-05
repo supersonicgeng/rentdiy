@@ -507,6 +507,7 @@ class RentService extends CommonService
             $contract_data = [
                 'contract_id'                   => contractId(),
                 'house_id'                      => $input['house_id'],
+                'user_id'                       => $input['user_id'],
                 'landlord_id'                   => $input['landlord_id'],
                 'landlord_full_name'            => $input['landlord_full_name'],
                 'landlord_e_mail'               => $input['landlord_e_mail'],
