@@ -17,6 +17,7 @@ use App\Model\BusinessContract;
 use App\Model\CheckBuilding;
 use App\Model\Config;
 use App\Model\ContractChattel;
+use App\Model\ContractService;
 use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
@@ -674,6 +675,15 @@ class RentService extends CommonService
                         ];
                         $contract_chattel_res = ContractChattel::insert($contract_chattel_data);
                     }
+                    foreach ($input['service_fee_info'] as $k =>  $v){
+                        $service_fee_data = [
+                            'contract_id'   => $contract_res,
+                            'service_name'  => $v['service_name'],
+                            'service_price' => $v['service_price'],
+                            'created_at'    => date('Y-m-d H:i:s', time()),
+                        ];
+                        $service_fee_res = ContractService::insert($service_fee_data);
+                    }
                     $separate_model = new SeparateContract();
                     $separate_data = [
                         'contract_id'                               => $contract_res,
@@ -745,7 +755,7 @@ class RentService extends CommonService
                         'created_at'                                => date('Y-m-d H:i:s', time()),
                     ];
                     $separate_res = $separate_model->insert($separate_data);
-                    if ($contract_tenement_res && $separate_res && $contract_chattel_res) {
+                    if ($contract_tenement_res && $separate_res && $contract_chattel_res && $service_fee_res) {
                         return $this->success('contract add success');
                     } else {
                         return $this->error('3', 'add contract failed');
