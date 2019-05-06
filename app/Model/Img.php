@@ -12,5 +12,5 @@ class Img extends Model
     public static $EXCEL = 'excel';
     public static $IMG = '';
     public static $IMG_EXT = ["png", "jpg", "gif","jpeg","bmp"];
-    public static $FILE_EXT = ['doc','docx','pdf','xls','xlsx'];
+    public static $FILE_EXT = ['doc','docx','pdf','xls','xlsx',"png", "jpg", "gif","jpeg","bmp"];
 }
