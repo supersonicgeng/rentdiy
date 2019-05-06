@@ -805,6 +805,7 @@ class RentService extends CommonService
                         'term_method'                           => $input['term_method'],
                         'commencement_date'                     => $input['commencement_date'],
                         'final_expiry_date'                     => $input['final_expiry_date'],
+                        'renewal_right'                         => $input['renewal_right'],
                         'renewal_time'                          => $input['renewal_time'],
                         'annual_rent'                           => $input['annual_rent'],
                         'premises_pro'                          => $input['premises_pro'],
