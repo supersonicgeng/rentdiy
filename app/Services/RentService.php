@@ -16,6 +16,7 @@ use App\Model\AliPay\AliPayTransfer;
 use App\Model\BusinessContract;
 use App\Model\CheckBuilding;
 use App\Model\Config;
+use App\Model\ContractChattel;
 use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
@@ -550,9 +551,20 @@ class RentService extends CommonService
                             'guarantor_phone'           => $v['guarantor_phone'],
                             'guarantor_e_mail'          => $v['guarantor_e_mail'],
                             'is_child'                  => $v['is_child'],
-                            'created_at'                => date('Y-d-m H:i:s', time()),
+                            'created_at'                => date('Y-m-d H:i:s', time()),
                         ];
                         $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    }
+                    foreach ($input['chattel_info'] as $k => $v){
+                        $contract_chattel_data = [
+                            'contract_id'   => $contract_res,
+                            'rent_house_id' => $input['house_id'],
+                            'chattel'       => $v['chattel'],
+                            'chattel_num'   => $v['chattel_num'],
+                            'note'          => $v['note'],
+                            'created_at'    => date('Y-m-d H:i:s', time()),
+                        ];
+                        $contract_chattel_res = ContractChattel::insert($contract_chattel_data);
                     }
                     $entire_model = new EntireContract();
                     $entire_data = [
@@ -611,7 +623,7 @@ class RentService extends CommonService
                         'created_at'                                => date('Y-m-d H:i:s', time()),
                     ];
                     $entire_res = $entire_model->insert($entire_data);
-                    if ($contract_tenement_res && $entire_res) {
+                    if ($contract_tenement_res && $entire_res && $contract_chattel_res) {
                         return $this->success('contract add success');
                     } else {
                         return $this->error('3', 'add contract failed');
@@ -647,9 +659,20 @@ class RentService extends CommonService
                             'guarantor_phone'           => $v['guarantor_phone'],
                             'guarantor_e_mail'          => $v['guarantor_e_mail'],
                             'is_child'                  => $v['is_child'],
-                            'created_at'                => date('Y-d-m H:i:s', time()),
+                            'created_at'                => date('Y-m-d H:i:s', time()),
                         ];
                         $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    }
+                    foreach ($input['chattel_info'] as $k => $v){
+                        $contract_chattel_data = [
+                            'contract_id'   => $contract_res,
+                            'rent_house_id' => $input['house_id'],
+                            'chattel'       => $v['chattel'],
+                            'chattel_num'   => $v['chattel_num'],
+                            'note'          => $v['note'],
+                            'created_at'    => date('Y-m-d H:i:s', time()),
+                        ];
+                        $contract_chattel_res = ContractChattel::insert($contract_chattel_data);
                     }
                     $separate_model = new SeparateContract();
                     $separate_data = [
@@ -722,7 +745,7 @@ class RentService extends CommonService
                         'created_at'                                => date('Y-m-d H:i:s', time()),
                     ];
                     $separate_res = $separate_model->insert($separate_data);
-                    if ($contract_tenement_res && $separate_res) {
+                    if ($contract_tenement_res && $separate_res && $contract_chattel_res) {
                         return $this->success('contract add success');
                     } else {
                         return $this->error('3', 'add contract failed');
@@ -759,7 +782,7 @@ class RentService extends CommonService
                             'guarantor_phone'           => $v['guarantor_phone'],
                             'guarantor_e_mail'          => $v['guarantor_e_mail'],
                             'is_child'                  => $v['is_child'],
-                            'created_at'                => date('Y-d-m H:i:s', time()),
+                            'created_at'                => date('Y-m-d H:i:s', time()),
                         ];
                         $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
                     }
@@ -865,7 +888,11 @@ class RentService extends CommonService
             if($count < ($page-1)*10){
                 return $this->error('3','no contact');
             }else{
-                $res = $model->offset(($page-1)*10)->limit(10)->get();
+                $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+                foreach($res as $key => $value){
+                    $res[$key]['property_name'] = RentHouse::where('id',$value['house_id'])->pluck('property_name')->first();
+                    $res[$key]['tenement_name'] = Tenement::where('id',$value['tenement_id'])->pluck('property_name')->first();
+                }
                 $data['contract_list'] = $res;
                 $data['total_page'] = ceil($count/10);
                 $data['current_page'] = $page;
@@ -955,32 +982,34 @@ class RentService extends CommonService
                 $contract_res = $model->insertGetId($contract_data);
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
-                    $contract_tenement_data = [
-                        'contract_id'               => $contract_res,
-                        'tenement_id'               => @$input['tenement_id'],
-                        'tenement_full_name'        => $input['tenement_full_name'],
-                        'identification_no'         => $input['identification_no'],
-                        'identification_type'       => $input['identification_type'],
-                        'service_physical_address'  => $input['service_physical_address'],
-                        'tenement_e_mail'           => $input['tenement_e_mail'],
-                        'tenement_phone'            => $input['tenement_phone'],
-                        'tenement_mobile'           => $input['tenement_mobile'],
-                        'tenement_hm'               => $input['tenement_hm'],
-                        'tenement_wk'               => $input['tenement_wk'],
-                        'tenement_post_address'     => $input['tenement_post_address'],
-                        'tenement_post_code'        => $input['tenement_post_code'],
-                        'tenement_service_address'  => $input['tenement_service_address'],
-                        'other_contact_address'     => $input['other_contact_address'],
-                        'additional_address'        => $input['additional_address'],
-                        'guarantor_name'            => $input['guarantor_name'],
-                        'occupation'                => $input['occupation'],
-                        'home_address'              => $input['home_address'],
-                        'guarantor_phone'           => $input['guarantor_phone'],
-                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
-                        'is_child'                  => $input['is_child'],
-                        'created_at'                => date('Y-d-m H:i:s', time()),
-                    ];
-                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    foreach ($input['tenement_info'] as $k => $v){
+                        $contract_tenement_data = [
+                            'contract_id'               => $contract_res,
+                            'tenement_id'               => @$v['tenement_id'],
+                            'tenement_full_name'        => $v['tenement_full_name'],
+                            'identification_no'         => $v['identification_no'],
+                            'identification_type'       => $v['identification_type'],
+                            'service_physical_address'  => $v['service_physical_address'],
+                            'tenement_e_mail'           => $v['tenement_e_mail'],
+                            'tenement_phone'            => $v['tenement_phone'],
+                            'tenement_mobile'           => $v['tenement_mobile'],
+                            'tenement_hm'               => $v['tenement_hm'],
+                            'tenement_wk'               => $v['tenement_wk'],
+                            'tenement_post_address'     => $v['tenement_post_address'],
+                            'tenement_post_code'        => $v['tenement_post_code'],
+                            'tenement_service_address'  => $v['tenement_service_address'],
+                            'other_contact_address'     => $v['other_contact_address'],
+                            'additional_address'        => $v['additional_address'],
+                            'guarantor_name'            => $v['guarantor_name'],
+                            'occupation'                => $v['occupation'],
+                            'home_address'              => $v['home_address'],
+                            'guarantor_phone'           => $v['guarantor_phone'],
+                            'guarantor_e_mail'          => $v['guarantor_e_mail'],
+                            'is_child'                  => $v['is_child'],
+                            'created_at'                => date('Y-m-d H:i:s', time()),
+                        ];
+                        $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    }
                     $entire_model = new EntireContract();
                     $entire_data = [
                         'contract_id'                               => $contract_res,
@@ -1050,32 +1079,34 @@ class RentService extends CommonService
                 $contract_res = $model->insertGetId($contract_data);
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
-                    $contract_tenement_data = [
-                        'contract_id'               => $contract_res,
-                        'tenement_id'               => @$input['tenement_id'],
-                        'tenement_full_name'        => $input['tenement_full_name'],
-                        'identification_no'         => $input['identification_no'],
-                        'identification_type'       => $input['identification_type'],
-                        'service_physical_address'  => $input['service_physical_address'],
-                        'tenement_e_mail'           => $input['tenement_e_mail'],
-                        'tenement_phone'            => $input['tenement_phone'],
-                        'tenement_mobile'           => $input['tenement_mobile'],
-                        'tenement_hm'               => $input['tenement_hm'],
-                        'tenement_wk'               => $input['tenement_wk'],
-                        'tenement_post_address'     => $input['tenement_post_address'],
-                        'tenement_post_code'        => $input['tenement_post_code'],
-                        'tenement_service_address'  => $input['tenement_service_address'],
-                        'other_contact_address'     => $input['other_contact_address'],
-                        'additional_address'        => $input['additional_address'],
-                        'guarantor_name'            => $input['guarantor_name'],
-                        'occupation'                => $input['occupation'],
-                        'home_address'              => $input['home_address'],
-                        'guarantor_phone'           => $input['guarantor_phone'],
-                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
-                        'is_child'                  => $input['is_child'],
-                        'created_at'                => date('Y-d-m H:i:s', time()),
-                    ];
-                    $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    foreach ($input['tenement_info'] as $k => $v){
+                        $contract_tenement_data = [
+                            'contract_id'               => $contract_res,
+                            'tenement_id'               => @$v['tenement_id'],
+                            'tenement_full_name'        => $v['tenement_full_name'],
+                            'identification_no'         => $v['identification_no'],
+                            'identification_type'       => $v['identification_type'],
+                            'service_physical_address'  => $v['service_physical_address'],
+                            'tenement_e_mail'           => $v['tenement_e_mail'],
+                            'tenement_phone'            => $v['tenement_phone'],
+                            'tenement_mobile'           => $v['tenement_mobile'],
+                            'tenement_hm'               => $v['tenement_hm'],
+                            'tenement_wk'               => $v['tenement_wk'],
+                            'tenement_post_address'     => $v['tenement_post_address'],
+                            'tenement_post_code'        => $v['tenement_post_code'],
+                            'tenement_service_address'  => $v['tenement_service_address'],
+                            'other_contact_address'     => $v['other_contact_address'],
+                            'additional_address'        => $v['additional_address'],
+                            'guarantor_name'            => $v['guarantor_name'],
+                            'occupation'                => $v['occupation'],
+                            'home_address'              => $v['home_address'],
+                            'guarantor_phone'           => $v['guarantor_phone'],
+                            'guarantor_e_mail'          => $v['guarantor_e_mail'],
+                            'is_child'                  => $v['is_child'],
+                            'created_at'                => date('Y-m-d H:i:s', time()),
+                        ];
+                        $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    }
                     $separate_model = new SeparateContract();
                     $separate_data = [
                         'contract_id'                               => $contract_res,
@@ -1160,31 +1191,34 @@ class RentService extends CommonService
                 $contract_res = $model->insertGetId($contract_data);
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
-                    $contract_tenement_data = [
-                        'contract_id'               => $contract_res,
-                        'tenement_id'               => @$input['tenement_id'],
-                        'tenement_full_name'        => $input['tenement_full_name'],
-                        'identification_no'         => $input['identification_no'],
-                        'identification_type'       => $input['identification_type'],
-                        'service_physical_address'  => $input['service_physical_address'],
-                        'tenement_e_mail'           => $input['tenement_e_mail'],
-                        'tenement_phone'            => $input['tenement_phone'],
-                        'tenement_mobile'           => $input['tenement_mobile'],
-                        'tenement_hm'               => $input['tenement_hm'],
-                        'tenement_wk'               => $input['tenement_wk'],
-                        'tenement_post_address'     => $input['tenement_post_address'],
-                        'tenement_post_code'        => $input['tenement_post_code'],
-                        'tenement_service_address'  => $input['tenement_service_address'],
-                        'other_contact_address'     => $input['other_contact_address'],
-                        'additional_address'        => $input['additional_address'],
-                        'guarantor_name'            => $input['guarantor_name'],
-                        'occupation'                => $input['occupation'],
-                        'home_address'              => $input['home_address'],
-                        'guarantor_phone'           => $input['guarantor_phone'],
-                        'guarantor_e_mail'          => $input['guarantor_e_mail'],
-                        'is_child'                  => $input['is_child'],
-                        'created_at'                => date('Y-d-m H:i:s', time()),
-                    ];
+                    foreach ($input['tenement_info'] as $k => $v){
+                        $contract_tenement_data = [
+                            'contract_id'               => $contract_res,
+                            'tenement_id'               => @$v['tenement_id'],
+                            'tenement_full_name'        => $v['tenement_full_name'],
+                            'identification_no'         => $v['identification_no'],
+                            'identification_type'       => $v['identification_type'],
+                            'service_physical_address'  => $v['service_physical_address'],
+                            'tenement_e_mail'           => $v['tenement_e_mail'],
+                            'tenement_phone'            => $v['tenement_phone'],
+                            'tenement_mobile'           => $v['tenement_mobile'],
+                            'tenement_hm'               => $v['tenement_hm'],
+                            'tenement_wk'               => $v['tenement_wk'],
+                            'tenement_post_address'     => $v['tenement_post_address'],
+                            'tenement_post_code'        => $v['tenement_post_code'],
+                            'tenement_service_address'  => $v['tenement_service_address'],
+                            'other_contact_address'     => $v['other_contact_address'],
+                            'additional_address'        => $v['additional_address'],
+                            'guarantor_name'            => $v['guarantor_name'],
+                            'occupation'                => $v['occupation'],
+                            'home_address'              => $v['home_address'],
+                            'guarantor_phone'           => $v['guarantor_phone'],
+                            'guarantor_e_mail'          => $v['guarantor_e_mail'],
+                            'is_child'                  => $v['is_child'],
+                            'created_at'                => date('Y-m-d H:i:s', time()),
+                        ];
+                        $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
+                    }
                     $contract_tenement_res = $contract_tenement_model->insert($contract_tenement_data);
                     $business_model = new BusinessContract();
                     $business_data = [
