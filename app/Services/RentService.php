@@ -763,8 +763,7 @@ class RentService extends CommonService
                 } else {
                     return $this->error('3', 'add contract failed');
                 }
-            }
-            elseif ($input['contract_type'] == 4 ) {
+            } elseif ($input['contract_type'] == 4 ) {
                 $contract_res = $model->insertGetId($contract_data);
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
