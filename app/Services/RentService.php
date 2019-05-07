@@ -902,7 +902,7 @@ class RentService extends CommonService
                 $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
                 foreach($res as $key => $value){
                     $res[$key]['property_name'] = RentHouse::where('id',$value['house_id'])->pluck('property_name')->first();
-                    $res[$key]['tenement_name'] = Tenement::where('id',$value['tenement_id'])->pluck('property_name')->first();
+                    $res[$key]['tenement_name'] = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
                 }
                 $data['contract_list'] = $res;
                 $data['total_page'] = ceil($count/10);
@@ -933,7 +933,7 @@ class RentService extends CommonService
             }else{
                 return $this->error('2','get contact failed');
             }
-        }elseif($res->contract_contract_type == 2){
+        }elseif($res->contract_contract_type == 2 || $res->contract_contract_type == 3){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
                 ->leftjoin('separate_contract','separate_contract.contract_id','=','id')->first();
             if($res){
@@ -941,7 +941,7 @@ class RentService extends CommonService
             }else{
                 return $this->error('2','get contact failed');
             }
-        }elseif($res->contract_contract_type == 3){
+        }elseif($res->contract_contract_type == 4){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
                 ->leftjoin('business_contract','business_contract.contract_id','=','id')->first();
             if($res){
