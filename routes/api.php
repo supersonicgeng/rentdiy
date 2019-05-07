@@ -151,6 +151,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 房屋检查
     $router->group(['prefix' => 'inspect'], function (Router $router) {
         $router->post('inspectAdd', 'InspectController@inspectAdd'); // 添加检查 4.12
+        $router->post('inspectList', 'InspectController@inspectList'); // 添加检查 4.12
     });
 });
 

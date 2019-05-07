@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Validator;
 class InspectService extends CommonService
 {
     /**
-     * @description:新增检查编辑
+     * @description:新增检查
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -184,8 +184,43 @@ class InspectService extends CommonService
                     }
                 }
             }
-
         }
+    }
 
+
+
+
+    /**
+     * @description:检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectList(array $input)
+    {
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $model = new Inspect();
+            $page = $input['page'];
+            $count = $model->where('rent_house_id',$input['rent_house_id'])->count();
+            if($count < ($page-1)*3){
+                return $this->error('3','no more inspect info');
+            }
+            $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*3)->limit(3)->get()->toArray();
+            if($res){
+                $data['inspect_list'] = $res;
+                $data['house_info'] = RentHouse::where('id',$input['rent_house_id'])->select('District','TA','Region','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','address')->first();
+                $data['house_info']['full_address'] = $data['house_info']['address'].','.Region::getName($data['house_info']['District']).','.Region::getName($data['house_info']['TA']).','.Region::getName($data['house_info']['Region']);
+                $data['total_page'] = ceil($count/3);
+                $data['current_page'] = $page;
+                return $this->success('get inspect list success',$data);
+            }else{
+                return $this->error('2','get inspect list fail');
+            }
+        }
     }
 }
