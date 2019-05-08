@@ -162,6 +162,30 @@ class InspectService extends CommonService
                                 }
                             }
                         }
+                        if($input['inspect_method'] == 2){
+                            // 发布市场
+                            $order_sn = orderId();
+                            $room_info = RentHouse::where('id',$input['rent_house_id'])->first();
+                            $order_data = [
+                                'inspect_id'            => $res,
+                                'user_id'               => $input['user_id'],
+                                'order_sn'              => $order_sn,
+                                'rent_house_id'         => $input['rent_house_id'],
+                                'District'              => $room_info->District,
+                                'TA'                    => $room_info->TA,
+                                'Region'                => $room_info->Region,
+                                'order_type'            => 3,
+                                'start_time'            => $input['inspect_start_date'],
+                                'end_time'              => $input['inspect_end_date'],
+                                'requirement'           => $input['requirement'],
+                                'budget'                => $input['budget'],
+                                'created_at'            => date('Y-m-d H:i:s',time()),
+                            ];
+                            $order_res = LandlordOrder::insert($order_data);
+                            if(!$order_res){
+                                $error += 1;
+                            }
+                        }
                         if ($res && !$error) {
                             return $this->success('inspect add success');
                         } else {
@@ -210,6 +234,30 @@ class InspectService extends CommonService
                                     if(!$room_res){
                                         $error += 1;
                                     }
+                                }
+                            }
+                            if($input['inspect_method'] == 2){
+                                // 发布市场
+                                $order_sn = orderId();
+                                $room_info = RentHouse::where('id',$input['rent_house_id'])->first();
+                                $order_data = [
+                                    'inspect_id'            => $res,
+                                    'user_id'               => $input['user_id'],
+                                    'order_sn'              => $order_sn,
+                                    'rent_house_id'         => $input['rent_house_id'],
+                                    'District'              => $room_info->District,
+                                    'TA'                    => $room_info->TA,
+                                    'Region'                => $room_info->Region,
+                                    'order_type'            => 3,
+                                    'start_time'            => $input['inspect_start_date'],
+                                    'end_time'              => $input['inspect_end_date'],
+                                    'requirement'           => $input['requirement'],
+                                    'budget'                => $input['budget'],
+                                    'created_at'            => date('Y-m-d H:i:s',time()),
+                                ];
+                                $order_res = LandlordOrder::insert($order_data);
+                                if(!$order_res){
+                                    $error += 1;
                                 }
                             }
                             if ($res && !$error) {
