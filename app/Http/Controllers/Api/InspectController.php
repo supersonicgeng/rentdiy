@@ -34,4 +34,17 @@ class InspectController extends Controller
         return service('Inspect')->inspectList($request->all());
     }
 
+
+    /**
+     * @description:检查项目
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectItem(Request $request)
+    {
+        return service('Inspect')->inspectItem($request->all());
+    }
 }
