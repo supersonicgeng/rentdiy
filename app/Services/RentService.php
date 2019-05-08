@@ -902,7 +902,7 @@ class RentService extends CommonService
                 foreach($res as $key => $value){
                     $res[$key]['property_name'] = RentHouse::where('id',$value['house_id'])->pluck('property_name')->first();
                     $res[$key]['tenement_name'] = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
-                    $tenement_id = ContractTenement::where('contract_id',$value['id'])->pluck('tenement')->first();
+                    $tenement_id = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_id')->first();
                     if($tenement_id){
                         $res[$key]['tenement_sn'] = Tenement::where('id',$tenement_id)->pluck('tenement_id')->first();
                         $res[$key]['tenement_id'] = $tenement_id;
