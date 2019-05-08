@@ -121,8 +121,8 @@ class InspectService extends CommonService
                 }elseif ($input['inspect_category'] == 2) { // 分租检查
                     $inspect_data = [
                         'rent_house_id'         => $input['rent_house_id'],
-                        'contract_id'           => $input['contract_id'],
-                        'inspect_name'              => $input['inspect_name'],
+                        'contract_id'           => @$input['contract_id'],
+                        'inspect_name'          => $input['inspect_name'],
                         'inspect_method'        => $input['inspect_method'],
                         'inspect_category'      => $input['inspect_category'],
                         'inspect_start_date'    => $input['inspect_start_date'],
@@ -194,8 +194,8 @@ class InspectService extends CommonService
                     }elseif ($input['inspect_category'] == 3) { // 批量检查
                         $inspect_data = [
                             'rent_house_id'         => $input['rent_house_id'],
-                            'contract_id'           => $input['contract_id'],
-                            'inspect_name'              => $input['inspect_name'],
+                            'contract_id'           => @$input['contract_id'],
+                            'inspect_name'          => $input['inspect_name'],
                             'inspect_method'        => $input['inspect_method'],
                             'inspect_category'      => $input['inspect_category'],
                             'inspect_start_date'    => $input['inspect_start_date'],
