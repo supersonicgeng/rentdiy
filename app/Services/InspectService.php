@@ -48,6 +48,7 @@ class InspectService extends CommonService
                 $inspect_data = [
                     'rent_house_id'             => $input['rent_house_id'],
                     'contract_id'               => $input['contract_id'],
+                    'inspect_name'              => $input['inspect_name'],
                     'inspect_method'            => $input['inspect_method'],
                     'inspect_category'          => $input['inspect_category'],
                     'inspect_start_date'        => $input['inspect_start_date'],
@@ -95,6 +96,7 @@ class InspectService extends CommonService
                     $inspect_data = [
                         'rent_house_id'         => $input['rent_house_id'],
                         'contract_id'           => $input['contract_id'],
+                        'inspect_name'              => $input['inspect_name'],
                         'inspect_method'        => $input['inspect_method'],
                         'inspect_category'      => $input['inspect_category'],
                         'inspect_start_date'    => $input['inspect_start_date'],
@@ -142,6 +144,7 @@ class InspectService extends CommonService
                         $inspect_data = [
                             'rent_house_id'         => $input['rent_house_id'],
                             'contract_id'           => $input['contract_id'],
+                            'inspect_name'              => $input['inspect_name'],
                             'inspect_method'        => $input['inspect_method'],
                             'inspect_category'      => $input['inspect_category'],
                             'inspect_start_date'    => $input['inspect_start_date'],
@@ -252,16 +255,16 @@ class InspectService extends CommonService
             if($inspect_res->inspect_category == 1){
                 $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                 foreach($room_name as $k => $v){
-                    $data[$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+                    $data['item'][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
                 }
                 return $this->success('get inspect item success',$data);
             }elseif ($inspect_res->inspect_category == 2){
-                $data['room_name']['items'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+                $data['item']['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                 return $this->success('get inspect item success',$data);
             }else{
                 $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                 foreach($room_name as $k => $v){
-                    $data[$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+                    $data['item'][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
                 }
                 return $this->success('get inspect item success',$data);
             }
