@@ -383,7 +383,7 @@ class RentService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('4','page number wrong');
             }
-            $res = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get()->toArray();
+            $res = $model->where('house_id',$input['rent_house_id'])->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get()->toArray();
             if($res){
                 foreach ($res as $k => $v){
                     $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
