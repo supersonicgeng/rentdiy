@@ -54,6 +54,7 @@ class InspectService extends CommonService
                     'inspect_start_date'        => $input['inspect_start_date'],
                     'inspect_end_date'          => $input['inspect_end_date'],
                     'inspect_note'              => $input['inspect_note'],
+                    'chattel_note'          => $input['chattel_note'],
                     'created_at'                => date('Y-m-d H:i:s',time()),
                 ];
                 $res = $model->insertGetId($inspect_data);
@@ -102,6 +103,7 @@ class InspectService extends CommonService
                         'inspect_start_date'    => $input['inspect_start_date'],
                         'inspect_end_date'      => $input['inspect_end_date'],
                         'inspect_note'          => $input['inspect_note'],
+                        'chattel_note'          => $input['chattel_note'],
                         'created_at'            => date('Y-m-d H:i:s', time()),
                     ];
                     $res = $model->insertGetId($inspect_data);
@@ -150,6 +152,7 @@ class InspectService extends CommonService
                             'inspect_start_date'    => $input['inspect_start_date'],
                             'inspect_end_date'      => $input['inspect_end_date'],
                             'inspect_note'          => $input['inspect_note'],
+                            'chattel_note'          => $input['chattel_note'],
                             'created_at'            => date('Y-m-d H:i:s', time()),
                         ];
                         $res = $model->insertGetId($inspect_data);
