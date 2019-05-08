@@ -260,6 +260,7 @@ class InspectService extends CommonService
                 return $this->success('get inspect item success',$room_name);
             }else{
                 $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+                dd($room_name);
                 foreach($room_name as $k => $v){
                     $room_name['items'] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
                 }
