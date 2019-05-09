@@ -362,7 +362,7 @@ class InspectService extends CommonService
     {
         $model = new RentHouse();
         $group_id = $model->where('id',$input['rent_house_id'])->pluck('group_id')->first();
-        $room_name = $model->where('gruop_id',$group_id)->select('id','room_name')->get()->toArray();
+        $room_name = $model->where('group_id',$group_id)->select('id','room_name')->get()->toArray();
         if($room_name){
             $data['room_name'] = $room_name;
             return $this->success('get room name success',$data);
