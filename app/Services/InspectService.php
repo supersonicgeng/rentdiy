@@ -217,11 +217,11 @@ class InspectService extends CommonService
                         $error += 1;
                     }else{
                         // 财产清单
-                        foreach ($input['chattel_list'] as $k => $v) {
+                        foreach ($input['chattel_list'] as $key => $value) {
                             $chattel_data = [
                                 'inspect_id'    => $room_res,
-                                'chattel_name'  => $v['chattel_name'],
-                                'chattel_num'   => $v['chattel_num'],
+                                'chattel_name'  => $value['chattel_name'],
+                                'chattel_num'   => $value['chattel_num'],
                                 'created_at'    => date('Y-m-d H:i:s', time()),
                             ];
                             $chattel_res = InspectChattel::insert($chattel_data);
@@ -229,8 +229,8 @@ class InspectService extends CommonService
                                 $error += 1;
                             }
                         }
+                        // 房屋
                         foreach ($v['items'] as $key => $value){
-                            // 房屋
                             $room_data = [
                                 'inspect_id'    => $room_res,
                                 'rent_house_id' => $v['rent_house_id'],
