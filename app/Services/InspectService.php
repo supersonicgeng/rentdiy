@@ -46,84 +46,82 @@ class InspectService extends CommonService
         }else{
             $model = new Inspect();
             if($input['inspect_category'] == 1) { // 整租检查
-                    $inspect_data = [
-                        'rent_house_id' => $input['rent_house_id'],
-                        'contract_id' => $input['contract_id'],
-                        'inspect_name' => $input['inspect_name'],
-                        'inspect_method' => $input['inspect_method'],
-                        'inspect_category' => $input['inspect_category'],
-                        'inspect_start_date' => $input['inspect_start_date'],
-                        'inspect_end_date' => $input['inspect_end_date'],
-                        'inspect_note' => $input['inspect_note'],
-                        'chattel_note' => $input['chattel_note'],
-                        'created_at' => date('Y-m-d H:i:s', time()),
-                    ];
-                    $res = $model->insertGetId($inspect_data);
-                    if ($res) {
-                        static $error = 0;
-                        // 财产清单
-                        foreach ($input['chattel_list'] as $k => $v) {
-                            $chattel_data = [
+                $inspect_data = [
+                    'rent_house_id' => $input['rent_house_id'],
+                    'contract_id' => $input['contract_id'],
+                    'inspect_name' => $input['inspect_name'],
+                    'inspect_method' => $input['inspect_method'],
+                    'inspect_category' => $input['inspect_category'],
+                    'inspect_start_date' => $input['inspect_start_date'],
+                    'inspect_end_date' => $input['inspect_end_date'],
+                    'inspect_note' => $input['inspect_note'],
+                    'chattel_note' => $input['chattel_note'],
+                    'created_at' => date('Y-m-d H:i:s', time()),
+                ];
+                $res = $model->insertGetId($inspect_data);
+                if ($res) {
+                    static $error = 0;
+                    // 财产清单
+                    foreach ($input['chattel_list'] as $k => $v) {
+                        $chattel_data = [
+                            'inspect_id' => $res,
+                            'chattel_name' => $v['chattel_name'],
+                            'chattel_num' => $v['chattel_num'],
+                            'created_at' => date('Y-m-d H:i:s', time()),
+                        ];
+                        $chattel_res = InspectChattel::insert($chattel_data);
+                        if (!$chattel_res) {
+                            $error += 1;
+                        }
+                    }
+                    // 检查房间存入
+                    foreach ($input['room_list'] as $k => $v) {
+                        foreach ($v['items'] as $key => $value) {
+                            $room_data = [
                                 'inspect_id' => $res,
-                                'chattel_name' => $v['chattel_name'],
-                                'chattel_num' => $v['chattel_num'],
+                                'room_name' => $v['room_name'],
+                                'items' => $value,
                                 'created_at' => date('Y-m-d H:i:s', time()),
                             ];
-                            $chattel_res = InspectChattel::insert($chattel_data);
-                            if (!$chattel_res) {
+                            $room_res = InspectRoom::insert($room_data);
+                            if (!$room_res) {
                                 $error += 1;
                             }
                         }
-                        // 检查房间存入
-                        foreach ($input['room_list'] as $k => $v) {
-                            foreach ($v['items'] as $key => $value) {
-                                $room_data = [
-                                    'inspect_id' => $res,
-                                    'room_name' => $v['room_name'],
-                                    'items' => $value,
-                                    'created_at' => date('Y-m-d H:i:s', time()),
-                                ];
-                                $room_res = InspectRoom::insert($room_data);
-                                if (!$room_res) {
-                                    $error += 1;
-                                }
-                            }
+                    }
+                    if ($input['inspect_method'] == 2) {
+                        // 发布市场
+                        $order_sn = orderId();
+                        $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
+                        $order_data = [
+                            'inspect_id' => $res,
+                            'user_id' => $input['user_id'],
+                            'order_sn' => $order_sn,
+                            'rent_house_id' => $input['rent_house_id'],
+                            'District' => $room_info->District,
+                            'TA' => $room_info->TA,
+                            'Region' => $room_info->Region,
+                            'order_type' => 3,
+                            'start_time' => $input['inspect_start_date'],
+                            'end_time' => $input['inspect_end_date'],
+                            'requirement' => $input['inspect_note'],
+                            'budget' => $input['budget'],
+                            'created_at' => date('Y-m-d H:i:s', time()),
+                        ];
+                        $order_res = LandlordOrder::insert($order_data);
+                        if (!$order_res) {
+                            $error += 1;
                         }
-                        if ($input['inspect_method'] == 2) {
-                            // 发布市场
-                            $order_sn = orderId();
-                            $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
-                            $order_data = [
-                                'inspect_id' => $res,
-                                'user_id' => $input['user_id'],
-                                'order_sn' => $order_sn,
-                                'rent_house_id' => $input['rent_house_id'],
-                                'District' => $room_info->District,
-                                'TA' => $room_info->TA,
-                                'Region' => $room_info->Region,
-                                'order_type' => 3,
-                                'start_time' => $input['inspect_start_date'],
-                                'end_time' => $input['inspect_end_date'],
-                                'requirement' => $input['inspect_note'],
-                                'budget' => $input['budget'],
-                                'created_at' => date('Y-m-d H:i:s', time()),
-                            ];
-                            $order_res = LandlordOrder::insert($order_data);
-                            if (!$order_res) {
-                                $error += 1;
-                            }
-                        }
-                        if ($res && !$error) {
-                            return $this->success('inspect add success');
-                        } else {
-                            return $this->error('3', 'inspect add failed');
-                        }
+                    }
+                    if ($res && !$error) {
+                        return $this->success('inspect add success');
                     } else {
                         return $this->error('3', 'inspect add failed');
                     }
-
+                } else {
+                    return $this->error('3', 'inspect add failed');
+                }
             }elseif ($input['inspect_category'] == 2) { // 分租检查
-                dd(111);
                 $inspect_data = [
                     'rent_house_id' => $input['rent_house_id'],
                     'contract_id' => @$input['contract_id'],
@@ -330,31 +328,47 @@ class InspectService extends CommonService
      */
     public function inspectItem(array $input)
     {
-        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
-        if(!$user_info->user_role %2 ){
-            return $this->error('2','this account is not a landlord role');
-        }else{
-            $model = new Inspect();
-            $inspect_res = $model->where('id',$input['inspect_id'])->first();
-            if($inspect_res->inspect_category == 1){
-                $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
-                foreach($room_name as $k => $v){
-                    $data['item'][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
-                }
-                return $this->success('get inspect item success',$data);
-            }elseif ($inspect_res->inspect_category == 2){
-                $data['item']['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
-                return $this->success('get inspect item success',$data);
-            }else{
-                $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
-                foreach($room_name as $k => $v){
-                    $data['item'][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
-                }
-                return $this->success('get inspect item success',$data);
+        $model = new Inspect();
+        $inspect_res = $model->where('id',$input['inspect_id'])->first();
+        if($inspect_res->inspect_category == 1){
+            $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            foreach($room_name as $k => $v){
+                $data['item'][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
             }
+            return $this->success('get inspect item success',$data);
+        }elseif ($inspect_res->inspect_category == 2){
+            $data['item']['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            return $this->success('get inspect item success',$data);
+        }else {
+            $room_name = InspectRoom::where('inspect_id', $input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            foreach ($room_name as $k => $v) {
+                $data['item'][$v['room_name']] = InspectRoom::where('inspect_id', $input['inspect_id'])->where('room_name', $v['room_name'])->get()->toArray();
+            }
+            return $this->success('get inspect item success', $data);
+
         }
     }
 
 
+    /**
+     * @description:批量检查 房屋列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectGroupRoom(array $input)
+    {
+        $model = new RentHouse();
+        $group_id = $model->where('id',$input['rent_house_id'])->pluck('group_id')->first();
+        $room_name = $model->where('gruop_id',$group_id)->select('id','room_name')->get()->toArray();
+        if($room_name){
+            $data['room_name'] = $room_name;
+            return $this->success('get room name success',$data);
+        }else{
+            return $this->error('2','get room name failed');
+        }
+    }
 
 }

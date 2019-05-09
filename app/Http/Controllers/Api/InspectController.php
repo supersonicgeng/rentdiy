@@ -47,4 +47,17 @@ class InspectController extends Controller
     {
         return service('Inspect')->inspectItem($request->all());
     }
+
+    /**
+     * @description:批量检查 房屋列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectGroupRoom(Request $request)
+    {
+        return service('Inspect')->inspectGroupRoom($request->all());
+    }
 }
