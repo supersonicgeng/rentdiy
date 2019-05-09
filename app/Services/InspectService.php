@@ -198,52 +198,49 @@ class InspectService extends CommonService
                     return $this->error('3', 'inspect add failed');
                 }
             }elseif ($input['inspect_category'] == 3) { // 批量检查
-                dd($input);
                 static $error = 0;
                 foreach($input['room_list'] as $k => $v){
-                    foreach ($v['items'] as $key => $value){
-                        $inspect_data = [
-                            'rent_house_id'         => $v['rent_house_id'],
-                            'contract_id'           => @$input['contract_id'],
-                            'inspect_name'          => $input['inspect_name'],
-                            'inspect_method'        => $input['inspect_method'],
-                            'inspect_category'      => $input['inspect_category'],
-                            'inspect_start_date'    => $input['inspect_start_date'],
-                            'inspect_end_date'      => $input['inspect_end_date'],
-                            'inspect_note'          => $input['inspect_note'],
-                            'chattel_note'          => $input['chattel_note'],
-                            'created_at'            => date('Y-m-d H:i:s', time()),
-                        ];
-                        $room_res = $model->insertGetId($inspect_data);;
-                        if(!$room_res){
-                            $error += 1;
-                        }else{
-                            // 财产清单
-                            foreach ($input['chattel_list'] as $k => $v) {
-                                $chattel_data = [
-                                    'inspect_id'    => $room_res,
-                                    'chattel_name'  => $v['chattel_name'],
-                                    'chattel_num'   => $v['chattel_num'],
-                                    'created_at'    => date('Y-m-d H:i:s', time()),
-                                ];
-                                $chattel_res = InspectChattel::insert($chattel_data);
-                                if (!$chattel_res) {
-                                    $error += 1;
-                                }
+                    $inspect_data = [
+                        'rent_house_id'         => $v['rent_house_id'],
+                        'contract_id'           => @$input['contract_id'],
+                        'inspect_name'          => $input['inspect_name'],
+                        'inspect_method'        => $input['inspect_method'],
+                        'inspect_category'      => $input['inspect_category'],
+                        'inspect_start_date'    => $input['inspect_start_date'],
+                        'inspect_end_date'      => $input['inspect_end_date'],
+                        'inspect_note'          => $input['inspect_note'],
+                        'chattel_note'          => $input['chattel_note'],
+                        'created_at'            => date('Y-m-d H:i:s', time()),
+                    ];
+                    $room_res = $model->insertGetId($inspect_data);;
+                    if(!$room_res){
+                        $error += 1;
+                    }else{
+                        // 财产清单
+                        foreach ($input['chattel_list'] as $k => $v) {
+                            $chattel_data = [
+                                'inspect_id'    => $room_res,
+                                'chattel_name'  => $v['chattel_name'],
+                                'chattel_num'   => $v['chattel_num'],
+                                'created_at'    => date('Y-m-d H:i:s', time()),
+                            ];
+                            $chattel_res = InspectChattel::insert($chattel_data);
+                            if (!$chattel_res) {
+                                $error += 1;
                             }
+                        }
+                        foreach ($v['items'] as $key => $value){
                             // 房屋
-                            foreach ($v['items'] as $key => $value){
-                                $room_data = [
-                                    'inspect_id'    => $room_res,
-                                    'rent_house_id' => $v['rent_house_id'],
-                                    'room_name'     => $v['room_name'],
-                                    'items'         => $value,
-                                    'created_at'    => date('Y-m-d H:i:s',time()),
-                                ];
-                                $res = InspectRoom::insert($room_data);
-                                if(!$res){
-                                    $error += 1;
-                                }
+                            $room_data = [
+                                'inspect_id'    => $room_res,
+                                'rent_house_id' => $v['rent_house_id'],
+                                'room_name'     => $v['room_name'],
+                                'items'         => $value,
+                                'created_at'    => date('Y-m-d H:i:s',time()),
+                            ];
+                            $res = InspectRoom::insert($room_data);
+                            if(!$res){
+                                $error += 1;
                             }
                         }
                     }
