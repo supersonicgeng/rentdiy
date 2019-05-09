@@ -198,11 +198,12 @@ class InspectService extends CommonService
                     return $this->error('3', 'inspect add failed');
                 }
             }elseif ($input['inspect_category'] == 3) { // 批量检查
+                dd($input);
                 static $error = 0;
                 foreach($input['room_list'] as $k => $v){
                     foreach ($v['items'] as $key => $value){
                         $inspect_data = [
-                            'rent_house_id'         => $input['rent_house_id'],
+                            'rent_house_id'         => $v['rent_house_id'],
                             'contract_id'           => @$input['contract_id'],
                             'inspect_name'          => $input['inspect_name'],
                             'inspect_method'        => $input['inspect_method'],
