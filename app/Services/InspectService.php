@@ -104,7 +104,7 @@ class InspectService extends CommonService
                             'order_type' => 3,
                             'start_time' => $input['inspect_start_date'],
                             'end_time' => $input['inspect_end_date'],
-                            'requirement' => $input['requirement'],
+                            'requirement' => $input['inspect_note'],
                             'budget' => $input['budget'],
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
@@ -181,7 +181,7 @@ class InspectService extends CommonService
                             'order_type' => 3,
                             'start_time' => $input['inspect_start_date'],
                             'end_time' => $input['inspect_end_date'],
-                            'requirement' => $input['requirement'],
+                            'requirement' => $input['inspect_note'],
                             'budget' => $input['budget'],
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
@@ -258,7 +258,7 @@ class InspectService extends CommonService
                             'order_type'            => 3,
                             'start_time'            => $input['inspect_start_date'],
                             'end_time'              => $input['inspect_end_date'],
-                            'requirement'           => $input['requirement'],
+                            'requirement'           => $input['inspect_note'],
                             'budget'                => $input['budget'],
                             'created_at'            => date('Y-m-d H:i:s',time()),
                         ];
