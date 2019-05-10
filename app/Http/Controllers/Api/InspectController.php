@@ -155,6 +155,6 @@ class InspectController extends Controller
      */
     public function inspectRecord(Request $request)
     {
-        return service('Inspect')->inspectConfirm($request->all());
+        return service('Inspect')->inspectRecord($request->all());
     }
 }
