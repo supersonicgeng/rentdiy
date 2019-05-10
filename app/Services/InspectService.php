@@ -431,6 +431,8 @@ class InspectService extends CommonService
        if($error){
            return $this->error('2','check failed');
        }else{
+           // 更改检查状态为2
+           Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>2]);
            return $this->success('check success');
        }
 
