@@ -47,7 +47,7 @@ class InspectService extends CommonService
         }else{
             $model = new Inspect();
             if($input['inspect_category'] == 1) { // 整租检查
-                $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+                $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
                 $inspect_data = [
                     'rent_house_id' => $input['rent_house_id'],
                     'contract_id' => $input['contract_id'],
@@ -125,7 +125,7 @@ class InspectService extends CommonService
                     return $this->error('3', 'inspect add failed');
                 }
             }elseif ($input['inspect_category'] == 2) { // 分租检查
-                $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+                $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
                 $inspect_data = [
                     'rent_house_id' => $input['rent_house_id'],
                     'contract_id' => @$input['contract_id'],
@@ -204,7 +204,7 @@ class InspectService extends CommonService
                 }
             }elseif ($input['inspect_category'] == 3) { // 批量检查
                 static $error = 0;
-                $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+                $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
                 foreach($input['room_list'] as $k => $v){
                     $inspect_data = [
                         'rent_house_id'         => $v['rent_house_id'],
