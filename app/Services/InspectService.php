@@ -350,7 +350,7 @@ class InspectService extends CommonService
                 if($res['inspect_category'] = 1){
                     $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                     foreach($room_name as $k => $v){
-                        $item_info[] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+                        $item_info[][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
                     }
                 }else{
                     $item_info[] = InspectRoom::where('inspect_id',$input['inspect_id'])->get()->toArray();
@@ -498,7 +498,7 @@ class InspectService extends CommonService
                 return $this->error('4','you check order already have a  tender can not edit this inspect ');
             }
             if($input['inspect_category'] == 1) { // 整租检查
-                $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+                $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
                 $inspect_data = [
                     'rent_house_id' => $input['rent_house_id'],
                     'contract_id' => $input['contract_id'],
@@ -580,7 +580,7 @@ class InspectService extends CommonService
                     return $this->error('3', 'inspect add failed');
                 }
             }elseif ($input['inspect_category'] == 2) { // 分租检查
-                $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+                $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
                 $inspect_data = [
                     'rent_house_id' => $input['rent_house_id'],
                     'contract_id' => @$input['contract_id'],
