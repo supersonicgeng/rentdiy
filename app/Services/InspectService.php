@@ -444,7 +444,7 @@ class InspectService extends CommonService
                     'inspect_note'  => $value['inspect_note'],
                     'updated_at'    => date('Y-m-d H:i:s',time()),
                 ];
-                $res = $model->where('id',$value['id'])->update($room_data);
+                $res = $model->where('id',$value['id'])->save($room_data);
             }else{
                 $room_data = [
                     'inspect_id'    => $input['inspect_id'],
