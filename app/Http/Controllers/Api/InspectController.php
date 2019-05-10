@@ -60,4 +60,61 @@ class InspectController extends Controller
     {
         return service('Inspect')->inspectGroupRoom($request->all());
     }
+
+
+    /**
+     * @description:房东开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectLandlordCheck(Request $request)
+    {
+        return service('Inspect')->inspectLandlordCheck($request->all());
+    }
+
+
+
+    /**
+     * @description:检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectEdit(Request $request)
+    {
+        return service('Inspect')->inspectEdit($request->all());
+    }
+
+
+    /**
+     * @description:检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectDeleteRoom(Request $request)
+    {
+        return service('Inspect')->inspectDeleteRoom($request->all());
+    }
+
+
+    /**
+     * @description:检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectDeleteItem(Request $request)
+    {
+        return service('Inspect')->inspectDeleteItem($request->all());
+    }
 }
