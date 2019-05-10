@@ -434,7 +434,6 @@ class InspectService extends CommonService
         static $error = 0;
         $model = new InspectRoom();
         foreach ($input['items_list'] as $key => $value){
-            dd($value);
             if(isset($value['id'])){
                 $room_data = [
                     'accept'        => $value['accept'],
