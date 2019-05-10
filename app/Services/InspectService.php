@@ -327,6 +327,44 @@ class InspectService extends CommonService
 
 
     /**
+     * @description:检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectDetail(array $input)
+    {
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $model = new Inspect();
+            $inspect_id = $input['inspect_id'];
+            $res = $model->where('id',$inspect_id)->first()->toArray();
+            if(!$res){
+                return $this->error('2','get inspect detail failed');
+            }else{
+                $chattel_info = InspectChattel::where('inspect_id',$inspect_id)->select('chattel_name','chattel_num')->get()->toArray();
+                if($res['inspect_category'] = 1){
+                    $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+                    foreach($room_name as $k => $v){
+                        $item_info[] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+                    }
+                }else{
+                    $item_info[] = InspectRoom::where('inspect_id',$input['inspect_id'])->get()->toArray();
+                }
+                $data['inspect_info'] = $res;
+                $data['chattel_info'] = $chattel_info;
+                $data['item_info']  = $item_info;
+                return $this->success('get inspect detail success',$data);
+            }
+        }
+    }
+
+
+    /**
      * @description:检查项目
      * @author: syg <13971394623@163.com>
      * @param $code
