@@ -350,10 +350,11 @@ class InspectService extends CommonService
                 if($res['inspect_category'] = 1){
                     $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                     foreach($room_name as $k => $v){
-                        $item_info[][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+                        $item_info[]['room_name'] =  $v['room_name'];
+                        $item_info[]['item'] =  InspectRoom::where('inspect_id',$input['inspect_id'])->pluck('item')->get()->toArray();
                     }
                 }else{
-                    $item_info[] = InspectRoom::where('inspect_id',$input['inspect_id'])->get()->toArray();
+                    $item_info[]['item'] =  InspectRoom::where('inspect_id',$input['inspect_id'])->pluck('item')->get()->toArray();
                 }
                 $data['inspect_info'] = $res;
                 $data['chattel_info'] = $chattel_info;
@@ -745,7 +746,7 @@ class InspectService extends CommonService
                 }else{
                     return $this->error('3', 'inspect add failed');
                 }*/
-            
+
         }
     }
 
