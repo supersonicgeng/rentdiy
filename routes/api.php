@@ -157,7 +157,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('inspectDeleteRoom', 'InspectController@inspectDeleteRoom'); // 删除房间 5.10
         $router->post('inspectDeleteItem', 'InspectController@inspectDeleteItem'); // 删除项目 5.10
         $router->post('inspectGroupRoom', 'InspectController@inspectGroupRoom'); // 批量检查 房屋列表 5.7
-        $router->post('inspectLandlordCheck','InspectController@inspectLandlordCheck'); // 房东开始检查 5.9
+        $router->post('inspectCheck','InspectController@inspectCheck'); // 房东开始检查 5.9
     });
 });
 

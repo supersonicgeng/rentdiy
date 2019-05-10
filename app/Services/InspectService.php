@@ -389,33 +389,56 @@ class InspectService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function inspectLandlordCheck(array $input)
+    public function inspectCheck(array $input)
     {
         // 修改检查表
         static $error = 0;
         $model = new InspectRoom();
         foreach ($input['items_list'] as $key => $value){
-            $room_data = [
-                'accept'        => $value['accept'],
-                'photo1'        => $value['photo1'],
-                'photo2'        => $value['photo2'],
-                'photo3'        => $value['photo3'],
-                'photo4'        => $value['photo4'],
-                'inspect_note'  => $value['inspect_note'],
-                'created_at'    => date('Y-m-d H:i:s',time()),
-            ];
-            $res = $model->where('id',$value['id'])->update($room_data);
+            if(isset($value['id'])){
+                $room_data = [
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'updated_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = $model->where('id',$value['id'])->update($room_data);
+            }else{
+                $room_data = [
+                    'inspect_id'    => $input['inspect_id'],
+                    'room_name'     => $value['room_name'],
+                    'items'         => $value['items'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = $model->insert($room_data);
+            }
             if(!$res){
                 $error += 1;
             }
+            // 将问题存入问题表中
+            //TODO
+
         }
-        // 将问题存入问题表中
+       if($error){
+           return $this->error('2','check failed');
+       }else{
+           return $this->success('check success');
+       }
 
     }
 
 
     /**
-     * @description:新增检查
+     * @description:检查编辑
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -614,7 +637,7 @@ class InspectService extends CommonService
                         'chattel_note'          => $input['chattel_note'],
                         'created_at'            => date('Y-m-d H:i:s', time()),
                     ];
-                    $room_res = $model->where('ins')->update($inspect_data);
+                    $room_res = $model->where('id',$v['inspect_id'])->update($inspect_data);
                     $inspect_id[] = $room_res;
                     if(!$room_res){
                         $error += 1;

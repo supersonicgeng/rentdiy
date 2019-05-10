@@ -70,9 +70,9 @@ class InspectController extends Controller
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function inspectLandlordCheck(Request $request)
+    public function inspectCheck(Request $request)
     {
-        return service('Inspect')->inspectLandlordCheck($request->all());
+        return service('Inspect')->inspectCheck($request->all());
     }
 
 
