@@ -434,6 +434,7 @@ class InspectService extends CommonService
         static $error = 0;
         $model = new InspectRoom();
         foreach ($input['items_list'] as $key => $value){
+            dd($value);
             if(isset($value['id'])){
                 $room_data = [
                     'accept'        => $value['accept'],
@@ -444,7 +445,7 @@ class InspectService extends CommonService
                     'inspect_note'  => $value['inspect_note'],
                     'updated_at'    => date('Y-m-d H:i:s',time()),
                 ];
-                $res = $model->where('id',$value['id'])->save($room_data);
+                $res = $model->where('id',$value['id'])->update($room_data);
             }else{
                 $room_data = [
                     'inspect_id'    => $input['inspect_id'],
