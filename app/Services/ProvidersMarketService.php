@@ -65,11 +65,13 @@ class ProvidersMarketService extends CommonService
         $rent_house_id = $input['rent_house_id'];
         $room_info = RentHouse::where('id',$rent_house_id)->first();
         $model = new LandlordOrder();
+        $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
         $order_sn = orderId();
         $order_data = [
             'rent_application_id'   => @$input['rent_application_id'],
             'rent_contract_id'      => @$input['rent_contract_id'],
             'issue_id'              => @$input['issue_id'],
+            'group_id'              => $group_id+1,
             'user_id'               => $user_id,
             'tenement_id'           => @$input['tenement_id'],
             'order_sn'              => $order_sn,
@@ -137,7 +139,7 @@ class ProvidersMarketService extends CommonService
         if($count <= ($page-1)*5){
             return $this->error('2','no more information');
         }
-        $res = $model->where('order_status',1)->offset(($page-1)*5)->limit(5)->get()->toArray();
+        $res = $model->where('order_status',1)->groupBy('group_id')->offset(($page-1)*5)->limit(5)->get()->toArray();
         foreach ($res as $k => $v){
             $order_res[$k] = RentHouse::where('id',$v['rent_house_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','require_renter','Region','available_date')->first()->toArray();
             $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
