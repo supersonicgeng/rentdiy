@@ -791,4 +791,48 @@ class InspectService extends CommonService
         }
 
     }
+
+
+    /**
+     * @description:检查确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectConfirm(array $input)
+    {
+        $item_id = $input['item_id'];
+        $res = InspectRoom::whereIn('id',$item_id)->delete();
+        if($res){
+            return $this->success('delete item success');
+        }else{
+            return $this->error('2','deleted item failed');
+        }
+
+    }
+
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectRecord(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new InspectRoom();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $data['res'] = $res;
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
+        }
+
+    }
 }
