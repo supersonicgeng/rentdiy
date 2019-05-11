@@ -813,6 +813,13 @@ class InspectService extends CommonService
             'upload_url'        => $input['upload_url'],
             'inspector_sign'    => $input['inspector_sign'],
             'tenement_sign'     => $input['tenement_sign'],
+            'select1'           => $input['select1'],
+            'select2'           => $input['select2'],
+            'select3'           => $input['select3'],
+            'select4'           => $input['select4'],
+            'select5'           => $input['select5'],
+            'select6'           => $input['select6'],
+            'select7'           => $input['select7'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $res = InspectCheck::insert($check_data);
