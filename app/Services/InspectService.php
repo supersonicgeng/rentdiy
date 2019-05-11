@@ -13,6 +13,7 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\Inspect;
 use App\Model\InspectChattel;
+use App\Model\InspectCheck;
 use App\Model\InspectRoom;
 use App\Model\Key;
 use App\Model\LandlordOrder;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\In;
 
 class InspectService extends CommonService
 {
@@ -803,14 +805,29 @@ class InspectService extends CommonService
      */
     public function inspectConfirm(array $input)
     {
-        $item_id = $input['item_id'];
-        $res = InspectRoom::whereIn('id',$item_id)->delete();
+        $check_data =  [
+            'inspect_id'        => $input['inspect_id'],
+            'inspector_note'    => $input['inspector_note'],
+            'tenement_note'     => $input['tenement_note'],
+            'other_note'        => $input['other_note'],
+            'upload_url'        => $input['upload_url'],
+            'inspector_sign'    => $input['inspector_sign'],
+            'tenement_sign'     => $input['tenement_sign'],
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $res = InspectCheck::insert($check_data);
         if($res){
-            return $this->success('delete item success');
+            // 更改状态
+            $inspect_method = Inspect::where('id',$input['inspect_id'])->first();
+            if($inspect_method->inspect_method == 2){
+                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            }else{
+                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            }
+            return $this->success('inspect confirm success');
         }else{
-            return $this->error('2','deleted item failed');
+            return $this->error('2','inspect confirm failed');
         }
-
     }
 
 
