@@ -444,6 +444,7 @@ class InspectService extends CommonService
                     'photo3'        => $value['photo3'],
                     'photo4'        => $value['photo4'],
                     'inspect_note'  => $value['inspect_note'],
+                    'video_url'     => $value['video_url'],
                     'updated_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 $res = $model->where('id',$value['id'])->update($room_data);
@@ -458,6 +459,7 @@ class InspectService extends CommonService
                     'photo3'        => $value['photo3'],
                     'photo4'        => $value['photo4'],
                     'inspect_note'  => $value['inspect_note'],
+                    'video_url'     => $value['video_url'],
                     'created_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 $res = $model->insert($room_data);
