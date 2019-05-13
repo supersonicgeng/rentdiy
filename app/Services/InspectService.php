@@ -857,7 +857,7 @@ class InspectService extends CommonService
     {
         $inspect_id = $input['inspect_id'];
         $model = new InspectRoom();
-        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
         $data['res'] = $res;
         if($res){
             return $this->success('get record success',$data);
@@ -894,26 +894,49 @@ class InspectService extends CommonService
 
 
     /**
-     * @description:检查记录
+     * @description:发布维修订单
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addIssues(array $input)
+    public function addIssuesBatch(array $input)
     {
-        $inspect_id = $input['inspect_id'];
-        $model = new InspectRoom();
-        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
-        $data['issues_res'] = $res;
-        $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
-        $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
-
-        if($res){
-            return $this->success('get record success',$data);
+        $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
+        $issues_id = $input['issues_id'];
+        static $error = 0;
+        foreach ($issues_id as $k => $v){
+            $order_sn = orderId();
+            $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
+            $order_data = [
+                'issues_id' => $v,
+                'user_id' => $input['user_id'],
+                'group_id'  => $group_id+1,
+                'order_sn' => $order_sn,
+                'rent_house_id' => $input['rent_house_id'],
+                'jobs'          => $input['jobs'],
+                'District' => $room_info->District,
+                'TA' => $room_info->TA,
+                'Region' => $room_info->Region,
+                'order_type' => 4,
+                'start_time' => $input['repair_start_date'],
+                'end_time' => $input['repair_end_date'],
+                'requirement' => $input['issues_note'],
+                'budget' => $input['budget'],
+                'created_at' => date('Y-m-d H:i:s', time()),
+            ];
+            $res = LandlordOrder::insert($order_data);
+            // 更改检查列表状态
+            InspectRoom::where('id',$v)->update(['accept'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        if(!$error){
+            return $this->success('send order market success');
         }else{
-            return $this->error('2','no record');
+            return $this->error('2','send order market failed');
         }
 
     }
@@ -935,6 +958,28 @@ class InspectService extends CommonService
             return $this->success('landlord confirm success');
         }else{
             return $this->error('2','landlord confirm failed');
+        }
+
+    }
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function issueRecord(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new InspectRoom();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $data['res'] = $res;
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
         }
 
     }

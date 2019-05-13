@@ -182,9 +182,9 @@ class InspectController extends Controller
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addIssues(Request $request)
+    public function addIssuesBatch(Request $request)
     {
-        return service('Inspect')->addIssues($request->all());
+        return service('Inspect')->addIssuesBatch($request->all());
     }
 
 
@@ -199,5 +199,18 @@ class InspectController extends Controller
     public function landlordConfirm(Request $request)
     {
         return service('Inspect')->landlordConfirm($request->all());
+    }
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function issueRecord(Request $request)
+    {
+        return service('Inspect')->issueRecord($request->all());
     }
 }
