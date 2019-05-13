@@ -824,6 +824,7 @@ class InspectService extends CommonService
             'select5'           => $input['select5'],
             'select6'           => $input['select6'],
             'select7'           => $input['select7'],
+            'repair_note'       => $input['repair_note'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $res = InspectCheck::insert($check_data);
