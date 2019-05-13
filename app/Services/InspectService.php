@@ -805,6 +805,10 @@ class InspectService extends CommonService
      */
     public function inspectConfirm(array $input)
     {
+        $check = Inspect::where('inspect_id',$input['inspect_id'])->first();
+        if($check){
+            return $this->error('3','already confirm');
+        }
         $check_data =  [
             'inspect_id'        => $input['inspect_id'],
             'inspector_note'    => $input['inspector_note'],
@@ -923,15 +927,11 @@ class InspectService extends CommonService
     {
         $inspect_id = $input['inspect_id'];
         $model = new Inspect();
-        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
-        $data['issues_res'] = $res;
-        $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
-        $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
-
+        $res = $model->where('id',$inspect_id)->update(['inspect_status'=> 4,'updated_at'=>date('Y-m-d H:i:s',time())]);
         if($res){
-            return $this->success('get record success',$data);
+            return $this->success('landlord confirm success');
         }else{
-            return $this->error('2','no record');
+            return $this->error('2','landlord confirm failed');
         }
 
     }
