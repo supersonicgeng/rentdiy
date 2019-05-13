@@ -859,4 +859,80 @@ class InspectService extends CommonService
         }
 
     }
+
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordCheckDetail(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new InspectRoom();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $data['issues_res'] = $res;
+        $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
+        $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
+        }
+
+    }
+
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addIssues(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new InspectRoom();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $data['issues_res'] = $res;
+        $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
+        $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
+
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
+        }
+
+    }
+
+    /**
+     * @description:房东确认检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordConfirm(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new Inspect();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
+        $data['issues_res'] = $res;
+        $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
+        $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
+
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
+        }
+
+    }
 }

@@ -157,4 +157,47 @@ class InspectController extends Controller
     {
         return service('Inspect')->inspectRecord($request->all());
     }
+
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordCheckDetail(Request $request)
+    {
+        return service('Inspect')->landlordCheckDetail($request->all());
+    }
+
+
+
+    /**
+     * @description:增加维修单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addIssues(Request $request)
+    {
+        return service('Inspect')->addIssues($request->all());
+    }
+
+
+    /**
+     * @description:房东确认检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordConfirm(Request $request)
+    {
+        return service('Inspect')->landlordConfirm($request->all());
+    }
 }

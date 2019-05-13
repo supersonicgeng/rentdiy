@@ -161,6 +161,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('inspectCheck','InspectController@inspectCheck'); // 房东开始检查 5.9
         $router->post('inspectConfirm','InspectController@inspectConfirm'); // 检查确认信息 5.10
         $router->post('inspectRecord','InspectController@inspectRecord'); // 检查确认信息 5.10
+        $router->post('landlordCheckDetail','InspectController@landlordCheckDetail'); // 获取信息 5.11
+        $router->post('addIssues','InspectController@addIssues'); // 增加维修单 5.11
+        $router->post('landlordConfirm','InspectController@landlordConfirm'); // 房东确认检查 5.11
     });
 });
 
