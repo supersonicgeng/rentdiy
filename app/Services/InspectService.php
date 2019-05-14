@@ -807,7 +807,7 @@ class InspectService extends CommonService
      */
     public function inspectConfirm(array $input)
     {
-        $check = Inspect::where('id',$input['inspect_id'])->first();
+        $check = InspectCheck::where('inspect_id',$input['inspect_id'])->first();
         if($check){
             return $this->error('3','already confirm');
         }
