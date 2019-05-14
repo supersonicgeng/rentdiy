@@ -1360,7 +1360,9 @@ class RentService extends CommonService
         if($identification){
             return $this->success('get identification success',$identification);
         }else{
-            $data = $model->where('contract_id',$input['contract_id'])->select('identification_no as certificate_no','identification_type as certificate_category')->first();
+            $data[0] = $model->where('contract_id',$input['contract_id'])->select('identification_no as certificate_no','identification_type as certificate_category')->first();
+            $data[0]['certificate_pic1'] = '';
+            $data[0]['certificate_pic2'] = '';
             return $this->success('get identification success',$data);
         }
     }
