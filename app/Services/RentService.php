@@ -42,6 +42,7 @@ use App\Model\SignLog;
 use App\Model\Survey;
 use App\Model\SysSign;
 use App\Model\Tenement;
+use App\Model\TenementCertificate;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
