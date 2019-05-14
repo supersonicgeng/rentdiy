@@ -1355,7 +1355,7 @@ class RentService extends CommonService
         //dd($input);
         $model = new ContractTenement();
         $res = $model->where('contract_id',$input['contract_id'])->pluck('tenement_id');
-        $identification = Tenement::where('id',$res)->select('certificate_category','certificate_no','certificate_pic1','certificate_pic2')->get()->toArray();
+        $identification = TenementCertificate::where('id',$res)->select('certificate_category','certificate_no','certificate_pic1','certificate_pic2')->get()->toArray();
         if($identification){
             return $this->success('get identification success',$identification);
         }else{
