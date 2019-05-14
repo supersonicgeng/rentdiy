@@ -165,4 +165,30 @@ class RentController extends CommonController
     {
         return service('Rent')->rentContactDetail($request->all());
     }
+
+    /**
+     * @description:租约详细
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactEffect(Request $request)
+    {
+        return service('Rent')->rentContactEffect($request->all());
+    }
+
+    /**
+     * @description:查看证件
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function viewTenementInfo(Request $request)
+    {
+        return service('Rent')->viewTenementInfo($request->all());
+    }
 }

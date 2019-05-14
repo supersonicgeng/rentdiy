@@ -1317,6 +1317,49 @@ class RentService extends CommonService
         }
     }
 
+    /**
+     * @description:租约生效
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentContactEffect(array $input)
+    {
+        //dd($input);
+        $model = new RentContract();
+        $effect_data = [
+            'contract_status'   => 2,
+            'rent_start_date'   => $input['rent_start_date'],
+            'rent_end_date'     => $input['rent_end_date'],
+        ];
+        $res = $model->where('id',$input['contract_id'])->update($effect_data);
+        if($res){
+            // 生成押金记录
+
+        }
+    }
 
 
+    /**
+     * @description:查看证件
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function viewTenementInfo(array $input)
+    {
+        //dd($input);
+        $model = new ContractTenement();
+        $res = $model->where('contract_id',$input['contract_id'])->pluck('tenement_id');
+        $identification = Tenement::where('id',$res)->select('certificate_category','certificate_no','certificate_pic1','certificate_pic2')->get()->toArray();
+        if($identification){
+            return $this->success('get identification success',$identification);
+        }else{
+            return $this->error('2','get identification success');
+        }
+    }
 }
