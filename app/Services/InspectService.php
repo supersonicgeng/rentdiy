@@ -859,7 +859,7 @@ class InspectService extends CommonService
         $model = new InspectRoom();
         $res = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
         $data['res'] = $res;
-        $data['inspect_method'] = Inspect::where('id',$inspect_id)->pluck('inspect_method');
+        $data['inspect_method'] = Inspect::where('id',$inspect_id)->pluck('inspect_method')->first();
         if($res){
             return $this->success('get record success',$data);
         }else{
