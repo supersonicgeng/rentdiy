@@ -999,46 +999,42 @@ class InspectService extends CommonService
         $group_id = LandlordOrder::max('group_id'); // 获得目前存入的最大group_id
         // 存入inspect_room表
         static $error = 0;
-        foreach ($input['room_list'] as $k => $v) {
-            foreach ($v['items'] as $key => $value) {
-                $room_data = [
-                    'inspect_id'    => $input['inspect_id'],
-                    'room_name'     => $value['room_name'],
-                    'items'         => $value['items'],
-                    'accept'        => $value['accept'],
-                    'photo1'        => $value['photo1'],
-                    'photo2'        => $value['photo2'],
-                    'photo3'        => $value['photo3'],
-                    'photo4'        => $value['photo4'],
-                    'inspect_note'  => $value['inspect_note'],
-                    'video_url'     => $value['video_url'],
-                    'created_at'    => date('Y-m-d H:i:s',time()),
-                ];
-                $issues_res = InspectRoom::insertGetId($room_data);
-                $order_sn = orderId();
-                $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
-                $order_data = [
-                    'issues_id' => $issues_res,
-                    'user_id' => $input['user_id'],
-                    'group_id'  => $group_id+1,
-                    'order_sn' => $order_sn,
-                    'rent_house_id' => $input['rent_house_id'],
-                    'jobs'          => $input['jobs'],
-                    'District' => $room_info->District,
-                    'TA' => $room_info->TA,
-                    'Region' => $room_info->Region,
-                    'order_type' => 4,
-                    'start_time' => $input['repair_start_date'],
-                    'end_time' => $input['repair_end_date'],
-                    'requirement' => $input['issues_note'],
-                    'budget' => $input['budget'],
-                    'created_at' => date('Y-m-d H:i:s', time()),
-                ];
-                $res = LandlordOrder::insert($order_data);
-            }
-            if(!$res){
-                $error += 1;
-            }
+        foreach ($input['items'] as $k => $v) {
+            $room_data = [
+                'items'         => $v['items'],
+                'accept'        => 2,
+                'photo1'        => $v['photo1'],
+                'photo2'        => $v['photo2'],
+                'photo3'        => $v['photo3'],
+                'photo4'        => $v['photo4'],
+                'inspect_note'  => $v['inspect_note'],
+                'video_url'     => $v['video_url'],
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $issues_res = InspectRoom::insertGetId($room_data);
+            $order_sn = orderId();
+            $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
+            $order_data = [
+                'issues_id' => $issues_res,
+                'user_id' => $input['user_id'],
+                'group_id'  => $group_id+1,
+                'order_sn' => $order_sn,
+                'rent_house_id' => $input['rent_house_id'],
+                'jobs'          => $input['jobs'],
+                'District' => $room_info->District,
+                'TA' => $room_info->TA,
+                'Region' => $room_info->Region,
+                'order_type' => 4,
+                'start_time' => $input['repair_start_date'],
+                'end_time' => $input['repair_end_date'],
+                'requirement' => $input['issues_note'],
+                'budget' => $input['budget'],
+                'created_at' => date('Y-m-d H:i:s', time()),
+            ];
+            $res = LandlordOrder::insert($order_data);
+        }
+        if(!$res){
+            $error += 1;
         }
         if(!$error){
             return $this->success('send order market success');
