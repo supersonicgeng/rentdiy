@@ -911,7 +911,7 @@ class InspectService extends CommonService
             $order_sn = orderId();
             $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
             $order_data = [
-                'issues_id' => $v,
+                'issue_id' => $v,
                 'user_id' => $input['user_id'],
                 'group_id'  => $group_id+1,
                 'order_sn' => $order_sn,
@@ -1015,7 +1015,7 @@ class InspectService extends CommonService
             $order_sn = orderId();
             $room_info = RentHouse::where('id', $input['rent_house_id'])->first();
             $order_data = [
-                'issues_id' => $issues_res,
+                'issue_id' => $issues_res,
                 'user_id' => $input['user_id'],
                 'group_id'  => $group_id+1,
                 'order_sn' => $order_sn,
