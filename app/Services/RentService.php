@@ -13,6 +13,7 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\AliPay\AliPayClient;
 use App\Model\AliPay\AliPayTransfer;
+use App\Model\Bond;
 use App\Model\BusinessContract;
 use App\Model\CheckBuilding;
 use App\Model\Config;
@@ -33,6 +34,7 @@ use App\Model\PlantOperateLog;
 use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentContract;
+use App\Model\RentFee;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\RouteItems;
@@ -530,6 +532,25 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
+                        if(!$v['tenement_id']){
+                            //房东自己添加的时候添加租户列表
+                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
+                            if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
+                                $v['tenement_id'] = $tenement_res;
+                            }else{ // 没有在租户表中新建一个租户信息
+                                $tenement_data = [
+                                    'tenement_id'               => tenementId(),
+                                    'mobile'                    => $v['tenement_mobile'],
+                                    'phone'                     => $v['tenement_phone'],
+                                    'email'                     => $v['tenement_e_mail'],
+                                    'mail_address'              => $input['mail_address'],
+                                    'service_address'           => $v['service_physical_address'],
+                                    'mail_code'                 => $v['tenement_post_code'],
+                                    'created_at'                => date('Y-m-d H:i:s',time()),
+                                ];
+                                $v['tenement_id'] = Tenement::insertGetId($tenement_data);
+                            }
+                        }
                         $contract_tenement_data = [
                             'contract_id'               => $contract_res,
                             'tenement_id'               => @$v['tenement_id'],
@@ -638,6 +659,25 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
+                        if(!$v['tenement_id']){
+                            //房东自己添加的时候添加租户列表
+                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
+                            if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
+                                $v['tenement_id'] = $tenement_res;
+                            }else{ // 没有在租户表中新建一个租户信息
+                                $tenement_data = [
+                                    'tenement_id'               => tenementId(),
+                                    'mobile'                    => $v['tenement_mobile'],
+                                    'phone'                     => $v['tenement_phone'],
+                                    'email'                     => $v['tenement_e_mail'],
+                                    'mail_address'              => $input['mail_address'],
+                                    'service_address'           => $v['service_physical_address'],
+                                    'mail_code'                 => $v['tenement_post_code'],
+                                    'created_at'                => date('Y-m-d H:i:s',time()),
+                                ];
+                                $v['tenement_id'] = Tenement::insertGetId($tenement_data);
+                            }
+                        }
                         $contract_tenement_data = [
                             'contract_id'               => $contract_res,
                             'tenement_id'               => @$v['tenement_id'],
@@ -769,6 +809,25 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
+                        if(!$v['tenement_id']){
+                            //房东自己添加的时候添加租户列表
+                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
+                            if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
+                                $v['tenement_id'] = $tenement_res;
+                            }else{ // 没有在租户表中新建一个租户信息
+                                $tenement_data = [
+                                    'tenement_id'               => tenementId(),
+                                    'mobile'                    => $v['tenement_mobile'],
+                                    'phone'                     => $v['tenement_phone'],
+                                    'email'                     => $v['tenement_e_mail'],
+                                    'mail_address'              => $input['mail_address'],
+                                    'service_address'           => $v['service_physical_address'],
+                                    'mail_code'                 => $v['tenement_post_code'],
+                                    'created_at'                => date('Y-m-d H:i:s',time()),
+                                ];
+                                $v['tenement_id'] = Tenement::insertGetId($tenement_data);
+                            }
+                        }
                         $contract_tenement_data = [
                             'contract_id'               => $contract_res,
                             'tenement_id'               => @$v['tenement_id'],
@@ -1337,8 +1396,314 @@ class RentService extends CommonService
         ];
         $res = $model->where('id',$input['contract_id'])->update($effect_data);
         if($res){
-            // 生成押金记录
+            $contract_data = $model->where('id',$input['contract_id'])->first();
+            if($contract_data->contract_type == 1){
+                // 生成押金记录
+                $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
+                $rent_house_info = RentHouse::where('id',$contract_data->house_id)->first();
+                $entire_data = EntireContract::where('contract_id',$input['contract_id'])->first();
+                $bond_data = [
+                    'contract_id'       => $input['contract_id'],
+                    'contract_sn'       => $contract_data->contract_id,
+                    'user_id'           => $input['user_id'],
+                    'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                    'property_name'     => $rent_house_info->property_name,
+                    'tenement_phone'    => $contract_tenement_data->tenement_phone,
+                    'tenement_email'    => $contract_tenement_data->tenement_email,
+                    'total_bond'        => $entire_data->bond_amont,
+                ];
+                $bond_res = Bond::insert($bond_data);
+                // 生成预付记录
+                if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
+                    if($entire_data->pay_method == 2){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i),
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($entire_data->pay_method == 3){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($entire_data->pay_method == 4){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }
+                }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
+                    if($entire_data->pay_method == 2){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($entire_data->pay_method == 3){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($entire_data->pay_method == 4){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $entire_data->rent_per_week,
+                                'arrears'           => $entire_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }
+                }
+            }elseif ($contract_data->contract_type == 2 || $contract_data->contract_type == 3){
+                // 生成押金记录
+                $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
+                $rent_house_info = RentHouse::where('id',$contract_data->house_id)->first();
+                $separate_data = SeparateContract::where('contract_id',$input['contract_id'])->first();
+                $bond_data = [
+                    'contract_id'       => $input['contract_id'],
+                    'contract_sn'       => $contract_data->contract_id,
+                    'user_id'           => $input['user_id'],
+                    'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                    'property_name'     => $rent_house_info->property_name,
+                    'tenement_phone'    => $contract_tenement_data->tenement_phone,
+                    'tenement_email'    => $contract_tenement_data->tenement_email,
+                    'total_bond'        => $separate_data->bond_amont,
+                ];
+                $bond_res = Bond::insert($bond_data);
+                // 生成预付记录
+                if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
+                    if($separate_data->pay_method == 2){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i),
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($separate_data->pay_method == 3){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($separate_data->pay_method == 4){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }
+                }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
+                    if($separate_data->pay_method == 2){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($separate_data->pay_method == 3){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }elseif ($separate_data->pay_method == 4){
+                        $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        for($i=0;$i<$cycle;$i++){
+                            $arrears_data = [
+                                'contract_id'       => $input['contract_id'],
+                                'contract_sn'       => $contract_data->contract_id,
+                                'user_id'           => $input['user_id'],
+                                'rent_house_id'     => $input['rent_house_id'],
+                                'tenement_id'       => $contract_tenement_data->tenement_id,
+                                'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                                'tenement_email'    => $contract_tenement_data->tenement_email,
+                                'effect_date'       => $input['rent_start_date'],
+                                'rent_fee'          => $separate_data->rent_per_week,
+                                'arrears'           => $separate_data->rent_per_week,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            RentFee::insert($arrears_data);
+                        }
+                    }
+                }
+            }elseif ($contract_data->contract_type == 4){
+                // 生成押金记录
+                $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
+                $rent_house_info = RentHouse::where('id',$contract_data->house_id)->first();
+                $business_data = BusinessContract::where('contract_id',$input['contract_id'])->first();
+                // 生成预付记录
+                if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
+                    $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                    for($i=0;$i<$cycle;$i++){
+                        $arrears_data = [
+                            'contract_id'       => $input['contract_id'],
+                            'contract_sn'       => $contract_data->contract_id,
+                            'user_id'           => $input['user_id'],
+                            'rent_house_id'     => $input['rent_house_id'],
+                            'tenement_id'       => $contract_tenement_data->tenement_id,
+                            'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                            'tenement_email'    => $contract_tenement_data->tenement_email,
+                            'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
+                            'rent_fee'          => $business_data->month_rent,
+                            'arrears'           => $business_data->month_rent,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        RentFee::insert($arrears_data);
+                    }
+                }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
+                    $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                    for($i=0;$i<$cycle;$i++){
+                        $arrears_data = [
+                            'contract_id'       => $input['contract_id'],
+                            'contract_sn'       => $contract_data->contract_id,
+                            'user_id'           => $input['user_id'],
+                            'rent_house_id'     => $input['rent_house_id'],
+                            'tenement_id'       => $contract_tenement_data->tenement_id,
+                            'tenement_name'     => $contract_tenement_data->tenement_full_name,
+                            'tenement_email'    => $contract_tenement_data->tenement_email,
+                            'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
+                            'rent_fee'          => $business_data->month_rent,
+                            'arrears'           => $business_data->month_rent,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        RentFee::insert($arrears_data);
+                    }
+                }
+            }
 
+        }else{
+            return $this->error('2','contact effect failed');
         }
     }
 
