@@ -167,6 +167,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('addIssuesBatch','InspectController@addIssuesBatch'); // 批量增加维修单 5.11
         $router->post('landlordConfirm','InspectController@landlordConfirm'); // 房东确认检查 5.11
         $router->post('issueRecord','InspectController@issueRecord'); // 待维修记录 5.10
+        $router->post('addIssues','InspectController@addIssues'); // 增加维修单 5.11
     });
 });
 
