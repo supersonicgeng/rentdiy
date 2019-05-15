@@ -1701,7 +1701,7 @@ class RentService extends CommonService
                     }
                 }
             }
-
+            return $this->success('contract effect success');
         }else{
             return $this->error('2','contact effect failed');
         }
