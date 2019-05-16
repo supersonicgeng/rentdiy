@@ -254,7 +254,7 @@ class LandlordService extends CommonService
             $res = $model->offset(($input['page']-1)*5)->limit(10)->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['providers_name']  = Providers::where('id',$v['service_id'])->pluck('service_name')->first();
-                $res[$k]['quality_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('service_name');
+                $res[$k]['quality_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('quality_score');
                 $res[$k]['community_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('community_score');
                 $res[$k]['money_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('money_score');
                 $res[$k]['providers_name']  = Providers::where('id',$v['service_id'])->pluck('service_name')->first();
