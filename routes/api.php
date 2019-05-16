@@ -118,7 +118,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22 // 接口 done
         $router->post('deleteLandlordInformation', 'LandlordController@deleteLandlordInformation'); // 删除房东联系人 3.27
         $router->post('watchTenementInformation','LandlordController@watchTenementInformation'); // 房东查看租户信息 5.5
+        $router->post('orderList','LandlordController@orderList'); // 查看订单列表
         $router->post('tenderList','LandlordController@tenderList'); // 查看订单报价
+        $router->post('tenderAccept','LandlordController@tenderAccept'); // 订单确认
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {

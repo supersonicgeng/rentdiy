@@ -18,6 +18,7 @@ use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Landlord;
+use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\Passport;
@@ -218,6 +219,42 @@ class LandlordService extends CommonService
             }else{
                 return $this->success('delete land lord success');
             }
+        }
+    }
+
+
+    /**
+     * @description:房东报价列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function orderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $model = new LandlordOrder();
+            if($input['start_date']){
+                $model = $model->where('start_time','>',$input['start_date']);
+            }
+            if($input['end_date']){
+                $model = $model->where('end_time','<',$input['end_date']);
+            }
+            $page = $input['page'];
+            $count = $model->where('user_id',$input['user_id'])->count();
+            if($count < ($page-1)*10){
+                return $this->error('2','no more order');
+            }
+            $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+            $data['order_list'] = $res;
+            $data['total_page'] = ceil($count/10);
+            $data['current_page'] = $page;
+            return $this->success('get order list success',$data);
         }
     }
 
