@@ -239,7 +239,7 @@ class LandlordService extends CommonService
             $model = new Tender();
             $model =  $model->where('order_id',$input['order_id']);
             if($input['sort_type'] == 1){
-                $model = $model->orderBy('DESC');
+                $model = $model->orderBy('id','DESC');
             }elseif ($input['sort_type'] == 2){
                 $model = $model->where('tender_status',3);
             }elseif ($input['sort_type'] == 3){
