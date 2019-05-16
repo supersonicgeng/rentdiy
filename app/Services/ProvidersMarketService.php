@@ -232,21 +232,22 @@ class ProvidersMarketService extends CommonService
         //dd($input);
         $model = new ProvidersScore();
         $score_data = [
-            'service_id'    => $input['service_id'],
-            'order_id'      => $input['order_id'],
-            'quota_price'   => $input['quota_price'],
-            'tender_note'   => $input['tender_note'],
-            'created_at'    => date('Y-m-d H:i:s',time()),
+            'service_id'        => $input['service_id'],
+            'order_id'          => $input['order_id'],
+            'quality_score'     => $input['quality_score'],
+            'community_score'   => $input['community_score'],
+            'money_score'       => $input['money_score'],
+            'score_detail'      => $input['score_detail'],
+            'created_at'        => date('Y-m-d H:i:s',time()),
         ];
-        if($model->where('order_id',$input['order_id'])->where('service_id',$input['service_id'])->first()){
-            return $this->error('3','you already tender this order');
+        if($model->where('order_id',$input['order_id'])->first()){
+            return $this->error('3','you already score this order');
         }
-        $res = $model->insert($tender_data);
+        $res = $model->insert($score_data);
         if($res){
-            LandlordOrder::where('id',$input['order_id'])->increment('total_tender');
-            return $this->success('tender success');
+            return $this->success('score success');
         }else{
-            return $this->error('2','tender failed');
+            return $this->error('2','score failed');
         }
     }
 }

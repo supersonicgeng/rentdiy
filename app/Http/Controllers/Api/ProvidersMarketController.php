@@ -60,4 +60,17 @@ class ProvidersMarketController extends CommonController
     {
         return service('ProvidersMarket')->tenderOrder($request->all());
     }
+
+    /**
+     * @description:订单评分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function orderScore(Request $request)
+    {
+        return service('ProvidersMarket')->orderScore($request->all());
+    }
 }
