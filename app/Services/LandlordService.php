@@ -25,6 +25,8 @@ use App\Model\PassportReward;
 use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
+use App\Model\Providers;
+use App\Model\ProvidersScore;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -234,13 +236,31 @@ class LandlordService extends CommonService
         if(!$user_info->user_role %2 ){
             return $this->error('2','this account is not a landlord role');
         }else{
-            $count = Tender::where('order_id',$input['order_id'])->count();
-            if($count < ($input['page']-1)*10){
+            $model = new Tender();
+            $model =  $model->where('order_id',$input['order_id']);
+            if($input['sort_type'] == 1){
+                $model = $model->orderBy('DESC');
+            }elseif ($input['sort_type'] == 2){
+                $model = $model->where('tender_status',3);
+            }elseif ($input['sort_type'] == 3){
+                $model = $model->where('tender_status',2);
+            }elseif ($input['sort_type'] == 4){
+                $model = $model->where('tender_status',4);
+            }
+            $count = $model->count();
+            if($count < ($input['page']-1)*5){
                 return $this->error('3','no more tender information');
             }
-            $res = Tender::where('order_id',$input['order_id'])->offset(($input['page']-1)*10)->limit(10)->get();
+            $res = $model->offset(($input['page']-1)*5)->limit(10)->get()->toArray();
+            foreach ($res as $k => $v){
+                $res[$k]['providers_name']  = Providers::where('id',$v['service_id'])->pluck('service_name')->first();
+                $res[$k]['quality_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('service_name');
+                $res[$k]['community_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('community_score');
+                $res[$k]['money_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('money_score');
+                $res[$k]['providers_name']  = Providers::where('id',$v['service_id'])->pluck('service_name')->first();
+            }
             $data['tender_list'] = $res;
-            $data['total_page'] = ceil($count/10);
+            $data['total_page'] = ceil($count/5);
             $data['current_page'] = $input['page'];
             return $this->success('get tender list success',$data);
         }
