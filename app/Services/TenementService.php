@@ -167,7 +167,7 @@ class TenementService extends CommonService
                 }else{
                     static $error = 0;
                     $certificate_model = new TenementCertificate();
-                    $certificate_model->where('tenement_id',$input['tenement_id'])->update('deleted_at',date('Y-m-d H:i:s',time()));
+                    $certificate_model->where('tenement_id',$input['tenement_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                     foreach ($input['certificate_category'] as $k => $v){
                         $certificate_data = [
                             'tenement_id'           => $input['id'],
