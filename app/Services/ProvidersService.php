@@ -188,9 +188,9 @@ class ProvidersService extends CommonService
                     return $this->error('4','provider information add failed');
                 }else{
                     static $error = 0;
-                    ProvidersCompanyPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
-                    ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
-                    ServiceIntroduce::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s'),time());
+                    ProvidersCompanyPic::where('service_id',$input['service_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                    ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                    ServiceIntroduce::where('service_id',$input['service_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
                     $service_company_pic = $input['service_company_pic'];
                     foreach ($service_company_pic as $k => $v){
                         $service_company_pic_data = [
