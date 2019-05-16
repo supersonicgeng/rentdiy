@@ -29,6 +29,7 @@ use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
 use App\Model\SysSign;
+use App\Model\Tender;
 use App\Model\Tenement;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
@@ -218,5 +219,30 @@ class LandlordService extends CommonService
         }
     }
 
-
+    /**
+     * @description:房东报价列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $count = Tender::where('order_id',$input['order_id'])->count();
+            if($count < ($input['page']-1)*10){
+                return $this->error('3','no more tender information');
+            }
+            $res = Tender::where('order_id',$input['order_id'])->offset(($input['page']-1)*10)->limit(10)->get();
+            $data['tender_list'] = $res;
+            $data['total_page'] = ceil($count/10);
+            $data['current_page'] = $input['page'];
+            return $this->success('get tender list success',$data);
+        }
+    }
 }

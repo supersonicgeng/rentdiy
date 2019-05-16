@@ -89,4 +89,18 @@ class LandlordController extends CommonController
     {
         return service('Tenement')->watchTenementInformation($request->all());
     }
+
+
+    /**
+     * @description:房东查看报价列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenderList(Request $request)
+    {
+        return service('Landlord')->tenderList($request->all());
+    }
 }

@@ -118,6 +118,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('editLandlordInformation', 'LandlordController@editLandlordInformation'); // 修改房东联系人 3.22 // 接口 done
         $router->post('deleteLandlordInformation', 'LandlordController@deleteLandlordInformation'); // 删除房东联系人 3.27
         $router->post('watchTenementInformation','LandlordController@watchTenementInformation'); // 房东查看租户信息 5.5
+        $router->post('tenderList','LandlordController@tenderList'); // 查看订单报价
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {
@@ -142,6 +143,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getOrderList', 'ProvidersMarketController@getOrderList'); // 获得订单列表 4.2
         $router->post('getOrderDetail', 'ProvidersMarketController@getOrderDetail'); // 获得订单详情 4.2
         $router->post('tenderOrder', 'ProvidersMarketController@tenderOrder'); //  服务商报价 4.30
+        $router->post('orderScore','ProvidersMarketController@orderScore'); // 评价服务商 5.16
     });
     // 钥匙管理
     $router->group(['prefix' => 'key'], function (Router $router) {
@@ -168,6 +170,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('landlordConfirm','InspectController@landlordConfirm'); // 房东确认检查 5.11
         $router->post('issueRecord','InspectController@issueRecord'); // 待维修记录 5.10
         $router->post('addIssues','InspectController@addIssues'); // 增加维修单 5.11
+    });
+    // 押金管理
+    $router->group(['prefix' => 'bond'], function (Router $router) {
+        $router->post('bondList', 'BondController@bondList'); // 押金列表 4.10
+        $router->post('uploadBond', 'BondController@uploadBond'); // 押金上缴 4.10
     });
 });
 
