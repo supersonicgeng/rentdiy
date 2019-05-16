@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class Tender extends Model
 {
     protected $table    = 'tender';
-    protected $fillable = ['id','service_id','order_id','quota_price','tender_note','tender_status','created_at','updated_at','deleted_at'];
+    protected $fillable = ['id','service_id','order_id','quota_price','tender_note','tender_status','start_date','end_date','created_at','updated_at','deleted_at'];
 }

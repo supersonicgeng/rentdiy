@@ -27,6 +27,7 @@ use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Providers;
+use App\Model\ProvidersScore;
 use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentHouse;
@@ -198,6 +199,39 @@ class ProvidersMarketService extends CommonService
         //dd($input);
         $model = new Tender();
         $tender_data = [
+            'service_id'    => $input['service_id'],
+            'order_id'      => $input['order_id'],
+            'quota_price'   => $input['quota_price'],
+            'tender_note'   => $input['tender_note'],
+            'start_date'    => $input['start_date'],
+            'end_date'      => $input['end_date'],
+            'created_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        if($model->where('order_id',$input['order_id'])->where('service_id',$input['service_id'])->first()){
+            return $this->error('3','you already tender this order');
+        }
+        $res = $model->insert($tender_data);
+        if($res){
+            LandlordOrder::where('id',$input['order_id'])->increment('total_tender');
+            return $this->success('tender success');
+        }else{
+            return $this->error('2','tender failed');
+        }
+    }
+
+    /**
+     * @description: 报价订单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function orderScore(array $input)
+    {
+        //dd($input);
+        $model = new ProvidersScore();
+        $score_data = [
             'service_id'    => $input['service_id'],
             'order_id'      => $input['order_id'],
             'quota_price'   => $input['quota_price'],
