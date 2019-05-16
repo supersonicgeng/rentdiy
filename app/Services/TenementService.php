@@ -163,7 +163,7 @@ class TenementService extends CommonService
                 $model = new Tenement();
                 $res = $model->where('user_id',$input['user_id'])->update($tenement_data);
                 if(!$res){
-                    return $this->error('4','tenement information add failed');
+                    return $this->error('5','tenement information add failed');
                 }else{
                     static $error = 0;
                     $certificate_model = new TenementCertificate();
@@ -183,7 +183,7 @@ class TenementService extends CommonService
                         }
                     }
                     if($error){
-                        return $this->error('4','tenement information edit failed');
+                        return $this->error('6','tenement information edit failed');
                     }
                     return $this->success('tenement information edit success');
                 }
