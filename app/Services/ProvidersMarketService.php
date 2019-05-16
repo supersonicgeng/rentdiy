@@ -232,7 +232,7 @@ class ProvidersMarketService extends CommonService
         //dd($input);
         $model = new ProvidersScore();
         $score_data = [
-            'service_id'        => $input['service_id'],
+            'service_id'        => LandlordOrder::where('id',$input['order_id'])->pluck('providers')->first(),
             'order_id'          => $input['order_id'],
             'quality_score'     => $input['quality_score'],
             'community_score'   => $input['community_score'],
