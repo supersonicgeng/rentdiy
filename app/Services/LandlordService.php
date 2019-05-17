@@ -240,16 +240,14 @@ class LandlordService extends CommonService
             return $this->error('2','this account is not a landlord role');
         }else{
             $model = new LandlordOrder();
-            if($input['start_date']){
-                $model = $model->where('start_time','>',$input['start_date']);
-            }
-            if($input['end_date']){
-                $model = $model->where('end_time','<',$input['end_date']);
-            }
             $page = $input['page'];
             $count = $model->where('user_id',$input['user_id'])->count();
             if($count < ($page-1)*10){
                 return $this->error('2','no more order');
+            }
+            $sort_order = $input['sort_order'];
+            if($sort_order == 2){
+                $model = $model->orderBy('id','DESC');
             }
             $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
             foreach ($res as $k => $v){
