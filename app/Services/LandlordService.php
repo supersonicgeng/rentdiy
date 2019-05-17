@@ -286,7 +286,7 @@ class LandlordService extends CommonService
             }elseif ($input['sort_type'] == 3){
                 $model = $model->where('tender_status',2);
             }elseif ($input['sort_type'] == 4){
-                $model = $model->where('tender_status',4);
+                $model = $model->where('tender_status',1);
             }
             $count = $model->count();
             if($count < ($input['page']-1)*5){
@@ -304,6 +304,43 @@ class LandlordService extends CommonService
             $data['total_page'] = ceil($count/5);
             $data['current_page'] = $input['page'];
             return $this->success('get tender list success',$data);
+        }
+    }
+
+
+    /**
+     * @description:房东报价确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenderAccept(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $order_id = $input['order_id'];
+            $tender_id = $input['tender_id'];
+            // 将所有的报价全部变成失效
+            $res1 = Tender::where('order_id',$order_id)->update(['tender_status'=>2]);
+            // 将报价的订单生效
+            $res2 = Tender::where('id',$tender_id)->update(['tender_status'=>3]);
+            // 将订单状态更改 增加服务商信息
+            $order_change_data = [
+                'order_status'  => 2,
+                'providers_id'  => Tender::where('id',$tender_id)->pluck('service_id')->first(),
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $res3 = LandlordOrder::where('order_id',$order_id)->update($order_change_data);
+            if($res1 && $res2 && $res3){
+                return $this->success('order accept success');
+            }else{
+                return $this->error('3','order accept failed');
+            }
         }
     }
 }
