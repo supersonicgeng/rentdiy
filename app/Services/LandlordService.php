@@ -28,6 +28,7 @@ use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Providers;
 use App\Model\ProvidersScore;
+use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -251,6 +252,9 @@ class LandlordService extends CommonService
                 return $this->error('2','no more order');
             }
             $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+            foreach ($res as $k => $v){
+                $res[$k]['property_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('property_name')->first();
+            }
             $data['order_list'] = $res;
             $data['total_page'] = ceil($count/10);
             $data['current_page'] = $page;
