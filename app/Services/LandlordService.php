@@ -290,7 +290,7 @@ class LandlordService extends CommonService
             if($count < ($input['page']-1)*5){
                 return $this->error('3','no more tender information');
             }
-            $res = $model->offset(($input['page']-1)*5)->limit(10)->get()->toArray();
+            $res = $model->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['providers_name']  = Providers::where('id',$v['service_id'])->pluck('service_name')->first();
                 $res[$k]['quality_score']  = ProvidersScore::where('service_id',$v['service_id'])->avg('quality_score');
