@@ -76,4 +76,18 @@ class ProvidersController extends CommonController
     {
         return service('Providers')->deleteProvidersInformation($request->all());
     }
+
+
+    /**
+     * @description:删除服务商主体
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderList(Request $request)
+    {
+        return service('Providers')->getOrderList($request->all());
+    }
 }

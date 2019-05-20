@@ -131,6 +131,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('editProvidersInformation', 'ProvidersController@editProvidersInformation'); // 修改服务商主体 3.22 // 接口done
         $router->post('deleteProvidersInformation', 'ProvidersController@deleteProvidersInformation'); // 删除服务商主体 3.27
         $router->post('getProvidersList','ProvidersController@getProvidersList'); // 获得所有服务商主体
+        $router->post('getOrderList','ProvidersController@getOrderList'); // 获得所有订单列表
     });
     // 操作员管理
     $router->group(['prefix' => 'operator'], function (Router $router) {

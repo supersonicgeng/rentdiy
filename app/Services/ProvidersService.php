@@ -18,6 +18,7 @@ use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Landlord;
+use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\Passport;
@@ -324,6 +325,56 @@ class ProvidersService extends CommonService
                 ProvidersCompanyPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s',time())); // 删除公司图片
                 ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->update('deleted_at',date('Y-m-d H:i:s',time())); // 删除公司宣传图片
                 return $this->success('deleted providers success');
+            }
+        }
+    }
+
+
+    /**
+     * @description:删除服务商主体
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $start_date = $input['start_date'];
+            if($start_date){
+                $model = $model->where('end_time','>',$start_date);
+            }
+            $end_date = $input['end_date'];
+            if($end_date){
+                $model = $model->where('end_time','<',$end_date);
+            }
+            $page = $input['page'];
+            $count = $model->count();
+            if($count < ($page-1)*10){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+            static $amount = 0;
+            foreach($res as $k=>$v){
+                $res[$k]['customer'] = Landlord::where('user_id',$v['user_id'])->pluck('landlord_name')->first();
+                $amount += $v['budget'];
+            }
+            $data['order_list'] = $res;
+            $data['total_amount'] = $amount;
+            $data['total_page'] = ceil($count/10);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get order list success',$data);
+            }else{
+                return $this->error('3','get order list failed');
             }
         }
     }
