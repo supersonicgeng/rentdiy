@@ -341,4 +341,32 @@ class LandlordService extends CommonService
             }
         }
     }
+
+
+    /**
+     * @description:房东订单中止
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function orderStop(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $order_id = $input['order_id'];
+            // 修改订单状态
+            $model = new LandlordOrder();
+            $res = $model->where('id',$order_id)->update(['order_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            if($res){
+                return $this->success('order stop success');
+            }else{
+                return $this->error('3','order stop failed');
+            }
+        }
+    }
 }

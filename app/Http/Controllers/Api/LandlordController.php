@@ -131,4 +131,19 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->tenderAccept($request->all());
     }
+
+
+
+    /**
+     * @description:房东中止订单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function orderStop(Request $request)
+    {
+        return service('Landlord')->orderStop($request->all());
+    }
 }
