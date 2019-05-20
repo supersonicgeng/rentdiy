@@ -179,6 +179,9 @@ class ProvidersMarketService extends CommonService
         $res = $model->where('id', $order_id)->first()->toArray();
         if($res['order_type'] == 4){
             $res['issues_info'] = InspectRoom::where('id',$res['issue_id'])->first();
+            if(!$res['issues_info']['inspect_note']){
+                $res['issues_info']['inspect_note'] = '';
+            }
         }
         $providers_info = Providers::where('user_id',$input['user_id'])->select('service_name','id as service_id')->get()->toArray();
         $data['order_info'] = $res;
