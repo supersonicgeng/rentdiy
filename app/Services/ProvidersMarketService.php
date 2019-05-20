@@ -136,7 +136,8 @@ class ProvidersMarketService extends CommonService
         }
         $model = $model->where('end_time','>=',date('Y-m-d',time()));
         $page = $input['page'];
-        $count = $model->where('order_status',1)->count();
+        $count = $model->where('order_status',1)->groupBy('group_id')->get()->toArray();
+        $count = count($count);
         if($count <= ($page-1)*5){
             return $this->error('2','no more information');
         }
