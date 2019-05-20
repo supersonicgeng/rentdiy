@@ -17,6 +17,7 @@ use App\Model\CheckBuilding;
 use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\InspectRoom;
 use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\Order;
@@ -175,7 +176,10 @@ class ProvidersMarketService extends CommonService
         //dd($input);
         $model = new LandlordOrder();
         $order_id = $input['order_id'];
-        $res = $model->where('id', $order_id)->first();
+        $res = $model->where('id', $order_id)->first()->toArray();
+        if($res['order_type'] == 4){
+            $res['issues_info'] = InspectRoom::where('id',$res['issue_id'])->first();
+        }
         $providers_info = Providers::where('user_id',$input['user_id'])->select('service_name','id as service_id')->get()->toArray();
         $data['order_info'] = $res;
         $data['providers_info'] = $providers_info;
