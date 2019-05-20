@@ -333,7 +333,7 @@ class LandlordService extends CommonService
                 'providers_id'  => Tender::where('id',$tender_id)->pluck('service_id')->first(),
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
-            $res3 = LandlordOrder::where('order_id',$order_id)->update($order_change_data);
+            $res3 = LandlordOrder::where('id',$order_id)->update($order_change_data);
             if($res1 && $res2 && $res3){
                 return $this->success('order accept success');
             }else{
