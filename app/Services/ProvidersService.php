@@ -458,7 +458,7 @@ class ProvidersService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('3','no more order info');
             }
-            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id')->get();
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
@@ -550,7 +550,7 @@ class ProvidersService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('3','no more order info');
             }
-            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id')->get();
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
@@ -596,7 +596,7 @@ class ProvidersService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('3','no more order info');
             }
-            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id')->get();
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
@@ -628,7 +628,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',1);
