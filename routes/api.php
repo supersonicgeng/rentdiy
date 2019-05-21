@@ -132,6 +132,14 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('deleteProvidersInformation', 'ProvidersController@deleteProvidersInformation'); // 删除服务商主体 3.27
         $router->post('getProvidersList','ProvidersController@getProvidersList'); // 获得所有服务商主体
         $router->post('getOrderList','ProvidersController@getOrderList'); // 获得所有订单列表
+        $router->post('getLookOrderList','ProvidersController@getLookOrderList'); // 获得看房订单列表
+        $router->post('getTenementOrderList','ProvidersController@getTenementOrderList'); // 获得租户调查订单列表
+        $router->post('getInspectOrderList','ProvidersController@getInspectOrderList'); // 获得看房订单列表
+        $router->post('getRepairOrderList','ProvidersController@getRepairOrderList'); // 获得看房订单列表
+        $router->post('getLitigationOrderList','ProvidersController@getLitigationOrderList'); // 获得看房订单列表
+        $router->post('getLookOrderDetail','ProvidersController@getLookOrderDetail'); // 获得看房订单详情
+        $router->post('getTenementOrderDetail','ProvidersController@getTenementOrderDetail'); // 获得租户调查订单详情
+        $router->post('getRepairOrderDetail','ProvidersController@getRepairOrderDetail'); // 获得维修订单详细
     });
     // 操作员管理
     $router->group(['prefix' => 'operator'], function (Router $router) {

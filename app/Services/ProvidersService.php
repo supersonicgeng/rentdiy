@@ -17,6 +17,7 @@ use App\Model\CheckBuilding;
 use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\Inspect;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
 use App\Model\Level;
@@ -29,6 +30,9 @@ use App\Model\PlantOperateLog;
 use App\Model\Providers;
 use App\Model\ProvidersCompanyPic;
 use App\Model\ProvidersCompanyPromoPic;
+use App\Model\Region;
+use App\Model\RentApplication;
+use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\ServiceIntroduce;
@@ -331,7 +335,7 @@ class ProvidersService extends CommonService
 
 
     /**
-     * @description:删除服务商主体
+     * @description:服务商已接订单列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -375,6 +379,280 @@ class ProvidersService extends CommonService
                 return $this->success('get order list success',$data);
             }else{
                 return $this->error('3','get order list failed');
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:服务商已接看房订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLookOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',1);
+            $model = $model->where('order_status',2);
+            $model = $model->groupBy('rent_house_id');
+            $page = $input['page'];
+            $count = $model->get()->toArray();
+            $count = count($count);
+            if($count < ($page-1)*5){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            foreach($res as $k=>$v){
+                $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+                $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            $data['house_info'] = $house_info;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get house list success',$data);
+            }else{
+                return $this->error('3','get house list failed');
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:服务商已接租户调查订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',2);
+            $model = $model->where('order_status',2);
+            $model = $model->groupBy('rent_house_id');
+            $page = $input['page'];
+            $count = $model->get()->toArray();
+            $count = count($count);
+            if($count < ($page-1)*5){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            foreach($res as $k=>$v){
+                $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+                $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            $data['house_info'] = $house_info;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get house list success',$data);
+            }else{
+                return $this->error('3','get house list failed');
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:服务商已接房屋检查订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getInspectOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',3);
+            $model = $model->where('order_status',2);
+            $model = $model->groupBy('rent_house_id');
+            $page = $input['page'];
+            $count = $model->get()->toArray();
+            $count = count($count);
+            if($count < ($page-1)*5){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id','inspect_id')->get();
+            foreach($res as $k=>$v){
+                $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','address','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+                $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+                $house_info[$k]['inspect_info'] = Inspect::where('id',$v['inspect_id'])->first();
+            }
+            $data['house_info'] = $house_info;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get house list success',$data);
+            }else{
+                return $this->error('3','get house list failed');
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:服务商已接维修订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRepairOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',4);
+            $model = $model->where('order_status',2);
+            $model = $model->groupBy('rent_house_id');
+            $page = $input['page'];
+            $count = $model->get()->toArray();
+            $count = count($count);
+            if($count < ($page-1)*5){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            foreach($res as $k=>$v){
+                $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+                $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            $data['house_info'] = $house_info;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get house list success',$data);
+            }else{
+                return $this->error('3','get house list failed');
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:服务商已接房屋诉讼订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLitigationOrderList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',5);
+            $model = $model->where('order_status',2);
+            $model = $model->groupBy('rent_house_id');
+            $page = $input['page'];
+            $count = $model->get()->toArray();
+            $count = count($count);
+            if($count < ($page-1)*5){
+                return $this->error('3','no more order info');
+            }
+            $res = $model->offset(($page-1)*5)->limit(5)->pluck('rent_house_id')->get();
+            foreach($res as $k=>$v){
+                $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+                $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            $data['house_info'] = $house_info;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get house list success',$data);
+            }else{
+                return $this->error('3','get house list failed');
+            }
+        }
+    }
+
+    /**
+     * @description:服务商已接房屋诉讼订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLookOrderDetail(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',1);
+            $model = $model->where('order_status',2);
+            $model = $model->where('rent_house_id',$input['rent_house_id']);
+            $res = $model->pluck('rent_application_id')->get();
+            $count = count($res);
+            $page = $input['page'];
+            if($count < ($page-1)*5){
+                return $this->error('3','no more application');
+            }
+            foreach($res as $k=>$v){
+                $appliction_data[$k] = RentApplication::where('id',$v)->first()->toArray();
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
+                $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
+                $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
+            }
+            $data['application_list'] = $appliction_data;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get application list success',$data);
+            }else{
+                return $this->error('4','get application list failed');
             }
         }
     }

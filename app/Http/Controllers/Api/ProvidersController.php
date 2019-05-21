@@ -79,7 +79,7 @@ class ProvidersController extends CommonController
 
 
     /**
-     * @description:删除服务商主体
+     * @description:服务商接单列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -89,5 +89,119 @@ class ProvidersController extends CommonController
     public function getOrderList(Request $request)
     {
         return service('Providers')->getOrderList($request->all());
+    }
+
+
+    /**
+     * @description:服务商接单看房列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLookOrderList(Request $request)
+    {
+        return service('Providers')->getLookOrderList($request->all());
+    }
+
+
+    /**
+     * @description:服务商接单租户调查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementOrderList(Request $request)
+    {
+        return service('Providers')->getTenementOrderList($request->all());
+    }
+
+
+
+    /**
+     * @description:服务商接单房屋检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getInspectOrderList(Request $request)
+    {
+        return service('Providers')->getInspectOrderList($request->all());
+    }
+
+
+
+    /**
+     * @description:服务商接单维修列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRepairOrderList(Request $request)
+    {
+        return service('Providers')->getRepairOrderList($request->all());
+    }
+
+
+
+    /**
+     * @description:服务商接单房屋诉讼列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLitigationOrderList(Request $request)
+    {
+        return service('Providers')->getLitigationOrderList($request->all());
+    }
+
+    /**
+     * @description:服务商接单房屋诉讼列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLookOrderDetail(Request $request)
+    {
+        return service('Providers')->getLookOrderDetail($request->all());
+    }
+
+    /**
+     * @description:服务商接单房屋诉讼列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementOrderDetail(Request $request)
+    {
+        return service('Providers')->getTenementOrderDetail($request->all());
+    }
+
+
+
+    /**
+     * @description:服务商接单房屋诉讼列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRepairOrderDetail(Request $request)
+    {
+        return service('Providers')->getRepairOrderDetail($request->all());
     }
 }
