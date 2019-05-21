@@ -252,6 +252,8 @@ class ProvidersMarketService extends CommonService
             return $this->error('3','you already score this order');
         }
         $res = $model->insert($score_data);
+        // 修改订单状态
+        LandlordOrder::where('id',$input['order_id'])->update(['order_status'=>4,'created_at'=>date('Y-m-d H:i:s',time())]);
         if($res){
             return $this->success('score success');
         }else{
