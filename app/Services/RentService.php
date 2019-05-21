@@ -532,7 +532,7 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
-                        if(!$v['tenement_id']){
+                        if(!@$v['tenement_id']){
                             //房东自己添加的时候添加租户列表
                             $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
                             if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
@@ -659,7 +659,7 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
-                        if(!$v['tenement_id']){
+                        if(!@$v['tenement_id']){
                             //房东自己添加的时候添加租户列表
                             $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
                             if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
@@ -809,7 +809,7 @@ class RentService extends CommonService
                 if ($contract_res) {
                     $contract_tenement_model = new ContractTenement();
                     foreach ($input['tenement_info'] as $k => $v){
-                        if(!$v['tenement_id']){
+                        if(!@$v['tenement_id']){
                             //房东自己添加的时候添加租户列表
                             $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
                             if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
