@@ -349,7 +349,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $start_date = $input['start_date'];
