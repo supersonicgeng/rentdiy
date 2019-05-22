@@ -249,7 +249,7 @@ class LandlordService extends CommonService
             if($sort_order == 2){
                 $model = $model->orderBy('id','DESC');
             }
-            $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+            $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['property_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('property_name')->first();
             }
