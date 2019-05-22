@@ -507,6 +507,7 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more order info');
             }
             $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id','inspect_id')->get()->toArray();
+            dd($res);
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','address','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
@@ -616,13 +617,13 @@ class ProvidersService extends CommonService
     }
 
     /**
- * @description:服务商已接房屋诉讼订单列表
- * @author: syg <13971394623@163.com>
- * @param $code
- * @param $message
- * @param array|null $data
- * @return \Illuminate\Http\JsonResponse
- */
+     * @description:服务商已接房屋诉讼订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getLookOrderDetail(array $input)
     {
         //dd($input);
@@ -658,6 +659,52 @@ class ProvidersService extends CommonService
             }
         }
     }
+
+
+    /**
+     * @description:服务商已接房屋诉讼订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementOrderDetail(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $model = new LandlordOrder();
+            $model = $model->whereIn('providers_id',$service_ids);
+            $model = $model->where('order_type',2);
+            $model = $model->where('order_status',2);
+            $model = $model->where('rent_house_id',$input['rent_house_id']);
+            $res = $model->select('rent_application_id')->get()->toArray();
+            $count = count($res);
+            $page = $input['page'];
+            if($count < ($page-1)*5){
+                return $this->error('3','no more application');
+            }
+            foreach($res as $k=>$v){
+                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first()->toArray();
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
+                $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
+                $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
+            }
+            $data['application_list'] = $appliction_data;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            if($res){
+                return $this->success('get application list success',$data);
+            }else{
+                return $this->error('4','get application list failed');
+            }
+        }
+    }
+
 
 
     /**
