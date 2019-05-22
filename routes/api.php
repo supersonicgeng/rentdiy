@@ -140,6 +140,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getLookOrderDetail','ProvidersController@getLookOrderDetail'); // 获得看房订单详情
         $router->post('getTenementOrderDetail','ProvidersController@getTenementOrderDetail'); // 获得租户调查订单详情
         $router->post('getRepairOrderDetail','ProvidersController@getRepairOrderDetail'); // 获得维修订单详细
+        $router->post('landlordScore','ProvidersController@landlordScore'); // 服务商给房东打分
     });
     // 操作员管理
     $router->group(['prefix' => 'operator'], function (Router $router) {

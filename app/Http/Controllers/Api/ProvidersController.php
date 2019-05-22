@@ -204,4 +204,19 @@ class ProvidersController extends CommonController
     {
         return service('Providers')->getRepairOrderDetail($request->all());
     }
+
+
+
+    /**
+     * @description:服务商给房东打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordScore(Request $request)
+    {
+        return service('Providers')->landlordScore($request->all());
+    }
 }

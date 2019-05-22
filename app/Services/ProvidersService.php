@@ -684,9 +684,8 @@ class ProvidersService extends CommonService
                 'order_id'          => $order_id,
                 'landlord_user_id'  => LandlordOrder::where('id',$order_id)->pluck('user_id')->first(),
                 'providers_id'      => LandlordOrder::where('id',$order_id)->pluck('providers_id')->first(),
-                'score_1'           => $input['score_1'],
-                'score_2'           => $input['score_2'],
-                'score_3'           => $input['score_3'],
+                'community_score'   => $input['community_score'],
+                'pay_score'         => $input['pay_score'],
                 'score_note'        => $input['score_note'],
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
