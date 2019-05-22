@@ -20,6 +20,7 @@ use App\Model\DriverTakeOver;
 use App\Model\Inspect;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
+use App\Model\LandlordOrderScore;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\Passport;
@@ -413,6 +414,7 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more order info');
             }
             $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id')->get();
+            dd($res);
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v)->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
@@ -614,13 +616,13 @@ class ProvidersService extends CommonService
     }
 
     /**
-     * @description:服务商已接房屋诉讼订单列表
-     * @author: syg <13971394623@163.com>
-     * @param $code
-     * @param $message
-     * @param array|null $data
-     * @return \Illuminate\Http\JsonResponse
-     */
+ * @description:服务商已接房屋诉讼订单列表
+ * @author: syg <13971394623@163.com>
+ * @param $code
+ * @param $message
+ * @param array|null $data
+ * @return \Illuminate\Http\JsonResponse
+ */
     public function getLookOrderDetail(array $input)
     {
         //dd($input);
@@ -653,6 +655,46 @@ class ProvidersService extends CommonService
                 return $this->success('get application list success',$data);
             }else{
                 return $this->error('4','get application list failed');
+            }
+        }
+    }
+
+
+    /**
+     * @description:服务商给房东打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordScore(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $order_id = $input['order_id'];
+            $order_res = LandlordOrderScore::where('order_id',$order_id)->first();
+            if($order_res){
+                return $this->error('3','this order already scored');
+            }
+            $score_data = [
+                'order_id'          => $order_id,
+                'landlord_user_id'  => LandlordOrder::where('id',$order_id)->pluck('user_id')->first(),
+                'providers_id'      => LandlordOrder::where('id',$order_id)->pluck('providers_id')->first(),
+                'score_1'           => $input['score_1'],
+                'score_2'           => $input['score_2'],
+                'score_3'           => $input['score_3'],
+                'score_note'        => $input['score_note'],
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $score_res = LandlordOrderScore::insert($score_data);
+            if($score_res){
+                return $this->success('score success');
+            }else{
+                return $this->error('4','score failed');
             }
         }
     }
