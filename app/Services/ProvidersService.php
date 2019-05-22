@@ -507,7 +507,6 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more order info');
             }
             $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id','inspect_id')->get()->toArray();
-            dd($res);
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','address','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
