@@ -34,6 +34,7 @@ use App\Model\ProvidersCompanyPromoPic;
 use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentHouse;
+use App\Model\RentPic;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\ServiceIntroduce;
