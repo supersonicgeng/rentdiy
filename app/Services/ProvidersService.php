@@ -636,7 +636,7 @@ class ProvidersService extends CommonService
             $model = $model->where('order_type',1);
             $model = $model->where('order_status',2);
             $model = $model->where('rent_house_id',$input['rent_house_id']);
-            $res = $model->pluck('rent_application_id')->get();
+            $res = $model->select('rent_application_id')->get()->toArray();
             $count = count($res);
             $page = $input['page'];
             if($count < ($page-1)*5){
