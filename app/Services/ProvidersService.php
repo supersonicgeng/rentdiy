@@ -642,6 +642,7 @@ class ProvidersService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('3','no more application');
             }
+            dd($res);
             foreach($res as $k=>$v){
                 $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first()->toArray();
                 $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
