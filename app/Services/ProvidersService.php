@@ -421,6 +421,9 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
+            if(!$house_info){
+                return $this->error('4','no data');
+            }
             $data['house_info'] = $house_info;
             $data['total_page'] = ceil($count/5);
             $data['current_page'] = $page;
@@ -466,6 +469,9 @@ class ProvidersService extends CommonService
                 $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            if(!$house_info){
+                return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
             $data['total_page'] = ceil($count/5);
@@ -513,6 +519,9 @@ class ProvidersService extends CommonService
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
                 $house_info[$k]['inspect_info'] = Inspect::where('id',$v['inspect_id'])->first();
             }
+            if(!$house_info){
+                return $this->error('4','no data');
+            }
             $data['house_info'] = $house_info;
             $data['total_page'] = ceil($count/5);
             $data['current_page'] = $page;
@@ -558,6 +567,9 @@ class ProvidersService extends CommonService
                 $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            }
+            if(!$house_info){
+                return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
             $data['total_page'] = ceil($count/5);
@@ -605,6 +617,9 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
+            if(!$house_info){
+                return $this->error('4','no data');
+            }
             $data['house_info'] = $house_info;
             $data['total_page'] = ceil($count/5);
             $data['current_page'] = $page;
@@ -648,6 +663,9 @@ class ProvidersService extends CommonService
                 $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first();
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
+            }
+            if(!$appliction_data){
+                return $this->error('4','no data');
             }
             $data['application_list'] = $appliction_data;
             $data['total_page'] = ceil($count/5);
@@ -694,6 +712,9 @@ class ProvidersService extends CommonService
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
+            if(!$appliction_data){
+                return $this->error('4','no data');
+            }
             $data['application_list'] = $appliction_data;
             $data['total_page'] = ceil($count/5);
             $data['current_page'] = $page;
@@ -730,6 +751,9 @@ class ProvidersService extends CommonService
             $res = $model->select('issue_id','group_id')->get()->toArray();
             foreach($res as $k=>$v){
                 $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first();
+            }
+            if(!$issue_data){
+                return $this->error('4','no data');
             }
             $data['repair_list'] = $issue_data;
             $data['order_info'] = $model->where('group_id',$res[0]['group_id'])->select('order_name','jobs','requirement')->first()->toArray();
@@ -773,6 +797,9 @@ class ProvidersService extends CommonService
                 $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first();
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
+            }
+            if(!$appliction_data) {
+                return $this->error('4', 'no data');
             }
             $data['application_list'] = $appliction_data;
             $data['total_page'] = ceil($count/5);
