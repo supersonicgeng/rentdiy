@@ -770,7 +770,7 @@ class ProvidersService extends CommonService
             }
             foreach($res as $k=>$v){
                 $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first();
-                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first(;
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first();
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
