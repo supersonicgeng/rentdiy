@@ -296,7 +296,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $provider_info = Providers::where('user_id',$input['user_id'])->where('id',$input['service_id'])->first()->toArray();
+            $provider_info = Providers::where('user_id',$input['user_id'])->where('id',$input['service_id'])->first();
             if(!$provider_info){
                 return $this->error('3','you not add a  providers information');
             }else{
@@ -644,8 +644,8 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more application');
             }
             foreach($res as $k=>$v){
-                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first()->toArray();
-                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
+                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first();
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first();
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
@@ -689,8 +689,8 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more application');
             }
             foreach($res as $k=>$v){
-                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first()->toArray();
-                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
+                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first();
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first();
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
@@ -729,7 +729,7 @@ class ProvidersService extends CommonService
             $model = $model->where('rent_house_id',$input['rent_house_id']);
             $res = $model->select('issue_id','group_id')->get()->toArray();
             foreach($res as $k=>$v){
-                $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first()->toArray();
+                $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first();
             }
             $data['repair_list'] = $issue_data;
             $data['order_info'] = $model->where('group_id',$res[0]['group_id'])->select('order_name','jobs','requirement')->first()->toArray();
@@ -769,8 +769,8 @@ class ProvidersService extends CommonService
                 return $this->error('3','no more application');
             }
             foreach($res as $k=>$v){
-                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first()->toArray();
-                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first()->toArray();
+                $appliction_data[$k] = RentApplication::where('id',$v['rent_application_id'])->first();
+                $tenement_info = Tenement::where('id', $appliction_data[$k]['tenement_id'])->first(;
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
