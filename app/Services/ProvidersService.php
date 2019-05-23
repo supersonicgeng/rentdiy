@@ -421,7 +421,7 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
-            if(!$house_info){
+            if(!@$house_info){
                 return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
@@ -470,7 +470,7 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
-            if(!$house_info){
+            if(!@$house_info){
                 return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
@@ -519,7 +519,7 @@ class ProvidersService extends CommonService
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
                 $house_info[$k]['inspect_info'] = Inspect::where('id',$v['inspect_id'])->first();
             }
-            if(!$house_info){
+            if(!@$house_info){
                 return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
@@ -568,7 +568,7 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
-            if(!$house_info){
+            if(!@$house_info){
                 return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
@@ -617,7 +617,7 @@ class ProvidersService extends CommonService
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             }
-            if(!$house_info){
+            if(!@$house_info){
                 return $this->error('4','no data');
             }
             $data['house_info'] = $house_info;
@@ -664,7 +664,7 @@ class ProvidersService extends CommonService
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
-            if(!$appliction_data){
+            if(!@$appliction_data){
                 return $this->error('4','no data');
             }
             $data['application_list'] = $appliction_data;
@@ -712,7 +712,7 @@ class ProvidersService extends CommonService
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
-            if(!$appliction_data){
+            if(!@$appliction_data){
                 return $this->error('4','no data');
             }
             $data['application_list'] = $appliction_data;
@@ -752,7 +752,7 @@ class ProvidersService extends CommonService
             foreach($res as $k=>$v){
                 $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first();
             }
-            if(!$issue_data){
+            if(!@$issue_data){
                 return $this->error('4','no data');
             }
             $data['repair_list'] = $issue_data;
@@ -798,7 +798,7 @@ class ProvidersService extends CommonService
                 $appliction_data[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                 $appliction_data[$k]['tenement_headimg'] = $tenement_info['headimg'];
             }
-            if(!$appliction_data) {
+            if(!@$appliction_data) {
                 return $this->error('4', 'no data');
             }
             $data['application_list'] = $appliction_data;
@@ -812,6 +812,25 @@ class ProvidersService extends CommonService
         }
     }
 
+
+    /**
+     * @description:服务商给房东打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReview (array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+
+        }
+    }
 
     /**
      * @description:服务商给房东打分
