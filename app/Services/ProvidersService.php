@@ -732,7 +732,7 @@ class ProvidersService extends CommonService
                 $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first()->toArray();
             }
             $data['repair_list'] = $issue_data;
-            $data['order_info'] = $model->where('group_id',$res[0]['group_id'])->first()->toArray();
+            $data['order_info'] = $model->where('group_id',$res[0]['group_id'])->select('order_name','jobs','requirement')->first()->toArray();
             if($res){
                 return $this->success('get repair list success',$data);
             }else{
