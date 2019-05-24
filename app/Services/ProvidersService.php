@@ -24,6 +24,7 @@ use App\Model\LandlordOrder;
 use App\Model\LandlordOrderScore;
 use App\Model\Level;
 use App\Model\LookHouse;
+use App\Model\Operator;
 use App\Model\Order;
 use App\Model\Passport;
 use App\Model\PassportReward;
@@ -857,12 +858,19 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $application_status = $input['application_status'];
+            $operator_id = $input['operator_id'];
+            if(!$operator_id){
+                $check_name = Operator::where('id',$operator_id)->pluck('operator_name')->first();
+            }else{
+                $providers_id = LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',1)->pluck('providers_id')->first();
+                $check_name = Providers::where('id',$providers_id)->pluck('first_name')->first();
+            }
             $look_data = [
                 'rent_application_id'   => $input['rent_application_id'],
                 'recommendation_score'  => $input['recommendation_score'],
                 'look_note'             => $input['look_note'],
                 'upload_url'            => $input['upload_url'],
+                'check_name'            => $check_name,
             ];
             $res = LookHouse::insert($look_data);
             if($res){
