@@ -23,6 +23,7 @@ use App\Model\Landlord;
 use App\Model\LandlordOrder;
 use App\Model\LandlordOrderScore;
 use App\Model\Level;
+use App\Model\LookHouse;
 use App\Model\Order;
 use App\Model\Passport;
 use App\Model\PassportReward;
@@ -836,6 +837,40 @@ class ProvidersService extends CommonService
                 return $this->success('tenement review success');
             }else{
                 return $this->error('3','tenement review failed');
+            }
+        }
+    }
+
+
+    /**
+     * @description:完成看房调查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function lookOrder (array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
+            return $this->error('2','this account is not a provider role');
+        }else{
+            $application_status = $input['application_status'];
+            $look_data = [
+                'rent_application_id'   => $input['rent_application_id'],
+                'recommendation_score'  => $input['recommendation_score'],
+                'look_note'             => $input['look_note'],
+                'upload_url'            => $input['upload_url'],
+            ];
+            $res = LookHouse::insert($look_data);
+            if($res){
+                // 更改订单状态
+                LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',1)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                return $this->success('look house success');
+            }else{
+                return $this->error('3','look house failed');
             }
         }
     }

@@ -142,6 +142,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getRepairOrderDetail','ProvidersController@getRepairOrderDetail'); // 获得维修订单详细
         $router->post('getLitigationOrderDetail','ProvidersController@getLitigationOrderDetail'); // 获得诉讼订单详细
         $router->post('tenementReview','ProvidersController@tenementReview'); // 服务商给处理租户调查
+        $router->post('lookOrder','ProvidersController@lookOrder'); // 服务商给处理租户调查
         $router->post('landlordScore','ProvidersController@landlordScore'); // 服务商给房东打分
         $router->post('landlordScore','ProvidersController@landlordScore'); // 服务商给房东打分
     });
