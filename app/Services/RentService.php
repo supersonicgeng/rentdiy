@@ -24,6 +24,7 @@ use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\EntireContract;
 use App\Model\Level;
+use App\Model\LookHouse;
 use App\Model\Order;
 use App\Model\OtherRentApplication;
 use App\Model\Passport;
@@ -392,6 +393,7 @@ class RentService extends CommonService
                     $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
                     $res[$k]['tenement_name'] = $tenement_info['first_name'].'&nbsp'.$tenement_info['middle_name'].'&nbsp'.$tenement_info['last_name'];
                     $res[$k]['tenement_headimg'] = $tenement_info['headimg'];
+                    $res[$k]['look_house'] = LookHouse::where('rent_application_id',$v['id'])->first();
                     /*$res[$k]['survey_score'] = Survey::where('application_id',$v['id'])->pluck('survey_score')->first();
                     $res[$k]['survey_people'] = Survey::where('application_id',$v['id'])->pluck('survey_people')->first();
                     $res[$k]['survey_date'] = Survey::where('application_id',$v['id'])->pluck('survey_date')->first();*/

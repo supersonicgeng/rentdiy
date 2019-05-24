@@ -822,7 +822,7 @@ class ProvidersService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function tenementReview (array $input)
+    public function tenementReview(array $input)
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
@@ -850,7 +850,7 @@ class ProvidersService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function lookOrder (array $input)
+    public function lookOrder(array $input)
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
