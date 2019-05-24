@@ -221,6 +221,21 @@ class ProvidersController extends CommonController
 
 
     /**
+     * @description:服务商接单房屋诉讼列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReview(Request $request)
+    {
+        return service('Providers')->tenementReview($request->all());
+    }
+
+
+
+    /**
      * @description:服务商给房东打分
      * @author: syg <13971394623@163.com>
      * @param $code

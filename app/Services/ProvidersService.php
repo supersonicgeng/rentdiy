@@ -814,7 +814,7 @@ class ProvidersService extends CommonService
 
 
     /**
-     * @description:服务商给房东打分
+     * @description:完成租客调查
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -828,7 +828,15 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-
+            $application_status = $input['application_status'];
+            $res = RentApplication::where('id',$input['rent_application_id'])->update(['application_status'=>$application_status,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            if($res){
+                // 更改订单状态
+                LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',2)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                return $this->success('tenement review success');
+            }else{
+                return $this->error('3','tenement review failed');
+            }
         }
     }
 

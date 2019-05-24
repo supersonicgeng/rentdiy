@@ -90,6 +90,10 @@ class ProvidersMarketService extends CommonService
         ];
         $res = $model->insert($order_data);
         if($res){
+            if($input['order_type'] == 2){
+                // 更新申请单
+                RentApplication::where('id',$input['rent_application_id'])->update(['application_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            }
             return $this->success('send order to service market success');
         }else{
             return $this->error('3','send order to service market failed');
