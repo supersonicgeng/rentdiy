@@ -11,7 +11,7 @@ class TestController extends Controller
     public function test()
     {
         $ip = "{$_SERVER['SERVER_NAME']}";
-        $dashboard_pdf_file = $ip."/Public/pdf/1.pdf";
+        $dashboard_pdf_file = $ip."/pdf/1.pdf";
         $pdf = new Mpdf();
         $pagecount = $pdf->SetDocTemplate($dashboard_pdf_file);
         for ($i=1; $i<=$pagecount; $i++) {
