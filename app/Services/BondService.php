@@ -60,6 +60,8 @@ class BondService extends CommonService
         $data['current_page'] = $page;
         return $this->success('get bond list success',$data);
     }
+
+
     /**
      * @description:押金上缴
      * @author: syg <13971394623@163.com>
@@ -85,4 +87,31 @@ class BondService extends CommonService
         }
     }
 
+
+
+    /**
+     * @description:押金上缴
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addBondLodgedSn(array $input)
+    {
+        $model = new Bond();
+        $bond_sn = $input['bond_sn'];
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_sn'       => $bond_sn,
+            'bond_status'   => 2,
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('add bond sn success');
+        }else{
+            return $this->error('2','add bond sn failed');
+        }
+    }
 }

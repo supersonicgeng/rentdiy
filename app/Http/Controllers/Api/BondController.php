@@ -21,15 +21,28 @@ class BondController extends CommonController
     }
 
     /**
-     * @description:押金上缴
+     * @description:押金上缴日期
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadBond(Request $request)
+    public function addBondLodgedDate(Request $request)
     {
-        return service('Bond')->uploadBond($request->all());
+        return service('Bond')->addBondLodgedDate($request->all());
+    }
+
+    /**
+     * @description:押金上缴编号
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addBondLodgedSn(Request $request)
+    {
+        return service('Bond')->addBondLodgedSn($request->all());
     }
 }
