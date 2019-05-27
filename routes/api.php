@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     });
     // 测试
     $router->group(['prefix' => 'test'], function (Router $router){
-        $router->get('test','TestController@test'); // 操作员登录 3.28
+        $router->get('test','test@test'); // 操作员登录 3.28
     });
 });
 
