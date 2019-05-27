@@ -1413,6 +1413,7 @@ class RentService extends CommonService
                     'tenement_phone'    => $contract_tenement_data->tenement_phone,
                     'tenement_email'    => $contract_tenement_data->tenement_email,
                     'total_bond'        => $entire_data->bond_amont,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = Bond::insert($bond_data);
                 // 生成预付记录
@@ -1543,6 +1544,7 @@ class RentService extends CommonService
                     'tenement_phone'    => $contract_tenement_data->tenement_phone,
                     'tenement_email'    => $contract_tenement_data->tenement_email,
                     'total_bond'        => $separate_data->bond_amont,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = Bond::insert($bond_data);
                 // 生成预付记录
