@@ -1412,7 +1412,7 @@ class RentService extends CommonService
                     'property_name'     => $rent_house_info->property_name,
                     'tenement_phone'    => $contract_tenement_data->tenement_phone,
                     'tenement_email'    => $contract_tenement_data->tenement_e_mail,
-                    'total_bond'        => $entire_data->bond_amont,
+                    'total_bond'        => $entire_data->bond_amount,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = Bond::insert($bond_data);
@@ -1543,7 +1543,7 @@ class RentService extends CommonService
                     'property_name'     => $rent_house_info->property_name,
                     'tenement_phone'    => $contract_tenement_data->tenement_phone,
                     'tenement_email'    => $contract_tenement_data->tenement_e_mail,
-                    'total_bond'        => $separate_data->bond_amont,
+                    'total_bond'        => $separate_data->bond_amount,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = Bond::insert($bond_data);
