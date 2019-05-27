@@ -56,7 +56,7 @@ class BondService extends CommonService
         }
         $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
         $data['bondList'] = $res;
-        $data['total_page'] = ceil($count/$page);
+        $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
         return $this->success('get bond list success',$data);
     }
