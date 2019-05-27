@@ -191,7 +191,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 押金管理
     $router->group(['prefix' => 'bond'], function (Router $router) {
         $router->post('bondList', 'BondController@bondList'); // 押金列表 4.10
-        $router->post('uploadBond', 'BondController@uploadBond'); // 押金上缴 4.10
+        $router->post('addBondLodgedDate', 'BondController@addBondLodgedDate'); // 押金上缴日期 5.27
     });
 });
 

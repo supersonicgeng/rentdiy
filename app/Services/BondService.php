@@ -68,31 +68,21 @@ class BondService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadBond(array $input)
+    public function addBondLodgedDate(array $input)
     {
         $model = new Bond();
-        if($input['bond_status']){
-            $model = $model->where('bond_status',$input['bond_status']);
+        $lodged_date = $input['lodged_date'];
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'lodged_date'   => $lodged_date,
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('add bond lodged date success');
+        }else{
+            return $this->error('2','add bond lodged date failed');
         }
-        if($input['property_name']){
-            $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
-        }
-        if($input['start_date']){
-            $model = $model->where('created_at','>',$input['start_date']);
-        }
-        if($input['end_date']){
-            $model = $model->where('created_at','<',$input['end_date']);
-        }
-        $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
-        if($count < ($page-1)*10){
-            return $this->error('3','no more information');
-        }
-        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
-        $data['bondList'] = $res;
-        $data['total_page'] = ceil($count/$page);
-        $data['current_page'] = $page;
-        return $this->success('get bond list success',$data);
     }
 
 }
