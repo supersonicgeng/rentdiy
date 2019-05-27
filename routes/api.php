@@ -56,6 +56,10 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'operator'], function (Router $router){
         $router->post('login','OperatorController@login'); // 操作员登录 3.28
     });
+    // 测试
+    $router->group(['prefix' => 'test'], function (Router $router){
+        $router->post('test','TestController@test'); // 操作员登录 3.28
+    });
 });
 
 
@@ -161,6 +165,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getOrderDetail', 'ProvidersMarketController@getOrderDetail'); // 获得订单详情 4.2
         $router->post('tenderOrder', 'ProvidersMarketController@tenderOrder'); //  服务商报价 4.30
         $router->post('orderScore','ProvidersMarketController@orderScore'); // 评价服务商 5.16
+        $router->post('tenderRepairOrder', 'ProvidersMarketController@tenderRepairOrder'); //  服务商维修报价 4.30
     });
     // 钥匙管理
     $router->group(['prefix' => 'key'], function (Router $router) {

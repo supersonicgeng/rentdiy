@@ -17,6 +17,7 @@
         "maatwebsite/excel": "~2.1.0",
         "orangehill/iseed": "dev-master",
         "overtrue/wechat": "^4.1",
+        "phpoffice/phpword": "^0.16.0",
         "predis/predis": "^1.1",
         "simplesoftwareio/simple-qrcode": "1.3.*",
         "zizaco/entrust": "^1.9"
