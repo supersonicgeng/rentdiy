@@ -13,8 +13,7 @@ class TestController extends Controller
         $ip = "{$_SERVER['SERVER_NAME']}";
         $dashboard_pdf_file = $ip."/Public/pdf/1.pdf";
         $pdf = new Mpdf();
-        $pdf->SetImportUse();
-        $pagecount = $pdf->SetSourceFile($dashboard_pdf_file);
+        $pagecount = $pdf->SetDocTemplate($dashboard_pdf_file);
         for ($i=1; $i<=$pagecount; $i++) {
             $import_page = $pdf->ImportPage();
             $pdf->UseTemplate($import_page);
