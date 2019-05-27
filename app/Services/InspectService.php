@@ -576,7 +576,7 @@ class InspectService extends CommonService
                     }
                     if ($res && !$error) {
                         // 更改检查状态为2 更新检查人id 检查操作员id
-                        Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>2,'check_user_id'=>@$input['check_user_id'],'check_operator_id'=>@$input['check_operator_id']]);
+                        //Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>2,'check_user_id'=>@$input['check_user_id'],'check_operator_id'=>@$input['check_operator_id']]);
                         return $this->success('inspect add success');
                     } else {
                         return $this->error('3', 'inspect add failed');
