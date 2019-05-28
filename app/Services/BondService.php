@@ -37,8 +37,12 @@ class BondService extends CommonService
     public function bondList(array $input)
     {
         $model = new Bond();
-        if($input['bond_status']){
-            $model = $model->where('bond_status',$input['bond_status']);
+        if($input['bond_status'] == 2){
+            $model = $model->whereIn('bond_status',[1,2,3]);
+        }elseif ($input['bond_status'] == 3){
+            $model = $model->whereIn('bond_status',[3,4,5,6]);
+        }elseif ($input['bond_status'] == 4){
+            $model = $model->whereIn('bond_status',[3,7,8,9]);
         }
         if($input['property_name']){
             $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
@@ -77,6 +81,7 @@ class BondService extends CommonService
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'lodged_date'   => $lodged_date,
+            'bond_status'   => 2,
             'updated_at'    => date('Y-m-d H:i:s',time()),
         ];
         $res = $model->where('id',$bond_id)->update($lodged_data);
@@ -104,6 +109,32 @@ class BondService extends CommonService
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'bond_sn'       => $bond_sn,
+            'bond_status'   => 3,
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('add bond sn success');
+        }else{
+            return $this->error('2','add bond sn failed');
+        }
+    }
+
+    /**
+     * @description:押金退缴
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function returnBond(array $input)
+    {
+        $model = new Bond();
+        $bond_sn = $input['bond_sn'];
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_sn'       => $bond_sn,
             'bond_status'   => 2,
             'updated_at'    => date('Y-m-d H:i:s',time()),
         ];
@@ -114,4 +145,5 @@ class BondService extends CommonService
             return $this->error('2','add bond sn failed');
         }
     }
+
 }
