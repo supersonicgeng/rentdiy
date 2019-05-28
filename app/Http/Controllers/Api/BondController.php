@@ -34,6 +34,48 @@ class BondController extends CommonController
     }
 
     /**
+     * @description:押金上缴列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondLodgedList(Request $request)
+    {
+        return service('Bond')->bondLodgedList($request->all());
+    }
+
+
+    /**
+     * @description:押金退缴列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondRefundList(Request $request)
+    {
+        return service('Bond')->bondRefundList($request->all());
+    }
+
+
+    /**
+     * @description:押金转移列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondTransformList(Request $request)
+    {
+        return service('Bond')->bondTransformList($request->all());
+    }
+
+
+    /**
      * @description:押金上缴日期
      * @author: syg <13971394623@163.com>
      * @param $code
