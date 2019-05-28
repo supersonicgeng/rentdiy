@@ -12,7 +12,7 @@ class TestController extends Controller
     public function test()
     {
         $ip = "{$_SERVER['SERVER_NAME']}";
-        $dashboard_pdf_file = "http://".$ip."/pdf/1.pdf";
+        $dashboard_pdf_file = "http://".$ip."/pdf/4.pdf";
         $fileContent = file_get_contents($dashboard_pdf_file,'rb');
         $mpdf = new Mpdf();
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
