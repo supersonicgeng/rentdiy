@@ -16,7 +16,6 @@ class TestController extends Controller
         $fileContent = file_get_contents($dashboard_pdf_file,'rb');
         $mpdf = new Mpdf();
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
-        dd($pagecount);
         $tplId = $mpdf->ImportPage($pagecount);
         $mpdf->UseTemplate($tplId);
         $mpdf->WriteHTML('Hello World');
