@@ -20,7 +20,7 @@ class TestController extends Controller
             $import_page = $mpdf->importPage($i);
             $mpdf->useTemplate($import_page);
             if($i == 1){
-                $mpdf->WriteText('20',40,'leo');
+                $mpdf->WriteText('30',45,'leo');
             }
             if($i < $pagecount){
                 $mpdf->AddPage();
