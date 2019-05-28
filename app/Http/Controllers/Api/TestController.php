@@ -18,7 +18,6 @@ class TestController extends Controller
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
         $tplId = $mpdf->ImportPage($pagecount);
         $mpdf->UseTemplate($tplId);
-        $mpdf->WriteHTML('Hello World');
         $mpdf->Output();
     }
 }
