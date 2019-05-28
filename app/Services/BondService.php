@@ -110,12 +110,8 @@ class BondService extends CommonService
     public function bondLodgedList(array $input)
     {
         $model = new Bond();
-        if($input['bond_status'] == 1){
-            $model = $model->where('bond_status',1);
-        }elseif ($input['bond_status'] == 2){
-            $model = $model->where('bond_status',2);
-        }elseif ($input['bond_status'] == 3){
-            $model = $model->where('bond_status',3);
+        if($input['bond_status']){
+            $model = $model->where('bond_status',$input['bond_status']);
         }
         if($input['property_name']){
             $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
