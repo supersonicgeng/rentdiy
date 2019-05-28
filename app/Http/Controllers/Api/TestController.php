@@ -19,6 +19,9 @@ class TestController extends Controller
         for($i=1; $i<=$pagecount;$i++){
             $import_page = $mpdf->importPage($i);
             $mpdf->useTemplate($import_page);
+            if($i == 1){
+                $mpdf->WriteCell('100',20,'123321');
+            }
             if($i < $pagecount){
                 $mpdf->AddPage();
             }
