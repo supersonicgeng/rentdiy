@@ -67,6 +67,39 @@ class BondService extends CommonService
 
 
     /**
+     * @description:押金欠款列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondArrearsList(array $input)
+    {
+        $model = new Bond();
+        $model = $model->where('bond_status',1);
+        if($input['property_name']){
+            $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
+        }
+        if($input['start_date']){
+            $model = $model->where('created_at','>',$input['start_date']);
+        }
+        if($input['end_date']){
+            $model = $model->where('created_at','<',$input['end_date']);
+        }
+        $page = $input['page'];
+        $count = $model->where('user_id',$input['user_id'])->count();
+        if($count < ($page-1)*10){
+            return $this->error('3','no more information');
+        }
+        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
+        $data['bondList'] = $res;
+        $data['total_page'] = ceil($count/10);
+        $data['current_page'] = $page;
+        return $this->success('get bond list success',$data);
+    }
+
+    /**
      * @description:押金上缴
      * @author: syg <13971394623@163.com>
      * @param $code
