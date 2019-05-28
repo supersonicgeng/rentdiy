@@ -12,18 +12,14 @@ class TestController extends Controller
     {
         $ip = "{$_SERVER['SERVER_NAME']}";
         $dashboard_pdf_file = "http://".$ip."/pdf/1.pdf";
-        $pdf = new Mpdf();
-        $pdf->SetImportUse();
-        $pagecount = $pdf->SetSourceFile($dashboard_pdf_file);
-        //$pagecount = $pdf->SetPageTemplate($dashboard_pdf_file);
+        $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+        $mpdf = new Mpdf();
+        $mpdf->SetImportUse();
+        $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
         dd($pagecount);
-        for ($i=1; $i<=$pagecount; $i++) {
-            $import_page = $pdf->ImportPage();
-            $pdf->UseTemplate($import_page);
-            if ($i < $pagecount)
-                $pdf->AddPage();
-        }
-        $pdf->Output();
-
+        $tplId = $mpdf->ImportPage($pagecount);
+        $mpdf->UseTemplate($tplId);
+        $mpdf->WriteHTML('Hello World');
+        $mpdf->Output();
     }
 }
