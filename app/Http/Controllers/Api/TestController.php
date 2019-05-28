@@ -17,7 +17,7 @@ class TestController extends Controller
         $mpdf = new Mpdf();
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
         for($i=1; $i<=$pagecount;$i++){
-            $import_page = $mpdf->importPage();
+            $import_page = $mpdf->importPage($i);
             $mpdf->useTemplate($import_page);
             if($i < $pagecount){
                 $mpdf->AddPage();
