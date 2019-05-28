@@ -279,7 +279,7 @@ class BondService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function returnBond(array $input)
+    public function refundBond(array $input)
     {
         $model = new Bond();
         $bond_sn = $input['bond_sn'];

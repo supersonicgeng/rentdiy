@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     });
     // 测试
     $router->group(['prefix' => 'test'], function (Router $router){
-        $router->get('test','test@test'); // 测试 pdf 3.28
+        $router->post('test','test@test'); // 测试 pdf 3.28
     });
 });
 
@@ -202,7 +202,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('bondTransformList', 'BondController@bondTransformList'); // 押金转移列表 5.27
         $router->post('addBondLodgedDate', 'BondController@addBondLodgedDate'); // 押金上缴日期 5.27
         $router->post('addBondLodgedSn', 'BondController@addBondLodgedSn'); // 押金上缴编号 5.27
-        $router->post('returnBond', 'BondController@returnBond'); // 押金退缴 5.28
+        $router->post('refundBond', 'BondController@refundBond'); // 押金退缴 5.28
     });
 });
 

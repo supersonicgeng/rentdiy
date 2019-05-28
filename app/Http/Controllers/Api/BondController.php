@@ -110,9 +110,9 @@ class BondController extends CommonController
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function returnBond(Request $request)
+    public function refundBond(Request $request)
     {
-        return service('Bond')->returnBond($request->all());
+        return service('Bond')->refundBond($request->all());
     }
 
 }
