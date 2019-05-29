@@ -33,6 +33,7 @@ use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\Repair;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -262,6 +263,49 @@ class ProvidersMarketService extends CommonService
             return $this->success('score success');
         }else{
             return $this->error('2','score failed');
+        }
+    }
+
+    /**
+     * @description: 报价订单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenderRepairOrder(array $input)
+    {
+        //dd($input);
+        $model = new Tender();
+        $tender_data = [
+            'service_id'    => $input['service_id'],
+            'order_id'      => $input['order_id'],
+            'quota_price'   => $input['quota_price'],
+            'tender_note'   => $input['tender_note'],
+            'start_date'    => $input['start_date'],
+            'end_date'      => $input['end_date'],
+            'created_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        if($model->where('order_id',$input['order_id'])->where('service_id',$input['service_id'])->first()){
+            return $this->error('3','you already tender this order');
+        }
+        $res = $model->insertGetId($tender_data);
+        if($res){
+            LandlordOrder::where('id',$input['order_id'])->increment('total_tender');
+            foreach ($input['repair_list'] as $k => $v){
+                $repair_data = [
+                    'order_id'              => $input['order_id'],
+                    'tender_id'             => $res,
+                    'items_id'              => $v['items_id'],
+                    'items_tender_price'    => $v['items_tender_price'],
+                    'created_at'            => date('Y-m-d H:i:s',time()),
+                ];
+                Repair::insert($repair_data);
+            }
+            return $this->success('tender success');
+        }else{
+            return $this->error('2','tender failed');
         }
     }
 }
