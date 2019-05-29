@@ -12,8 +12,10 @@ namespace App\Services;
 
 use App\Lib\Util\QueryPager;
 use App\Model\Bond;
+use App\Model\ContractTenement;
 use App\Model\Region;
 use App\Model\RentContact;
+use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\Verify;
@@ -270,6 +272,31 @@ class BondService extends CommonService
             return $this->error('2','add bond sn failed');
         }
     }
+
+    /**
+     * @description:押金退缴信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundInfo(array $input)
+    {
+        $model = new Bond();
+        $bond_id = $input['bond_id'];
+        $contract_id = $model->where('id',$bond_id)->pluck('contract_id')->first();
+        $tenement_info = ContractTenement::where('contract_id',$contract_id)->select('tenement_id','tenement_full_name')->get()->toArray();
+        $landlord_info = RentContract::where('id',$contract_id)->select('landlord_id','landlord_full_name')->first()->toArray();
+        if($tenement_info && $landlord_info){
+            $res['tenement_info'] = $tenement_info;
+            $res['landlord_info'] = $landlord_info;
+            return $this->success('get refund info success',$res);
+        }else{
+            return $this->error('2','get refund info failed');
+        }
+    }
+
 
     /**
      * @description:押金退缴

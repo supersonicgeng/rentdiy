@@ -103,6 +103,19 @@ class BondController extends CommonController
 
 
     /**
+     * @description:押金退缴信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundInfo(Request $request)
+    {
+        return service('Bond')->refundInfo($request->all());
+    }
+
+    /**
      * @description:押金退缴
      * @author: syg <13971394623@163.com>
      * @param $code
