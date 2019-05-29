@@ -15,6 +15,7 @@ class TestController extends Controller
         $dashboard_pdf_file = "http://".$ip."/pdf/4.pdf";
         $fileContent = file_get_contents($dashboard_pdf_file,'rb');
         $mpdf = new Mpdf();
+        dd($mpdf);
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
         for($i=1; $i<=$pagecount;$i++){
             $import_page = $mpdf->importPage($i);
