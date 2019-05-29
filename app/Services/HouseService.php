@@ -649,7 +649,7 @@ class HouseService extends CommonService
                             /*'available_time'        => @$input['available_time']?$input['available_time']:$rent_house_info->available_time,*/
                             'room_name'             => @$v['room_name']?$v['room_name']:$rent_house_info->room_name,
                             'room_description'      => @$v['room_description']?$v['room_description']:$rent_house_info->room_description,
-                            'bed_no'                => @$v['bed_no']?$input['bed_no']:$rent_house_info->bed_no,
+                            'bed_no'                => @$v['bed_no']?$v['bed_no']:$rent_house_info->bed_no,
                             'shower_room'           => @$v['shower_room']?$v['shower_room']:$rent_house_info->shower_room,
                             'require_renter'        => @$v['require_renter']?$v['require_renter']:$rent_house_info->require_renter,
                             'room_short_words'      => @$v['room_short_words']?implode(',',$v['room_short_words']):$rent_house_info->room_short_words,
