@@ -47,6 +47,8 @@ class BondService extends CommonService
             $model = $model->whereIn('bond_status',[3,4,5,6]);
         }elseif ($input['bond_status'] == 4){
             $model = $model->whereIn('bond_status',[3,7,8,9]);
+        }else{
+            $model = $model->where('bond_status',1);
         }
         if($input['property_name']){
             $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
