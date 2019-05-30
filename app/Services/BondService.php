@@ -13,6 +13,7 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\Bond;
 use App\Model\BondRefund;
+use App\Model\BondTransfer;
 use App\Model\ContractTenement;
 use App\Model\Region;
 use App\Model\RentContact;
@@ -347,4 +348,151 @@ class BondService extends CommonService
         }
     }
 
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundBondConfirm(array $input)
+    {
+        $model = new Bond();
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_status'   => 5,
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('bond refund confirm success');
+        }else{
+            return $this->error('2','bond refund confirm failed');
+        }
+    }
+
+
+    /**
+     * @description:押金退缴时间
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundBondDate(array $input)
+    {
+        $model = new Bond();
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_status'   => 6,
+            'refund_date'   => $input['refund_date'],
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('bond refund date update success');
+        }else{
+            return $this->error('2','bond refund date update failed');
+        }
+    }
+
+    /**
+     * @description:押金退缴
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBond(array $input)
+    {
+        $model = new BondTransfer();
+        static $error = 0;
+        $tenement_info = $input['tenement_info'];
+        foreach ($tenement_info as $k => $v){
+            $refund_data = [
+                'bond_id'               => $input['bond_id'],
+                'tenement_id'           => $v['tenement_id'],
+                'tenement_full_name'    => $v['tenement_full_name'],
+                'tenement_account'      => $v['tenement_account'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($refund_data);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        $landlord_info = $input['landlord_info'];
+        foreach ($landlord_info as $k => $v){
+            $refund_data = [
+                'bond_id'               => $input['bond_id'],
+                'landlord_id'           => $v['landlord_id'],
+                'landlord_full_name'    => $v['landlord_full_name'],
+                'landlord_account'      => $v['landlord_account'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $model->insert($refund_data);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        if(!$error){
+            Bond::where('id',$input['bond_id'])->update([ 'bond_status'   => 7, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
+            return $this->success('bond transfer info add success');
+        }else{
+            return $this->error('2','bond transfer info add failed');
+        }
+    }
+
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBondConfirm(array $input)
+    {
+        $model = new Bond();
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_status'   => 8,
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('bond transfer confirm success');
+        }else{
+            return $this->error('2','bond transfer confirm failed');
+        }
+    }
+
+
+    /**
+     * @description:押金退缴时间
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBondDate(array $input)
+    {
+        $model = new Bond();
+        $bond_id = $input['bond_id'];
+        $lodged_data = [
+            'bond_status'   => 9,
+            'transfer_date' => $input['transfer_date'],
+            'updated_at'    => date('Y-m-d H:i:s',time()),
+        ];
+        $res = $model->where('id',$bond_id)->update($lodged_data);
+        if($res){
+            return $this->success('bond transfer date update success');
+        }else{
+            return $this->error('2','bond transfer date update failed');
+        }
+    }
 }

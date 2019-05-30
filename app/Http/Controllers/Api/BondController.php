@@ -128,4 +128,71 @@ class BondController extends CommonController
         return service('Bond')->refundBond($request->all());
     }
 
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundBondConfirm(Request $request)
+    {
+        return service('Bond')->refundBondConfirm($request->all());
+    }
+
+
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refundBondDate(Request $request)
+    {
+        return service('Bond')->refundBondDate($request->all());
+    }
+
+
+    /**
+     * @description:押金退缴
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBond(Request $request)
+    {
+        return service('Bond')->transferBond($request->all());
+    }
+
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBondConfirm(Request $request)
+    {
+        return service('Bond')->transferBondConfirm($request->all());
+    }
+
+
+    /**
+     * @description:押金退缴确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferBondDate(Request $request)
+    {
+        return service('Bond')->transferBondDate($request->all());
+    }
 }

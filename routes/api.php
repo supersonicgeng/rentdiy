@@ -204,6 +204,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('addBondLodgedSn', 'BondController@addBondLodgedSn'); // 押金上缴编号 5.27
         $router->post('refundInfo', 'BondController@refundInfo'); // 押金退缴信息 5.28
         $router->post('refundBond', 'BondController@refundBond'); // 押金退缴 5.28
+        $router->post('refundBondConfirm', 'BondController@refundBondConfirm'); // 押金退缴确认 5.28
+        $router->post('refundBondDate', 'BondController@refundBondDate'); // 押金退缴时间 5.28
+        $router->post('transferBond', 'BondController@transferBond'); // 押金退缴 5.28
+        $router->post('transferBondConfirm', 'BondController@transferBondConfirm'); // 押金退缴确认 5.28
+        $router->post('transferBondDate', 'BondController@transferBondDate'); // 押金退缴时间 5.28
     });
 });
 
