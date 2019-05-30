@@ -14,8 +14,11 @@ class TestController extends Controller
         $ip = "{$_SERVER['SERVER_NAME']}";
         $dashboard_pdf_file = "http://".$ip."/pdf/4.pdf";
         $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+        dump(111);
         $mpdf = new Mpdf();
+        dump(2222);
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+        dump($pagecount);
         for($i=1; $i<=$pagecount;$i++){
             $import_page = $mpdf->importPage($i);
             $mpdf->useTemplate($import_page);
