@@ -27,6 +27,6 @@ class TestController extends Controller
                 $mpdf->AddPage();
             }
         }
-        return $mpdf->Output();
+        $mpdf->Output();
     }
 }
