@@ -12,6 +12,7 @@ namespace App\Services;
 
 use App\Lib\Util\QueryPager;
 use App\Model\Bond;
+use App\Model\BondRefund;
 use App\Model\ContractTenement;
 use App\Model\Region;
 use App\Model\RentContact;
@@ -308,16 +309,38 @@ class BondService extends CommonService
      */
     public function refundBond(array $input)
     {
-        $model = new Bond();
-        $bond_sn = $input['bond_sn'];
-        $bond_id = $input['bond_id'];
-        $lodged_data = [
-            'bond_sn'       => $bond_sn,
-            'bond_status'   => 2,
-            'updated_at'    => date('Y-m-d H:i:s',time()),
-        ];
-        $res = $model->where('id',$bond_id)->update($lodged_data);
-        if($res){
+        $model = new BondRefund();
+        static $error = 0;
+        $tenement_info = $input['tenement_info'];
+        foreach ($tenement_info as $k => $v){
+            $refund_data = [
+                'bond_id'               => $input['bond_id'],
+                'tenement_id'           => $v['tenement_id'],
+                'tenement_full_name'    => $v['tenement_full_name'],
+                'tenement_account'      => $v['tenement_account'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($refund_data);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        $landlord_info = $input['landlord_info'];
+        foreach ($landlord_info as $k => $v){
+            $refund_data = [
+                'bond_id'               => $input['bond_id'],
+                'landlord_id'           => $v['landlord_id'],
+                'landlord_full_name'    => $v['landlord_full_name'],
+                'landlord_account'      => $v['landlord_account'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $model->insert($refund_data);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        if(!$error){
+            Bond::where('id',$input['bond_id'])->update([ 'bond_status'   => 4, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
             return $this->success('add bond sn success');
         }else{
             return $this->error('2','add bond sn failed');
