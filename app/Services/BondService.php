@@ -289,7 +289,11 @@ class BondService extends CommonService
         $bond_id = $input['bond_id'];
         $contract_id = $model->where('id',$bond_id)->pluck('contract_id')->first();
         $tenement_info = ContractTenement::where('contract_id',$contract_id)->select('tenement_id','tenement_full_name')->get()->toArray();
+        foreach ($tenement_info as $k => $v){
+            $tenement_info[$k]['tenement_account'] = '';
+        }
         $landlord_info = RentContract::where('id',$contract_id)->select('landlord_id','landlord_full_name')->first()->toArray();
+        $landlord_info['landlord_account'] = '';
         if($tenement_info && $landlord_info){
             $res['tenement_info'] = $tenement_info;
             $res['landlord_info'] = $landlord_info;
