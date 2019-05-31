@@ -182,7 +182,7 @@ class ProvidersMarketService extends CommonService
         $model = new LandlordOrder();
         $order_id = $input['order_id'];
         $group_id = $model->where('id',$order_id)->pluck('group_id')->first();
-        $res = $model->where('group_id', $order_id)->get()->toArray();
+        $res = $model->where('group_id', $group_id)->get()->toArray();
         foreach ($res as $k => $v){
             if($v['order_type'] == 4){
                 $v[$k]['issues_info'] = InspectRoom::where('id',$res['issue_id'])->first();
