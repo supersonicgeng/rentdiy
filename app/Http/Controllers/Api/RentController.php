@@ -127,6 +127,49 @@ class RentController extends CommonController
 
 
     /**
+     * @description:同意申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationAgree(Request $request)
+    {
+        return service('Rent')->rentTenementApplicationAgree($request->all());
+    }
+
+
+    /**
+     * @description:备份申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationBackup(Request $request)
+    {
+        return service('Rent')->rentTenementApplicationBackup($request->all());
+    }
+
+
+
+    /**
+     * @description:拒绝申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationReject(Request $request)
+    {
+        return service('Rent')->rentTenementApplicationReject($request->all());
+    }
+
+
+    /**
      * @description:添加租约
      * @author: syg <13971394623@163.com>
      * @param $code

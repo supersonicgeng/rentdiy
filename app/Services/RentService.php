@@ -496,6 +496,91 @@ class RentService extends CommonService
 
 
     /**
+     * @description:同意申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationAgree(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role < 4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $model = new RentApplication();
+            $rent_house_id = $model->where('id',$input['application_id'])->pluck('rent_house_id')->first();
+            $model->where('rent_house_id',$rent_house_id)->update(['application_status'=>7,'updated_at'=>date('Y:m:d h:i:s',time())]);
+            $res = $model->where('id',$input['application_id'])->update(['application_status'=>8,'updated_at'=>date('Y:m:d h:i:s',time())]);
+            if($res){
+                return $this->success('application agree success',$res);
+            } else{
+                return $this->error('3','application agree failed');
+            }
+        }
+    }
+
+
+
+
+    /**
+     * @description:备选申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationBackup(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role < 4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $model = new RentApplication();
+            $res = $model->where('id',$input['application_id'])->update(['application_status'=>5,'updated_at'=>date('Y:m:d h:i:s',time())]);
+            if($res){
+                return $this->success('application backup success',$res);
+            } else{
+                return $this->error('3','application backup failed');
+            }
+        }
+    }
+
+
+
+
+
+    /**
+     * @description:拒绝申请
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementApplicationReject(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role < 4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $model = new RentApplication();
+            $res = $model->where('id',$input['application_id'])->update(['application_status'=>7,'updated_at'=>date('Y:m:d h:i:s',time())]);
+            if($res){
+                return $this->success('application reject success',$res);
+            } else{
+                return $this->error('3','gapplication reject failed');
+            }
+        }
+    }
+
+
+    /**
      * @description:添加租约
      * @author: syg <13971394623@163.com>
      * @param $code

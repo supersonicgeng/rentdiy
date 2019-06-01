@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     });
     // 测试
     $router->group(['prefix' => 'test'], function (Router $router){
-        $router->get('test','TestController@test'); // 测试 pdf 5.28
+        $router->post('test','TestController@test'); // 测试 pdf 5.28
     });
 });
 
@@ -101,6 +101,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('rentHouseApplicationList', 'RentController@rentHouseApplicationList'); // 租户租房申请列表（房东查看） 3.30 // 接口done
         $router->post('rentTenementApplicationList', 'RentController@rentTenementApplicationList'); // 租户租房申请列表（租户查看） 3.30// 接口done
         $router->post('rentTenementApplicationDetail', 'RentController@rentTenementApplicationDetail'); // 租户租房申请详情（租户查看） 3.30
+        $router->post('rentTenementApplicationAgree', 'RentController@rentTenementApplicationAgree'); // 同意申请3.30
+        $router->post('rentTenementApplicationBackup', 'RentController@rentTenementApplicationBackup'); // 备用 3.30
+        $router->post('rentTenementApplicationReject', 'RentController@rentTenementApplicationReject'); // 拒绝 3.30
         $router->post('rentContactAdd','RentController@rentContactAdd'); // 添加租约 4.1
         $router->post('rentContactList','RentController@rentContactList'); // 租约列表 4.13
         $router->post('rentContactDetail', 'RentController@rentContactDetail'); // 租约详情 4.13
@@ -209,6 +212,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('transferBond', 'BondController@transferBond'); // 押金退缴 5.28
         $router->post('transferBondConfirm', 'BondController@transferBondConfirm'); // 押金退缴确认 5.28
         $router->post('transferBondDate', 'BondController@transferBondDate'); // 押金退缴时间 5.28
+    });
+    // 欠款管理
+    $router->group(['prefix' => 'arrears'], function (Router $router) {
+        $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
+
     });
 });
 
