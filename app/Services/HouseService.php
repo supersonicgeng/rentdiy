@@ -953,6 +953,7 @@ class HouseService extends CommonService
             return $this->error('3','the page number is not right');
         }
         $res = $model->where('user_id',$user_id)->where('deleted_at',null)->select('id','group_id','rent_category','property_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put')->groupBy('group_id')->offset(($page-1)*9)->limit(9)->get()->toArray();
+        dd($res);
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
