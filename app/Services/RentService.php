@@ -622,7 +622,7 @@ class RentService extends CommonService
                     foreach ($input['tenement_info'] as $k => $v){
                         if(!@$v['tenement_id']){
                             //房东自己添加的时候添加租户列表
-                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
+                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id')->first();
                             if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
                                 $v['tenement_id'] = $tenement_res;
                             }else{ // 没有在租户表中新建一个租户信息
@@ -632,7 +632,7 @@ class RentService extends CommonService
                                     'phone'                     => $v['tenement_phone'],
                                     'email'                     => $v['tenement_e_mail'],
                                     'mail_address'              => $v['tenement_post_address'],
-                                    'service_address'           => $v['service_physical_address'],
+                                    'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
                                     'created_at'                => date('Y-m-d H:i:s',time()),
                                 ];
@@ -759,7 +759,7 @@ class RentService extends CommonService
                                     'phone'                     => $v['tenement_phone'],
                                     'email'                     => $v['tenement_e_mail'],
                                     'mail_address'              => $v['tenement_post_address'],
-                                    'service_address'           => $v['service_physical_address'],
+                                    'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
                                     'created_at'                => date('Y-m-d H:i:s',time()),
                                 ];
@@ -912,7 +912,7 @@ class RentService extends CommonService
                                     'phone'                     => $v['tenement_phone'],
                                     'email'                     => $v['tenement_e_mail'],
                                     'mail_address'              => $v['tenement_post_address'],
-                                    'service_address'           => $v['service_physical_address'],
+                                    'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
                                     'created_at'                => date('Y-m-d H:i:s',time()),
                                 ];
