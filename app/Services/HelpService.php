@@ -141,7 +141,7 @@ class HelpService extends CommonService
         }
     }
 
-    /**
+       /**
      * @description:获得区信息
      * @author: syg <13971394623@163.com>
      * @param $code
@@ -154,6 +154,27 @@ class HelpService extends CommonService
         $res = DB::table('region')->where('level',3)->where('super_number',$ta_id)->get(['region_name as district_name','region_number as district_id']);
         if($res){
             return $this->success('district get success',$res);
+        }else{
+            return $this->error('2','district get failed');
+        }
+    }
+
+
+    /**
+     * @description:获得区信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLat(array $input)
+    {
+        $addres = $input['address'].','.$input['district_name'].','.$input['ta_name'].','.$input['region_name'];
+        $request = 'http://maps.google.com/maps/api/geocode/json?address='.$addres.'&sensor=true_or_false&key=AIzaSyArr-6TU1Je2fy8opX3qFcSlUQiaD7mK2g';
+        $res = file_get_contents($request);
+        if($res){
+            return $this->success('get lat success',$res);
         }else{
             return $this->error('2','district get failed');
         }

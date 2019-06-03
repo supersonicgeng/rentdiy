@@ -86,4 +86,17 @@ class PublicController extends CommonController
         $ta_id = $request->ta_id;
         return service('Help')->getDistrict($ta_id);
     }
+
+    /**
+     * @description:获得市名和市id
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLat(Request $request)
+    {
+        return service('Help')->getLat($request->all());
+    }
 }

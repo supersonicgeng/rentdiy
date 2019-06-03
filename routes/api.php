@@ -46,6 +46,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('getRegion','PublicController@getRegion'); // 获得州地址 接口done
         $router->post('getTa','PublicController@getTa'); // 获得市地址 接口done
         $router->post('getDistrict','PublicController@getDistrict'); // 获得地区地址 接口done
+        $router->post('getLat','PublicController@getLat'); // 获得地区地址 接口done
     });
     // 租赁市场
     $router->group(['prefix' => 'house'], function (Router $router){
