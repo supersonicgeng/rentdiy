@@ -1074,6 +1074,49 @@ class RentService extends CommonService
     }
 
     /**
+     * @description:租户查看租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementContractList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if($user_info->user_role < 4){
+            return $this->error('2','this account is not a tenement role');
+        }else{
+            $model = new RentContract();
+            $contract_ids = ContractTenement::where('tenement_id',$input['tenement_id'])->pluck('contract_id')->get();
+            $contact_status = @$input['contact_status'];
+            if($contact_status){
+                $model = $model->where('status',$contact_status);
+            }
+            $model = $model::whereIn('id',$contract_ids);
+            $count = $model->count();
+            $page = $input['page'];
+            if($count < ($page-1)*10){
+                return $this->error('3','no contact');
+            }else{
+                $res = $model->offset(($page-1)*5)->limit(5)->get()->toArray();
+                foreach ($res as $k => $v){
+                    $house_info = RentHouse::where('id',$v['house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
+                    $application_res[$k] = $house_info;
+                    $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                    $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
+                    $application_res[$k]['contract_id'] = $v['id'];
+                }
+                $data['house_list'] = $application_res;
+                $data['total_page'] = ceil($count/5);
+                $data['current_page'] = $input['page'];
+                return $this->success('get rent contract list success',$data);
+            }
+        }
+    }
+
+    /**
      * @description:租约详情
      * @author: syg <13971394623@163.com>
      * @param $code

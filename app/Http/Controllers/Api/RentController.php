@@ -210,7 +210,7 @@ class RentController extends CommonController
     }
 
     /**
-     * @description:租约详细
+     * @description:租约生效
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -220,6 +220,19 @@ class RentController extends CommonController
     public function rentContactEffect(Request $request)
     {
         return service('Rent')->rentContactEffect($request->all());
+    }
+
+    /**
+     * @description:租户查看租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentTenementContractList(Request $request)
+    {
+        return service('Rent')->rentTenementContractList($request->all());
     }
 
     /**
