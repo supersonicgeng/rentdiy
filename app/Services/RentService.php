@@ -1101,6 +1101,7 @@ class RentService extends CommonService
                 return $this->error('3','no contact');
             }else{
                 $res = $model->offset(($page-1)*5)->limit(5)->get()->toArray();
+                dd($res);
                 foreach ($res as $k => $v){
                     $house_info = RentHouse::where('id',$v['house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
                     dump($house_info);exit;
