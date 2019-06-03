@@ -1090,9 +1090,9 @@ class RentService extends CommonService
         }else{
             $model = new RentContract();
             $contract_ids = ContractTenement::where('tenement_id',$input['tenement_id'])->pluck('contract_id')->toArray();
-            $contact_status = @$input['contact_status'];
-            if($contact_status){
-                $model = $model->where('contact_status',$contact_status);
+            $contract_status = @$input['contract_status'];
+            if($contract_status){
+                $model = $model->where('contract_status',$contract_status);
             }
             $model = $model->whereIn('id',$contract_ids);
             $count = $model->count();
