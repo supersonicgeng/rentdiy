@@ -1089,7 +1089,8 @@ class RentService extends CommonService
             return $this->error('2','this account is not a tenement role');
         }else{
             $model = new RentContract();
-            $contract_ids = ContractTenement::where('tenement_id',$input['tenement_id'])->pluck('contract_id')->get();
+            $contract_ids = ContractTenement::where('tenement_id',$input['tenement_id'])->select('contract_id')->get()->toArray();
+            dd($contract_ids);
             $contact_status = @$input['contact_status'];
             if($contact_status){
                 $model = $model->where('status',$contact_status);
