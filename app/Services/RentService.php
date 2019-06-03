@@ -1094,7 +1094,7 @@ class RentService extends CommonService
             if($contact_status){
                 $model = $model->where('status',$contact_status);
             }
-            $model = $model::whereIn('id',$contract_ids);
+            $model = $model->whereIn('id',$contract_ids);
             $count = $model->count();
             $page = $input['page'];
             if($count < ($page-1)*10){
