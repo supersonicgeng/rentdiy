@@ -956,6 +956,7 @@ class HouseService extends CommonService
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
+                $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
             }
             $data['house_list'] = $res;
             $data['current_page'] = $page;
