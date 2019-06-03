@@ -172,6 +172,7 @@ class HelpService extends CommonService
     {
         $addres = $input['address'].','.$input['district_name'].','.$input['ta_name'].','.$input['region_name'];
         $request = 'http://maps.google.com/maps/api/geocode/json?address='.$addres.'&sensor=true_or_false&key=AIzaSyArr-6TU1Je2fy8opX3qFcSlUQiaD7mK2g';
+        dd($request);
         $res = file_get_contents($request);
         if($res){
             return $this->success('get lat success',$res);
