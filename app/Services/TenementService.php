@@ -208,6 +208,7 @@ class TenementService extends CommonService
         }else{
             $tenement_info = Tenement::where('user_id',$input['user_id'])->first();
             $tenement_info = (array)$tenement_info;
+            dd($tenement_info);
             if($tenement_info){
                 $certificate_model = new TenementCertificate();
                 $certificate_data = $certificate_model->where('tenement_id',$tenement_info['id'])->get()->toArray();
