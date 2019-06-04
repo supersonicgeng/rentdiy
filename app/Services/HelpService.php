@@ -93,6 +93,7 @@ class HelpService extends CommonService
         $res = Verify::insert($data);
         if($res){
             $url = 'http://ngrok.zhan2345.com:8083/sms/'.$input['account'].'/Your Verify Code is '.$code;
+            dump($url);
             $res = curlGet($url);
             dd($res);
             return $this->success('verify_code send success',['code' => $code]);
