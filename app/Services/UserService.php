@@ -205,9 +205,9 @@ class UserService extends CommonService
                 $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
                 $res->update();
                 $res = $res->toArray();
-                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
-                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
-                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                $res1 = Landlord::where('user_id',$res['id'])->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res['id'])->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res['id'])->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 if(!$res1){
                     $res['landlord_info'][0] = [
                         'landlord_id'   => '',
