@@ -109,7 +109,7 @@ class TenementService extends CommonService
                     if($error){
                         return $this->error('4','tenement information add failed');
                     }
-                    return $this->success('tenement information add success');
+                    return $this->success('tenement information add success',$res);
                 }
             }
         }

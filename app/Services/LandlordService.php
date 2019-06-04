@@ -88,11 +88,11 @@ class LandlordService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $model = new Landlord();
-                $res = $model->insert($landlord_data);
+                $res = $model->insertGetId($landlord_data);
                 if(!$res){
                     return $this->error('4','landlord information add failed');
                 }else{
-                    return $this->success('landlord information add success');
+                    return $this->success('landlord information add success',$res);
                 }
             }
         }

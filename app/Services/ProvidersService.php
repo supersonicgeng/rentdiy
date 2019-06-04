@@ -145,7 +145,7 @@ class ProvidersService extends CommonService
                     if(!$error){
                         return $this->success('provider information add success');
                     }else{
-                        return $this->error('5','pic save failed');
+                        return $this->error('5','pic save failed',$res);
                     }
                 }
             }
