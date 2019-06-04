@@ -206,10 +206,10 @@ class TenementService extends CommonService
         if($user_info->user_role <4){
             return $this->error('2','this account is not a tenement role');
         }else{
-            $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
+            $tenement_info = Tenement::where('user_id',$input['user_id'])->first();
             if($tenement_info){
                 $certificate_model = new TenementCertificate();
-                $certificate_data = $certificate_model->where('tenement_id',$tenement_info['id'])->get()->toArray();
+                $certificate_data = $certificate_model->where('tenement_id',$tenement_info->id)->get()->toArray();
                 foreach ($certificate_data as $k => $v){
                     $tenement_info['certificate_category'][$k] = $v['certificate_category'];
                     $tenement_info['certificate_no'][$k] = $v['certificate_no'];
