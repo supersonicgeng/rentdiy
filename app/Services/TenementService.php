@@ -210,7 +210,7 @@ class TenementService extends CommonService
             if($tenement_info){
                 $tenement_info = $tenement_info->toArray();
                 $certificate_model = new TenementCertificate();
-                $certificate_data = $certificate_model->where('tenement_id',$tenement_info->id)->get()->toArray();
+                $certificate_data = $certificate_model->where('tenement_id',$tenement_info['id'])->get()->toArray();
                 foreach ($certificate_data as $k => $v){
                     $tenement_info['certificate_category'][$k] = $v['certificate_category'];
                     $tenement_info['certificate_no'][$k] = $v['certificate_no'];
