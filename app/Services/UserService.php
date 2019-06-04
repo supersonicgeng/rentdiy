@@ -208,7 +208,7 @@ class UserService extends CommonService
                 $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
                 $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
                 if(!$res1){
-                    $res['landlord_info'] = [
+                    $res['landlord_info'][0] = [
                         'landlord_id'   => '',
                         'landlord_name' => '',
                     ];
@@ -216,14 +216,14 @@ class UserService extends CommonService
                     $res['landlord_info'] = $res1;
                 }
                 if(!$res2){
-                    $res['tenement_info'] = [
+                    $res['tenement_info'][0] = [
                         'tenement_id'   => '',
                     ];
                 }else{
                     $res['tenement_info'] = $res2;
                 }
                 if(!$res3){
-                    $res['providers_info'] = [
+                    $res['providers_info'][0] = [
                         'providers_id'   => '',
                         'providers_name' => '',
                     ];
