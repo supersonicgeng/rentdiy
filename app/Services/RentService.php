@@ -1097,21 +1097,26 @@ class RentService extends CommonService
             $model = $model->whereIn('id',$contract_ids);
             $count = $model->count();
             $page = $input['page'];
-            if($count < ($page-1)*10){
+            if($count < ($page-1)*5){
                 return $this->error('3','no contact');
             }else{
                 $res = $model->offset(($page-1)*5)->limit(5)->get()->toArray();
-                foreach ($res as $k => $v){
-                    $house_info = RentHouse::where('id',$v['house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
-                    $application_res[$k] = $house_info;
-                    $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
-                    $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
-                    $application_res[$k]['contract_id'] = $v['id'];
+                if($res){
+                    foreach ($res as $k => $v){
+                        $house_info = RentHouse::where('id',$v['house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date')->first()->toArray();;
+                        $application_res[$k] = $house_info;
+                        $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+                        $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
+                        $application_res[$k]['contract_id'] = $v['id'];
+                    }
+                    $data['house_list'] = $application_res;
+                    $data['total_page'] = ceil($count/5);
+                    $data['current_page'] = $input['page'];
+                    return $this->success('get rent contract list success',$data);
+                }else{
+                    return $this->error('4','get contract list failed');
                 }
-                $data['house_list'] = $application_res;
-                $data['total_page'] = ceil($count/5);
-                $data['current_page'] = $input['page'];
-                return $this->success('get rent contract list success',$data);
+
             }
         }
     }
