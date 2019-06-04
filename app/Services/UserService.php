@@ -138,9 +138,13 @@ class UserService extends CommonService
             }
         }
 
-        $res = $model->insert($data);
+        $res = $model->insertGetId($data);
         if($res){
-            return $this->success('register OK');
+            $token = md5($res.time().mt_rand(100,999));
+            $user = $model->where('id',$res)->first();
+            $user->login_token = $token; //生成token
+            $user->update();
+            return $this->success('register OK',$res);
         }else{
             return $this->error(3,'register failed');
         }
