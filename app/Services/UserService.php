@@ -143,8 +143,9 @@ class UserService extends CommonService
             $token = md5($res.time().mt_rand(100,999));
             $user = $model->where('id',$res)->first();
             $user->login_token = $token; //生成token
+            $user->login_expire_time = date('Y-m-d H:i:s',time()+7200);
             $user->update();
-            return $this->success('register OK',$res);
+            return $this->success('register OK',$user);
         }else{
             return $this->error(3,'register failed');
         }
