@@ -79,7 +79,7 @@ class HelpService extends CommonService
         if(0 <strtotime($expire_time)-time() && strtotime($expire_time)-time() <10){
             return $this->error('2','the verify is send to you email pls check your email');
         }
-        // TODO 手机发送验证码
+
         //$to = $input['account']; //接受验证码邮箱
         $code = rand_string(4,1); //生成验证码
         //将验证码信息存入verify表中
@@ -92,10 +92,8 @@ class HelpService extends CommonService
         ];
         $res = Verify::insert($data);
         if($res){
-            /*$subject = 'Verify mail';
-            Mail::send('email.verify',['code' => $code],function($code) use($to,$subject){
-                $code->to($to)->subject($subject);
-            });*/
+            $url = 'http://ngrok.zhan2345.com:8083/sms/'.$input['account'].'/Your Verify Code is '.$code;
+            file_get_contents($url);
             return $this->success('verify_code send success',['code' => $code]);
         }else{
             return $this->error('3','send verify failed pls try again');
