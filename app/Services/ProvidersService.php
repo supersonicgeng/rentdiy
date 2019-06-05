@@ -277,7 +277,8 @@ class ProvidersService extends CommonService
             if(!$provider_list){
                 return $this->error('3','you not add a  providers information');
             }else{
-                return $this->success('get providers success',$provider_list);
+                $data['provider_list'] = $provider_list;
+                return $this->success('get providers success',$data);
             }
         }
     }
