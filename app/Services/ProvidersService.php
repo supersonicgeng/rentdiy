@@ -204,7 +204,7 @@ class ProvidersService extends CommonService
                     $service_company_pic = $input['service_company_pic'];
                     foreach ($service_company_pic as $k => $v){
                         $service_company_pic_data = [
-                            'service_id'    => $res,
+                            'service_id'    => $input['service_id'],
                             'company_pic'   => $v,
                             'created_at'    => date('Y-m-d H:i:s',time()),
                         ];
@@ -216,7 +216,7 @@ class ProvidersService extends CommonService
                     $service_company_promo_pic = $input['service_company_promo_pic'];
                     foreach ($service_company_promo_pic as $key => $value){
                         $service_company_promo_pic_data = [
-                            'service_id'        => $res,
+                            'service_id'        => $input['service_id'],
                             'company_promo_pic' => $value,
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
@@ -228,7 +228,7 @@ class ProvidersService extends CommonService
                     $service_introduce = $input['service_introduce'];
                     foreach ($service_introduce as $keys => $values){
                         $service_introduce_data = [
-                            'service_id'    => $res,
+                            'service_id'    => $input['service_id'],
                             'service_name'  => $values['service_name'],
                             'price'         => $values['price'],
                             'is_gts'        => $values['is_gts'],
