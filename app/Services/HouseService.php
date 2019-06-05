@@ -426,7 +426,7 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $rent_house_id = $input['rent_house_id'];
-        $res = $model->where('id',$rent_house_id)->select('group_id','rent_category','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date')->first();
+        $res = $model->where('id',$rent_house_id)->select('group_id','rent_category','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','least_rent_time','address','lat','lon','available_date')->first();
         if($res){
             $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
             $res['short_words'] = explode(',',$res['short_words']);
@@ -984,7 +984,7 @@ class HouseService extends CommonService
         $res = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','rent_category','property_name','details','property_type','bathroom_type','bathroom_no','bedroom_no','require_renter','short_words',
             'actual_area','building_area','parking_no','garage_no','insurance_company','insurance_start_time','insurance_end_time','address','District','TA','Region','lat','lon','bus_station','school','supermarket',
             'hospital','rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','available_time','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
-            'can_party','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
+            'can_party','least_rent_time','can_pet','can_smoke','other_rule','rent_method')->first()->toArray();
         if($res['rent_category'] == 1 || $res['rent_category'] == 4){
             $res['contact_info'] = RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->select('contact_name','contact_role','e_mail','phone')->get()->toArray()?RentContact::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->select('contact_name','contact_role','e_mail','phone')->get()->toArray():[];
             $data = RentPic::where('rent_house_id',$res['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
@@ -1009,7 +1009,7 @@ class HouseService extends CommonService
             $res['short_words'] = explode(',',$res['short_words']);
             $res['room_info'] = $model->where('user_id',$user_id)->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','group_id','bed_no','bus_station','school','supermarket',
                 'hospital','room_name','room_description','shower_room','bed_no','require_renter','room_short_words', 'rent_period','rent_least_fee','rent_fee_detail','rent_fee','rent_fee_pre_week','least_rent_time','least_rent_method','pre_rent','pre_rent_fee','margin_rent','margin_rent_fee','total_need_fee',
-                'can_party','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
+                'can_party','least_rent_time','can_pet','can_smoke','other_rule','rent_method')->get()->toArray();
             foreach ($res['room_info'] as $key => $value){
                 if(!$value['room_short_words']){
                     $res['room_info'][$key]['room_short_words'] = [];
