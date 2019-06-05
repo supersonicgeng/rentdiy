@@ -30,6 +30,7 @@ use App\Model\PlantOperateLog;
 use App\Model\Providers;
 use App\Model\ProvidersCompanyPic;
 use App\Model\ProvidersCompanyPromoPic;
+use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -116,6 +117,7 @@ class OperatorService extends CommonService
     {
         $account = $input['account'];
         $password = $input['password'];
+        $operator_way = $input['operator_way'];
         // 验证账号
         $model = new Operator();
         $res = $model->where('operator_account',$account)->where('password',md5($password))->first();
@@ -125,6 +127,15 @@ class OperatorService extends CommonService
             $token = md5($res->id.time().mt_rand(100,999));
             $res->login_token = $token; //生成token
             $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+            if($operator_way == 1){
+                if($res->role >4){
+                    return $this->error('3','your account is a provider operator');
+                }
+            }else{
+                if($res->role < 5){
+                    return $this->error('3','your account is a landlord operator');
+                }
+            }
             $res->update();
             return $this->success('login OK',$res->toArray());
         }
@@ -192,10 +203,16 @@ class OperatorService extends CommonService
     public function getOperatorList(array $input)
     {
         $user_id = $input['user_id'];
+        $operator_way = $input['operator_way'];
         $model = new Operator();
-        $res = $model->where('user_id',$user_id)->where('deleted_at',null)->select('id as operator_id','operator_name')->get()->toArray();
+        $res = $model->where('user_id',$user_id)->where('operator_way',$operator_way)->where('deleted_at',null)->select('id as operator_id','operator_name')->get();
         if($res){
-            return $this->success('get list success',$res);
+            $res = $res->toArray();
+            foreach ($res as $key => $value){
+                $res[$key]['house_id'] = OperatorRoom::where('operator_id',$value['operator_id'])->where('deleted_at',null)->pluck('house_id');
+            }
+            $data['operator_list'] = $res;
+            return $this->success('get list success',$data);
         }else{
             return $this->error('3','get list failed');
         }
