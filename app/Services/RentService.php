@@ -1134,6 +1134,11 @@ class RentService extends CommonService
         //dd($input);
         $model = new RentContract();
         $res = $model->where('id',$input['contract_id'])->first();
+        if($res){
+
+        }else{
+            return $this->error('2','get contract detail failed');
+        }
         if($res->contract_contract_type == 1){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
                 ->leftjoin('entire_contract','entire_contract.contract_id','=','id')->first();
@@ -1589,6 +1594,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(1);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($entire_data->pay_method == 3){
@@ -1615,6 +1622,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(2);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($entire_data->pay_method == 4){
@@ -1641,6 +1650,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(3);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
@@ -1669,6 +1680,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(4);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($entire_data->pay_method == 3){
@@ -1695,6 +1708,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(5);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($entire_data->pay_method == 4){
@@ -1721,6 +1736,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(6);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
@@ -1778,6 +1795,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(7);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($separate_data->pay_method == 3){
@@ -1804,6 +1823,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(8);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($separate_data->pay_method == 4){
@@ -1830,6 +1851,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(9);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
@@ -1858,6 +1881,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(10);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($separate_data->pay_method == 3){
@@ -1884,6 +1909,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(11);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }elseif ($separate_data->pay_method == 4){
@@ -1910,6 +1937,8 @@ class RentService extends CommonService
                                 'items_name'        => 'bond fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
+                            dump(12);
+                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
@@ -1944,6 +1973,8 @@ class RentService extends CommonService
                             'items_name'        => 'bond fee',
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
+                        dump(13);
+                        dd($arrears_data);
                         RentArrears::insert($arrears_data);
                     }
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
@@ -1970,6 +2001,8 @@ class RentService extends CommonService
                             'items_name'        => 'bond fee',
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
+                        dump(14);
+                        dd($arrears_data);
                         RentArrears::insert($arrears_data);
                     }
                 }
