@@ -14,5 +14,7 @@ class Providers extends Model
         'mobile'    => 'integer',
         'hm'        => 'integer',
         'wk'        => 'integer',
+        'mail_code' => 'integer',
+        'bank_account'  => 'integer',
     ];
 }
