@@ -209,7 +209,11 @@ class OperatorService extends CommonService
         if($res){
             $res = $res->toArray();
             foreach ($res as $key => $value){
-                $res[$key]['house_id'] = OperatorRoom::where('operator_id',$value['id'])->where('deleted_at',null)->pluck('house_id');
+                $house_id = OperatorRoom::where('operator_id',$value['id'])->where('deleted_at',null)->pluck('house_id');
+                foreach ($house_id as $k => $v){
+                    $res[$key]['house_list']['house_id'][$k] = $v;
+                    $res[$key]['house_list']['house_name'][$k] = RentHouse::where('id',$v)->pluck('property_name')->first();
+                }
             }
             $data['operator_list'] = $res;
             return $this->success('get list success',$data);
