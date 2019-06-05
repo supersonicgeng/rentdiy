@@ -205,11 +205,11 @@ class OperatorService extends CommonService
         $user_id = $input['user_id'];
         $operator_way = $input['operator_way'];
         $model = new Operator();
-        $res = $model->where('user_id',$user_id)->where('operator_way',$operator_way)->where('deleted_at',null)->select('id as operator_id','operator_name')->get();
+        $res = $model->where('user_id',$user_id)->where('operator_way',$operator_way)->where('deleted_at',null)->get();
         if($res){
             $res = $res->toArray();
             foreach ($res as $key => $value){
-                $res[$key]['house_id'] = OperatorRoom::where('operator_id',$value['operator_id'])->where('deleted_at',null)->pluck('house_id');
+                $res[$key]['house_id'] = OperatorRoom::where('operator_id',$value['id'])->where('deleted_at',null)->pluck('house_id');
             }
             $data['operator_list'] = $res;
             return $this->success('get list success',$data);
