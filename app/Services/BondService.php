@@ -16,6 +16,7 @@ use App\Model\BondRefund;
 use App\Model\BondTransfer;
 use App\Model\ContractTenement;
 use App\Model\Region;
+use App\Model\RentArrears;
 use App\Model\RentContact;
 use App\Model\RentContract;
 use App\Model\RentHouse;
@@ -40,7 +41,7 @@ class BondService extends CommonService
      */
     public function bondList(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         if($input['bond_status'] == 2){
             $model = $model->whereIn('bond_status',[1,2,3]);
         }elseif ($input['bond_status'] == 3){
@@ -60,11 +61,11 @@ class BondService extends CommonService
             $model = $model->where('created_at','<',$input['end_date']);
         }
         $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
+        $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
             return $this->error('3','no more information');
         }
-        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
+        $res = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->offset(($page-1)*10)->limit(10)->get()->toArray();
         $data['bondList'] = $res;
         $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
@@ -82,7 +83,7 @@ class BondService extends CommonService
      */
     public function bondArrearsList(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $model = $model->where('bond_status',1);
         if($input['property_name']){
             $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
@@ -94,11 +95,11 @@ class BondService extends CommonService
             $model = $model->where('created_at','<',$input['end_date']);
         }
         $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
+        $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
             return $this->error('3','no more information');
         }
-        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
+        $res = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->offset(($page-1)*10)->limit(10)->get()->toArray();
         $data['bondList'] = $res;
         $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
@@ -115,7 +116,7 @@ class BondService extends CommonService
      */
     public function bondLodgedList(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         if($input['bond_status']){
             $model = $model->where('bond_status',$input['bond_status']);
         }
@@ -129,7 +130,7 @@ class BondService extends CommonService
             $model = $model->where('created_at','<',$input['end_date']);
         }
         $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
+        $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
             return $this->error('3','no more information');
         }
@@ -150,7 +151,7 @@ class BondService extends CommonService
      */
     public function bondRefundList(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         if($input['bond_status'] == 3){
             $model = $model->where('bond_status',3);
         }elseif ($input['bond_status'] == 4){
@@ -170,11 +171,11 @@ class BondService extends CommonService
             $model = $model->where('created_at','<',$input['end_date']);
         }
         $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
+        $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
             return $this->error('3','no more information');
         }
-        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
+        $res = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->offset(($page-1)*10)->limit(10)->get()->toArray();
         $data['bondList'] = $res;
         $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
@@ -192,7 +193,7 @@ class BondService extends CommonService
      */
     public function bondTransformList(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         if($input['bond_status'] == 2){
             $model = $model->where('bond_status',2);
         }elseif ($input['bond_status'] == 7){
@@ -212,11 +213,11 @@ class BondService extends CommonService
             $model = $model->where('created_at','<',$input['end_date']);
         }
         $page = $input['page'];
-        $count = $model->where('user_id',$input['user_id'])->count();
+        $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
             return $this->error('3','no more information');
         }
-        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*10)->limit(10)->get()->toArray();
+        $res = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->offset(($page-1)*10)->limit(10)->get()->toArray();
         $data['bondList'] = $res;
         $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
@@ -233,7 +234,7 @@ class BondService extends CommonService
      */
     public function addBondLodgedDate(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $lodged_date = $input['lodged_date'];
         $bond_id = $input['bond_id'];
         $lodged_data = [
@@ -261,7 +262,7 @@ class BondService extends CommonService
      */
     public function addBondLodgedSn(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_sn = $input['bond_sn'];
         $bond_id = $input['bond_id'];
         $lodged_data = [
@@ -287,7 +288,7 @@ class BondService extends CommonService
      */
     public function refundInfo(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_id = $input['bond_id'];
         $contract_id = $model->where('id',$bond_id)->pluck('contract_id')->first();
         $tenement_info = ContractTenement::where('contract_id',$contract_id)->select('tenement_id','tenement_full_name')->get()->toArray();
@@ -364,7 +365,7 @@ class BondService extends CommonService
      */
     public function refundBondConfirm(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'bond_status'   => 5,
@@ -389,7 +390,7 @@ class BondService extends CommonService
      */
     public function refundBondDate(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'bond_status'   => 6,
@@ -462,7 +463,7 @@ class BondService extends CommonService
      */
     public function transferBondConfirm(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'bond_status'   => 8,
@@ -487,7 +488,7 @@ class BondService extends CommonService
      */
     public function transferBondDate(array $input)
     {
-        $model = new Bond();
+        $model = new RentArrears();
         $bond_id = $input['bond_id'];
         $lodged_data = [
             'bond_status'   => 9,
