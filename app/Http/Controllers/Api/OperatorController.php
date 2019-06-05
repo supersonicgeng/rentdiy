@@ -78,6 +78,19 @@ class OperatorController extends Controller
 
 
     /**
+     * @description: 获得操作员详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOperatorDetail(Request $request)
+    {
+        return service('Operator')->getOperatorDetail($request->all());
+    }
+
+    /**
      * @description: 修改操作员是否禁用
      * @author: syg <13971394623@163.com>
      * @param $code

@@ -161,6 +161,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('addOperatorInformation', 'OperatorController@addOperatorInformation'); // 生成操作员 3.28
         $router->post('editOperatorInformation', 'OperatorController@editOperatorInformation'); // 编辑操作员 3.28
         $router->post('getOperatorList', 'OperatorController@getOperatorList'); // 获得操作员列表 3.29
+        $router->post('getOperatorDetail', 'OperatorController@getOperatorDetail'); // 获得操作员详细 3.29
         $router->post('changeOperatorStatus', 'OperatorController@changeOperatorStatus'); // 修改操作员是否禁用 3.29
     });
     // 服务商市场
@@ -235,6 +236,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //需要登录的路由写在这里
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
-    // 操作员模块
+    // 欠款管理
+    $router->group(['prefix' => 'operator'], function (Router $router) {
+        $router->post('getHouseList', 'OperatorController@getHouseList'); // 操作员获取列表 4.10
 
+    });
 });

@@ -231,8 +231,8 @@ class OperatorService extends CommonService
                     $res[$key]['role4'] = 0;
                 }
                 foreach ($house_id as $k => $v){
-                    $res[$key]['house_list']['house_id'][$k] = $v;
-                    $res[$key]['house_list']['house_name'][$k] = RentHouse::where('id',$v)->pluck('property_name')->first();
+                    $res[$key]['house_list'][$k]['house_id'] = $v;
+                    $res[$key]['house_list'][$k]['house_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
                 }
             }
             $data['operator_list'] = $res;
@@ -241,6 +241,56 @@ class OperatorService extends CommonService
             return $this->error('3','get list failed');
         }
     }
+
+
+    /**
+     * @description:获得操作员详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOperatorDetail(array $input)
+    {
+        $user_id = $input['user_id'];
+        $operator_id = $input['operator_id'];
+        $model = new Operator();
+        $res = $model->where('user_id',$user_id)->where('id',$operator_id)->first();
+        if($res){
+            $res = $res->toArray();
+            $house_id = OperatorRoom::where('operator_id',$res['id'])->where('deleted_at',null)->pluck('house_id');
+            if($res['role'] %2){
+                $res['role1'] = 1;
+            }else{
+                $res['role1'] = 0;
+            }
+            if($res['role']  == 2 || $res['role']  == 3 || $res['role']  == 6 || $res['role'] == 7  || $res['role']  == 10 || $res['role']  == 11 ||$res['role']  == 14 ||$res['role']  == 15){
+                $res['role2'] = 1;
+            }else{
+                $res['role2'] = 0;
+            }
+            if($res['role']  == 4 || $res['role']  == 5 || $res['role']  == 6 || $res['role'] == 7  || $res['role']  == 12 || $res['role']  == 13 ||$res['role']  == 14 ||$res['role']  == 15){
+                $res['role3'] = 1;
+            }else{
+                $res['role3'] = 0;
+            }
+            if($res['role'] > 7){
+                $res['role4'] = 1;
+            }else{
+                $res['role4'] = 0;
+            }
+            foreach ($house_id as $k => $v){
+                $res['house_list'][$k]['house_id'] = $v;
+                $res['house_list'][$k]['house_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
+            }
+            $data['operator_detail'] = $res;
+            return $this->success('get detail success',$data);
+        }else{
+            return $this->error('3','get detail failed');
+        }
+    }
+
 
     /**
      * @description:修改操作员是否禁用
