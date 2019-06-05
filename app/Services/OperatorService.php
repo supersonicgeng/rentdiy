@@ -210,6 +210,26 @@ class OperatorService extends CommonService
             $res = $res->toArray();
             foreach ($res as $key => $value){
                 $house_id = OperatorRoom::where('operator_id',$value['id'])->where('deleted_at',null)->pluck('house_id');
+                if($value['role'] %2){
+                    $res[$key]['role1'] = 1;
+                }else{
+                    $res[$key]['role1'] = 0;
+                }
+                if($value['role']  == 2 || $value['role']  == 3 || $value['role']  == 6 || $value['role'] == 7  || $value['role']  == 10 || $value['role']  == 11 ||$value['role']  == 14 ||$value['role']  == 15){
+                    $res[$key]['role2'] = 1;
+                }else{
+                    $res[$key]['role2'] = 0;
+                }
+                if($value['role']  == 4 || $value['role']  == 5 || $value['role']  == 6 || $value['role'] == 7  || $value['role']  == 12 || $value['role']  == 13 ||$value['role']  == 14 ||$value['role']  == 15){
+                    $res[$key]['role3'] = 1;
+                }else{
+                    $res[$key]['role3'] = 0;
+                }
+                if($value['role'] > 7){
+                    $res[$key]['role4'] = 1;
+                }else{
+                    $res[$key]['role4'] = 0;
+                }
                 foreach ($house_id as $k => $v){
                     $res[$key]['house_list']['house_id'][$k] = $v;
                     $res[$key]['house_list']['house_name'][$k] = RentHouse::where('id',$v)->pluck('property_name')->first();
