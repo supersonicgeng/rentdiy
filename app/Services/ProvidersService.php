@@ -128,13 +128,13 @@ class ProvidersService extends CommonService
                         }
                     }
                     $service_introduce = $input['service_introduce'];
-                    foreach ($service_introduce as $key => $value){
+                    foreach ($service_introduce as $keys => $values){
                         $service_introduce_data = [
                             'service_id'    => $res,
-                            'service_name'  => $value['service_name'],
-                            'price'         => $value['price'],
-                            'is_gts'        => $value['is_gts'],
-                            'details'       => $value['details'],
+                            'service_name'  => $values['service_name'],
+                            'price'         => $values['price'],
+                            'is_gts'        => $values['is_gts'],
+                            'details'       => $values['details'],
                             'created_at'    => date('Y-m-d H:i:s',time()),
                         ];
                         $service_introduce_res = ServiceIntroduce::insert($service_introduce_data);
@@ -226,13 +226,13 @@ class ProvidersService extends CommonService
                         }
                     }
                     $service_introduce = $input['service_introduce'];
-                    foreach ($service_introduce as $key => $value){
+                    foreach ($service_introduce as $keys => $values){
                         $service_introduce_data = [
                             'service_id'    => $res,
-                            'service_name'  => $value['service_name'],
-                            'price'         => $value['price'],
-                            'is_gts'        => $value['is_gts'],
-                            'details'       => $value['details'],
+                            'service_name'  => $values['service_name'],
+                            'price'         => $values['price'],
+                            'is_gts'        => $values['is_gts'],
+                            'details'       => $values['details'],
                             'created_at'    => date('Y-m-d H:i:s',time()),
                         ];
                         $service_introduce_res = ServiceIntroduce::insert($service_introduce_data);
