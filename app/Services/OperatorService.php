@@ -307,7 +307,7 @@ class OperatorService extends CommonService
         $operator_info = $model->where('user_id',$user_id)->where('id',$input['operator_id'])->first();
         if($operator_info->is_use){
             $operator_info->is_use = 0;
-            $res = $model->update();
+            $res = $operator_info->update();
             if($res){
                 return $this->success('change operator status success');
             }else{
@@ -315,7 +315,7 @@ class OperatorService extends CommonService
             }
         }else{
             $operator_info->is_use = 1;
-            $res = $model->update();
+            $res = $operator_info->update();
             if($res){
                 return $this->success('change operator status success');
             }else{
