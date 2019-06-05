@@ -65,7 +65,7 @@ class OperatorService extends CommonService
             'operator_way'      => $input['operator_way'],
             'operator_account'  => $input['operator_account'],
             'operator_name'     => $input['operator_name'],
-            'password'          => md5($input['password']),
+            'password'          => $input['password'],
             'role'              => $input['role'],
             'start_date'        => $input['start_date'],
             'end_date'          => $input['end_date'],
@@ -157,18 +157,37 @@ class OperatorService extends CommonService
         $model = new Operator();
         $operator_info = $model->where('user_id',$user_id)->where('id',$operator_id)->first();
         $operator_data = [
-            'operator_account'  => @$input['operator_account']?$input['operator_account']:$operator_info->operator_account,
-            'operator_name'     => @$input['operator_name']?$input['operator_name']:$operator_info->operator_name,
-            'password'          => @$input['password']?md5($input['password']):$operator_info->password,
+            'password'          => @$input['password']?$input['password']:$operator_info->password,
             'role'              => @$input['role']?$input['role']:$operator_info->role,
             'start_date'        => @$input['start_date']?$input['start_date']:$operator_info->start_date,
             'end_date'          => @$input['end_date']?$input['end_date']:$operator_info->end_date,
             'email'             => @$input['email']?$input['email']:$operator_info->email,
             'phone'             => @$input['phone']?$input['phone']:$operator_info->phone,
-            'is_use'            => @$input['is_use']?$input['is_use']:$operator_info->is_use,
             'update_at'         => date('Y-m-d H:i:s',time())
         ];
         $res = $model->where('user_id',$user_id)->where('id',$operator_id)->update($operator_data);
+        static $error = 0;
+        if($res){
+            // 删除已经存在的房屋列表
+            OperatorRoom::where('operator_id',$operator_id)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+            foreach ($input['house_id'] as $k => $v)
+                $data = [
+                    'operator_id'   => $operator_id,
+                    'house_id'      => $v,
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+            $insert_res = OperatorRoom::insert($data);
+            if(!$insert_res){
+                $error += 1;
+            }
+            if($res && !$error){
+                return $this->success('edit operator information success');
+            }else{
+                return $this->error('2','edit operator information failed');
+            }
+        }else{
+            return $this->error('2','edit operator information failed');
+        }
     }
 
 
