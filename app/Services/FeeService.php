@@ -47,6 +47,7 @@ class FeeService extends CommonService
             $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
             $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
             $fee_data = [
+                'user_id'           => $input['user_id'],
                 'contract_id'       => $input['contract_id'],
                 'contract_sn'       => $input['contract_sn'],
                 'rent_house_id'     => $rent_house_id,
@@ -75,6 +76,7 @@ class FeeService extends CommonService
             $rent_house_id = $input['rent_house_id'];
             $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
             $fee_data = [
+                'user_id'           => $input['user_id'],
                 'rent_house_id'     => $rent_house_id,
                 'arrears_type'      => 4,
                 'property_name'     => $rent_house_info->property_name,
