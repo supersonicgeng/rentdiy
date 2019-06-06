@@ -391,10 +391,18 @@ class RentService extends CommonService
             $res = $model->where('rent_house_id',$input['rent_house_id'])->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get()->toArray();
             if($res){
                 foreach ($res as $k => $v){
-                    $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
-                    $res[$k]['tenement_name'] = $tenement_info['first_name'].' '.$tenement_info['middle_name'].' '.$tenement_info['last_name'];
-                    $res[$k]['tenement_headimg'] = $tenement_info['headimg'];
-                    $res[$k]['look_house'] = LookHouse::where('rent_application_id',$v['id'])->first();
+                    $tenement_info = Tenement::where('id',$v['tenement_id'])->first();
+                    if($tenement_info){
+                        $tenement_info = $tenement_info->toArray();
+                        $res[$k]['tenement_name'] = $tenement_info['first_name'].' '.$tenement_info['middle_name'].' '.$tenement_info['last_name'];
+                        $res[$k]['tenement_headimg'] = $tenement_info['headimg'];
+                        $res[$k]['look_house'] = LookHouse::where('rent_application_id',$v['id'])->first();
+                    }else{
+                        $res[$k]['tenement_name'] = '';
+                        $res[$k]['tenement_headimg'] = '';
+                        $res[$k]['look_house'] = LookHouse::where('rent_application_id',$v['id'])->first();
+                    }
+
                     /*$res[$k]['survey_score'] = Survey::where('application_id',$v['id'])->pluck('survey_score')->first();
                     $res[$k]['survey_people'] = Survey::where('application_id',$v['id'])->pluck('survey_people')->first();
                     $res[$k]['survey_date'] = Survey::where('application_id',$v['id'])->pluck('survey_date')->first();*/
