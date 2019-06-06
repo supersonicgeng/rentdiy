@@ -1580,6 +1580,7 @@ class RentService extends CommonService
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     if($entire_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1608,6 +1609,7 @@ class RentService extends CommonService
                         }
                     }elseif ($entire_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1636,6 +1638,7 @@ class RentService extends CommonService
                         }
                     }elseif ($entire_data->pay_method == 4){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1666,6 +1669,7 @@ class RentService extends CommonService
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
                     if($entire_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1694,6 +1698,7 @@ class RentService extends CommonService
                         }
                     }elseif ($entire_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1722,6 +1727,7 @@ class RentService extends CommonService
                         }
                     }elseif ($entire_data->pay_method == 4){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1778,6 +1784,7 @@ class RentService extends CommonService
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     if($separate_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             ['id','contract_id','contract_sn','user_id','rent_house_id','tenement_id','tenement_name','tenement_email','tenement_phone','arrears_type','property_name',
                                 'effect_date','arrears_fee','rent_circle','rent_times','is_pay','pay_fee','need_pay_fee','pay_date','number','unit_price','subject_code','tex',
@@ -1809,6 +1816,7 @@ class RentService extends CommonService
                         }
                     }elseif ($separate_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1837,6 +1845,7 @@ class RentService extends CommonService
                         }
                     }elseif ($separate_data->pay_method == 4){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1867,6 +1876,7 @@ class RentService extends CommonService
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
                     if($separate_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1895,6 +1905,7 @@ class RentService extends CommonService
                         }
                     }elseif ($separate_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1923,6 +1934,7 @@ class RentService extends CommonService
                         }
                     }elseif ($separate_data->pay_method == 4){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1959,6 +1971,7 @@ class RentService extends CommonService
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                    dump($cycle);
                     for($i=0;$i<$cycle;$i++){
                         $arrears_data = [
                             'contract_id'       => $input['contract_id'],
@@ -1987,6 +2000,7 @@ class RentService extends CommonService
                     }
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
                     $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
+                    dump($cycle);
                     for($i=0;$i<$cycle;$i++){
                         $arrears_data = [
                             'contract_id'       => $input['contract_id'],
