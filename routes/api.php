@@ -217,9 +217,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('transferBondDate', 'BondController@transferBondDate'); // 押金退缴时间 5.28
     });
     // 欠款管理
-    $router->group(['prefix' => 'arrears'], function (Router $router) {
-        $router->post('keyAdd', 'KeyController@keyAdd'); // 添加钥匙 4.10
-
+    $router->group(['prefix' => 'fee'], function (Router $router) {
+        $router->post('feeAdd', 'FeeController@feeAdd'); // 添加费用单 4.10
+        $router->post('getContractList', 'FeeController@getContractList'); // 获得租约列表 4.10
     });
 });
 
