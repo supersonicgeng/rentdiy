@@ -65,7 +65,7 @@ class OperatorService extends CommonService
             'operator_way'      => $input['operator_way'],
             'operator_account'  => $input['operator_account'],
             'operator_name'     => $input['operator_name'],
-            'password'          => $input['password'],
+            'password'          => md5($input['password']),
             'role'              => $input['role'],
             'start_date'        => $input['start_date'],
             'end_date'          => $input['end_date'],
