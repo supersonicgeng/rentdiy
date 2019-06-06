@@ -78,10 +78,10 @@ class OperatorService extends CommonService
         $res = $model->insertGetId($operator_data);
         static $error = 0;
         if($res){
-            foreach ($input['house_id'] as $k => $v)
+            foreach ($input['house_list'] as $k => $v)
             $data = [
                 'operator_id'   => $res,
-                'house_id'      => $v,
+                'house_id'      => $v['house_id'],
                 'created_at'    => date('Y-m-d H:i:s',time())
             ];
             $insert_res = OperatorRoom::insert($data);
@@ -170,10 +170,10 @@ class OperatorService extends CommonService
         if($res){
             // 删除已经存在的房屋列表
             OperatorRoom::where('operator_id',$operator_id)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-            foreach ($input['house_id'] as $k => $v)
+            foreach ($input['house_list'] as $k => $v)
                 $data = [
                     'operator_id'   => $operator_id,
-                    'house_id'      => $v,
+                    'house_id'      => $v['house_id'],
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
             $insert_res = OperatorRoom::insert($data);
