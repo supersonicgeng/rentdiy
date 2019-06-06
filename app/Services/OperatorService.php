@@ -163,7 +163,7 @@ class OperatorService extends CommonService
             'end_date'          => @$input['end_date']?$input['end_date']:$operator_info->end_date,
             'email'             => @$input['email']?$input['email']:$operator_info->email,
             'phone'             => @$input['phone']?$input['phone']:$operator_info->phone,
-            'update_at'         => date('Y-m-d H:i:s',time())
+            'updated_at'         => date('Y-m-d H:i:s',time())
         ];
         $res = $model->where('user_id',$user_id)->where('id',$operator_id)->update($operator_data);
         static $error = 0;
