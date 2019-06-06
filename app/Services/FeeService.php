@@ -114,7 +114,7 @@ class FeeService extends CommonService
     public function getContractList(array $input)
     {
         $model = new RentContract();
-        $res = $model->where('user_id',$input['user_id'])->select('id','contract_sn')->get();
+        $res = $model->where('user_id',$input['user_id'])->select('id','contract_id')->get();
         if($res){
             $data['contract_list'] = $res;
             return $this->success('get contract list success');
