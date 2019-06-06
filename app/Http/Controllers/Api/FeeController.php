@@ -15,9 +15,9 @@ class FeeController extends Controller
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addFee(Request $request)
+    public function feeAdd(Request $request)
     {
-        return service('Fee')->addFee($request->all());
+        return service('Fee')->feeAdd($request->all());
     }
 
     /**
