@@ -117,6 +117,7 @@ class FeeService extends CommonService
         $res = $model->where('user_id',$input['user_id'])->select('id','contract_id')->get();
         if($res){
             $res = $res->toArray();
+            dd($res);
             $data['contract_list'] = $res;
             return $this->success('get contract list success');
         }else{
