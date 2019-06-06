@@ -348,7 +348,7 @@ class BondService extends CommonService
             }
         }
         if(!$error){
-            Bond::where('id',$input['bond_id'])->update([ 'bond_status'   => 4, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
+            RentArrears::where('id',$input['bond_id'])->update([ 'bond_status'   => 4, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
             return $this->success('bond refund info add success');
         }else{
             return $this->error('2','bond refund info add failed');
@@ -446,7 +446,7 @@ class BondService extends CommonService
             }
         }
         if(!$error){
-            Bond::where('id',$input['bond_id'])->update([ 'bond_status'   => 7, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
+            RentArrears::where('id',$input['bond_id'])->update([ 'bond_status'   => 7, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
             return $this->success('bond transfer info add success');
         }else{
             return $this->error('2','bond transfer info add failed');
