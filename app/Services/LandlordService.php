@@ -393,7 +393,7 @@ class LandlordService extends CommonService
             if(!$contract_ids){
                 return $this->error('2','no tenement in contract');
             }
-            $tenement_ids = ContractTenement::whereIn('contract_id',$contract_ids)->pluck('tenement_id')->distinct();
+            $tenement_ids = ContractTenement::whereIn('contract_id',$contract_ids)->pluck('tenement_id');
             foreach ($tenement_ids as $k => $v){
                 $tenement_info[] = Tenement::where('id',$v)->select('id','headimg','first_name','middle_name','last_name','mobile','email','birthday','mail_address')->get();
             }
