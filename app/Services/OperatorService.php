@@ -118,7 +118,6 @@ class OperatorService extends CommonService
     {
         $account = $input['account'];
         $password = $input['password'];
-        $operator_way = $input['operator_way'];
         // 验证账号
         $model = new Operator();
         $res = $model->where('operator_account',$account)->where('password',md5($password))->first();
@@ -128,15 +127,6 @@ class OperatorService extends CommonService
             $token = md5($res->id.time().mt_rand(100,999));
             $res->login_token = $token; //生成token
             $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
-            if($operator_way == 1){
-                if($res->role >4){
-                    return $this->error('3','your account is a provider operator');
-                }
-            }else{
-                if($res->role < 5){
-                    return $this->error('3','your account is a landlord operator');
-                }
-            }
             $res->update();
             return $this->success('login OK',$res->toArray());
         }
