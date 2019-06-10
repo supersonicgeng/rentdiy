@@ -1756,6 +1756,7 @@ class RentService extends CommonService
                         }
                     }
                 }else{
+                    dump(1);
                     dd(strtotime($input['rent_start_date'])-time());
                 }
             }elseif ($contract_data->contract_type == 2 || $contract_data->contract_type == 3){
@@ -1964,6 +1965,9 @@ class RentService extends CommonService
                             RentArrears::insert($arrears_data);
                         }
                     }
+                }else{
+                    dump(23);
+                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }elseif ($contract_data->contract_type == 4){
                 // 生成押金记录
@@ -2029,6 +2033,9 @@ class RentService extends CommonService
                         dd($arrears_data);
                         RentArrears::insert($arrears_data);
                     }
+                }else{
+                    dump(4);
+                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }
 
