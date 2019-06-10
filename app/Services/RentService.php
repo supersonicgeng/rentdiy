@@ -1552,7 +1552,6 @@ class RentService extends CommonService
         $res = $model->where('id',$input['contract_id'])->update($effect_data);
         if($res){
             $contract_data = $model->where('id',$input['contract_id'])->first();
-            dump($contract_data);
             if($contract_data->contract_type == 1){
                 // 生成押金记录
                 $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
@@ -1577,7 +1576,6 @@ class RentService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
-                dd($bond_res);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     if($entire_data->pay_method == 2){
@@ -1782,7 +1780,6 @@ class RentService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
-                dd($bond_res);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     if($separate_data->pay_method == 2){
@@ -1971,7 +1968,6 @@ class RentService extends CommonService
                 $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
                 $rent_house_info = RentHouse::where('id',$contract_data->house_id)->first();
                 $business_data = BusinessContract::where('contract_id',$input['contract_id'])->first();
-                dd(222);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
