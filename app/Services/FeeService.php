@@ -69,6 +69,9 @@ class FeeService extends CommonService
                 'items_name'        => $input['items_name'],
                 'describe'          => $input['describe'],
                 'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                'District'          => $rent_house_info->District,
+                'TA'                => $rent_house_info->TA,
+                'Region'            => $rent_house_info->Region,
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->insert($fee_data);
@@ -92,6 +95,9 @@ class FeeService extends CommonService
                 'items_name'        => $input['items_name'],
                 'describe'          => $input['describe'],
                 'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                'District'          => $rent_house_info->District,
+                'TA'                => $rent_house_info->TA,
+                'Region'            => $rent_house_info->Region,
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->insert($fee_data);
@@ -137,7 +143,7 @@ class FeeService extends CommonService
      */
     public function sendNotice(array $input)
     {
-       
+
     }
 
 
@@ -153,7 +159,19 @@ class FeeService extends CommonService
     public function feeList(array $input)
     {
         $model = new RentArrears();
-        $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->distinct();
+        if($input['property_name']){
+            $model = $model->where('property_name','like','%'.$input['property_name'].'%');
+        }
+        if($input['District']){
+            $model = $model->where('District',$input['District']);
+        }
+        if($input['TA']){
+            $model = $model->where('TA',$input['TA']);
+        }
+        if($input['Region']){
+            $model = $model->where('Region',$input['Region']);
+        }
+        $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
         $count = count($count);
         if($count <= ($input['page']-1)*10){
             return $this->error('2','no more fee information');
@@ -163,7 +181,7 @@ class FeeService extends CommonService
             static $paid_all = 0;
             static $rent_arrears_all = 0;
             static $other_arrears_all = 0;
-            $res = $model->where('user_id',$input['user_id'])->pluck('contract_id')->distinct()->limit(10)->offset(($input['page']-1)*10);
+            $res = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id')->limit(10)->offset(($input['page']-1)*10);
             foreach ($res as $k => $v){
                 $fee_res = $model->where('contract_id',$v)->get()->toArray();
                 $fee_count = count($fee_res);

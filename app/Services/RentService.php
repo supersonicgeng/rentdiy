@@ -1574,6 +1574,9 @@ class RentService extends CommonService
                     'need_pay_fee'      => $entire_data->bond_amount,
                     'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7),
                     'items_name'        => 'bond fee',
+                    'District'          => $rent_house_info->District,
+                    'TA'                => $rent_house_info->TA,
+                    'Region'            => $rent_house_info->Region,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
@@ -1602,6 +1605,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1629,6 +1635,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1656,6 +1665,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1685,6 +1697,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1712,6 +1727,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1739,6 +1757,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1767,6 +1788,9 @@ class RentService extends CommonService
                     'need_pay_fee'      => $separate_data->bond_amount,
                     'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7),
                     'items_name'        => 'bond fee',
+                    'District'          => $rent_house_info->District,
+                    'TA'                => $rent_house_info->TA,
+                    'Region'            => $rent_house_info->Region,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
@@ -1795,6 +1819,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1822,6 +1849,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1849,6 +1879,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1878,6 +1911,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1905,6 +1941,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1932,6 +1971,9 @@ class RentService extends CommonService
                                 'rent_times'        => $i+1,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                                 'items_name'        => 'rent fee',
+                                'District'          => $rent_house_info->District,
+                                'TA'                => $rent_house_info->TA,
+                                'Region'            => $rent_house_info->Region,
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1967,6 +2009,9 @@ class RentService extends CommonService
                             'rent_times'        => $i+1,
                             'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                             'items_name'        => 'rent fee',
+                            'District'          => $rent_house_info->District,
+                            'TA'                => $rent_house_info->TA,
+                            'Region'            => $rent_house_info->Region,
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
                         RentArrears::insert($arrears_data);
@@ -1994,6 +2039,9 @@ class RentService extends CommonService
                             'rent_times'        => $i+1,
                             'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
                             'items_name'        => 'rent fee',
+                            'District'          => $rent_house_info->District,
+                            'TA'                => $rent_house_info->TA,
+                            'Region'            => $rent_house_info->Region,
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
                         RentArrears::insert($arrears_data);
