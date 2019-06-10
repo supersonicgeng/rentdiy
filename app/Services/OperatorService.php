@@ -81,6 +81,7 @@ class OperatorService extends CommonService
             foreach ($input['house_list'] as $k => $v)
             $data = [
                 'operator_id'   => $res,
+                'operator_way'  => $input['operator_way'],
                 'house_id'      => $v['house_id'],
                 'created_at'    => date('Y-m-d H:i:s',time())
             ];
@@ -174,6 +175,7 @@ class OperatorService extends CommonService
                 $data = [
                     'operator_id'   => $operator_id,
                     'house_id'      => $v['house_id'],
+                    'operator_way'  => $input['operator_way'],
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
             $insert_res = OperatorRoom::insert($data);
