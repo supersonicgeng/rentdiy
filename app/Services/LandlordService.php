@@ -66,7 +66,7 @@ class LandlordService extends CommonService
             return $this->error('2','this account is not a landlord role');
         }else{
             $landlord_info = Landlord::where('user_id',$input['user_id'])->where('deleted_at',null)->count();
-            if($landlord_info >11){
+            if($landlord_info >= 11){
                 return $this->error('3','you only can add 11 landlord information');
             }else{
                 $landlord_data = [
