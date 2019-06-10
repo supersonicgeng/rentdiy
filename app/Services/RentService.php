@@ -1576,6 +1576,8 @@ class RentService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
+                dump($bond_res);
+                dd(222);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     if($entire_data->pay_method == 2){
