@@ -224,6 +224,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getContractList', 'FeeController@getContractList'); // 获得租约列表 4.10
         $router->post('sendNotice', 'FeeController@sendNotice'); // 发布通知 4.10
         $router->post('feeList', 'FeeController@feeList'); // 费用单列表 4.10
+        $router->post('feeDetail', 'FeeController@feeDetail'); // 费用单列表 4.10
     });
 });
 

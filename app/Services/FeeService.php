@@ -21,6 +21,8 @@ use App\Model\RentContact;
 use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\Tenement;
+use App\Model\TenementNote;
 use App\Model\Verify;
 use App\User;
 use Carbon\Carbon;
@@ -231,6 +233,36 @@ class FeeService extends CommonService
             $data['other_arrears_all'] = $other_arrears_all;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
+            return $this->success('get arrears success',$data);
+        }
+    }
+
+
+
+    /**
+     * @description:费用清单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeDetail(array $input)
+    {
+        $model = new RentArrears();
+        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->get();
+        $count = count($count);
+        if($count <= ($input['page']-1)*4){
+            return $this->error('2','no more fee information');
+        }else{
+            $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
+            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','tenement_phone','tenement_mobile','tenement_email')->first();
+            $fee_detail = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->offset(($input['page']-1)*4)
+                ->limit(4)->get();
+            $data['fee_detail'] = $fee_detail;
+            $data['tenement_note'] = TenementNote::where('user_id',$input['user_id'])->where('tenement_id',$tenement_id)->get()->toArray();
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/4);
             return $this->success('get arrears success',$data);
         }
     }
