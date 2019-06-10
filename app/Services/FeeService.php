@@ -256,7 +256,7 @@ class FeeService extends CommonService
             return $this->error('2','no more fee information');
         }else{
             $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
-            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','tenement_phone','tenement_mobile','tenement_email')->first();
+            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','phone','mobile','email')->first();
             $fee_detail = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->offset(($input['page']-1)*4)
                 ->limit(4)->get();
             $data['fee_detail'] = $fee_detail;
