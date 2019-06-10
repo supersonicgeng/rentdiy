@@ -126,4 +126,89 @@ class FeeService extends CommonService
         }
     }
 
+
+    /**
+     * @description:发送通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendNotice(array $input)
+    {
+       
+    }
+
+
+
+    /**
+     * @description:费用清单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeList(array $input)
+    {
+        $model = new RentArrears();
+        $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->distinct();
+        $count = count($count);
+        if($count <= ($input['page']-1)*10){
+            return $this->error('2','no more fee information');
+        }else{
+            static $total_arrears_all = 0;
+            static $total_rent_all = 0;
+            static $paid_all = 0;
+            static $rent_arrears_all = 0;
+            static $other_arrears_all = 0;
+            $res = $model->where('user_id',$input['user_id'])->pluck('contract_id')->distinct()->limit(10)->offset(($input['page']-1)*10);
+            foreach ($res as $k => $v){
+                $fee_res = $model->where('contract_id',$v)->get()->toArray();
+                $fee_count = count($fee_res);
+                $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
+                $fee_list[$k]['tenement_email'] = $fee_res[0]['tenement_email'];
+                $fee_list[$k]['property_name'] = $fee_res[0]['property_name'];
+                $fee_list[$k]['total_stay'] = $fee_res[0]['tenement_name'];
+                $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
+                $fee_list[$k]['rent_per_week'] = RentHouse::where('id',$fee_res[0]['rent_house_id'])->pluck('rent_per_week')->first();
+                $fee_list[$k]['expire_date'] = $fee_res[$fee_count-1]['expire_date'];
+                static $total_arrears = 0;
+                static $total_rent = 0;
+                static $paid = 0;
+                static $rent_arrears = 0;
+                static $other_arrears = 0;
+                foreach ($fee_res as $key => $value){
+                    if($value['arrears_type'] == 1 || $value['arrears_type'] == 2 || $value['arrears_type'] == 3){
+                        $total_arrears += $value['need_pay_fee'];
+                        $total_rent += $value['arrears_fee'];
+                        $paid += $value['pay_fee'];
+                        if($value['arrears_type'] == 2){
+                            $rent_arrears += $value['need_pay_fee'];
+                        }elseif($value['arrears_type'] == 1 || $value['arrears_type'] == 3){
+                            $other_arrears += $value['need_pay_fee'];
+                        }
+                    }
+                }
+                $fee_list[$k]['total_arrears'] = $total_arrears;
+                $fee_list[$k]['total_rent'] = $total_rent;
+                $fee_list[$k]['paid'] = $paid;
+                $fee_list[$k]['rent_arrears'] = $rent_arrears;
+                $fee_list[$k]['other_arrears'] = $other_arrears;
+                $total_arrears_all += $total_arrears;
+                $total_rent_all += $total_rent;
+                $paid_all += $paid;
+                $rent_arrears_all += $rent_arrears;
+                $other_arrears_all += $other_arrears;
+            }
+            $data['fee_list'] = $fee_list;
+            $data['total_arrears_all'] = $total_arrears_all;
+            $data['total_rent_all'] = $total_rent_all;
+            $data['paid_all'] = $paid_all;
+            $data['rent_arrears_all'] = $rent_arrears_all;
+            $data['other_arrears_all'] = $other_arrears_all;
+            return $this->success('get arrears success',$data);
+        }
+    }
 }

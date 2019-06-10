@@ -33,4 +33,32 @@ class FeeController extends Controller
         return service('Fee')->getContractList($request->all());
     }
 
+       /**
+     * @description:获得租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendNotice(Request $request)
+    {
+        return service('Fee')->sendNotice($request->all());
+    }
+
+    /**
+     * @description:获得租约列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeList(Request $request)
+    {
+        return service('Fee')->feeList($request->all());
+    }
+
+
+
 }
