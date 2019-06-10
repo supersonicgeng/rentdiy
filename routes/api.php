@@ -131,6 +131,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenderList','LandlordController@tenderList'); // 查看订单报价
         $router->post('tenderAccept','LandlordController@tenderAccept'); // 订单确认
         $router->post('orderStop','LandlordController@orderStop'); // 订单中止
+        $router->post('getTenementList','LandlordController@getTenementList'); // 获得租户列表
+        $router->post('tenementNote','LandlordController@tenementNote'); // 租户行为记录
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {

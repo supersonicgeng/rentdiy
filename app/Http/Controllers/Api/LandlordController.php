@@ -146,4 +146,33 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->orderStop($request->all());
     }
+
+
+    /**
+     * @description:获得租户列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementList(Request $request)
+    {
+        return service('Landlord')->getTenementList($request->all());
+    }
+
+
+
+    /**
+     * @description:租户行为记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementNote(Request $request)
+    {
+        return service('Landlord')->tenementNote($request->all());
+    }
 }

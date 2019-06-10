@@ -15,6 +15,7 @@ use App\Model\AliPay\AliPayClient;
 use App\Model\AliPay\AliPayTransfer;
 use App\Model\CheckBuilding;
 use App\Model\Config;
+use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Landlord;
@@ -28,6 +29,7 @@ use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Providers;
 use App\Model\ProvidersScore;
+use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
@@ -35,6 +37,7 @@ use App\Model\SignLog;
 use App\Model\SysSign;
 use App\Model\Tender;
 use App\Model\Tenement;
+use App\Model\TenementNote;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
@@ -366,6 +369,67 @@ class LandlordService extends CommonService
                 return $this->success('order stop success');
             }else{
                 return $this->error('3','order stop failed');
+            }
+        }
+    }
+
+
+    /**
+     * @description:获得租户列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementList(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $contract_ids = RentContract::where('user_id',$input['user_id'])->where('contract_status','>','1')->pluck('id');
+            if(!$contract_ids){
+                return $this->error('2','no tenement in contract');
+            }
+            $tenement_ids = ContractTenement::whereIn('contract_id',$contract_ids)->pluck('tenement_id')->distinct();
+            foreach ($tenement_ids as $k => $v){
+                $tenement_info[] = Tenement::where('id',$v)->select('id','headimg','first_name','middle_name','last_name','mobile','email','birthday','mail_address')->get();
+            }
+            $data['tenement_info'] = $tenement_info;
+            return $this->success('get tenement list success',$data);
+        }
+    }
+
+
+    /**
+     * @description:租户行为记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementNote(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $model = new TenementNote();
+            $note_data = [
+                'user_id'       => $input['user_id'],
+                'tenement_id'   => $input['tenement_id'],
+                'tenement_note' => $input['tenement_note'],
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($note_data);
+            if($res){
+                return $this->success('add tenement note success');
+            }else{
+                return $this->error('2','add tenement note failed');
             }
         }
     }
