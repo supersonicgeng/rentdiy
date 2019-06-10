@@ -42,7 +42,7 @@ class FeeService extends CommonService
     public function feeAdd(array $input)
     {
         $model = new RentArrears();
-        if(isset($input['contract_id'])){
+        if($input['contract_id']){
             $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
             $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
             $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
@@ -72,6 +72,7 @@ class FeeService extends CommonService
                 'District'          => $rent_house_info->District,
                 'TA'                => $rent_house_info->TA,
                 'Region'            => $rent_house_info->Region,
+                'upload_url'        => $input['upload_url'],
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->insert($fee_data);
@@ -98,6 +99,7 @@ class FeeService extends CommonService
                 'District'          => $rent_house_info->District,
                 'TA'                => $rent_house_info->TA,
                 'Region'            => $rent_house_info->Region,
+                'upload_url'        => $input['upload_url'],
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->insert($fee_data);
