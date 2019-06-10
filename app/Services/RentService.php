@@ -1576,13 +1576,10 @@ class RentService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
-                dump($bond_res);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
-                    dd($entire_data->pay_method);
-                    if($entire_data->pay_method == 2){
+                    if($entire_data->pay_method == 1){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1602,16 +1599,13 @@ class RentService extends CommonService
                                 'need_pay_fee'      => $entire_data->rent_per_week,
                                 'rent_fee'          => $entire_data->rent_per_week,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(1);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($entire_data->pay_method == 3){
+                    }elseif ($entire_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1625,22 +1619,19 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
-                                'arrears_fee'       => $entire_data->rent_per_week,
+                                'arrears_fee'       => $entire_data->rent_per_week*2,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $entire_data->rent_per_week,
-                                'rent_fee'          => $entire_data->rent_per_week,
+                                'need_pay_fee'      => $entire_data->rent_per_week*2,
+                                'rent_fee'          => $entire_data->rent_per_week*2,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(2);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($entire_data->pay_method == 4){
+                    }elseif ($entire_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1654,24 +1645,21 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                                'arrears_fee'       => $entire_data->rent_per_week,
+                                'arrears_fee'       => $entire_data->rent_per_week*30/7,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $entire_data->rent_per_week,
-                                'rent_fee'          => $entire_data->rent_per_week,
+                                'need_pay_fee'      => $entire_data->rent_per_week*30/7,
+                                'rent_fee'          => $entire_data->rent_per_week*30/7,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(3);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
-                    if($entire_data->pay_method == 2){
+                    if($entire_data->pay_method == 1){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1691,16 +1679,13 @@ class RentService extends CommonService
                                 'need_pay_fee'      => $entire_data->rent_per_week,
                                 'rent_fee'          => $entire_data->rent_per_week,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(4);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($entire_data->pay_method == 3){
+                    }elseif ($entire_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1714,22 +1699,19 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
-                                'arrears_fee'       => $entire_data->rent_per_week,
+                                'arrears_fee'       => $entire_data->rent_per_week*2,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $entire_data->rent_per_week,
-                                'rent_fee'          => $entire_data->rent_per_week,
+                                'need_pay_fee'      => $entire_data->rent_per_week*2,
+                                'rent_fee'          => $entire_data->rent_per_week*2,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(5);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($entire_data->pay_method == 4){
+                    }elseif ($entire_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1743,23 +1725,18 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                                'arrears_fee'       => $entire_data->rent_per_week,
+                                'arrears_fee'       => $entire_data->rent_per_week*30/7,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $entire_data->rent_per_week,
-                                'rent_fee'          => $entire_data->rent_per_week,
+                                'need_pay_fee'      => $entire_data->rent_per_week*30/7,
+                                'rent_fee'          => $entire_data->rent_per_week*30/7,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(6);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
-                }else{
-                    dump(1);
-                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }elseif ($contract_data->contract_type == 2 || $contract_data->contract_type == 3){
                 // 生成押金记录
@@ -1787,13 +1764,9 @@ class RentService extends CommonService
                 $bond_res = RentArrears::insert($bond_data);
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
-                    if($separate_data->pay_method == 2){
+                    if($separate_data->pay_method == 1){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
-                            ['id','contract_id','contract_sn','user_id','rent_house_id','tenement_id','tenement_name','tenement_email','tenement_phone','arrears_type','property_name',
-                                'effect_date','arrears_fee','rent_circle','rent_times','is_pay','pay_fee','need_pay_fee','pay_date','number','unit_price','subject_code','tex',
-                                'expire_date','discount','items_name','describe','created_at','updated_at','deleted_at'];
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
                                 'contract_sn'       => $contract_data->contract_id,
@@ -1812,16 +1785,13 @@ class RentService extends CommonService
                                 'need_pay_fee'      => $separate_data->rent_per_week,
                                 'rent_fee'          => $separate_data->rent_per_week,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(7);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($separate_data->pay_method == 3){
+                    }elseif ($separate_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1835,20 +1805,18 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
-                                'arrears_fee'       => $separate_data->rent_per_week,
+                                'arrears_fee'       => $separate_data->rent_per_week*2,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $separate_data->rent_per_week,
-                                'rent_fee'          => $separate_data->rent_per_week,
+                                'need_pay_fee'      => $separate_data->rent_per_week*2,
+                                'rent_fee'          => $separate_data->rent_per_week*2,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(8);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($separate_data->pay_method == 4){
+                    }elseif ($separate_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
                         dump($cycle);
                         for($i=0;$i<$cycle;$i++){
@@ -1864,24 +1832,21 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                                'arrears_fee'       => $separate_data->rent_per_week,
+                                'arrears_fee'       => $separate_data->rent_per_week*30/7,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $separate_data->rent_per_week,
-                                'rent_fee'          => $separate_data->rent_per_week,
+                                'need_pay_fee'      => $separate_data->rent_per_week*30/7,
+                                'rent_fee'          => $separate_data->rent_per_week*30/7,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(9);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
-                    if($separate_data->pay_method == 2){
+                    if($separate_data->pay_method == 1){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/7);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1901,16 +1866,13 @@ class RentService extends CommonService
                                 'need_pay_fee'      => $separate_data->rent_per_week,
                                 'rent_fee'          => $separate_data->rent_per_week,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*7*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(10);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($separate_data->pay_method == 3){
+                    }elseif ($separate_data->pay_method == 2){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/14);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1924,22 +1886,19 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i),
-                                'arrears_fee'       => $separate_data->rent_per_week,
+                                'arrears_fee'       => $separate_data->rent_per_week*2,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $separate_data->rent_per_week,
-                                'rent_fee'          => $separate_data->rent_per_week,
+                                'need_pay_fee'      => $separate_data->rent_per_week*2,
+                                'rent_fee'          => $separate_data->rent_per_week*2,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*14*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(11);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
-                    }elseif ($separate_data->pay_method == 4){
+                    }elseif ($separate_data->pay_method == 3){
                         $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
-                        dump($cycle);
                         for($i=0;$i<$cycle;$i++){
                             $arrears_data = [
                                 'contract_id'       => $input['contract_id'],
@@ -1953,23 +1912,18 @@ class RentService extends CommonService
                                 'tenement_phone'    => $contract_tenement_data->tenement_phone,
                                 'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                                 'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                                'arrears_fee'       => $separate_data->rent_per_week,
+                                'arrears_fee'       => $separate_data->rent_per_week*30/7,
                                 'is_pay'            => 1,
                                 'pay_fee'           => 0,
-                                'need_pay_fee'      => $separate_data->rent_per_week,
-                                'rent_fee'          => $separate_data->rent_per_week,
+                                'need_pay_fee'      => $separate_data->rent_per_week*30/7,
+                                'rent_fee'          => $separate_data->rent_per_week*30/7,
                                 'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                                'items_name'        => 'bond fee',
+                                'items_name'        => 'rent fee',
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
-                            dump(12);
-                            dd($arrears_data);
                             RentArrears::insert($arrears_data);
                         }
                     }
-                }else{
-                    dump(23);
-                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }elseif ($contract_data->contract_type == 4){
                 // 生成押金记录
@@ -1979,7 +1933,6 @@ class RentService extends CommonService
                 // 生成预付记录
                 if(0>strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()>-3600*24*60){
                     $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
-                    dump($cycle);
                     for($i=0;$i<$cycle;$i++){
                         $arrears_data = [
                             'contract_id'       => $input['contract_id'],
@@ -1993,22 +1946,19 @@ class RentService extends CommonService
                             'tenement_phone'    => $contract_tenement_data->tenement_phone,
                             'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                             'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                            'arrears_fee'       => $business_data->rent_per_week,
+                            'arrears_fee'       => $business_data->rent_per_week*30/7,
                             'is_pay'            => 1,
                             'pay_fee'           => 0,
-                            'need_pay_fee'      => $business_data->rent_per_week,
-                            'rent_fee'          => $business_data->rent_per_week,
+                            'need_pay_fee'      => $business_data->rent_per_week*30/7,
+                            'rent_fee'          => $business_data->rent_per_week*30/7,
                             'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                            'items_name'        => 'bond fee',
+                            'items_name'        => 'rent fee',
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
-                        dump(13);
-                        dd($arrears_data);
                         RentArrears::insert($arrears_data);
                     }
                 }else if(0<strtotime($input['rent_start_date'])-time()&&strtotime($input['rent_start_date'])-time()<3600*24*60){
                     $cycle = ceil((time()-strtotime($input['rent_start_date']))/3600/24/30);
-                    dump($cycle);
                     for($i=0;$i<$cycle;$i++){
                         $arrears_data = [
                             'contract_id'       => $input['contract_id'],
@@ -2022,25 +1972,19 @@ class RentService extends CommonService
                             'tenement_phone'    => $contract_tenement_data->tenement_phone,
                             'tenement_email'    => $contract_tenement_data->tenement_e_mail,
                             'effect_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i),
-                            'arrears_fee'       => $business_data->rent_per_week,
+                            'arrears_fee'       => $business_data->rent_per_week*30/7,
                             'is_pay'            => 1,
                             'pay_fee'           => 0,
-                            'need_pay_fee'      => $business_data->rent_per_week,
-                            'rent_fee'          => $business_data->rent_per_week,
+                            'need_pay_fee'      => $business_data->rent_per_week*30/7,
+                            'rent_fee'          => $business_data->rent_per_week*30/7,
                             'expire_date'       => date('Y-m-d',strtotime($input['rent_start_date'])+3600*24*30*$i+3600*24*7),
-                            'items_name'        => 'bond fee',
+                            'items_name'        => 'rent fee',
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
-                        dump(14);
-                        dd($arrears_data);
                         RentArrears::insert($arrears_data);
                     }
-                }else{
-                    dump(4);
-                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }
-
             return $this->success('contract effect success');
         }else{
             return $this->error('2','contact effect failed');
