@@ -226,6 +226,8 @@ class FeeService extends CommonService
             $data['paid_all'] = $paid_all;
             $data['rent_arrears_all'] = $rent_arrears_all;
             $data['other_arrears_all'] = $other_arrears_all;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
             return $this->success('get arrears success',$data);
         }
     }
