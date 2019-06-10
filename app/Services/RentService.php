@@ -1755,6 +1755,8 @@ class RentService extends CommonService
                             RentArrears::insert($arrears_data);
                         }
                     }
+                }else{
+                    dd(strtotime($input['rent_start_date'])-time());
                 }
             }elseif ($contract_data->contract_type == 2 || $contract_data->contract_type == 3){
                 // 生成押金记录
