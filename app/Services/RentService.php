@@ -1016,7 +1016,7 @@ class RentService extends CommonService
                         'notes_upload_url'                      => $input['notes_upload_url'],
                         'landlord_signature'                    => $input['landlord_signature'],
                         'tenement_signature'                    => $input['tenement_signature'],
-                        'rent_end_date'                         => $input['rent_end_date'],
+                        /*'rent_end_date'                         => $input['rent_end_date'],*/
                         'rent_fee'                              => $input['rent_fee'],
                         'created_at'                            => date('Y-m-d H:i:s', time()),
                     ];
