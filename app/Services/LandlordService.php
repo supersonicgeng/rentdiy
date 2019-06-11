@@ -390,8 +390,8 @@ class LandlordService extends CommonService
             return $this->error('2','this account is not a landlord role');
         }else{
             $contract_ids = RentContract::where('user_id',$input['user_id'])->where('contract_status','>','1')->pluck('id')->toArray();
-            dd($contract_ids);
-            if(!$contract_ids){
+
+            if($contract_ids == []){
                 return $this->error('2','no tenement in contract');
             }
             $tenement_ids = ContractTenement::whereIn('contract_id',$contract_ids)->pluck('tenement_id');
