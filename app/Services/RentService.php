@@ -1017,7 +1017,7 @@ class RentService extends CommonService
                         'landlord_signature'                    => $input['landlord_signature'],
                         'tenement_signature'                    => $input['tenement_signature'],
                         /*'rent_end_date'                         => $input['rent_end_date'],*/
-                        'rent_fee'                              => $input['rent_fee'],
+                        /*'rent_fee'                              => $input['rent_fee'],*/
                         'created_at'                            => date('Y-m-d H:i:s', time()),
                     ];
                     $business_res = $business_model->insert($business_data);
