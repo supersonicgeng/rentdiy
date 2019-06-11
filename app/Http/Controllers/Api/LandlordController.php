@@ -175,4 +175,17 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->tenementNote($request->all());
     }
+
+    /**
+     * @description:租户管理
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementManage(Request $request)
+    {
+        return service('Landlord')->tenementManage($request->all());
+    }
 }

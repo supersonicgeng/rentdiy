@@ -38,6 +38,7 @@ use App\Model\SysSign;
 use App\Model\Tender;
 use App\Model\Tenement;
 use App\Model\TenementNote;
+use App\Model\TenementScore;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
@@ -390,7 +391,6 @@ class LandlordService extends CommonService
             return $this->error('2','this account is not a landlord role');
         }else{
             $contract_ids = RentContract::where('user_id',$input['user_id'])->where('contract_status','>','1')->pluck('id')->toArray();
-
             if($contract_ids == []){
                 return $this->error('2','no tenement in contract');
             }
@@ -436,6 +436,52 @@ class LandlordService extends CommonService
             }else{
                 return $this->error('2','add tenement note failed');
             }
+        }
+    }
+
+
+    /**
+     * @description:租户管理
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementManage(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+           $model = new TenementScore();
+           if($input['tenement_name']){
+               $model = $model->where('tenement_name',$input['tenement_name']);
+           }
+           if($input['birthday']){
+               $model = $model->where('birthday',$input['birthday']);
+           }
+           $count = $model->where('user_id',$input['user_id'])->count();
+           if($count < ($input['page']-1)*5){
+               return $this->error('2','no more tenement score information');
+           }
+           $score_res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
+           if($score_res){
+               foreach ($score_res as $k => $v){
+                   $tenement_info = Tenement::where('id',$v['tenement_id'])->first()->toArray();
+                   $score_res[$k] = $v;
+                   $score_res[$k]['headimg'] = $tenement_info['headimg'];
+                   $score_res[$k]['rent_start_date'] = RentContract::where('id',$v['contract_id'])->pluck('rent_start_date')->first();
+                   $score_res[$k]['rent_end_date'] = RentContract::where('id',$v['contract_id'])->pluck('rent_end_date')->first();
+               }
+               $data['score_res'] = $score_res;
+               $data['current_page'] = $input['page'];
+               $data['total_page'] = ceil($count/5);
+               return $this->success('get tenement manage success',$data);
+           }else{
+               return $this->error('2','get tenement manege failed');
+           }
         }
     }
 }
