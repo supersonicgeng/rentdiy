@@ -188,9 +188,9 @@ class FeeService extends CommonService
             static $other_arrears_all = 0;
             $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->pluck('contract_id')->groupBy('contract_id')->toArray();
             $res = array_values($res);
-            dd($res[0]);
             foreach ($res[0] as $k => $v){
                 $fee_res = $model->where('contract_id',$v)->get()->toArray();
+                dd($fee_res);
                 $fee_count = count($fee_res);
                 $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                 $fee_list[$k]['tenement_email'] = $fee_res[0]['tenement_email'];
