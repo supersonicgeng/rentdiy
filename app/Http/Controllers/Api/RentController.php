@@ -247,4 +247,17 @@ class RentController extends CommonController
     {
         return service('Rent')->viewTenementInfo($request->all());
     }
+
+    /**
+     * @description:租户打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementScore(Request $request)
+    {
+        return service('Rent')->tenementScore($request->all());
+    }
 }

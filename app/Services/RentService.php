@@ -47,6 +47,7 @@ use App\Model\Survey;
 use App\Model\SysSign;
 use App\Model\Tenement;
 use App\Model\TenementCertificate;
+use App\Model\TenementScore;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
@@ -637,6 +638,7 @@ class RentService extends CommonService
                                 $tenement_data = [
                                     'tenement_id'               => tenementId(),
                                     'mobile'                    => $v['tenement_mobile'],
+                                    'first_name'                => $v['tenement_full_name'],
                                     'phone'                     => $v['tenement_phone'],
                                     'email'                     => $v['tenement_e_mail'],
                                     'mail_address'              => $v['tenement_post_address'],
@@ -757,7 +759,7 @@ class RentService extends CommonService
                     foreach ($input['tenement_info'] as $k => $v){
                         if(!@$v['tenement_id']){
                             //房东自己添加的时候添加租户列表
-                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id');
+                            $tenement_res = Tenement::where('email',$v['tenement_e_mail'])->pluck('id')->first();
                             if($tenement_res){ // 当这个email 在租户表中有时 默认存为那个用户表
                                 $v['tenement_id'] = $tenement_res;
                             }else{ // 没有在租户表中新建一个租户信息
@@ -2077,6 +2079,42 @@ class RentService extends CommonService
             $data[0]['certificate_pic1'] = '';
             $data[0]['certificate_pic2'] = '';
             return $this->success('get identification success',$data);
+        }
+    }
+
+
+    /**
+     * @description:租户得分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementScore(array $input)
+    {
+        //dd($input);
+        $model = new ContractTenement();
+        $res = $model->where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
+        $birthday = Tenement::where('id',$res)->pluck('birthday')->first();
+        $tenement_score_data = [
+            'tenement_id'       => $res,
+            'tenement_name'     => Tenement::where('id',$res)->pluck('first_name')->first(),
+            'user_id'           => $input['user_id'],
+            'pay_score'         => $input['pay_score'],
+            'hygiene_score'     => $input['hygiene_score'],
+            'facility_score'    => $input['facility_score'],
+            'detail'            => $input['detail'],
+            'contract_id'       => $input['contract_id'],
+            'accept_again'      => $input['accept_again'],
+            'birthday'          => $birthday,
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $score_data = TenementScore::insert($tenement_score_data);
+        if($score_data){
+            return $this->success('tenement score success');
+        }else{
+            return $this->error('2','tenement score failed');
         }
     }
 }

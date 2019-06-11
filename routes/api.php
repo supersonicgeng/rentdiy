@@ -111,6 +111,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('rentContactDetail', 'RentController@rentContactDetail'); // 租约详情 4.13
         $router->post('viewTenementInfo', 'RentController@viewTenementInfo'); // 查看证件 5.13
         $router->post('rentContactEffect', 'RentController@rentContactEffect'); // 租约生效 5.13
+        $router->post('tenementScore', 'RentController@tenementScore'); // 租户打分 5.13
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {
@@ -133,6 +134,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('orderStop','LandlordController@orderStop'); // 订单中止
         $router->post('getTenementList','LandlordController@getTenementList'); // 获得租户列表
         $router->post('tenementNote','LandlordController@tenementNote'); // 租户行为记录
+        $router->post('tenementManage','LandlordController@tenementManage'); // 租户管理
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {
@@ -225,6 +227,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('sendNotice', 'FeeController@sendNotice'); // 发布通知 4.10
         $router->post('feeList', 'FeeController@feeList'); // 费用单列表 4.10
         $router->post('feeDetail', 'FeeController@feeDetail'); // 费用单列表 4.10
+    });
+    // 银行对账管理
+    $router->group(['prefix' => 'reconciliation'], function (Router $router) {
+        $router->post('test', 'ReconciliationController@test'); // 添加费用单 4.10
     });
 });
 
