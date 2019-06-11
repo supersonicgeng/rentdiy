@@ -226,6 +226,7 @@ class FeeService extends CommonService
                 $rent_arrears_all += $rent_arrears;
                 $other_arrears_all += $other_arrears;
             }
+            dd($fee_list);
             $data['fee_list'] = $fee_list;
             $data['total_arrears_all'] = $total_arrears_all;
             $data['total_rent_all'] = $total_rent_all;
