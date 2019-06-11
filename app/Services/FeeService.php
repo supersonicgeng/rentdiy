@@ -153,14 +153,14 @@ class FeeService extends CommonService
 
 
     /**
-     * @description:费用清单
+     * @description:追欠款清单
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function feeList(array $input)
+    public function arrearsList(array $input)
     {
         $model = new RentArrears();
         if($input['property_name']){
