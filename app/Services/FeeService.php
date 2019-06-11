@@ -191,6 +191,7 @@ class FeeService extends CommonService
             foreach ($res[0] as $k => $v){
                 $fee_res = $model->where('contract_id',$v)->get()->toArray();
                 $fee_count = count($fee_res);
+                dump($fee_res);
                 dd($fee_count);
                 $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                 $fee_list[$k]['tenement_email'] = $fee_res[0]['tenement_email'];
