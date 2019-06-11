@@ -240,14 +240,14 @@ class FeeService extends CommonService
 
 
     /**
-     * @description:费用清单
+     * @description:追欠款详情
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function feeDetail(array $input)
+    public function arrearsDetail(array $input)
     {
         $model = new RentArrears();
         $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->get();

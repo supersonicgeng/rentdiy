@@ -60,16 +60,16 @@ class FeeController extends Controller
     }
 
     /**
-     * @description:获得租约列表
+     * @description:追欠款详情
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function feeDetail(Request $request)
+    public function arrearsDetail(Request $request)
     {
-        return service('Fee')->feeDetail($request->all());
+        return service('Fee')->arrearsDetail($request->all());
     }
 
 }
