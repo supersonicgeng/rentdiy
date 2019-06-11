@@ -186,7 +186,7 @@ class FeeService extends CommonService
             static $paid_all = 0;
             static $rent_arrears_all = 0;
             static $other_arrears_all = 0;
-            $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->pluck('contract_id')->groupBy('contract_id');
+            $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->toArray();
             dd($res);
             $res = array_values($res);
             foreach ($res[0] as $k => $v){
