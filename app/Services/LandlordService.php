@@ -397,8 +397,12 @@ class LandlordService extends CommonService
             foreach ($tenement_ids as $k => $v){
                 $tenement_info[] = Tenement::where('id',$v)->select('id','headimg','first_name','middle_name','last_name','mobile','email','birthday','mail_address')->get();
             }
-            $data['tenement_info'] = $tenement_info;
-            return $this->success('get tenement list success',$data);
+            if($tenement_info){
+                $data['tenement_info'] = $tenement_info;
+                return $this->success('get tenement list success',$data);
+            }else{
+                return $this->error('2','no tenement in contract');
+            }
         }
     }
 
