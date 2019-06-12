@@ -145,7 +145,8 @@ class UserService extends CommonService
             $user = $model->where('id',$res)->first();
             $user->login_token = $token; //生成token
             // 注册 环信账号
-            \link1st\Easemob\App\Easemob::publicRegistration('user_'.$res,'123456');
+            $easemob = new \link1st\Easemob\App\Easemob();
+            $easemob->publicRegistration('user_'.$res,'123456');
             $user->login_expire_time = date('Y-m-d H:i:s',time()+7200);
             $user->update();
             return $this->success('register OK',$user);
