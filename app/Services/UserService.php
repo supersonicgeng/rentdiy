@@ -40,6 +40,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use link1st\Easemob\Facades\Easemob;
 
 class UserService extends CommonService
 {
@@ -143,6 +144,8 @@ class UserService extends CommonService
             $token = md5($res.time().mt_rand(100,999));
             $user = $model->where('id',$res)->first();
             $user->login_token = $token; //生成token
+            // 注册 环信账号
+            \link1st\Easemob\App\Easemob::publicRegistration('user_'.$res,'123456');
             $user->login_expire_time = date('Y-m-d H:i:s',time()+7200);
             $user->update();
             return $this->success('register OK',$user);
