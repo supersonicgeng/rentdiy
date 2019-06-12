@@ -112,6 +112,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('viewTenementInfo', 'RentController@viewTenementInfo'); // 查看证件 5.13
         $router->post('rentContactEffect', 'RentController@rentContactEffect'); // 租约生效 5.13
         $router->post('tenementScore', 'RentController@tenementScore'); // 租户打分 5.13
+        $router->post('changeRentFee', 'RentController@changeRentFee'); // 租金调整 5.13
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {

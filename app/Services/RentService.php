@@ -33,6 +33,7 @@ use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Region;
+use App\Model\RentAdjust;
 use App\Model\RentApplication;
 use App\Model\RentArrears;
 use App\Model\RentContract;
@@ -2117,6 +2118,34 @@ class RentService extends CommonService
             return $this->success('tenement score success');
         }else{
             return $this->error('2','tenement score failed');
+        }
+    }
+
+
+    /**
+     * @description:租金调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeRentFee(array $input)
+    {
+        //dd($input);
+        $model = new RentAdjust();
+        $adjust_data = [
+            'contract_id'       => $input['contract_id'],
+            'rent_fee_method'   => $input['rent_fee_method'],
+            'rent_price'        => $input['rent_price'],
+            'effective_date'    => $input['effective_date'],
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $adjust_res = $model->insert($adjust_data);
+        if($adjust_res){
+            return $this->success('change rent fee success');
+        }else{
+            return $this->error('2','change rent fee failed');
         }
     }
 }
