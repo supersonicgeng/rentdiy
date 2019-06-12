@@ -381,15 +381,24 @@ class InspectService extends CommonService
         $inspect_res = $model->where('id',$input['inspect_id'])->first();
         if($inspect_res->inspect_category == 1){
             $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            if(!$room_name){
+                return $this->error('2','no inspect info');
+            }
             foreach($room_name as $k => $v){
                 $data[][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
             }
             return $this->success('get inspect item success',$data);
         }elseif ($inspect_res->inspect_category == 2){
             $data[]['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            if(!$data){
+                return $this->error('2','no inspect info');
+            }
             return $this->success('get inspect item success',$data);
         }else {
             $room_name = InspectRoom::where('inspect_id', $input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            if(!$room_name){
+                return $this->error('2','no inspect info');
+            }
             foreach ($room_name as $k => $v) {
                 $data[][$v['room_name']] = InspectRoom::where('inspect_id', $input['inspect_id'])->where('room_name', $v['room_name'])->get()->toArray();
             }
