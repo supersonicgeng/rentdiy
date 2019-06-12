@@ -189,7 +189,8 @@ return [
         Orangehill\Iseed\IseedServiceProvider::class, //Iseed
 
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,//二维码
-        Laravel\Socialite\SocialiteServiceProvider::class // socialite  授权登陆
+        Laravel\Socialite\SocialiteServiceProvider::class, // socialite  授权登陆
+        link1st\Easemob\EasemobServiceProvider::class  // 环信
     ],
 
     /*
@@ -244,6 +245,7 @@ return [
         'Excel'    => Maatwebsite\Excel\Facades\Excel::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Socialite' => \Laravel\Socialite\Facades\Socialite::class,
+        'Easemob' => link1st\Easemob\Facades\Easemob::class,
     ],
 
 ];
