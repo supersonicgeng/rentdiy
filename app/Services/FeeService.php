@@ -307,7 +307,7 @@ class FeeService extends CommonService
         if($input['amount']){
             $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND tenement like %'.$input['tenement_name'].'%
               AND created_at > '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).' AND created_at < '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24).' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
-            $count = DB::table(DB::raw("($sql ) as T"))->get()->toArray();
+            $count = DB::table(DB::raw($sql))->get()->toArray();
             dd($count);
         }
         if($count <= ($input['page']-1)*10){
