@@ -2096,6 +2096,7 @@ class RentService extends CommonService
         //dd($input);
         $model = new ContractTenement();
         $res = $model->where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
+        $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
         $birthday = Tenement::where('id',$res)->pluck('birthday')->first();
         $tenement_score_data = [
             'tenement_id'       => $res,
@@ -2108,6 +2109,7 @@ class RentService extends CommonService
             'contract_id'       => $input['contract_id'],
             'accept_again'      => $input['accept_again'],
             'birthday'          => $birthday,
+            'rent_house_id'     => $rent_house_id,
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $score_data = TenementScore::insert($tenement_score_data);

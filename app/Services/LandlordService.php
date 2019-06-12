@@ -462,7 +462,7 @@ class LandlordService extends CommonService
            if($input['birthday']){
                $model = $model->where('birthday',$input['birthday']);
            }
-           $count = $model->where('user_id',$input['user_id'])->count();
+           $count = $model->where('user_id',$input['user_id'])->where('rent_house_id',$input['rent_house_id'])->count();
            if($count < ($input['page']-1)*5){
                return $this->error('2','no more tenement score information');
            }
