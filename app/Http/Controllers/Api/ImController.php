@@ -11,7 +11,7 @@ class ImController extends Controller
     public function sendMsg(Request $request)
     {
         $easemob = new Easemob();
-        $res = $easemob->sendMessageText('user_29','user','123','leo');
+        $res = $easemob->sendMessageText('user_29','users','123','leo');
         dd($res);
     }
 }
