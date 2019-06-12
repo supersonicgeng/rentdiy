@@ -46,6 +46,7 @@ use App\Model\SeparateContract;
 use App\Model\SignLog;
 use App\Model\Survey;
 use App\Model\SysSign;
+use App\Model\Task;
 use App\Model\Tenement;
 use App\Model\TenementCertificate;
 use App\Model\TenementScore;
@@ -2146,6 +2147,69 @@ class RentService extends CommonService
             return $this->success('change rent fee success');
         }else{
             return $this->error('2','change rent fee failed');
+        }
+    }
+
+    /**
+     * @description:租约中止
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentSuspend(array $input)
+    {
+        $suspend_type = $input['suspend_type'];
+        if($suspend_type <4){
+            // 仅通知
+            // 生成任务
+            if($suspend_type == 1){
+                $task_start_time = date('Y-m-d',time()+3600*48);
+            }elseif ($suspend_type == 2){
+                $task_start_time = date('Y-m-d',time()+3600*24*90);
+            }elseif ($suspend_type == 3){
+                $task_start_time = date('Y-m-d',time()+3600*24*28);
+            }
+            $task_data = [
+                'user_id'   => $input['user_id'],
+                'task_type' => 1,
+                'task_start_time'   => $task_start_time,
+                'task_status'       => 0,
+                'task_title'        => 'rent suspend inform',
+                'task_content'      => 'need suspend the rent contract',
+                'contract_id'       => $input['contract_id'],
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
+            if($task_res){
+                return $this->success('rent suspend task add success');
+            }else{
+                return $this->error('2','rent suspend task add failed');
+            }
+        }else{
+            $res = RentContract::where('id',$input['contract_id'])->update([
+                'rent_end_date' => $input['rent_end_date'],
+                'rent_status'   => 3,
+                'update_at'     => date('Y-m-d H:i:s',time()),
+            ]);
+            if($res){
+                // 增加最后一个租金单
+                // 获取最后一次的租金详情
+                
+                /*$last_rent_fee_date = RentArrears::where('contract_id',$input['contract_id'])->where('arrears_type',2)->orderBy('created_at','DESC')->first();
+                if($last_rent_fee_date['rent_circle'] ==1 ){
+                    $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*8-1;
+                }elseif ($last_rent_fee_date['rent_circle'] ==2){
+                    $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*15-1;
+                }elseif ($last_rent_fee_date['rent_circle'] ==3){
+                    $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*31-1;
+                }*/
+                return $this->success('suspend contract success');
+            }else{
+                return $this->error('2','suspend contract failed');
+            }
         }
     }
 }
