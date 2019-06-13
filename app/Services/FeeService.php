@@ -213,6 +213,14 @@ class FeeService extends CommonService
                         $paid += $value['pay_fee'];
                         if($value['arrears_type'] == 2){
                             $rent_arrears += $value['need_pay_fee'];
+                            if($value['rent_circle'] == 1){
+                                $fee_list[$k]['total_stay'] = $value['rent_times'].'weeks';
+                            }elseif ($value['rent_circle'] == 2){
+                                $fee_list[$k]['total_stay'] = ($value['rent_times']*2).'weeks';
+                            }elseif ($value['rent_circle'] == 3){
+                                $fee_list[$k]['total_stay'] = $value['rent_times'].'month';
+                            }
+                            $fee_list[$k]['total_stay'] = $value['rent_times'];
                         }elseif($value['arrears_type'] == 1 || $value['arrears_type'] == 3){
                             $other_arrears += $value['need_pay_fee'];
                         }
@@ -311,8 +319,8 @@ class FeeService extends CommonService
                     $fee_list[$k]['payment_due'] = '';
                     static $total_arrears = 0;
                     foreach ($fee_res as $key => $value){
-                        if($value['arrears_type'] == 3 || $value['arrears_type'] == 4){
-                            $total_arrears += $value['need_pay_fee'];
+                        if($value['arrears_type'] == 3){
+                            $total_arrears += $value['arrears_fee'];
                             $fee_list[$k]['invoice_date'] = $value['created_at'];
                             $fee_list[$k]['payment_due'] = $value['expire_date'];
                             $fee_list[$k]['amount'] = $total_arrears;
@@ -345,8 +353,8 @@ class FeeService extends CommonService
                     $fee_list[$k]['payment_due'] = '';
                     static $total_arrears = 0;
                     foreach ($fee_res as $key => $value){
-                        if($value['arrears_type'] == 3 || $value['arrears_type'] == 4){
-                            $total_arrears += $value['need_pay_fee'];
+                        if($value['arrears_type'] == 3){
+                            $total_arrears += $value['arrears_fee'];
                             $fee_list[$k]['invoice_date'] = $value['created_at'];
                             $fee_list[$k]['payment_due'] = $value['expire_date'];
                         }
