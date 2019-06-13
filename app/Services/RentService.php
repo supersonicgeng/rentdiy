@@ -2190,14 +2190,14 @@ class RentService extends CommonService
             }
         }else{
             $res = RentContract::where('id',$input['contract_id'])->update([
-                'rent_end_date' => $input['rent_end_date'],
-                'rent_status'   => 3,
-                'update_at'     => date('Y-m-d H:i:s',time()),
+                'rent_end_date'     => $input['rent_end_date'],
+                'contract_status'   => 3,
+                'update_at'         => date('Y-m-d H:i:s',time()),
             ]);
             if($res){
                 // 增加最后一个租金单
                 // 获取最后一次的租金详情
-                
+
                 /*$last_rent_fee_date = RentArrears::where('contract_id',$input['contract_id'])->where('arrears_type',2)->orderBy('created_at','DESC')->first();
                 if($last_rent_fee_date['rent_circle'] ==1 ){
                     $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*8-1;
