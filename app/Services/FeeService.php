@@ -196,7 +196,6 @@ class FeeService extends CommonService
                 $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                 $fee_list[$k]['tenement_email'] = $fee_res[0]['tenement_email'];
                 $fee_list[$k]['property_name'] = $fee_res[0]['property_name'];
-                $fee_list[$k]['total_stay'] = $fee_res[0]['tenement_name'];
                 $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                 $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                 $fee_list[$k]['rent_per_week'] = RentHouse::where('id',$fee_res[0]['rent_house_id'])->pluck('rent_fee_pre_week')->first();
