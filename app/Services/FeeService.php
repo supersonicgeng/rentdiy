@@ -267,11 +267,12 @@ class FeeService extends CommonService
             return $this->error('2','no more fee information');
         }else{
             $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
-            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','phone','mobile','email')->first();
+            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','first_name','phone','mobile','email')->first();
             $fee_detail = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->offset(($input['page']-1)*4)
                 ->limit(4)->get()->toArray();
             $data['fee_detail'] = $fee_detail;
             $data['tenement_note'] = TenementNote::where('user_id',$input['user_id'])->where('tenement_id',$tenement_id)->get()->toArray();
+            $data['tenement_name'] = $data['tenement_info']->first_name;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/4);
             return $this->success('get arrears success',$data);
