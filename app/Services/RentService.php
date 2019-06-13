@@ -2125,6 +2125,7 @@ class RentService extends CommonService
         ];
         $score_data = TenementScore::insert($tenement_score_data);
         if($score_data){
+            $model->where('id',$input['contract_id'])->update(['contract_status'   => 6,'updated_at'   => date('Y-m-d H:i:s',time()),]);
             return $this->success('tenement score success');
         }else{
             return $this->error('2','tenement score failed');
