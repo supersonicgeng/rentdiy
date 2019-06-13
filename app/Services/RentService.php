@@ -1055,6 +1055,7 @@ class RentService extends CommonService
             if($contact_status){
                 $model = $model->where('status',$contact_status);
             }
+            $model = $model->whereIn('contact_status',[1,2,3,4]);
             $model = $model->where('house_id',$input['rent_house_id']);
             $model = $model->where('user_id',$input['user_id']);
             $count = $model->count();
