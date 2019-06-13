@@ -316,6 +316,7 @@ class FeeService extends CommonService
             }else{
                 $res = DB::table(DB::raw($sql))->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
                 foreach ($res as $k => $v){
+                    $v = (array)$v;
                     dd($v);
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
