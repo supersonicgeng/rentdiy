@@ -349,7 +349,7 @@ class InspectService extends CommonService
                 return $this->error('2','get inspect detail failed');
             }else{
                 $chattel_info = InspectChattel::where('inspect_id',$inspect_id)->select('chattel_name','chattel_num')->get()->toArray();
-                if($res['inspect_category'] = 1){
+                if($res['inspect_category'] == 1){
                     $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
                     foreach($room_name as $k => $v){
                         $item_info[$k]['room_name'] =  $v['room_name'];
