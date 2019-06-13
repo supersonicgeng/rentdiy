@@ -306,20 +306,15 @@ class FeeService extends CommonService
         $count = count($count);
         if($input['amount']){
             if($input['invoice_date'] && $input['tenement_name']){
-                dump(1);
-                $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND tenement_name like \'%'.$input['tenement_name'].'%\'
-              AND created_at > '.date('Y-m-d',strtotime($input['invoice_date'])).' AND created_at < '.date('Y-m-d',strtotime($input['invoice_date'])+3600*24).' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND tenement_name like \'%'.$input['tenement_name'].'%\' AND created_at BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
                 $count = DB::table(DB::raw($sql))->get()->toArray();
             }elseif(!$input['invoice_date']){
-                dump(2);
                 $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND tenement_name like \'%'.$input['tenement_name'].'%\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
                 $count = DB::table(DB::raw($sql))->get()->toArray();
             }elseif(!$input['tenement_name']){
-                dump(3);
-                $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND created_at > '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).' AND created_at < '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24).' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND created_at BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
                 $count = DB::table(DB::raw($sql))->get()->toArray();
             }else{
-                dump(4);
                 $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
                 $count = DB::table(DB::raw($sql))->get()->toArray();
             }
