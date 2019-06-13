@@ -1548,14 +1548,18 @@ class RentService extends CommonService
     {
         //dd($input);
         $model = new RentContract();
+        $contract_data = $model->where('id',$input['contract_id'])->first();
+        // 其他租约全部变成失效
+        $model->where('house_id',$contract_data->house_id)->update(['contract_status'   => 5,'updated_at'   => date('Y-m-d H:i:s',time()),]);
+        // 租约变成生效
         $effect_data = [
             'contract_status'   => 2,
             'rent_start_date'   => $input['rent_start_date'],
             'rent_end_date'     => $input['rent_end_date'],
+            'updated_at'        => date('Y-m-d H:i:s',time()),
         ];
         $res = $model->where('id',$input['contract_id'])->update($effect_data);
         if($res){
-            $contract_data = $model->where('id',$input['contract_id'])->first();
             if($contract_data->contract_type == 1){
                 // 生成押金记录
                 $contract_tenement_data = ContractTenement::where('contract_id',$input['contract_id'])->first();
@@ -2052,6 +2056,11 @@ class RentService extends CommonService
                     }
                 }
             }
+            //房屋下架
+            RentHouse::where('id',$contract_data->house_id)->update([
+                'is_put'        => 1,
+                'updated_at'    => date('Y-m-d H:i:s',time()),
+            ]);
             return $this->success('contract effect success');
         }else{
             return $this->error('2','contact effect failed');
