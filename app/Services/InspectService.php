@@ -390,7 +390,7 @@ class InspectService extends CommonService
             }
             return $this->success('get inspect item success',$data);
         }elseif ($inspect_res->inspect_category == 2){
-            $data[]['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            $data[]['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->get()->toArray();
             if(!$data){
                 return $this->error('2','no inspect info');
             }
