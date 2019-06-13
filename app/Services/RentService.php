@@ -2192,7 +2192,7 @@ class RentService extends CommonService
             $res = RentContract::where('id',$input['contract_id'])->update([
                 'rent_end_date'     => $input['rent_end_date'],
                 'contract_status'   => 3,
-                'update_at'         => date('Y-m-d H:i:s',time()),
+                'updated_at'        => date('Y-m-d H:i:s',time()),
             ]);
             if($res){
                 // 增加最后一个租金单
