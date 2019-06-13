@@ -311,10 +311,10 @@ class FeeService extends CommonService
                 $count = DB::table(DB::raw($sql))->get()->toArray();
             }
             $res_count = count($count);
-            if($res_count < ($input['page']-1)*10){
+            if($res_count <= ($input['page']-1)*10){
                 return $this->error('2','no more fee information');
             }else{
-                $res = DB::table(DB::raw($sql))->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
+                $res = DB::table(DB::raw($sql))->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
                 dd($res);
                 foreach ($res as $k => $v){
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
@@ -346,7 +346,7 @@ class FeeService extends CommonService
             }
             $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
             $count = count($count);
-            if($count < ($input['page']-1)*10){
+            if($count <= ($input['page']-1)*10){
                 return $this->error('2','no more fee information');
             }else{
                 $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
