@@ -391,7 +391,7 @@ class FeeService extends CommonService
             $model = $model->where('tex',0);
         }
         if($input['include_gts'] == 3){
-            $model = $model->where('tex','!=','0');
+            $model = $model->where('tex','>','0');
         }
         $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->get();
         $count = count($count);
