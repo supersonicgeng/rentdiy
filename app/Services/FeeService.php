@@ -335,7 +335,7 @@ class FeeService extends CommonService
                 $data['fee_list'] = $fee_list;
                 $data['current_page'] = $input['page'];
                 $data['total_page'] = ceil($res_count/10);
-                return $this->success('get arrears success',$data);
+                return $this->success('get fee list success',$data);
             }
         }else{
             if($input['tenement_name']){
@@ -369,7 +369,7 @@ class FeeService extends CommonService
                 $data['fee_list'] = $fee_list;
                 $data['current_page'] = $input['page'];
                 $data['total_page'] = ceil($count/10);
-                return $this->success('get arrears success',$data);
+                return $this->success('get fee list success',$data);
             }
         }
     }
@@ -387,19 +387,21 @@ class FeeService extends CommonService
     public function feeDetail(array $input)
     {
         $model = new RentArrears();
-        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->get();
+        if($input['include_gts'] == 2){
+            $model = $model->where('tax',0);
+        }
+        if($input['include_gts'] == 3){
+            $model = $model->where('tax','!=','0');
+        }
+        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->get();
         $count = count($count);
-        if($count <= ($input['page']-1)*4){
+        if($count <= ($input['page']-1)*10){
             return $this->error('2','no more fee information');
         }else{
-            $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
-            $data['tenement_info'] = Tenement::where('id',$tenement_id)->select('tenement_id','phone','mobile','email')->first();
-            $fee_detail = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->offset(($input['page']-1)*4)
-                ->limit(4)->get();
-            $data['fee_detail'] = $fee_detail;
-            $data['tenement_note'] = TenementNote::where('user_id',$input['user_id'])->where('tenement_id',$tenement_id)->get()->toArray();
+            $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
+            $data['fee_data'] = $fee_data;
             $data['current_page'] = $input['page'];
-            $data['total_page'] = ceil($count/4);
+            $data['total_page'] = ceil($count/10);
             return $this->success('get arrears success',$data);
         }
     }
