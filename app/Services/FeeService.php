@@ -334,7 +334,7 @@ class FeeService extends CommonService
                 }
                 $data['fee_list'] = $fee_list;
                 $data['current_page'] = $input['page'];
-                $data['total_page'] = ceil($count/10);
+                $data['total_page'] = ceil($res_count/10);
                 return $this->success('get arrears success',$data);
             }
         }else{
