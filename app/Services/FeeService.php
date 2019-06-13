@@ -305,7 +305,7 @@ class FeeService extends CommonService
         $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
         $count = count($count);
         if($input['amount']){
-            dd($input);
+            dd(!$input['tenement_name']);
             if($input['invoice_date'] && $input['tenement_name']){
                 $sql = 'SELECT * FROM (SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND tenement_name like %'.$input['tenement_name'].'%
               AND created_at > '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).' AND created_at < '.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24).' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
