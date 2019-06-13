@@ -386,6 +386,18 @@ class FeeService extends CommonService
             return $this->error('2','no more fee information');
         }else{
             $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
+            static $amount_price = 0;
+            static $discount = 0;
+            static $gts = 0;
+            foreach ($fee_data as $k => $v){
+                $amount_price += $v['unit_price']*$v['number'];
+                $discount += ($v['unit_price']*$v['number'])*$v['discount']/100;
+                $gts += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100;
+            }
+            $data['total_price'] = $amount_price-$discount+$gts;
+            $data['amount_price'] = $amount_price;
+            $data['discount'] = $discount;
+            $data['gts'] = $gts;
             $data['fee_data'] = $fee_data;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
