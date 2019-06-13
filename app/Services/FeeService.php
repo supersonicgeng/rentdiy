@@ -412,4 +412,127 @@ class FeeService extends CommonService
         }
     }
 
+    /**
+     * @description:现金收据清单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cashList(array $input)
+    {
+        $model = new RentArrears();
+        if($input['amount']){
+            if($input['pay_date'] && $input['tenement_name']){
+                $sql = '(SELECT  SUM(need_pay_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'1\', \'2\',\'3\') AND tenement_name like \'%'.$input['tenement_name'].'%\' AND expire_date BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $count = DB::table(DB::raw($sql))->get()->toArray();
+            }elseif(!$input['pay_date']){
+                $sql = '(SELECT  SUM(need_pay_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'1\', \'2\',\'3\') AND tenement_name like \'%'.$input['tenement_name'].'%\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $count = DB::table(DB::raw($sql))->get()->toArray();
+            }elseif(!$input['tenement_name']){
+                $sql = '(SELECT  SUM(need_pay_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'1\', \'2\',\'3\') AND expire_date BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $count = DB::table(DB::raw($sql))->get()->toArray();
+            }else{
+                $sql = '(SELECT  SUM(need_pay_fee) AS SUMM ,contract_id FROM rent_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'1\', \'2\',\'3\') GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
+                $count = DB::table(DB::raw($sql))->get()->toArray();
+            }
+            $res_count = count($count);
+            if($res_count <= ($input['page']-1)*10){
+                return $this->error('2','no more fee information');
+            }else{
+                $res = DB::table(DB::raw($sql))->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
+                foreach ($res as $k => $v){
+                    $v = (array)$v;
+                    $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
+                    $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
+                    $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
+                    $fee_list[$k]['payment_due'] = '';
+                    static $total_arrears = 0;
+                    foreach ($fee_res as $key => $value){
+                        $total_arrears += $value['need_pay_fee'];
+                        $fee_list[$k]['payment_due'] = $value['expire_date'];
+                        $fee_list[$k]['amount'] = $total_arrears;
+                    }
+                }
+                $data['fee_list'] = $fee_list;
+                $data['current_page'] = $input['page'];
+                $data['total_page'] = ceil($res_count/10);
+                return $this->success('get fee list success',$data);
+            }
+        }else{
+            if($input['tenement_name']){
+                $model = $model->where('tenement_name','like','%'.$input['tenement_name'].'%');
+            }
+            if($input['invoice_date']){
+                $model = $model->where('created_at','>',date('Y-m-d H:i:s',strtotime($input['invoice_date'])))->where('created_at','<',date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24));
+            }
+            $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
+            $count = count($count);
+            if($count <= ($input['page']-1)*10){
+                return $this->error('2','no more fee information');
+            }else{
+                $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
+                foreach ($res as $k => $v){
+                    $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
+                    $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
+                    $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
+                    $fee_list[$k]['payment_due'] = '';
+                    static $total_arrears = 0;
+                    foreach ($fee_res as $key => $value){
+                        $total_arrears += $value['need_pay_fee'];
+                        $fee_list[$k]['payment_due'] = $value['expire_date'];
+                        $fee_list[$k]['amount'] = $total_arrears;
+                    }
+                }
+                $data['fee_list'] = $fee_list;
+                $data['current_page'] = $input['page'];
+                $data['total_page'] = ceil($count/10);
+                return $this->success('get fee list success',$data);
+            }
+        }
+    }
+
+
+
+    /**
+     * @description:现金收据详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cashDetail(array $input)
+    {
+        $model = new RentArrears();
+        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get();
+        $count = count($count);
+        if($count <= ($input['page']-1)*10){
+            return $this->error('2','no more fee information');
+        }else{
+            $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get()->toArray();
+            static $bond_arrears = 0;
+            static $rent_arrears = 0;
+            static $expense_arrears = 0;
+            foreach ($fee_data as $k => $v){
+                if($v['arrears_type'] == 1){
+                    $bond_arrears += $v['need_pay_fee'];
+                }elseif ($v['arrears_type'] == 2){
+                    $rent_arrears += $v['need_pay_fee'];
+                }elseif ($v['arrears_type'] == 3){
+                    $expense_arrears += $v['need_pay_fee'];
+                }
+            }
+            $data['bond_arrears'] = $bond_arrears;
+            $data['rent_arrears'] = $rent_arrears;
+            $data['expense_arrears'] = $expense_arrears;
+            $data['property_address'] = RentHouse::where('id',$fee_data[0]['rent_house_id'])->pluck('address')->first();
+            $data['fee_data'] = $fee_data;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get arrears success',$data);
+        }
+    }
+
 }

@@ -232,6 +232,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('arrearsDetail', 'FeeController@arrearsDetail'); // 追欠款详情 4.10
         $router->post('feeList', 'FeeController@feeList'); // 费用单列表 4.10
         $router->post('feeDetail', 'FeeController@feeDetail'); // 费用单详情 4.10
+        $router->post('cashList', 'FeeController@cashList'); // 现金收据列表 4.10
+        $router->post('cashDetail', 'FeeController@cashDetail'); // 现金收据详情 4.10
     });
     // 银行对账管理
     $router->group(['prefix' => 'reconciliation'], function (Router $router) {

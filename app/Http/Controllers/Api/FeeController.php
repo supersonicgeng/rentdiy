@@ -74,20 +74,20 @@ class FeeController extends Controller
 
 
     /**
-     * @description:追欠款列表
-     * @author: syg <13971394623@163.com>
-     * @param $code
-     * @param $message
-     * @param array|null $data
-     * @return \Illuminate\Http\JsonResponse
-     */
+ * @description:费用单列表
+ * @author: syg <13971394623@163.com>
+ * @param $code
+ * @param $message
+ * @param array|null $data
+ * @return \Illuminate\Http\JsonResponse
+ */
     public function feeList(Request $request)
     {
         return service('Fee')->feeList($request->all());
     }
 
     /**
-     * @description:追欠款详情
+     * @description:费用单详情
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -97,5 +97,32 @@ class FeeController extends Controller
     public function feeDetail(Request $request)
     {
         return service('Fee')->feeDetail($request->all());
+    }
+
+
+    /**
+     * @description:现金收据列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cashList(Request $request)
+    {
+        return service('Fee')->cashList($request->all());
+    }
+
+    /**
+     * @description:现金收据详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cashDetail(Request $request)
+    {
+        return service('Fee')->cashDetail($request->all());
     }
 }
