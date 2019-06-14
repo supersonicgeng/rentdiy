@@ -459,9 +459,9 @@ class RentService extends CommonService
             }
             $total_page = ceil($count/9);
             if($sort_order == 1){
-                $res = $model->where('tenement_id',$input['tenement_id'])->orderBy('id','DESC')->offset(($page-1)*9)->limit(9)->get()->toArray();
+                $res = $model->where('tenement_id',$input['tenement_id'])->groupBy('rent_house_id')->orderBy('id','DESC')->offset(($page-1)*9)->limit(9)->get()->toArray();
             }else{
-                $res = $model->where('tenement_id',$input['tenement_id'])->offset(($page-1)*9)->limit(9)->get()->toArray();
+                $res = $model->where('tenement_id',$input['tenement_id'])->groupBy('rent_house_id')->offset(($page-1)*9)->limit(9)->get()->toArray();
             }
             if($res){
                 foreach ($res as $k => $v){
