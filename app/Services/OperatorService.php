@@ -60,6 +60,11 @@ class OperatorService extends CommonService
     public function addOperatorInformation(array $input)
     {
         //$operator_account = operatorAccount();
+        $model = new Operator();
+        $check_res = $model->where('operator_account',$input['operator_account'])->first();
+        if($check_res){
+            return $this->error('2','the operator account is used pls change a new account');
+        }
         $operator_data = [
             'user_id'           => $input['user_id'],
             'operator_way'      => $input['operator_way'],
@@ -74,7 +79,6 @@ class OperatorService extends CommonService
             'is_use'            => $input['is_use'],
             'created_at'        => date('Y-m-d H:i:s',time())
         ];
-        $model = new Operator();
         $res = $model->insertGetId($operator_data);
         static $error = 0;
         if($res){
