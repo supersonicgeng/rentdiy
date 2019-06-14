@@ -453,7 +453,7 @@ class RentService extends CommonService
                 $model = $model->where('status',$application_status);
             }
             $sort_order = $input['sort_order'];
-            $count = $model->where('tenement_id',$input['tenement_id'])->count();
+            $count = $model->where('tenement_id',$input['tenement_id'])->groupBy('rent_house_id')->count();
             if($count<($page-1)*9){
                 return $this->error('3','no data');
             }
