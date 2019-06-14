@@ -399,6 +399,12 @@ class FeeService extends CommonService
         if($input['include_gts'] == 3){
             $model = $model->where('tex','>','0');
         }
+        if($input['start_date']){
+            $model = $model->where('created_at','>',date('Y-m-d H:i:s',$input['start_date']));
+        }
+        if($input['end_date']){
+            $model = $model->where('created_at','<',date('Y-m-d H:i:s',$input['end_date']+3600*24-1));
+        }
         $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->get();
         $count = count($count);
         if($count <= ($input['page']-1)*10){
