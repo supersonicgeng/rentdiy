@@ -45,7 +45,7 @@ class FeeService extends CommonService
     public function feeAdd(array $input)
     {
         $model = new RentArrears();
-        if($input['contract_id']){
+        if($input['arrears_type'] == 3){
             $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
             $contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
             $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
@@ -82,11 +82,19 @@ class FeeService extends CommonService
             ];
             $res = $model->insert($fee_data);
         }else{
-            $rent_house_id = $input['rent_house_id'];
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            $contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+            $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
             $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
             $fee_data = [
                 'user_id'           => $input['user_id'],
+                'contract_id'       => $input['contract_id'],
+                'contract_sn'       => $contract_sn,
                 'rent_house_id'     => $rent_house_id,
+                'tenement_id'       => $tenement_info->tenement_id,
+                'tenement_name'     => $tenement_info->tenement_full_name,
+                'tenement_email'    => $tenement_info->tenement_email,
+                'tenement_phone'    => $tenement_info->tenement_phone,
                 'arrears_type'      => 4,
                 'property_name'     => $rent_house_info->property_name,
                 'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100),
@@ -510,7 +518,7 @@ class FeeService extends CommonService
     public function cashDetail(array $input)
     {
         $model = new RentArrears();
-        $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get()->toArray();
+        $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('is_pay',[1,3])->whereIn('arrears_type',[1,2,3])->get()->toArray();
         static $bond_arrears = 0;
         static $rent_arrears = 0;
         static $expense_arrears = 0;
