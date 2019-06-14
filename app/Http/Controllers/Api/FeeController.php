@@ -125,4 +125,17 @@ class FeeController extends Controller
     {
         return service('Fee')->cashDetail($request->all());
     }
+
+    /**
+     * @description:现金收据冲账
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cashPay(Request $request)
+    {
+        return service('Fee')->cashPay($request->all());
+    }
 }
