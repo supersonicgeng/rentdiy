@@ -505,7 +505,7 @@ class FeeService extends CommonService
                     foreach ($fee_res as $key => $value){
                         $total_arrears += $value['need_pay_fee'];
                         $fee_list[$k]['payment_due'] = $value['expire_date'];
-                        $fee_list[$k]['amount'] = $total_arrears;
+                        $fee_list[$k]['amount'] = round($total_arrears,2);
                     }
                 }
                 $data['fee_list'] = $fee_list;
