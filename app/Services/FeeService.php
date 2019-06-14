@@ -422,10 +422,10 @@ class FeeService extends CommonService
                 $discount += ($v['unit_price']*$v['number'])*$v['discount']/100;
                 $gts += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100;
             }
-            $data['total_price'] = $amount_price-$discount+$gts;
-            $data['amount_price'] = $amount_price;
-            $data['discount'] = $discount;
-            $data['gts'] = $gts;
+            $data['total_price'] = round(($amount_price-$discount+$gts),2);
+            $data['amount_price'] = round($amount_price,2);
+            $data['discount'] = round($discount,2);
+            $data['gts'] = round($gts,2);
             $data['fee_data'] = $fee_data;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
