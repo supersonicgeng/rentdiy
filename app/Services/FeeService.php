@@ -523,6 +523,12 @@ class FeeService extends CommonService
                 $expense_arrears += $v['need_pay_fee'];
             }
         }
+        $data['headimg'] = Tenement::where('id',$fee_data[0]['tenement_id'])->pluck('headimg')->first();
+        $data['tenement_full_name'] = $fee_data[0]['tenement_name'];
+        $data['birthday'] = Tenement::where('id',$fee_data[0]['tenement_id'])->pluck('birthday')->first();
+        $data['tenement_email'] = $fee_data[0]['tenement_email'];
+        $data['tenement_phone'] = $fee_data[0]['tenement_phone'];
+        $data['property_name'] = $fee_data[0]['property_name'];
         $data['bond_arrears'] = $bond_arrears;
         $data['rent_arrears'] = $rent_arrears;
         $data['expense_arrears'] = $expense_arrears;
