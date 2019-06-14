@@ -322,6 +322,7 @@ class FeeService extends CommonService
                 foreach ($res as $k => $v){
                     $v = (array)$v;
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
+                    $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
@@ -356,6 +357,7 @@ class FeeService extends CommonService
                 $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
                 foreach ($res as $k => $v){
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
+                    $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
