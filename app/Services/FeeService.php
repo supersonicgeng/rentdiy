@@ -510,33 +510,25 @@ class FeeService extends CommonService
     public function cashDetail(array $input)
     {
         $model = new RentArrears();
-        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get();
-        $count = count($count);
-        if($count <= ($input['page']-1)*10){
-            return $this->error('2','no more fee information');
-        }else{
-            $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get()->toArray();
-            static $bond_arrears = 0;
-            static $rent_arrears = 0;
-            static $expense_arrears = 0;
-            foreach ($fee_data as $k => $v){
-                if($v['arrears_type'] == 1){
-                    $bond_arrears += $v['need_pay_fee'];
-                }elseif ($v['arrears_type'] == 2){
-                    $rent_arrears += $v['need_pay_fee'];
-                }elseif ($v['arrears_type'] == 3){
-                    $expense_arrears += $v['need_pay_fee'];
-                }
+        $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->get()->toArray();
+        static $bond_arrears = 0;
+        static $rent_arrears = 0;
+        static $expense_arrears = 0;
+        foreach ($fee_data as $k => $v){
+            if($v['arrears_type'] == 1){
+                $bond_arrears += $v['need_pay_fee'];
+            }elseif ($v['arrears_type'] == 2){
+                $rent_arrears += $v['need_pay_fee'];
+            }elseif ($v['arrears_type'] == 3){
+                $expense_arrears += $v['need_pay_fee'];
             }
-            $data['bond_arrears'] = $bond_arrears;
-            $data['rent_arrears'] = $rent_arrears;
-            $data['expense_arrears'] = $expense_arrears;
-            $data['property_address'] = RentHouse::where('id',$fee_data[0]['rent_house_id'])->pluck('address')->first();
-            $data['fee_data'] = $fee_data;
-            $data['current_page'] = $input['page'];
-            $data['total_page'] = ceil($count/10);
-            return $this->success('get arrears success',$data);
         }
+        $data['bond_arrears'] = $bond_arrears;
+        $data['rent_arrears'] = $rent_arrears;
+        $data['expense_arrears'] = $expense_arrears;
+        $data['property_address'] = RentHouse::where('id',$fee_data[0]['rent_house_id'])->pluck('address')->first();
+        $data['fee_data'] = $fee_data;
+        return $this->success('get arrears success',$data);
     }
 
 
