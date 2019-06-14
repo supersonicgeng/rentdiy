@@ -466,8 +466,8 @@ class FeeService extends CommonService
             if($input['tenement_name']){
                 $model = $model->where('tenement_name','like','%'.$input['tenement_name'].'%');
             }
-            if($input['invoice_date']){
-                $model = $model->where('created_at','>',date('Y-m-d H:i:s',strtotime($input['invoice_date'])))->where('created_at','<',date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24));
+            if($input['pay_date']){
+                $model = $model->where('created_at','>',date('Y-m-d H:i:s',strtotime($input['expire_date'])))->where('created_at','<',date('Y-m-d H:i:s',strtotime($input['expire_date'])+3600*24));
             }
             $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
             $count = count($count);
