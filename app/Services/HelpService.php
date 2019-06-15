@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Mpdf\Mpdf;
+use setasign\Fpdi\PdfParser\StreamReader;
 
 class HelpService extends CommonService
 {
