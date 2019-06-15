@@ -161,7 +161,7 @@ class InspectService extends CommonService
                         foreach ($v['items'] as $key => $value) {
                             $room_data = [
                                 'inspect_id' => $res,
-                                'room_name' => $v['room_name'],
+                                'room_name' => RentHouse::where('id',$input['rent_house_id'])->pluck('room_name')->first(),
                                 'items' => $value,
                                 'created_at' => date('Y-m-d H:i:s', time()),
                             ];
@@ -243,7 +243,7 @@ class InspectService extends CommonService
                             $room_data = [
                                 'inspect_id' => $room_res,
                                 'rent_house_id' => $v['rent_house_id'],
-                                'room_name' => $v['room_name'],
+                                'room_name' => RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first(),
                                 'items' => $value,
                                 'created_at' => date('Y-m-d H:i:s', time()),
                             ];
