@@ -648,7 +648,7 @@ class FeeService extends CommonService
 
     public function test(array $input,$file)
     {
-        \Maatwebsite\Excel\Excel::load($file->getRealPath(), function ($reader) use (&$error) {
+        \Maatwebsite\Excel\Excel::import($file->getRealPath(), function ($reader) use (&$error) {
             $data = $reader->get()->toArray();
             dump(111);
             dd($data[0]);
