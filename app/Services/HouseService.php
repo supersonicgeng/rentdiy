@@ -1282,7 +1282,7 @@ class HouseService extends CommonService
         if($count < ($page-1)*4){
             return $this->error('3','the page number is not right');
         }
-        $res = $model->where('user_id',$user_id)->where('deleted_at',null)->select('id as rent_house_id','rent_category','District','TA','Region','property_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put','rent_status')->offset(($page-1)*4)->limit(4)->get();
+        $res = $model->where('user_id',$user_id)->where('deleted_at',null)->select('id as rent_house_id','rent_category','District','TA','Region','property_name','room_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put','rent_status')->offset(($page-1)*4)->limit(4)->get();
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
