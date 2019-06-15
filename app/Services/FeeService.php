@@ -594,6 +594,7 @@ class FeeService extends CommonService
                     'pay_money'     => $need_pay->need_pay_fee,
                     'pay_date'      => $input['pay_date'],
                     'pay_method'    => 1,
+                    'note'          => $input['note'],
                     'created_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 $receive_res = FeeReceive::insert($receive_data);
@@ -621,6 +622,7 @@ class FeeService extends CommonService
                     'pay_money'     => $pay_money,
                     'pay_date'      => $input['pay_date'],
                     'pay_method'    => 1,
+                    'note'          => $input['note'],
                     'created_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 $receive_res = FeeReceive::insert($receive_data);
