@@ -61,6 +61,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'test'], function (Router $router){
         $router->post('test','TestController@test'); // 测试 pdf 5.28
         $router->get('testIM','ImController@sendMsg'); // 测试 pdf 5.28
+        $router->any('testFee', 'FeeController@test'); // 银行对账调试 4.10
     });
 });
 
@@ -235,10 +236,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('cashList', 'FeeController@cashList'); // 现金收据列表 4.10
         $router->post('cashDetail', 'FeeController@cashDetail'); // 现金收据详情 4.10
         $router->post('cashPay', 'FeeController@cashPay'); // 现金收据冲账 4.10
-    });
-    // 银行对账管理
-    $router->group(['prefix' => 'reconciliation'], function (Router $router) {
-        $router->post('test', 'ReconciliationController@test'); // 添加费用单 4.10
+
     });
 });
 

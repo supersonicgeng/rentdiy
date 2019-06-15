@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FeeService extends CommonService
 {
@@ -644,4 +645,46 @@ class FeeService extends CommonService
         }
     }
 
+
+    public function test(array $input,$file)
+    {
+        dd($file);
+        Excel::load($file->getRealPath(), function ($reader) use (&$error) {
+            $data = $reader->get()->toArray();
+            dd($data);
+            $title = $data[0];
+            if ($title == Wish::$EXCEL) {
+                $i = 1;
+                $success_count = 0;
+                $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    $privince_id = Region::provinceId($data[$i][2]);
+                    $city_id = Region::cityId($privince_id, $data[$i][3]);
+                    $county_id = Region::countyId($city_id, $data[$i][4]);
+                    $result = service('Wish')->wishAdd([
+                        'title'      => $data[$i][0],
+                        'username'   => $data[$i][1],
+                        'expired_at' => $data[$i][7],
+                        'province'   => $privince_id,
+                        'city'       => $city_id,
+                        'county'     => $county_id,
+                        'address'    => $data[$i][5],
+                        'phone'      => $data[$i][6]
+                    ]);
+                    if ($result['code'] == 0) {
+                        $success_count++;
+                    } else {
+                        $failed_count++;
+                    }
+                    $i++;
+                }
+            } else {
+                $error ['code'] = 2;
+                $error['msg'] = '表格格式不正确';
+            }
+            $error['code'] = 0;
+            $error['msg'] = '成功导入' . $success_count . '条数据';
+        }, 'UTF-8');
+        return $error;
+    }
 }

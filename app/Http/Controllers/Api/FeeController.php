@@ -138,4 +138,12 @@ class FeeController extends Controller
     {
         return service('Fee')->cashPay($request->all());
     }
+
+
+    public function test(Request $request)
+    {
+        $file   = $request->file('file');
+        dd($request);
+        return service('Fee')->test($request->all(),$file);
+    }
 }
