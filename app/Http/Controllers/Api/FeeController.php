@@ -143,7 +143,6 @@ class FeeController extends Controller
     public function test(Request $request)
     {
         $file   = $request->file('file');
-        dd($request);
         return service('Fee')->test($request->all(),$file);
     }
 }
