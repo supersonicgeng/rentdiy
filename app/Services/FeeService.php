@@ -650,7 +650,7 @@ class FeeService extends CommonService
     public function test(array $input,$file)
     {
         $excel = new Excel();
-        $data = $excel->toArray(new UsersImport(), $file);
+        $data = $excel::toArray(new UsersImport(), $file);
         dd($data);
     }
 }
