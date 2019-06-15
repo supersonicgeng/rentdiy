@@ -650,7 +650,8 @@ class FeeService extends CommonService
     {
         Excel::load($file->getRealPath(), function ($reader) use (&$error) {
             $data = $reader->get()->toArray();
-            dd($data);
+            dump(111);
+            dd($data[0]);
             $title = $data[0];
             if ($title == Wish::$EXCEL) {
                 $i = 1;
