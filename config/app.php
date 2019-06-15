@@ -190,7 +190,7 @@ return [
 
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,//二维码
         Laravel\Socialite\SocialiteServiceProvider::class, // socialite  授权登陆
-        link1st\Easemob\EasemobServiceProvider::class  // 环信
+        link1st\Easemob\EasemobServiceProvider::class,  // 环信
     ],
 
     /*
