@@ -29,6 +29,7 @@ use App\Model\Plant;
 use App\Model\PlantOperateLog;
 use App\Model\Providers;
 use App\Model\ProvidersScore;
+use App\Model\RentApplication;
 use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RouteItems;
@@ -482,6 +483,36 @@ class LandlordService extends CommonService
            }else{
                return $this->error('2','get tenement manege failed');
            }
+        }
+    }
+
+    /**
+     * @description:租约生成时获取租户信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementInfo(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $rent_house_id = $input['rent_house_id'];
+            $application_tenement_id = RentApplication::where('rent_house_id',$rent_house_id)->where('application_status',8)->pluck('tenement_id')->first();
+            if($application_tenement_id){
+                $application_tenement_res = Tenement::where('id',$application_tenement_id)->first();
+                if($application_tenement_res){
+                    $data['tenement_info'] = $application_tenement_res;
+                    return $this->success('get tenement info success',$data);
+                }
+            }else{
+                return $this->error('2','no tenement info');
+            }
+
         }
     }
 }

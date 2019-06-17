@@ -188,4 +188,17 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->tenementManage($request->all());
     }
+
+    /**
+     * @description:租约生成时获取租户信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTenementInfo(Request $request)
+    {
+        return service('Landlord')->getTenementInfo($request->all());
+    }
 }
