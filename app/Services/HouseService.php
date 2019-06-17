@@ -13,7 +13,9 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\HouseWatchList;
 use App\Model\Region;
+use App\Model\RentApplication;
 use App\Model\RentContact;
+use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\Verify;
@@ -1289,6 +1291,18 @@ class HouseService extends CommonService
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
+                if(RentApplication::where('rent_house_id',$v['rent_house_id'])->first()){
+                    $res[$k]['house_status'] = 2;
+                }
+                if(RentContract::where('house_id',$v['rent_house_id'])->first()){
+                    $res[$k]['house_status'] = 3;
+                }
+                if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status','>',2)->first()){
+                    $res[$k]['house_status'] = 4;
+                }
+                if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',3)->first() || RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',5)->first()){
+                    $res[$k]['house_status'] = 5;
+                }
             }
             $data['house_list'] = $res;
             $data['current_page'] = $page;
