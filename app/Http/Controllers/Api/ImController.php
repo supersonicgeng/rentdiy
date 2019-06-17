@@ -15,6 +15,39 @@ class ImController extends Controller
         $message = $request->msg;
         $easemob = new Easemob();
         $res = $easemob->sendMessageText([$to],'users',$message,$send);
-        dd($res);
+        if($res['data'][$to] == 'success'){
+            return $this->success('send im success');
+        }else{
+            return $this->error('2','send im failed');
+        }
+    }
+
+    /**
+     * @description:操作成功处理
+     * @author: hkw <hkw925@qq.com>
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function success($message, $data = [])
+    {
+        $result         = ['code' => 0, 'msg' => $message];
+        $result['data'] = $data;
+        return $result;
+    }
+
+    /**
+     * @description:操作失败处理
+     * @author: hkw <hkw925@qq.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function error($code, $message, $data = [])
+    {
+        $result         = ['code' => $code, 'msg' => $message];
+        $result['data'] = $data;
+        return $result;
     }
 }
