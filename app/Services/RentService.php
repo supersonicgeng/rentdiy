@@ -470,6 +470,7 @@ class RentService extends CommonService
                     $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                     $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
                     $application_res[$k]['application_id'] = $v['id'];
+                    $application_res[$k]['application_status'] = $v['status'];
                 }
                 $data['house_list'] = $application_res;
                 $data['total_page'] = $total_page;
