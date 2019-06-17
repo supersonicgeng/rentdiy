@@ -12,6 +12,7 @@ namespace App\Services;
 
 use App\Imports\UsersImport;
 use App\Lib\Util\QueryPager;
+use App\Model\BankCheck;
 use App\Model\Bond;
 use App\Model\BondRefund;
 use App\Model\BondTransfer;
@@ -659,14 +660,83 @@ class FeeService extends CommonService
             }else{
                 // TODO ANZ银行对账
                 $i = 1;
-                $success_count = 0;
-                $failed_count = 0;
+                static $success_count = 0;
+                static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][0] == 'Deposit' || $data[$i][0] == 'Bill Payment' || $data[$i][0] == 'Direct Credit'){
-                        
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][2];
+                        $code = $data[$i][3];
+                        $reference = $data[$i][4];
+                        $amount = $data[$i][5];
+                        $date = $data[$i][6];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
                     }
                     $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
                 }
             }
         }elseif ($input['bank_type'] == 'BNZ'){
@@ -674,36 +744,511 @@ class FeeService extends CommonService
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO BNZ银行对账
+                $i = 1;
+                static $success_count = 0;
+                static $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    if($data[$i][2] == 'DEPOSIT' || $data[$i][2] == 'BILL PAYMENT' || $data[$i][2] == 'DIRECT CREDIT'){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][3];
+                        $code = $data[$i][4];
+                        $reference = $data[$i][5];
+                        $amount = $data[$i][1];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'BNZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }elseif ($input['bank_type'] == 'westpac'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Other Party' || $data[0][3] != 'Description' || $data[0][4] != 'Reference' || $data[0][5] != 'Particulars' || $data[0][6] != 'Analysis Code'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO westpac银行对账
+                $i = 1;
+                static $success_count = 0;
+                static $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    if($data[$i][3] == 'DEPOSIT' || $data[$i][3] == 'BILL PAYMENT' || $data[$i][3] == 'DIRECT CREDIT'){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][5];
+                        $code = $data[$i][6];
+                        $reference = $data[$i][4];
+                        $amount = $data[$i][1];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'westpac',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }elseif ($input['bank_type'] == 'ASB'){
             if($data[6][0] != 'Date' || $data[6][1] != 'Unique Id' || $data[6][2] != 'Tran Type' || $data[6][3] != 'Cheque Number' || $data[6][4] != 'Payee' || $data[6][5] != 'Memo' || $data[6][6] != 'Amount'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO ASB银行对账
+                $i = 8;
+                static $success_count = 0;
+                static $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    if($data[$i][2] == 'CREDIT' || $data[$i][2] == 'D/C'){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][5];
+                        $code = $data[$i][5];
+                        $reference = $data[$i][4];
+                        $amount = $data[$i][1];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ASB',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }elseif ($input['bank_type'] == 'kiwi'){
             if(substr($data[0][0],0,2) != '38' ){
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO kiwi银行对账
+                $i = 8;
+                static $success_count = 0;
+                static $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    if($data[$i][3] > 0){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][1];
+                        $code = $data[$i][1];
+                        $reference = $data[$i][1];
+                        $amount = $data[$i][3];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ASB',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }elseif ($input['bank_type'] == 'TSB'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Reference' || $data[0][3] != 'Description' || $data[0][4] != 'Particulars'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO TSB银行对账
+                $i = 1;
+                static $success_count = 0;
+                static $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    if($data[$i][1] > 0){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][4];
+                        $code = $data[$i][3];
+                        $reference = $data[$i][2];
+                        $amount = $data[$i][1];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ASB',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }elseif ($input['bank_type'] == 'co-operative'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Details' || $data[0][2] != 'Amount' || $data[0][3] != 'Balance'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 // TODO co-operative银行对账
+                $i = 1;
+                $success_count = 0;
+                $failed_count = 0;
+                while (!empty($data[$i][0])) {
+                    // 处理数据
+                    $match_data = explode('-',$data[$i][1]);
+                    if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
+                        $check_id = BankCheck::max('check_id');
+                        $particulars = $data[$i][4];
+                        $code = $data[$i][3];
+                        $reference = $data[$i][2];
+                        $amount = $data[$i][1];
+                        $date = $data[$i][0];
+                        $date = date('Y-m-d',strtotime($date));
+                        if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
+                            // 匹配
+                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            if($match_res){ // 匹配成功
+                                $bank_check_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'check_id'  => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ASB',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res){ // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i+1;
+                                }else{
+                                    // 匹配成功的 费用单 更新对应的 对账id
+                                    $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();
+                                }
+                            }else{
+                                $bank_check_data = [
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
+                                    'bank_check_date'   => $date,
+                                    'bank_sn'           => 'ANZ',
+                                    'amount'            => $amount,
+                                    'match_code'        => $code,
+                                    'match_arrears_id'  => $match_res->id,
+                                    'is_checked'        => 1,
+                                    'created_at'        => date('Y-m-d H:i:s',time()),
+                                ];
+                                $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
+                                if(!$bank_check_res) { // 插入不成功
+                                    $failed_count += 1;
+                                    $error_row[] = $i + 1;
+                                }
+                            }
+                        }
+                    }
+                    $i++;
+                }
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                if($match_up_res){
+                    foreach ($match_up_res as $k => $v){
+                        $res[$k]['bank_check_id'] = $v['id'];
+                        $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                        $res[$k]['payment_amount'] = $v['amount'];
+                        $res[$k]['payment_date'] = $v['bank_check_date'];
+                        $res[$k]['match_code'] = $v['match_code'];
+                        $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                        $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                        $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                        $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                        $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                    }
+                    $check_data['check_res'] = $res;
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->success('match success',$check_data);
+                }else{
+                    return $this->error('2','no match data');
+                }
             }
         }
     }
