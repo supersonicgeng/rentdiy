@@ -450,7 +450,7 @@ class RentService extends CommonService
             }
             $application_status = @$input['application_status'];
             if($application_status){
-                $model = $model->where('status',$application_status);
+                $model = $model->where('application_status',$application_status);
             }
             $sort_order = $input['sort_order'];
             $count = $model->where('tenement_id',$input['tenement_id'])->groupBy('rent_house_id')->count();
@@ -470,7 +470,7 @@ class RentService extends CommonService
                     $application_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                     $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
                     $application_res[$k]['application_id'] = $v['id'];
-                    $application_res[$k]['application_status'] = $v['status'];
+                    $application_res[$k]['application_status'] = $v['application_status'];
                 }
                 $data['house_list'] = $application_res;
                 $data['total_page'] = $total_page;
