@@ -1291,6 +1291,7 @@ class HouseService extends CommonService
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
+                $res[$k]['house_status'] = 1;
                 if(RentApplication::where('rent_house_id',$v['rent_house_id'])->first()){
                     $res[$k]['house_status'] = 2;
                 }
