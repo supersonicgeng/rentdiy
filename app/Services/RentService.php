@@ -415,7 +415,7 @@ class RentService extends CommonService
                 $data['current_page'] = $page;
                 return $this->success('get application success',$data);
             } else{
-                return $this->error('3','get application failed');
+                return $this->error('3','You have no recevied any tenancy application yet.');
             }
         }else{
             return $this->error('2','this account is not a landlord role');
