@@ -60,7 +60,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     // 测试
     $router->group(['prefix' => 'test'], function (Router $router){
         $router->get('test','TestController@test'); // 测试 pdf 5.28
-        $router->get('testIM','ImController@sendMsg'); // 测试 pdf 5.28
+        $router->post('testIM','ImController@sendMsg'); // 测试 pdf 5.28
         $router->any('testFee', 'FeeController@test'); // 银行对账调试 4.10
     });
 });
