@@ -658,6 +658,7 @@ class FeeService extends CommonService
             if($data[0][0] != 'Type' || $data[0][1] != 'Details' || $data[0][2] != 'Particulars' || $data[0][3] != 'Code' || $data[0][4] != 'Reference' || $data[0][5] != 'Amount' || $data[0][6] != 'Date' || $data[0][7] != 'ForeignCurrencyAmount' || $data[0][8] != 'ConversionCharge'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                dd($data);
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
                 static $success_count = 0;
