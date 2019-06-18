@@ -145,4 +145,44 @@ class FeeController extends Controller
         $file   = $request->file('file');
         return service('Fee')->test($request->all(),$file);
     }
+
+    /**
+     * @description:银行对账上传CSV文件
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheck(Request $request)
+    {
+        return service('Fee')->bankCheck($request->all());
+    }
+
+    /**
+     * @description:银行对账确认符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function confirmMatchCheck(Request $request)
+    {
+        return service('Fee')->confirmMatchCheck($request->all());
+    }
+
+
+    /**
+     * @description:银行对账余额调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function balanceAdjust(Request $request)
+    {
+        return service('Fee')->balanceAdjust($request->all());
+    }
 }

@@ -237,7 +237,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('cashList', 'FeeController@cashList'); // 现金收据列表 4.10
         $router->post('cashDetail', 'FeeController@cashDetail'); // 现金收据详情 4.10
         $router->post('cashPay', 'FeeController@cashPay'); // 现金收据冲账 4.10
-
+        $router->post('bankCheck', 'FeeController@bankCheck'); // 银行对账上传CSV文件 4.10
+        $router->post('confirmMatchCheck', 'FeeController@confirmMatchCheck'); // 银行对账确认符合费用单 4.10
+        $router->post('balanceAdjust', 'FeeController@balanceAdjust'); // 银行对账余额调整 4.10
+        $router->post('historyList', 'FeeController@historyList'); // 银行对账历史账单 4.10
     });
 });
 
