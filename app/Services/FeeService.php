@@ -1283,6 +1283,7 @@ class FeeService extends CommonService
                         $reference = $data[$i][4];
                         $amount = $data[$i][5];
                         $date = $data[$i][6];
+                        dump(strtotime($date));
                         $date = date('Y-m-d',strtotime($date));
                         dump($date);
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
