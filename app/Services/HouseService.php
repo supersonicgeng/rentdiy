@@ -1177,7 +1177,7 @@ class HouseService extends CommonService
             $offset = ($input['page']-1)*5;
             $count = $model->count();
             $total_page = ceil($count/5);
-            $res = $model->offset($offset)->limit(5)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
+            $res = $model->offset($offset)->limit(5)->select('id','rent_category','property_name','room_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
@@ -1189,7 +1189,7 @@ class HouseService extends CommonService
             $offset = ($input['page']-1)*9;
             $count = $model->count();
             $total_page = ceil($count/9);
-            $res = $model->offset($offset)->limit(9)->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
+            $res = $model->offset($offset)->limit(9)->select('id','rent_category','property_name','room_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->get()->toArray();
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']);
