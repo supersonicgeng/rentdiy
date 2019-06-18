@@ -1971,12 +1971,19 @@ class FeeService extends CommonService
         $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',1)->get();
         if($un_confirm){
             $un_confirm = $un_confirm->toArray();
+            foreach ($un_confirm as $k => $v){
+                $un_confirm[$k]['bank_check_date'] = date('m/d/Y',strtotime($v['bank_check_date']));
+            }
             $data['un_confirm'] = $un_confirm;
         }
         // 用户未处理费用单列表
         $arrears_un_confirm = RentArrears::where('user_id',$input['user_id'])->whereIn('arrears_type',[1,2,3])->whereIn('is_pay',[1,3])->get();
         if($arrears_un_confirm){
             $arrears_un_confirm = $arrears_un_confirm->toArray();
+            foreach ($arrears_un_confirm as $k => $v){
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['expire_date']));
+            }
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
         // 用户余额
@@ -2015,7 +2022,7 @@ class FeeService extends CommonService
     }
 
     /**
-     * @description:银行对账余额调整
+     * @description:银行对账余额调整确认
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
