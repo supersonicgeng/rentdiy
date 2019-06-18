@@ -1258,21 +1258,18 @@ class FeeService extends CommonService
     {
         $excel = new Excel();
         $data = $excel::toArray(new UsersImport(), $file);
-        dump($data);
+        $data = $data[0];
         if($input['bank_type'] == 'ANZ'){
-            dump(11);
             if($data[0][0] != 'Type' || $data[0][1] != 'Details' || $data[0][2] != 'Particulars' || $data[0][3] != 'Code' || $data[0][4] != 'Reference' || $data[0][5] != 'Amount' || $data[0][6] != 'Date' || $data[0][7] != 'ForeignCurrencyAmount' || $data[0][8] != 'ConversionCharge'){
                 dump(22);
                 return $this->error('2','the csv file is not the select bank');
             }else{
-                dump(11);
                 $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][0] == 'Deposit' || $data[$i][0] == 'Bill Payment' || $data[$i][0] == 'Direct Credit'){
-                        dump($data[$i]);
                         $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][2];
                         $code = $data[$i][3];
