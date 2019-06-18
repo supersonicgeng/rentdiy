@@ -240,7 +240,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('bankCheck', 'FeeController@bankCheck'); // 银行对账上传CSV文件 4.10
         $router->post('matchData', 'FeeController@matchData'); // 银行对账符合费用单 4.10
         $router->post('confirmMatchCheck', 'FeeController@confirmMatchCheck'); // 银行对账确认符合费用单 4.10
-        $router->post('unmatchData', 'FeeController@unmatchData'); // 银行对账符合费用单 4.10
+        $router->post('unMatchData', 'FeeController@unMatchData'); // 银行对账符合费用单 4.10
         $router->post('balanceAdjust', 'FeeController@balanceAdjust'); // 银行对账余额调整 4.10
         $router->post('balanceAdjustConfirm', 'FeeController@balanceAdjustConfirm'); // 银行对账余额调整确认 4.10
         $router->post('historyList', 'FeeController@historyList'); // 银行对账历史账单 4.10
