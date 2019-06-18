@@ -1331,7 +1331,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                   /* foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1343,7 +1343,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1416,7 +1416,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                    /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1428,7 +1428,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1501,7 +1501,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                    /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1513,7 +1513,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1584,7 +1584,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                    /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1596,7 +1596,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1669,7 +1669,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                   /* foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1681,7 +1681,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1754,7 +1754,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                    /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1766,7 +1766,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1840,7 +1840,7 @@ class FeeService extends CommonService
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
-                    foreach ($match_up_res as $k => $v){
+                    /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
                         $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
                         $res[$k]['payment_amount'] = $v['amount'];
@@ -1852,7 +1852,7 @@ class FeeService extends CommonService
                         $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
                         $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
                     }
-                    $check_data['check_res'] = $res;
+                    $check_data['check_res'] = $res;*/
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
@@ -1862,6 +1862,39 @@ class FeeService extends CommonService
         }
     }
 
+
+    /**
+     * @description:银行对账确认符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function matchData(array $input)
+    {
+        $check_id = $input['check_id'];
+        $match_up_res = BankCheck::where('check_id',$check_id)->where('match_arrears_id','>',0)->get()->toArray();
+        if($match_up_res){
+            foreach ($match_up_res as $k => $v){
+                $res[$k]['bank_check_id'] = $v['id'];
+                $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                $res[$k]['payment_amount'] = $v['amount'];
+                $res[$k]['payment_date'] = $v['bank_check_date'];
+                $res[$k]['match_code'] = $v['match_code'];
+                $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                $res[$k]['invoice_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first();
+                $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+            }
+            $check_data['check_res'] = $res;
+            $check_data['check_id'] = $check_id;
+            return $this->success('match success',$check_data);
+        }else{
+            return $this->error('2','no match data');
+        }
+    }
 
     /**
      * @description:银行对账确认符合费用单
@@ -1901,6 +1934,39 @@ class FeeService extends CommonService
                 RentArrears::where('id',$bank_check_data->match_arrears_id)->update($change_arrears_data);
             }
         }
+       /* // 未确认的账目
+        $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',1)->get();
+        if($un_confirm){
+            $un_confirm = $un_confirm->toArray();
+            $data['un_confirm'] = $un_confirm;
+        }
+        // 用户未处理费用单列表
+        $arrears_un_confirm = RentArrears::where('user_id',$input['user_id'])->whereIn('arrears_type',[1,2,3])->whereIn('is_pay',[1,3])->get();
+        if($arrears_un_confirm){
+            $arrears_un_confirm = $arrears_un_confirm->toArray();
+            $data['arrears_un_confirm'] = $arrears_un_confirm;
+        }
+        // 用户余额
+        $balance = RentContract::where('user_id',$input['user_id'])->where('balance','>',0)->get();
+        if($balance){
+            $balance = $balance->toArray();
+            $data['balance'] = $balance;
+        }*/
+        $data['check_id'] = $input['check_id'];
+        // 返回数据
+        return $this->success('match check success',$data);
+    }
+
+    /**
+     * @description:银行对账确认符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unMatchData(array $input)
+    {
         // 未确认的账目
         $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',1)->get();
         if($un_confirm){
@@ -1922,7 +1988,6 @@ class FeeService extends CommonService
         // 返回数据
         return $this->success('match check success',$data);
     }
-
 
     /**
      * @description:银行对账余额调整

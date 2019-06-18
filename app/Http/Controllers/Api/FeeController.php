@@ -173,6 +173,31 @@ class FeeController extends Controller
     {
         return service('Fee')->confirmMatchCheck($request->all());
     }
+    /**
+     * @description:银行对账获取符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function matchData(Request $request)
+    {
+        return service('Fee')->matchData($request->all());
+    }
+
+    /**
+     * @description:银行对账获取不符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unMatchData(Request $request)
+    {
+        return service('Fee')->unMatchData($request->all());
+    }
 
 
     /**
@@ -186,5 +211,18 @@ class FeeController extends Controller
     public function balanceAdjust(Request $request)
     {
         return service('Fee')->balanceAdjust($request->all());
+    }
+
+    /**
+     * @description:银行对账余额调整确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function balanceAdjustConfirm(Request $request)
+    {
+        return service('Fee')->balanceAdjustConfirm($request->all());
     }
 }
