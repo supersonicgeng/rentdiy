@@ -157,7 +157,6 @@ class FeeController extends Controller
     public function bankCheck(Request $request)
     {
         $file   = $request->file('file');
-        dd($file);
         return service('Fee')->bankCheck($request->all(),$file);
         /*return service('Fee')->bankCheck($request->all());*/
     }
