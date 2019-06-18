@@ -1257,6 +1257,7 @@ class FeeService extends CommonService
     public function bankCheck(array $input)
     {
         $excel = new Excel();
+        dump($input['upload_url']);
         $data = $excel::toArray(new UsersImport(), $input['upload_url']);
         dd($data);
         if($input['bank_type'] == 'ANZ'){
