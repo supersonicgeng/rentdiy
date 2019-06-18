@@ -1281,8 +1281,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][4];
                         $amount = $data[$i][5];
                         $date = $data[$i][6];
-                        $date = explode('/',$date);
-                        $data = $date[1].'/'.$date[0].'/'.$date[2];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
