@@ -2039,7 +2039,7 @@ class FeeService extends CommonService
                         'is_pay'    => 2,
                         'pay_fee'   => $need_pay->pay_fee+$need_pay->need_pay_fee,
                         'need_pay_fee'  => 0,
-                        'pay_date'      => $input['pay_date'],
+                        'pay_date'      => date('Y-m-d',time()),
                         'updated_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
@@ -2050,12 +2050,13 @@ class FeeService extends CommonService
                     $receive_data = [
                         'arrears_id'    => $v,
                         'pay_money'     => $need_pay->need_pay_fee,
-                        'pay_date'      => $input['pay_date'],
-                        'pay_method'    => 1,
-                        'note'          => $input['note'],
+                        'pay_date'      => date('Y-m-d',time()),
+                        'pay_method'    => 3,
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
+                    $balance->balance = $balance->balance-$pay_money;
+                    $balance->update();
                     if(!$receive_res){
                         $error += 1;
                     }
@@ -2065,7 +2066,7 @@ class FeeService extends CommonService
                         'is_pay'        => 3,
                         'pay_fee'       => $need_pay->pay_fee+$pay_money,
                         'need_pay_fee'  => $need_pay->need_pay_fee-$pay_money,
-                        'pay_date'      => $input['pay_date'],
+                        'pay_date'      => date('Y-m-d',time()),
                         'updated_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
@@ -2076,23 +2077,20 @@ class FeeService extends CommonService
                     $receive_data = [
                         'arrears_id'    => $v,
                         'pay_money'     => $pay_money,
-                        'pay_date'      => $input['pay_date'],
+                        'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 1,
-                        'note'          => $input['note'],
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
+                    $balance->balance = $balance->balance-$pay_money;
+                    $balance->update();
                     if(!$receive_res){
                         $error += 1;
                     }
-                    // 修改余额
-                    $pay_money = 0;
                 }
             }
         }
-
-
         // 返回数据
-        return $this->success('match check success');
+        return $this->success('balance adjust success');
     }
 }
