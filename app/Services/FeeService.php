@@ -1999,6 +1999,100 @@ class FeeService extends CommonService
      */
     public function balanceAdjust(array $input)
     {
+        $contract_id = $input['contract_id'];
+        $balance_data = RentContract::where('id',$contract_id)->first()->toArray();
+        if($balance_data){
+            $balance_data = $balance_data->toArray();
+            $data['balance'] = $balance_data;
+        }
+        $arrears_un_confirm = RentArrears::where('contract_id',$contract_id)->whereIn('arrears_type',[1,2,3])->whereIn('is_pay',[1,3])->get();
+        if($arrears_un_confirm){
+            $arrears_un_confirm = $arrears_un_confirm->toArray();
+            $data['arrears_un_confirm'] = $arrears_un_confirm;
+        }
+        // 返回数据
+        return $this->success('match check success',$data);
+    }
 
+    /**
+     * @description:银行对账余额调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function balanceAdjustConfirm(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $adjust_info = $input['adjust_info'];
+        static $error = 0;
+        $model = new RentArrears();
+        $balance = RentContract::where('id',$contract_id)->first();
+        if(is_array($adjust_info)){
+            foreach ($adjust_info as $v => $v){
+                $need_pay = $model->where('id',$v['arrears_id'])->first();
+                $pay_money = $v['pay_money'];
+                if($pay_money = $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
+                    // 更改此次费用
+                    $change_arrears_data = [
+                        'is_pay'    => 2,
+                        'pay_fee'   => $need_pay->pay_fee+$need_pay->need_pay_fee,
+                        'need_pay_fee'  => 0,
+                        'pay_date'      => $input['pay_date'],
+                        'updated_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
+                    if(!$change_arrears_res){
+                        $error += 1;
+                    }
+                    // 增加收账数据
+                    $receive_data = [
+                        'arrears_id'    => $v,
+                        'pay_money'     => $need_pay->need_pay_fee,
+                        'pay_date'      => $input['pay_date'],
+                        'pay_method'    => 1,
+                        'note'          => $input['note'],
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $receive_res = FeeReceive::insert($receive_data);
+                    if(!$receive_res){
+                        $error += 1;
+                    }
+                }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
+                    // 更改此次费用
+                    $change_arrears_data = [
+                        'is_pay'        => 3,
+                        'pay_fee'       => $need_pay->pay_fee+$pay_money,
+                        'need_pay_fee'  => $need_pay->need_pay_fee-$pay_money,
+                        'pay_date'      => $input['pay_date'],
+                        'updated_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
+                    if(!$change_arrears_res){
+                        $error += 1;
+                    }
+                    // 增加收账数据
+                    $receive_data = [
+                        'arrears_id'    => $v,
+                        'pay_money'     => $pay_money,
+                        'pay_date'      => $input['pay_date'],
+                        'pay_method'    => 1,
+                        'note'          => $input['note'],
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $receive_res = FeeReceive::insert($receive_data);
+                    if(!$receive_res){
+                        $error += 1;
+                    }
+                    // 修改余额
+                    $pay_money = 0;
+                }
+            }
+        }
+
+
+        // 返回数据
+        return $this->success('match check success');
     }
 }
