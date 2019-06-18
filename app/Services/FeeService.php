@@ -1885,7 +1885,7 @@ class FeeService extends CommonService
                 $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
                 $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
                 $res[$k]['invoice_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first()));
-                $res[$k]['due_date'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first();
+                $res[$k]['due_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first()));
                 $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
             }
             $check_data['check_res'] = $res;
