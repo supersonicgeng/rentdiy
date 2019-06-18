@@ -15,5 +15,5 @@ class SeparateContract extends Model
         'location_underfloor_insulation','location_underfloor_insulation_detail','underfloor_insulation_type','underfloor_insulation_type_detail',
         'underfloor_R_value','underfloor_minimum_thickness','condition','condition_detail','wall_insulation','wall_insulation_detail','supplementary_information',
         'install_insulation','install_insulation_detail','underfloor_insulation','underfloor_insulation_detail','last_upgraded','professionally_assessed','plan',
-        'landlord_state','landlord_signature','tenement_signature','rent_end_date','rent_fee','created_at','updated_at','deleted_at'];
+        'landlord_state','landlord_signature','sign_date','tenement_signature','rent_end_date','rent_fee','created_at','updated_at','deleted_at'];
 }
