@@ -1254,7 +1254,7 @@ class FeeService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function bankCheck(array $input,$file)
+    public function bankCheck(array $input)
     {
         $excel = new Excel();
         $file = file_get_contents($input['upload_url']);
