@@ -1329,7 +1329,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1366,6 +1366,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][5];
                         $amount = $data[$i][1];
                         $date = $data[$i][0];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
@@ -1412,7 +1414,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1449,6 +1451,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][4];
                         $amount = $data[$i][1];
                         $date = $data[$i][0];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
@@ -1495,7 +1499,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1578,7 +1582,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1604,7 +1608,7 @@ class FeeService extends CommonService
                 return $this->error('2','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
-                $i = 8;
+                $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
@@ -1615,6 +1619,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][1];
                         $amount = $data[$i][3];
                         $date = $data[$i][0];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
@@ -1661,7 +1667,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1698,6 +1704,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][2];
                         $amount = $data[$i][1];
                         $date = $data[$i][0];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
@@ -1744,7 +1752,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1782,6 +1790,8 @@ class FeeService extends CommonService
                         $reference = $data[$i][2];
                         $amount = $data[$i][1];
                         $date = $data[$i][0];
+                        $transdate = explode('/',$date);
+                        $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
@@ -1828,7 +1838,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
