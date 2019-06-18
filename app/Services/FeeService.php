@@ -671,9 +671,11 @@ class FeeService extends CommonService
                         $amount = $data[$i][5];
                         $date = $data[$i][6];
                         $date = date('Y-m-d',strtotime($date));
+                        dump($date);
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
                             $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            dump($match_res);
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
                                     'user_id'   => $input['user_id'],
@@ -686,6 +688,7 @@ class FeeService extends CommonService
                                     'is_checked'        => 1,
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
+                                dump($bank_check_data);
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
                                 if(!$bank_check_res){ // 插入不成功
                                     $failed_count += 1;
@@ -707,6 +710,7 @@ class FeeService extends CommonService
                                     'is_checked'        => 1,
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
+                                dump($bank_check_data);
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
                                 if(!$bank_check_res) { // 插入不成功
                                     $failed_count += 1;
@@ -718,6 +722,7 @@ class FeeService extends CommonService
                     $i++;
                 }
                 $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
+                dump($match_up_res);
                 if($match_up_res){
                     foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
