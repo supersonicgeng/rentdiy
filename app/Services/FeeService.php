@@ -1874,30 +1874,32 @@ class FeeService extends CommonService
     public function confirmMatchCheck(array $input)
     {
         $match_ids = $input['match_ids'];
-        // 修改 已核对的账目
-        foreach ($match_ids as $k => $v){
-            $bank_check_data = BankCheck::where('id',$v)->first();
-            $bank_check_data->is_check = 2;
-            $bank_check_data->updated_at = date('Y-m-d H:i:s',time());
-            $bank_check_data->update();
-            // 收费单增加数据
-            $receives_data = [
-                'arrears_id'    => $bank_check_data->match_arrears_id,
-                'pay_money'     => $bank_check_data->amount,
-                'pay_date'      => $bank_check_data->bank_check_date,
-                'pay_method'    => 2,
-                'bank_check_id' => $v,
-            ];
-            $receives_res = FeeReceive::insert($receives_data);
-            $arrears_data = RentArrears::where('id',$bank_check_data->match_arrears_id)->first();
-            $change_arrears_data = [
-                'is_pay'    => 2,
-                'pay_fee'   => $arrears_data->pay_fee+$bank_check_data->amount,
-                'need_pay_fee'  => 0,
-                'pay_date'      => $bank_check_data->bank_check_date,
-                'updated_at'    => date('Y-m-d H:i:s',time()),
-            ];
-            RentArrears::where('id',$bank_check_data->match_arrears_id)->update($change_arrears_data);
+        if(is_array($match_ids)){
+            // 修改 已核对的账目
+            foreach ($match_ids as $k => $v){
+                $bank_check_data = BankCheck::where('id',$v)->first();
+                $bank_check_data->is_check = 2;
+                $bank_check_data->updated_at = date('Y-m-d H:i:s',time());
+                $bank_check_data->update();
+                // 收费单增加数据
+                $receives_data = [
+                    'arrears_id'    => $bank_check_data->match_arrears_id,
+                    'pay_money'     => $bank_check_data->amount,
+                    'pay_date'      => $bank_check_data->bank_check_date,
+                    'pay_method'    => 2,
+                    'bank_check_id' => $v,
+                ];
+                $receives_res = FeeReceive::insert($receives_data);
+                $arrears_data = RentArrears::where('id',$bank_check_data->match_arrears_id)->first();
+                $change_arrears_data = [
+                    'is_pay'    => 2,
+                    'pay_fee'   => $arrears_data->pay_fee+$bank_check_data->amount,
+                    'need_pay_fee'  => 0,
+                    'pay_date'      => $bank_check_data->bank_check_date,
+                    'updated_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                RentArrears::where('id',$bank_check_data->match_arrears_id)->update($change_arrears_data);
+            }
         }
         // 未确认的账目
         $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_check',1)->get();
