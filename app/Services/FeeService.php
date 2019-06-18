@@ -2000,7 +2000,7 @@ class FeeService extends CommonService
     public function balanceAdjust(array $input)
     {
         $contract_id = $input['contract_id'];
-        $balance_data = RentContract::where('id',$contract_id)->first()->toArray();
+        $balance_data = RentContract::where('id',$contract_id)->first();
         if($balance_data){
             $balance_data = $balance_data->toArray();
             $data['balance'] = $balance_data;
