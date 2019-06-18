@@ -1982,7 +1982,7 @@ class FeeService extends CommonService
             $arrears_un_confirm = $arrears_un_confirm->toArray();
             foreach ($arrears_un_confirm as $k => $v){
                 $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
-                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['expire_date']));
+                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['expire_date']));
             }
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
@@ -2015,6 +2015,10 @@ class FeeService extends CommonService
         $arrears_un_confirm = RentArrears::where('contract_id',$contract_id)->whereIn('arrears_type',[1,2,3])->whereIn('is_pay',[1,3])->get();
         if($arrears_un_confirm){
             $arrears_un_confirm = $arrears_un_confirm->toArray();
+            foreach ($arrears_un_confirm as $k => $v){
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
+                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['expire_date']));
+            }
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
         // 返回数据
