@@ -1168,8 +1168,8 @@ class FeeService extends CommonService
                 $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
+                    $match_data = explode('-',$data[$i][1]);
                     if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][4];
                         $code = $data[$i][3];
                         $reference = $data[$i][2];
