@@ -225,4 +225,30 @@ class FeeController extends Controller
     {
         return service('Fee')->balanceAdjustConfirm($request->all());
     }
+
+    /**
+     * @description:银行对账手工调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankAdjust(Request $request)
+    {
+        return service('Fee')->bankAdjust($request->all());
+    }
+
+    /**
+     * @description:银行对账手工调整确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankAdjustConfirm(Request $request)
+    {
+        return service('Fee')->bankAdjustConfirm($request->all());
+    }
 }
