@@ -1878,7 +1878,7 @@ class FeeService extends CommonService
             // 修改 已核对的账目
             foreach ($match_ids as $k => $v){
                 $bank_check_data = BankCheck::where('id',$v)->first();
-                $bank_check_data->is_check = 2;
+                $bank_check_data->is_checked = 2;
                 $bank_check_data->updated_at = date('Y-m-d H:i:s',time());
                 $bank_check_data->update();
                 // 收费单增加数据
@@ -1902,7 +1902,7 @@ class FeeService extends CommonService
             }
         }
         // 未确认的账目
-        $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_check',1)->get();
+        $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',1)->get();
         if($un_confirm){
             $un_confirm = $un_confirm->toArray();
             $data['un_confirm'] = $un_confirm;
