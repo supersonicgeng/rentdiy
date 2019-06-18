@@ -1267,16 +1267,16 @@ class FeeService extends CommonService
         $data = $data[0];
         if($input['bank_type'] == 'ANZ'){
             if($data[0][0] != 'Type' || $data[0][1] != 'Details' || $data[0][2] != 'Particulars' || $data[0][3] != 'Code' || $data[0][4] != 'Reference' || $data[0][5] != 'Amount' || $data[0][6] != 'Date' || $data[0][7] != 'ForeignCurrencyAmount' || $data[0][8] != 'ConversionCharge'){
-                dump(22);
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                dump($data);
+                $check_id = BankCheck::max('check_id');
                 $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][0] == 'Deposit' || $data[$i][0] == 'Bill Payment' || $data[$i][0] == 'Direct Credit'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][2];
                         $code = $data[$i][3];
                         $reference = $data[$i][4];
@@ -1354,13 +1354,13 @@ class FeeService extends CommonService
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Payee' || $data[0][3] != 'Particulars' || $data[0][4] != 'Code' || $data[0][5] != 'Reference' || $data[0][6] != 'Tran Type' || $data[0][7] != 'This Party Account' || $data[0][8] != 'Other Party Account' || $data[0][9] != 'Serial' || $data[0][10] != 'Transaction Code' || $data[0][11] != 'Batch Number' || $data[0][12] != 'Originating Bank/Branch' || $data[0][13] != 'Processed Date'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][2] == 'DEPOSIT' || $data[$i][2] == 'BILL PAYMENT' || $data[$i][2] == 'DIRECT CREDIT'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][3];
                         $code = $data[$i][4];
                         $reference = $data[$i][5];
@@ -1438,13 +1438,13 @@ class FeeService extends CommonService
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Other Party' || $data[0][3] != 'Description' || $data[0][4] != 'Reference' || $data[0][5] != 'Particulars' || $data[0][6] != 'Analysis Code'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][3] == 'DEPOSIT' || $data[$i][3] == 'BILL PAYMENT' || $data[$i][3] == 'DIRECT CREDIT'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][5];
                         $code = $data[$i][6];
                         $reference = $data[$i][4];
@@ -1522,13 +1522,13 @@ class FeeService extends CommonService
             if($data[6][0] != 'Date' || $data[6][1] != 'Unique Id' || $data[6][2] != 'Tran Type' || $data[6][3] != 'Cheque Number' || $data[6][4] != 'Payee' || $data[6][5] != 'Memo' || $data[6][6] != 'Amount'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 8;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][2] == 'CREDIT' || $data[$i][2] == 'D/C'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][5];
                         $code = $data[$i][5];
                         $reference = $data[$i][4];
@@ -1606,13 +1606,13 @@ class FeeService extends CommonService
             if(substr($data[0][0],0,2) != '38' ){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 8;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][3] > 0){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][1];
                         $code = $data[$i][1];
                         $reference = $data[$i][1];
@@ -1690,13 +1690,13 @@ class FeeService extends CommonService
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Reference' || $data[0][3] != 'Description' || $data[0][4] != 'Particulars'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 1;
                 static $success_count = 0;
                 static $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
                     if($data[$i][1] > 0){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][4];
                         $code = $data[$i][3];
                         $reference = $data[$i][2];
@@ -1774,6 +1774,7 @@ class FeeService extends CommonService
             if($data[0][0] != 'Date' || $data[0][1] != 'Details' || $data[0][2] != 'Amount' || $data[0][3] != 'Balance'){
                 return $this->error('2','the csv file is not the select bank');
             }else{
+                $check_id = BankCheck::max('check_id');
                 $i = 1;
                 $success_count = 0;
                 $failed_count = 0;
@@ -1781,7 +1782,6 @@ class FeeService extends CommonService
                     // 处理数据
                     $match_data = explode('-',$data[$i][1]);
                     if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
-                        $check_id = BankCheck::max('check_id');
                         $particulars = $data[$i][4];
                         $code = $data[$i][3];
                         $reference = $data[$i][2];
