@@ -2089,7 +2089,7 @@ class FeeService extends CommonService
                         'arrears_id'    => $v,
                         'pay_money'     => $pay_money,
                         'pay_date'      => date('Y-m-d',time()),
-                        'pay_method'    => 1,
+                        'pay_method'    => 3,
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
@@ -2099,6 +2099,125 @@ class FeeService extends CommonService
                         $error += 1;
                     }
                 }
+            }
+        }
+        // 返回数据
+        return $this->success('balance adjust success');
+    }
+
+
+
+    /**
+     * @description:银行对账手工调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankAdjust(array $input)
+    {
+        $bank_check_id = $input['bank_check_id'];
+        $ban_check_data = BankCheck::where('id',$bank_check_id)->first();
+        if($ban_check_data){
+            $ban_check_data = $ban_check_data->toArray();
+            $ban_check_data['bank_check_date'] = date('m/d/Y',strtotime($ban_check_data['bank_check_date']));
+            $data['bank_check_data'] = $ban_check_data;
+        }
+        $arrears_un_confirm = RentArrears::where('user_id',$input['user_id'])->whereIn('arrears_type',[1,2,3])->whereIn('is_pay',[1,3])->get();
+        if($arrears_un_confirm){
+            $arrears_un_confirm = $arrears_un_confirm->toArray();
+            foreach ($arrears_un_confirm as $k => $v){
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
+                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['expire_date']));
+            }
+            $data['arrears_un_confirm'] = $arrears_un_confirm;
+        }
+        // 返回数据
+        return $this->success('get balance data success',$data);
+    }
+
+    /**
+     * @description:银行对账手工调整确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankAdjustConfirm(array $input)
+    {
+        $bank_check_id = $input['bank_check_id'];
+        $adjust_info = $input['adjust_info'];
+        static $error = 0;
+        $model = new RentArrears();
+        $bank_check_res = BankCheck::where('id',$bank_check_id)->first();
+        if(is_array($adjust_info)){
+            foreach ($adjust_info as $v => $v){
+                $need_pay = $model->where('id',$v['arrears_id'])->first();
+                $pay_money = $v['pay_money'];
+                if($pay_money = $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
+                    // 更改此次费用
+                    $change_arrears_data = [
+                        'is_pay'    => 2,
+                        'pay_fee'   => $need_pay->pay_fee+$need_pay->need_pay_fee,
+                        'need_pay_fee'  => 0,
+                        'pay_date'      => date('Y-m-d',time()),
+                        'updated_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
+                    if(!$change_arrears_res){
+                        $error += 1;
+                    }
+                    // 增加收账数据
+                    $receive_data = [
+                        'arrears_id'    => $v,
+                        'pay_money'     => $need_pay->need_pay_fee,
+                        'pay_date'      => date('Y-m-d',time()),
+                        'pay_method'    => 2,
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $receive_res = FeeReceive::insert($receive_data);
+                    $bank_check_res->pay_amount = $bank_check_res->pay_amount-$pay_money;
+                    $bank_check_res->update();
+                    if(!$receive_res){
+                        $error += 1;
+                    }
+                }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
+                    // 更改此次费用
+                    $change_arrears_data = [
+                        'is_pay'        => 3,
+                        'pay_fee'       => $need_pay->pay_fee+$pay_money,
+                        'need_pay_fee'  => $need_pay->need_pay_fee-$pay_money,
+                        'pay_date'      => date('Y-m-d',time()),
+                        'updated_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $change_arrears_res = $model->where('id',$v)->update($change_arrears_data);
+                    if(!$change_arrears_res){
+                        $error += 1;
+                    }
+                    // 增加收账数据
+                    $receive_data = [
+                        'arrears_id'    => $v,
+                        'pay_money'     => $pay_money,
+                        'pay_date'      => date('Y-m-d',time()),
+                        'pay_method'    => 2,
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    $receive_res = FeeReceive::insert($receive_data);
+                    $bank_check_res->pay_amount = $bank_check_res->pay_amount-$pay_money;
+                    $bank_check_res->update();
+                    if(!$receive_res){
+                        $error += 1;
+                    }
+                }
+            }
+            if($bank_check_res->pay_amount > 0){
+                // 增加余额
+                $contract_id = $model->where('id',$adjust_info[0]['arrears_id'])->pluck('contract_id')->first();
+                $balance = RentContract::where('id',$contract_id)->first();
+                $balance->balance += $bank_check_res->pay_amount;
+                $balance->update();
             }
         }
         // 返回数据
