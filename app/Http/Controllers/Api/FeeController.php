@@ -140,11 +140,6 @@ class FeeController extends Controller
     }
 
 
-    public function test(Request $request)
-    {
-        $file   = $request->file('file');
-        return service('Fee')->test($request->all(),$file);
-    }
 
     /**
      * @description:银行对账上传CSV文件
@@ -276,5 +271,33 @@ class FeeController extends Controller
     public function unMatchList(Request $request)
     {
         return service('Fee')->unMatchList($request->all());
+    }
+
+    /**
+     * @description:银行对账详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckDetail(Request $request)
+    {
+        return service('Fee')->bankCheckDetail($request->all());
+    }
+
+
+
+    /**
+     * @description:银行对账列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckList(Request $request)
+    {
+        return service('Fee')->bankCheckList($request->all());
     }
 }

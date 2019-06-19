@@ -1736,6 +1736,35 @@ class FeeService extends CommonService
     {
         $bank_check_id = $input['bank_check_id'];
         $bank_check_res = BankCheck::where('id',$bank_check_id)->first()->toArray();
+        if(!$bank_check_res){
+            return $this->error('2','get bank check detail failed');
+        }else{
+            $data['bank_check_data'] = $bank_check_res;
+            return $this->success('get bank check detail success',$data);
+        }
+    }
 
+
+    /**
+     * @description:银行对账详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckList(array $input)
+    {
+        $check_id = $input['check_id'];
+        $count = BankCheck::where('check_id',$check_id)->count();
+        if($count <= ($input['page']-1)*5){
+            return $this->error('2','get bank check data failed');
+        }else{
+            $check_res = BankCheck::where('check_id',$check_id)->offset(($input['page']-1)*5)->limit()->get()->toArray();
+            $data['check_res'] = $check_res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/5);
+            return $this->success('get bank check data success',$data);
+        }
     }
 }

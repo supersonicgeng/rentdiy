@@ -61,7 +61,6 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'test'], function (Router $router){
         $router->get('test','TestController@test'); // 测试 pdf 5.28
         $router->post('testIM','ImController@sendMsg'); // 测试 pdf 5.28
-        $router->any('testFee', 'FeeController@test'); // 银行对账调试 4.10
     });
 });
 
@@ -238,6 +237,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('cashDetail', 'FeeController@cashDetail'); // 现金收据详情 4.10
         $router->post('cashPay', 'FeeController@cashPay'); // 现金收据冲账 4.10
         $router->post('bankCheck', 'FeeController@bankCheck'); // 银行对账上传CSV文件 4.10
+        $router->post('bankCheckList', 'FeeController@bankCheckList'); // 银行对账列表 4.10
         $router->post('matchData', 'FeeController@matchData'); // 银行对账符合费用单 4.10
         $router->post('confirmMatchCheck', 'FeeController@confirmMatchCheck'); // 银行对账确认符合费用单 4.10
         $router->post('unMatchData', 'FeeController@unMatchData'); // 银行对账符合费用单 4.10
@@ -247,6 +247,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('unMatchList', 'FeeController@unMatchList'); // 银行对账未对账单 4.10
         $router->post('bankAdjust', 'FeeController@bankAdjust'); // 银行对账手工调整 4.10
         $router->post('bankAdjustConfirm', 'FeeController@bankAdjustConfirm'); // 银行对账手工调整确认 4.10
+        $router->post('bankCheckDetail', 'FeeController@bankCheckDetail'); // 银行对账详情 4.10
     });
 });
 
