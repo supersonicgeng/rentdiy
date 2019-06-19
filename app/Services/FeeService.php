@@ -694,6 +694,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'ANZ',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
@@ -716,7 +717,7 @@ class FeeService extends CommonService
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'ANZ',
                                     'amount'            => $amount,
-                                   /* 'match_code'        => $code,*/
+                                    'match_code'        => $code,
                                     'is_checked'        => 1,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
@@ -783,6 +784,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'BNZ',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
@@ -872,6 +874,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'westpac',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
@@ -959,6 +962,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'ASB',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
@@ -1048,6 +1052,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'kiwi',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
@@ -1137,6 +1142,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'TSB',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
@@ -1227,6 +1233,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'co-operative',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
+                                    'match_tenement_id' => $match_res->tenement_id,
                                     'match_tenement_name'   => $match_res->tenement_name,
                                     /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 2,
