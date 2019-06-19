@@ -1767,7 +1767,7 @@ class FeeService extends CommonService
         if($count <= ($input['page']-1)*5){
             return $this->error('2','get bank check data failed');
         }else{
-            $check_res = BankCheck::where('check_id',$check_id)->offset(($input['page']-1)*5)->limit()->get()->toArray();
+            $check_res = BankCheck::where('check_id',$check_id)->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
             $data['check_res'] = $check_res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/5);
