@@ -178,8 +178,8 @@ class FeeService extends CommonService
     public function arrearsList(array $input)
     {
         $model = new RentArrears();
-        if($input['property_name']){
-            $model = $model->where('property_name','like','%'.$input['property_name'].'%');
+        if($input['tenement_name']){
+            $model = $model->where('property_name','like','%'.$input['tenement_name'].'%');
         }
         if($input['District']){
             $model = $model->where('District',$input['District']);
