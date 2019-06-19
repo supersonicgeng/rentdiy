@@ -2107,7 +2107,7 @@ class FeeService extends CommonService
                     }
                     // 增加收账数据
                     $receive_data = [
-                        'arrears_id'    => $v,
+                        'arrears_id'    => $v['arrears_id'],
                         'pay_money'     => $pay_money,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 3,
@@ -2219,7 +2219,7 @@ class FeeService extends CommonService
                     }
                     // 增加收账数据
                     $receive_data = [
-                        'arrears_id'    => $v,
+                        'arrears_id'    => $v['arrears_id'],
                         'pay_money'     => $pay_money,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 2,
