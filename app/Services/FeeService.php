@@ -2087,8 +2087,7 @@ class FeeService extends CommonService
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
-                    $balance->balance = $balance->balance-$pay_money;
-                    $balance->update();
+                    RentContract::where('id',$contract_id)->decrement('balance',$pay_money);
                     if(!$receive_res){
                         $error += 1;
                     }
@@ -2114,8 +2113,7 @@ class FeeService extends CommonService
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
-                    $balance->balance = $balance->balance-$pay_money;
-                    $balance->update();
+                    RentContract::where('id',$contract_id)->decrement('balance',$pay_money);
                     if(!$receive_res){
                         $error += 1;
                     }
