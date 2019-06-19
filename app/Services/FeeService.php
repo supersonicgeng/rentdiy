@@ -2062,7 +2062,7 @@ class FeeService extends CommonService
         $model = new RentArrears();
         $balance = RentContract::where('id',$contract_id)->first();
         if(is_array($adjust_info)){
-            foreach ($adjust_info as $v => $v){
+            foreach ($adjust_info as $k => $v){
                 $need_pay = $model->where('id',$v['arrears_id'])->first();
                 $pay_money = $v['pay_money'];
                 if($pay_money == $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
@@ -2080,7 +2080,7 @@ class FeeService extends CommonService
                     }
                     // 增加收账数据
                     $receive_data = [
-                        'arrears_id'    => $v,
+                        'arrears_id'    => $v['arrears_id'],
                         'pay_money'     => $need_pay->need_pay_fee,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 3,
@@ -2174,7 +2174,7 @@ class FeeService extends CommonService
         $model = new RentArrears();
         $bank_check_res = BankCheck::where('id',$bank_check_id)->first();
         if(is_array($adjust_info)){
-            foreach ($adjust_info as $v => $v){
+            foreach ($adjust_info as $k => $v){
                 $need_pay = $model->where('id',$v['arrears_id'])->first();
                 $pay_money = $v['pay_money'];
                 if($pay_money == $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
@@ -2192,7 +2192,7 @@ class FeeService extends CommonService
                     }
                     // 增加收账数据
                     $receive_data = [
-                        'arrears_id'    => $v,
+                        'arrears_id'    => $v['arrears_id'],
                         'pay_money'     => $need_pay->need_pay_fee,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 2,
