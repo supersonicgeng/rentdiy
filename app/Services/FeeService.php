@@ -2219,8 +2219,41 @@ class FeeService extends CommonService
                 $balance->balance += $bank_check_res->pay_amount;
                 $balance->update();
             }
+            // 将此条数据变为已核对
+            $bank_check_res->is_checked = 2;
+            $bank_check_res->update();
         }
         // 返回数据
         return $this->success('balance adjust success');
+    }
+
+
+
+    /**
+     * @description:银行对账已核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function historyList(array $input)
+    {
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->get();
+        if($check_history){
+            $check_history = $check_history->toArray();
+            foreach ($check_history as $k => $v){
+                if($v['match_arrears_id']){
+                    $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                }else{
+                    $arrears_id = FeeReceive::where('bank_check_id',$v['id'])->pluck('arrears_id')->first();
+                    $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$arrears_id)->pluck('tenement_name')->first();
+                }
+            }
+            $data['check_history'] = $check_history;
+            return $this->success('get check history success',$data);
+        }else{
+            return $this->error('2','get check history failed');
+        }
     }
 }

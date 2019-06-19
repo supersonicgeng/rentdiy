@@ -251,4 +251,17 @@ class FeeController extends Controller
     {
         return service('Fee')->bankAdjustConfirm($request->all());
     }
+
+    /**
+     * @description:银行对账已核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function historyList(Request $request)
+    {
+        return service('Fee')->historyList($request->all());
+    }
 }
