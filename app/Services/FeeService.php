@@ -367,6 +367,7 @@ class FeeService extends CommonService
                     $fee_list[$k]['invoice_date'] = '';
                     $fee_list[$k]['payment_due'] = '';
                     foreach ($fee_res as $key => $value){
+                        dump($fee_res);
                         if($value['arrears_type'] == 3){
                             $total_arrears += $value['arrears_fee'];
                             $fee_list[$k]['invoice_date'] = $value['created_at'];
