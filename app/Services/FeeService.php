@@ -2065,7 +2065,7 @@ class FeeService extends CommonService
             foreach ($adjust_info as $v => $v){
                 $need_pay = $model->where('id',$v['arrears_id'])->first();
                 $pay_money = $v['pay_money'];
-                if($pay_money = $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
+                if($pay_money == $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
                     // 更改此次费用
                     $change_arrears_data = [
                         'is_pay'    => 2,
@@ -2177,7 +2177,7 @@ class FeeService extends CommonService
             foreach ($adjust_info as $v => $v){
                 $need_pay = $model->where('id',$v['arrears_id'])->first();
                 $pay_money = $v['pay_money'];
-                if($pay_money = $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
+                if($pay_money == $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
                     // 更改此次费用
                     $change_arrears_data = [
                         'is_pay'    => 2,
