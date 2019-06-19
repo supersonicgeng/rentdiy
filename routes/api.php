@@ -244,6 +244,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('balanceAdjust', 'FeeController@balanceAdjust'); // 银行对账余额调整 4.10
         $router->post('balanceAdjustConfirm', 'FeeController@balanceAdjustConfirm'); // 银行对账余额调整确认 4.10
         $router->post('historyList', 'FeeController@historyList'); // 银行对账历史账单 4.10
+        $router->post('unMatchList', 'FeeController@unMatchList'); // 银行对账未对账单 4.10
         $router->post('bankAdjust', 'FeeController@bankAdjust'); // 银行对账手工调整 4.10
         $router->post('bankAdjustConfirm', 'FeeController@bankAdjustConfirm'); // 银行对账手工调整确认 4.10
     });

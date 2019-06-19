@@ -264,4 +264,17 @@ class FeeController extends Controller
     {
         return service('Fee')->historyList($request->all());
     }
+
+    /**
+     * @description:银行对账未核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unMatchList(Request $request)
+    {
+        return service('Fee')->unMatchList($request->all());
+    }
 }

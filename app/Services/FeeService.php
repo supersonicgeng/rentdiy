@@ -179,7 +179,7 @@ class FeeService extends CommonService
     {
         $model = new RentArrears();
         if($input['tenement_name']){
-            $model = $model->where('property_name','like','%'.$input['tenement_name'].'%');
+            $model = $model->where('tenement_name','like','%'.$input['tenement_name'].'%');
         }
         if($input['District']){
             $model = $model->where('District',$input['District']);
@@ -2246,6 +2246,41 @@ class FeeService extends CommonService
                 return $this->error('2','get check history failed');
             }else{
                 $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
+                foreach ($check_history as $k => $v){
+                    if($v['match_arrears_id']){
+                        $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                    }else{
+                        $arrears_id = FeeReceive::where('bank_check_id',$v['id'])->pluck('arrears_id')->first();
+                        $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$arrears_id)->pluck('tenement_name')->first();
+                    }
+                }
+                $data['check_history'] = $check_history;
+                $data['current_page'] = (int)$input['page'];
+                $data['total_page'] = ceil($count/5);
+                return $this->success('get check history success',$data);
+            }
+        }else{
+            return $this->error('2','get check history failed');
+        }
+    }
+
+    /**
+     * @description:银行对账未核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unMatchList(array $input)
+    {
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',1)->get();
+        if($check_history){
+            $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',1)->count();
+            if($count <= ($input['page']-1)*5){
+                return $this->error('2','get check history failed');
+            }else{
+                $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',1)->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
                 foreach ($check_history as $k => $v){
                     if($v['match_arrears_id']){
                         $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
