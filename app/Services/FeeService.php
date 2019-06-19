@@ -2255,6 +2255,8 @@ class FeeService extends CommonService
                     }
                 }
                 $data['check_history'] = $check_history;
+                $data['current_page'] = $input['page'];
+                $data['total_page'] = ceil($count/5);
                 return $this->success('get check history success',$data);
             }
         }else{
