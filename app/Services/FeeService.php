@@ -685,17 +685,18 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::where/*('need_pay_fee',$amount)->where*/('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'ANZ',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -705,8 +706,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                    /*$match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -715,7 +716,7 @@ class FeeService extends CommonService
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'ANZ',
                                     'amount'            => $amount,
-                                    'match_code'        => $code,
+                                   /* 'match_code'        => $code,*/
                                     'is_checked'        => 1,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
@@ -730,7 +731,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
                 if($match_up_res){
                    /* foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -773,17 +774,18 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::where/*('need_pay_fee',$amount)->where*/('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'BNZ',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8].''.$data[$i][9].''.$data[$i][10].''.$data[$i][11].''.$data[$i][12].''.$data[$i][13],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -793,8 +795,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                    /*$match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -818,7 +820,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)->get()->toArray();
                 if($match_up_res){
                     /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -861,17 +863,18 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::/*where('need_pay_fee',$amount)->*/where('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'westpac',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -881,8 +884,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                   /* $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -906,7 +909,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)/*->where('match_arrears_id','>',0)*/->get()->toArray();
                 if($match_up_res){
                     /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -947,7 +950,7 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::/*where('need_pay_fee',$amount)->*/where('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
                                     'user_id'   => $input['user_id'],
@@ -956,8 +959,9 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'ASB',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -967,8 +971,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                    /*$match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -992,7 +996,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)/*->where('match_arrears_id','>',0)*/->get()->toArray();
                 if($match_up_res){
                     /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1035,17 +1039,18 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::/*where('need_pay_fee',$amount)->*/where('user_id',$input['user_id'])->/*whereIn('is_pay',[1,3])->*/where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'kiwi',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -1055,8 +1060,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                    /*$match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -1080,7 +1085,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)/*->where('match_arrears_id','>',0)*/->get()->toArray();
                 if($match_up_res){
                    /* foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1123,16 +1128,17 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::/*where('need_pay_fee',$amount)->*/where('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'TSB',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -1142,8 +1148,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                   /* $match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -1153,7 +1159,7 @@ class FeeService extends CommonService
                                     'bank_sn'           => 'TSB',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
+                                    /*'match_arrears_id'  => $match_res->id,*/
                                     'is_checked'        => 1,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
@@ -1168,7 +1174,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)/*->where('match_arrears_id','>',0)*/->get()->toArray();
                 if($match_up_res){
                     /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
@@ -1212,17 +1218,18 @@ class FeeService extends CommonService
                         $date = date('Y-m-d',strtotime($date));
                         if(strtotime($date) >= strtotime($input['check_start_date'])&&strtotime($date) <= strtotime($input['check_end_date'])+3600*24-1){
                             // 匹配
-                            $match_res = RentArrears::where('need_pay_fee',$amount)->where('user_id',$input['user_id'])->whereIn('is_pay',[1,3])->where('subject_code',$code)->first();
+                            $match_res = RentArrears::/*where('need_pay_fee',$amount)->*/where('user_id',$input['user_id'])/*->whereIn('is_pay',[1,3])*/->where('subject_code',$code)->first();
                             if($match_res){ // 匹配成功
                                 $bank_check_data = [
-                                    'user_id'   => $input['user_id'],
-                                    'check_id'  => $check_id+1,
+                                    'user_id'           => $input['user_id'],
+                                    'check_id'          => $check_id+1,
                                     'bank_check_date'   => $date,
                                     'bank_sn'           => 'co-operative',
                                     'amount'            => $amount,
                                     'match_code'        => $code,
-                                    'match_arrears_id'  => $match_res->id,
-                                    'is_checked'        => 1,
+                                    'match_tenement_name'   => $match_res->tenement_name,
+                                    /*'match_arrears_id'  => $match_res->id,*/
+                                    'is_checked'        => 2,
                                     'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
@@ -1232,8 +1239,8 @@ class FeeService extends CommonService
                                     $error_row[] = $i+1;
                                 }else{
                                     // 匹配成功的 费用单 更新对应的 对账id
-                                    $match_res->bank_check_id = $bank_check_res;
-                                    $match_res->update();
+                                    /*$match_res->bank_check_id = $bank_check_res;
+                                    $match_res->update();*/
                                 }
                             }else{
                                 $bank_check_data = [
@@ -1257,7 +1264,7 @@ class FeeService extends CommonService
                     }
                     $i++;
                 }
-                $match_up_res = BankCheck::where('check_id',$check_id+1)->where('match_arrears_id','>',0)->get()->toArray();
+                $match_up_res = BankCheck::where('check_id',$check_id+1)/*->where('match_arrears_id','>',0)*/->get()->toArray();
                 if($match_up_res){
                     /*foreach ($match_up_res as $k => $v){
                         $res[$k]['bank_check_id'] = $v['id'];
