@@ -649,7 +649,7 @@ class FeeService extends CommonService
         }
     }
 
-    
+
 
     /**
      * @description:银行对账上传CSV文件
@@ -1596,7 +1596,7 @@ class FeeService extends CommonService
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
-                    $bank_check_res->pay_amount = $bank_check_res->pay_amount-$pay_money;
+                    $bank_check_res->amount = $bank_check_res->amount-$pay_money;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
@@ -1623,18 +1623,18 @@ class FeeService extends CommonService
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
-                    $bank_check_res->pay_amount = $bank_check_res->pay_amount-$pay_money;
+                    $bank_check_res->amount = $bank_check_res->amount-$pay_money;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
                     }
                 }
             }
-            if($bank_check_res->pay_amount > 0){
+            if($bank_check_res->amount > 0){
                 // 增加余额
                 $contract_id = $model->where('id',$adjust_info[0]['arrears_id'])->pluck('contract_id')->first();
                 $balance = RentContract::where('id',$contract_id)->first();
-                $balance->balance += $bank_check_res->pay_amount;
+                $balance->balance += $bank_check_res->amount;
                 $balance->update();
             }
             // 将此条数据变为已核对
@@ -1715,5 +1715,20 @@ class FeeService extends CommonService
         }else{
             return $this->error('2','get check history failed');
         }
+    }
+
+    /**
+     * @description:银行对账详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckDetail(array $input)
+    {
+        $bank_check_id = $input['bank_check_id'];
+        $bank_check_res = BankCheck::where('id',$bank_check_id)->first()->toArray();
+
     }
 }
