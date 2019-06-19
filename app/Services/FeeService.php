@@ -1297,6 +1297,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1317,6 +1318,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1347,7 +1349,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'BNZ'){
@@ -1382,6 +1385,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8].''.$data[$i][9].''.$data[$i][10].''.$data[$i][11].''.$data[$i][12].''.$data[$i][13],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1402,6 +1406,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6].''.$data[$i][7].''.$data[$i][8].''.$data[$i][9].''.$data[$i][10].''.$data[$i][11].''.$data[$i][12].''.$data[$i][13],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1432,7 +1437,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'westpac'){
@@ -1467,6 +1473,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1487,6 +1494,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1517,7 +1525,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'ASB'){
@@ -1550,6 +1559,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1570,6 +1580,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4].''.$data[$i][5].''.$data[$i][6],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1600,7 +1611,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'kiwi'){
@@ -1635,6 +1647,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1655,6 +1668,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1685,7 +1699,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'TSB'){
@@ -1719,6 +1734,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1740,6 +1756,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1770,7 +1787,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }elseif ($input['bank_type'] == 'co-operative'){
@@ -1806,6 +1824,7 @@ class FeeService extends CommonService
                                     'match_code'        => $code,
                                     'match_arrears_id'  => $match_res->id,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1826,6 +1845,7 @@ class FeeService extends CommonService
                                     'amount'            => $amount,
                                     'match_code'        => $code,
                                     'is_checked'        => 1,
+                                    'bank_check_detail' => $data[$i][0].''.$data[$i][1].''.$data[$i][2].''.$data[$i][3].''.$data[$i][4],
                                     'created_at'        => date('Y-m-d H:i:s',time()),
                                 ];
                                 $bank_check_res = BankCheck::insertGetId($bank_check_data); // 插入待检查表
@@ -1856,7 +1876,8 @@ class FeeService extends CommonService
                     $check_data['check_id'] = $check_id+1;
                     return $this->success('match success',$check_data);
                 }else{
-                    return $this->error('2','no match data');
+                    $check_data['check_id'] = $check_id+1;
+                    return $this->error('2','no match data',$check_data);
                 }
             }
         }
