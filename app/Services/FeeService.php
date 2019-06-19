@@ -1267,7 +1267,7 @@ class FeeService extends CommonService
         $data = $data[0];
         if($input['bank_type'] == 'ANZ'){
             if($data[0][0] != 'Type' || $data[0][1] != 'Details' || $data[0][2] != 'Particulars' || $data[0][3] != 'Code' || $data[0][4] != 'Reference' || $data[0][5] != 'Amount' || $data[0][6] != 'Date' || $data[0][7] != 'ForeignCurrencyAmount' || $data[0][8] != 'ConversionCharge'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
@@ -1355,7 +1355,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'BNZ'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Payee' || $data[0][3] != 'Particulars' || $data[0][4] != 'Code' || $data[0][5] != 'Reference' || $data[0][6] != 'Tran Type' || $data[0][7] != 'This Party Account' || $data[0][8] != 'Other Party Account' || $data[0][9] != 'Serial' || $data[0][10] != 'Transaction Code' || $data[0][11] != 'Batch Number' || $data[0][12] != 'Originating Bank/Branch' || $data[0][13] != 'Processed Date'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
@@ -1443,7 +1443,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'westpac'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Other Party' || $data[0][3] != 'Description' || $data[0][4] != 'Reference' || $data[0][5] != 'Particulars' || $data[0][6] != 'Analysis Code'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
@@ -1531,7 +1531,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'ASB'){
             if($data[6][0] != 'Date' || $data[6][1] != 'Unique Id' || $data[6][2] != 'Tran Type' || $data[6][3] != 'Cheque Number' || $data[6][4] != 'Payee' || $data[6][5] != 'Memo' || $data[6][6] != 'Amount'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 8;
@@ -1617,7 +1617,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'kiwi'){
             if(substr($data[0][0],0,2) != '38' ){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
@@ -1705,7 +1705,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'TSB'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Amount' || $data[0][2] != 'Reference' || $data[0][3] != 'Description' || $data[0][4] != 'Particulars'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
@@ -1793,7 +1793,7 @@ class FeeService extends CommonService
             }
         }elseif ($input['bank_type'] == 'co-operative'){
             if($data[0][0] != 'Date' || $data[0][1] != 'Details' || $data[0][2] != 'Amount' || $data[0][3] != 'Balance'){
-                return $this->error('2','the csv file is not the select bank');
+                return $this->error('3','the csv file is not the select bank');
             }else{
                 $check_id = BankCheck::max('check_id');
                 $i = 1;
