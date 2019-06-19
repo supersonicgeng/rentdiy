@@ -402,11 +402,8 @@ class FeeService extends CommonService
         if($input['include_gts'] == 3){
             $model = $model->where('tex','>','0');
         }
-        if($input['start_date']){
-            $model = $model->where('created_at','>',date('Y-m-d H:i:s',$input['start_date']));
-        }
-        if($input['end_date']){
-            $model = $model->where('created_at','<',date('Y-m-d H:i:s',$input['end_date']+3600*24-1));
+        if($input['start_date'] && $input['end_date']){
+            $model = $model->whereBetween('created_at',[$input['start_date'],$input['end_date']]);
         }
         if($input['arrears_type']){
             $model = $model->where('arrears_type',$input['arrears_type']);
