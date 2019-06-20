@@ -907,7 +907,7 @@ class RentService extends CommonService
                         'created_at'                                => date('Y-m-d H:i:s', time()),
                     ];
                     $separate_res = $separate_model->insert($separate_data);
-                    if ($contract_tenement_res && $separate_res && $contract_chattel_res && $service_fee_res) {
+                    if ($contract_tenement_res && $separate_res && $contract_chattel_res /*&& $service_fee_res*/) {
                         return $this->success('contract add success');
                     } else {
                         return $this->error('3', 'add contract failed');
