@@ -497,9 +497,9 @@ class FeeService extends CommonService
                 return $this->error('2','no more fee information');
             }else{
                 $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
+                $total_arrears = 0;
                 foreach ($res as $k => $v){
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->whereIn('arrears_type',[1,2,3])->get()->toArray();
-                    static $total_arrears = 0;
                     $fee_list[$k]['contract_id'] = $v['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
