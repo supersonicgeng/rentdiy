@@ -1743,7 +1743,7 @@ class FeeService extends CommonService
         $bank_check_res = BankCheck::where('id',$bank_check_id)->first()->toArray();
         $tenement_list = RentContract::where('user_id',$input['user_id'])->get()->toArray();
         foreach ($tenement_list as $k => $v){
-            $tenement_data[$k]['tenement_name'] = ContractTenement::where('contract_id',$v['id'])->pluck('tenement_name')->first();
+            $tenement_data[$k]['tenement_name'] = ContractTenement::where('contract_id',$v['id'])->pluck('tenement_full_name')->first();
             $tenement_data[$k]['tenement_id'] = ContractTenement::where('contract_id',$v['id'])->pluck('tenement_id')->first();
             $tenement_data[$k]['contract_sn'] = $v['contract_id'];
         }
