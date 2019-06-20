@@ -1840,10 +1840,10 @@ class FeeService extends CommonService
             RentArrears::where('tenement_id',$tenement_id)->update(['subject_code'=> $input['code']]);
             //
             $bank_check_id = $input['bank_check_id'];
-            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'match_tenement_name'=>$input['tenement_full_name']]);
+            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'is_checked'=>2,'match_tenement_name'=>$input['tenement_full_name']]);
         }else{
             $bank_check_id = $input['bank_check_id'];
-            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'match_tenement_name'=>$input['tenement_full_name']]);
+            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'is_checked'=>2,'match_tenement_name'=>$input['tenement_full_name']]);
         }
         return $this->success('check match update success');
     }
