@@ -647,6 +647,7 @@ class RentService extends CommonService
                                     'mail_address'              => $v['tenement_post_address'],
                                     'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
+                                    'subject_code'              => subjectCode(),
                                     'created_at'                => date('Y-m-d H:i:s',time()),
                                 ];
                                 $v['tenement_id'] = Tenement::insertGetId($tenement_data);
@@ -776,6 +777,7 @@ class RentService extends CommonService
                                     'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
                                     'created_at'                => date('Y-m-d H:i:s',time()),
+                                    'subject_code'              => subjectCode(),
                                 ];
                                 $v['tenement_id'] = Tenement::insertGetId($tenement_data);
                             }
@@ -929,6 +931,7 @@ class RentService extends CommonService
                                     'mail_address'              => $v['tenement_post_address'],
                                     'service_address'           => $v['tenement_service_address'],
                                     'mail_code'                 => $v['tenement_post_code'],
+                                    'subject_code'              => subjectCode(),
                                     'created_at'                => date('Y-m-d H:i:s',time()),
                                 ];
                                 $v['tenement_id'] = Tenement::insertGetId($tenement_data);
@@ -1590,6 +1593,7 @@ class RentService extends CommonService
                     'District'          => $rent_house_info->District,
                     'TA'                => $rent_house_info->TA,
                     'Region'            => $rent_house_info->Region,
+                    'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
@@ -1621,6 +1625,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1651,6 +1656,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1681,6 +1687,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1713,6 +1720,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1743,6 +1751,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1773,6 +1782,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1804,6 +1814,7 @@ class RentService extends CommonService
                     'District'          => $rent_house_info->District,
                     'TA'                => $rent_house_info->TA,
                     'Region'            => $rent_house_info->Region,
+                    'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $bond_res = RentArrears::insert($bond_data);
@@ -1835,6 +1846,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1865,6 +1877,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1895,6 +1908,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1927,6 +1941,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1957,6 +1972,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -1987,6 +2003,7 @@ class RentService extends CommonService
                                 'District'          => $rent_house_info->District,
                                 'TA'                => $rent_house_info->TA,
                                 'Region'            => $rent_house_info->Region,
+                                'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                                 'created_at'        => date('Y-m-d H:i:s',time()),
                             ];
                             RentArrears::insert($arrears_data);
@@ -2025,6 +2042,7 @@ class RentService extends CommonService
                             'District'          => $rent_house_info->District,
                             'TA'                => $rent_house_info->TA,
                             'Region'            => $rent_house_info->Region,
+                            'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
                         RentArrears::insert($arrears_data);
@@ -2055,6 +2073,7 @@ class RentService extends CommonService
                             'District'          => $rent_house_info->District,
                             'TA'                => $rent_house_info->TA,
                             'Region'            => $rent_house_info->Region,
+                            'subject_code'      => Tenement::where('id',$contract_tenement_data->tenement_id)->pluck('subject_code')->first(),
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
                         RentArrears::insert($arrears_data);

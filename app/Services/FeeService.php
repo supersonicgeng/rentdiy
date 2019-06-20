@@ -70,7 +70,7 @@ class FeeService extends CommonService
                 'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100),
                 'number'            => $input['number'],
                 'unit_price'        => $input['unit_price'],
-                'subject_code'      => $input['subject_code'],
+                'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
                 'tex'               => $input['tex'],
                 'discount'          => $input['discount'],
                 'items_name'        => $input['items_name'],
@@ -106,7 +106,7 @@ class FeeService extends CommonService
                 'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100),
                 'number'            => $input['number'],
                 'unit_price'        => $input['unit_price'],
-                'subject_code'      => $input['subject_code'],
+                'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
                 'tex'               => $input['tex'],
                 'discount'          => $input['discount'],
                 'items_name'        => $input['items_name'],
@@ -422,6 +422,8 @@ class FeeService extends CommonService
                 $discount += ($v['unit_price']*$v['number'])*$v['discount']/100;
                 $gts += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100;
             }
+            $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
+            $data['subject_code'] = Tenement::where('id',$tenement_id)->pluck('subject_code')->first();
             $data['total_price'] = round(($amount_price-$discount+$gts),2);
             $data['amount_price'] = round($amount_price,2);
             $data['discount'] = round($discount,2);
