@@ -238,6 +238,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('cashPay', 'FeeController@cashPay'); // 现金收据冲账 4.10
         $router->post('bankCheck', 'FeeController@bankCheck'); // 银行对账上传CSV文件 4.10
         $router->post('bankCheckList', 'FeeController@bankCheckList'); // 银行对账列表 4.10
+        $router->post('bankCheckDetail', 'FeeController@bankCheckDetail'); // 银行对账详情 4.10
+        $router->post('bankCheckTenementInfo', 'FeeController@bankCheckTenementInfo'); // 银行对账详情 租户信息 4.10
         $router->post('matchData', 'FeeController@matchData'); // 银行对账符合费用单 4.10
         $router->post('confirmMatchCheck', 'FeeController@confirmMatchCheck'); // 银行对账确认符合费用单 4.10
         $router->post('unMatchData', 'FeeController@unMatchData'); // 银行对账符合费用单 4.10

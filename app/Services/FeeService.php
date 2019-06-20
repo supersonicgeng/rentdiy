@@ -1779,4 +1779,26 @@ class FeeService extends CommonService
             return $this->success('get bank check data success',$data);
         }
     }
+
+    /**
+     * @description:银行对账详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckTenementInfo(array $input)
+    {
+        $tenement_id = $input['tenement_id'];
+        $contract_id = $input['contract_id'];
+        $tenement_info = Tenement::where('id',$tenement_id)->first()->toArray();
+        $arrears_info = RentArrears::where('contract_id',$contract_id)->whereIn('is_pay',[1,3])->where('arrears_type','<',4)->get();
+        if($arrears_info){
+            $arrears_info = $arrears_info->toArray();
+        }
+        $data['tenement_info'] = $tenement_info;
+        $data['arrears_info'] = $arrears_info;
+        return $this->success('get tenement info success',$data);
+    }
 }
