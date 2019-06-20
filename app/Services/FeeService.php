@@ -1745,6 +1745,7 @@ class FeeService extends CommonService
             $tenement_data[$k]['tenement_name'] = ContractTenement::where('contract_id',$v['id'])->pluck('tenement_full_name')->first();
             $tenement_data[$k]['tenement_id'] = ContractTenement::where('contract_id',$v['id'])->pluck('tenement_id')->first();
             $tenement_data[$k]['contract_sn'] = $v['contract_id'];
+            $tenement_data[$k]['contract_id'] = $v['id'];
         }
         if(!$bank_check_res){
             return $this->error('2','get bank check detail failed');
