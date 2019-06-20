@@ -1298,7 +1298,7 @@ class HouseService extends CommonService
                 if(RentContract::where('house_id',$v['rent_house_id'])->first()){
                     $res[$k]['house_status'] = 3;
                 }
-                if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status','>',2)->first()){
+                if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status','>',1)->first()){
                     $res[$k]['house_status'] = 4;
                 }
                 if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',3)->first() || RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',5)->first()){
