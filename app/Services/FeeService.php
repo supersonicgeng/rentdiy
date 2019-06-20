@@ -1625,10 +1625,12 @@ class FeeService extends CommonService
                         'pay_money'     => $need_pay->need_pay_fee,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 2,
+                        'bank_check_id' => $bank_check_id,
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
                     $bank_check_res->amount = $bank_check_res->amount-$pay_money;
+                    $bank_check_res->is_checked = 4;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
@@ -1652,10 +1654,12 @@ class FeeService extends CommonService
                         'pay_money'     => $pay_money,
                         'pay_date'      => date('Y-m-d',time()),
                         'pay_method'    => 2,
+                        'bank_check_id' => $bank_check_id,
                         'created_at'    => date('Y-m-d H:i:s',time()),
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
                     $bank_check_res->amount = $bank_check_res->amount-$pay_money;
+                    $bank_check_res->is_checked = 4;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
@@ -1689,9 +1693,9 @@ class FeeService extends CommonService
      */
     public function historyList(array $input)
     {
-        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked','<',3)->get();
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',4)->get();
         if($check_history){
-            $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->count();
+            $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',4)->count();
             if($count <= ($input['page']-1)*5){
                 return $this->error('2','get check history failed');
             }else{
