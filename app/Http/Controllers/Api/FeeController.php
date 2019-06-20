@@ -314,4 +314,18 @@ class FeeController extends Controller
     {
         return service('Fee')->bankCheckTenementInfo($request->all());
     }
+
+
+    /**
+     * @description:银行对账租户信息 确认租户
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckMatch(Request $request)
+    {
+        return service('Fee')->bankCheckMatch($request->all());
+    }
 }

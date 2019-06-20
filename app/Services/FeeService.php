@@ -1835,7 +1835,16 @@ class FeeService extends CommonService
         $tenement_id = $input['tenement_id'];
         $is_check_match_code = $input['is_check_match_code'];
         if($is_check_match_code == 2){
-            // 修改
+            // 修改匹配码
+            Tenement::where('id',$tenement_id)->update(['subject_code'=> $input['code']]);
+            RentArrears::where('tenement_id',$tenement_id)->update(['subject_code'=> $input['code']]);
+            //
+            $bank_check_id = $input['bank_check_id'];
+            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'match_tenement_name'=>$input['tenement_full_name']]);
+        }else{
+            $bank_check_id = $input['bank_check_id'];
+            BankCheck::where('id',$bank_check_id)->update(['match_tenement_id'=> $tenement_id,'match_tenement_name'=>$input['tenement_full_name']]);
         }
+        return $this->success('check match update success');
     }
 }

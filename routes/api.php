@@ -249,7 +249,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('unMatchList', 'FeeController@unMatchList'); // 银行对账未对账单 4.10
         $router->post('bankAdjust', 'FeeController@bankAdjust'); // 银行对账手工调整 4.10
         $router->post('bankAdjustConfirm', 'FeeController@bankAdjustConfirm'); // 银行对账手工调整确认 4.10
-        $router->post('bankCheckDetail', 'FeeController@bankCheckDetail'); // 银行对账详情 4.10
+        $router->post('bankCheckMatch', 'FeeController@bankCheckMatch'); // 银行对账详情 确认租户4.10
     });
 });
 
