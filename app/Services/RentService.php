@@ -98,6 +98,8 @@ class RentService extends CommonService
                 ];
                 $model = new RentApplication();
                 $res = $model->insert($application_data);
+                // 更新房屋状态为2
+                RentHouse::where('id',$input['rent_house_id'])->update(['rent_status'=>2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 if($res){
                     return $this->success('application success');
                 }else{
@@ -527,6 +529,7 @@ class RentService extends CommonService
             $rent_house_id = $model->where('id',$input['application_id'])->pluck('rent_house_id')->first();
             $model->where('rent_house_id',$rent_house_id)->update(['application_status'=>7,'updated_at'=>date('Y:m:d h:i:s',time())]);
             $res = $model->where('id',$input['application_id'])->update(['application_status'=>8,'updated_at'=>date('Y:m:d h:i:s',time())]);
+            RentHouse::where('id',$rent_house_id)->update(['rent_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
             if($res){
                 return $this->success('application agree success',$res);
             } else{
@@ -2083,6 +2086,7 @@ class RentService extends CommonService
             //房屋下架
             RentHouse::where('id',$contract_data->house_id)->update([
                 'is_put'        => 1,
+                'rent_status'   => 4,
                 'updated_at'    => date('Y-m-d H:i:s',time()),
             ]);
             return $this->success('contract effect success');
@@ -2228,6 +2232,8 @@ class RentService extends CommonService
                 'contract_status'   => 3,
                 'updated_at'        => date('Y-m-d H:i:s',time()),
             ]);
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            RentHouse::where('id',$rent_house_id)->update(['rent_status'=>5,'updated_at'=>date('Y-m-d H:i:s',time())]);
             if($res){
                 // 增加最后一个租金单
                 // 获取最后一次的租金详情
