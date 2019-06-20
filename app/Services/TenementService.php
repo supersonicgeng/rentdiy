@@ -83,6 +83,7 @@ class TenementService extends CommonService
                     'company'                   => $input['company'],
                     'job_title'                 => $input['job_title'],
                     'instruction'               => $input['instruction'],
+                    'subject_code'              => subjectCode(),
                     'created_at'                => date('Y-m-d H:i:s',time()),
                 ];
                 $model = new Tenement();
