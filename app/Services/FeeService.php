@@ -503,11 +503,9 @@ class FeeService extends CommonService
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['payment_due'] = '';
-                    $total_arrears = 0;
                     foreach ($fee_res as $key => $value){
-                        $total_arrears += $value['need_pay_fee'];
                         $fee_list[$k]['payment_due'] = $value['expire_date'];
-                        $fee_list[$k]['amount'] = round($total_arrears,2);
+                        $fee_list[$k]['amount'] += round($value['need_pay_fee'],2);
                     }
                 }
                 $data['fee_list'] = $fee_list;
