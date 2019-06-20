@@ -1307,23 +1307,37 @@ class FeeService extends CommonService
     public function matchData(array $input)
     {
         $check_id = $input['check_id'];
-        $match_up_res = BankCheck::where('check_id',$check_id)->where('match_arrears_id','>',0)->get()->toArray();
-        if($match_up_res){
-            foreach ($match_up_res as $k => $v){
-                $res[$k]['bank_check_id'] = $v['id'];
-                $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
-                $res[$k]['payment_amount'] = $v['amount'];
-                $res[$k]['payment_date'] = date('m/d/Y',strtotime($v['bank_check_date']));
-                $res[$k]['match_code'] = $v['match_code'];
-                $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
-                $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
-                $res[$k]['invoice_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first()));
-                $res[$k]['due_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first()));
-                $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+        $match_code_res = BankCheck::where('check_id',$check_id)->where('is_checked',2)->get()->toArray();
+        if($match_code_res){
+            foreach ($match_code_res as $k => $v){
+                $amount = $v['amount'];
+                $tenement_id = $v['match_tenement_id'];
+                $match_res = RentArrears::where('user_id',$input['user_id'])->where('need_pay_fee',$amount)->where('arrears_type','>',4)->where('tenement_id',$tenement_id)->where('bank_check_id',null)->first();
+                if($match_res){
+                    BankCheck::where('id',$v['id'])->update(['match_arrears_id'=> $match_res->id,'is_checked'=>3]);
+                    $match_res->bank_check_id = $v['id'];
+                    $match_res->update();
+                }
             }
-            $check_data['check_res'] = $res;
-            $check_data['check_id'] = $check_id;
-            return $this->success('match success',$check_data);
+            $match_up_res = BankCheck::where('check_id',$check_id)->where('is_checked',3)->get()->toArray();
+            if($match_up_res){
+                foreach ($match_up_res as $k => $v){
+                    $res[$k]['bank_check_id'] = $v['id'];
+                    $res[$k]['tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
+                    $res[$k]['payment_amount'] = $v['amount'];
+                    $res[$k]['payment_date'] = date('m/d/Y',strtotime($v['bank_check_date']));
+                    $res[$k]['match_code'] = $v['match_code'];
+                    $res[$k]['arrears_amount'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('need_pay_fee')->first();
+                    $res[$k]['arrears_type'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('arrears_type')->first();
+                    $res[$k]['invoice_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('created_at')->first()));
+                    $res[$k]['due_date'] = date('m/d/Y',strtotime(RentArrears::where('id',$v['match_arrears_id'])->pluck('expire_date')->first()));
+                    $res[$k]['subject_code'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('subject_code')->first();
+                }
+                $check_data['check_res'] = $res;
+                $check_data['check_id'] = $check_id;
+                return $this->success('match success',$check_data);
+            }
+            return $this->error('2','no match data');
         }else{
             return $this->error('2','no match data');
         }
