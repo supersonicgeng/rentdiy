@@ -1783,7 +1783,7 @@ class FeeService extends CommonService
     }
 
     /**
-     * @description:银行对账详情
+     * @description:银行对账详情 租户信息
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -1798,9 +1798,44 @@ class FeeService extends CommonService
         $arrears_info = RentArrears::where('contract_id',$contract_id)->whereIn('is_pay',[1,3])->where('arrears_type','<',4)->get();
         if($arrears_info){
             $arrears_info = $arrears_info->toArray();
+            $bond_arrears = 0;
+            $rent_arrears = 0;
+            $expenses_arrears = 0;
+            foreach ($arrears_info as $k => $v){
+                if($v['arrears_type'] == 1){
+                    $bond_arrears += $v['need_pay_fee'];
+                }elseif ($v['arrears_type'] == 2){
+                    $rent_arrears += $v['need_pay_fee'];
+                }elseif ($v['arrears_type'] == 3){
+                    $expenses_arrears += $v['need_pay_fee'];
+                }
+            }
+            $total_arrears = $bond_arrears+$rent_arrears+$expenses_arrears;
         }
         $data['tenement_info'] = $tenement_info;
         $data['arrears_info'] = $arrears_info;
+        $data['total_arrares'] = $total_arrears;
+        $data['bond_arrears'] = $bond_arrears;
+        $data['rent_arrears'] = $rent_arrears;
+        $data['expenses_arrears'] = $expenses_arrears;
         return $this->success('get tenement info success',$data);
+    }
+
+
+    /**
+     * @description:银行对账租户信息 确认租户
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bankCheckMatch(array $input)
+    {
+        $tenement_id = $input['tenement_id'];
+        $is_check_match_code = $input['is_check_match_code'];
+        if($is_check_match_code == 2){
+            // 修改
+        }
     }
 }
