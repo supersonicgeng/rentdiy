@@ -1689,7 +1689,7 @@ class FeeService extends CommonService
      */
     public function historyList(array $input)
     {
-        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->get();
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked','<',3)->get();
         if($check_history){
             $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->count();
             if($count <= ($input['page']-1)*5){
