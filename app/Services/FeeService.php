@@ -1312,7 +1312,7 @@ class FeeService extends CommonService
             foreach ($match_code_res as $k => $v){
                 $amount = $v['amount'];
                 $tenement_id = $v['match_tenement_id'];
-                $match_res = RentArrears::where('user_id',$input['user_id'])->where('need_pay_fee',$amount)->where('arrears_type','>',4)->where('tenement_id',$tenement_id)->where('bank_check_id',null)->first();
+                $match_res = RentArrears::where('user_id',$input['user_id'])->where('need_pay_fee',$amount)->where('arrears_type','<',4)->where('tenement_id',$tenement_id)->where('bank_check_id',null)->first();
                 if($match_res){
                     BankCheck::where('id',$v['id'])->update(['match_arrears_id'=> $match_res->id,'is_checked'=>3]);
                     $match_res->bank_check_id = $v['id'];
