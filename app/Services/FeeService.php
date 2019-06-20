@@ -1630,7 +1630,7 @@ class FeeService extends CommonService
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
                     $bank_check_res->amount = $bank_check_res->amount-$pay_money;
-                    $bank_check_res->is_checked = 4;
+                    $bank_check_res->is_checked = 5;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
@@ -1659,7 +1659,7 @@ class FeeService extends CommonService
                     ];
                     $receive_res = FeeReceive::insert($receive_data);
                     $bank_check_res->amount = $bank_check_res->amount-$pay_money;
-                    $bank_check_res->is_checked = 4;
+                    $bank_check_res->is_checked = 5;
                     $bank_check_res->update();
                     if(!$receive_res){
                         $error += 1;
@@ -1693,13 +1693,13 @@ class FeeService extends CommonService
      */
     public function historyList(array $input)
     {
-        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',4)->get();
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked','>',3)->get();
         if($check_history){
-            $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',4)->count();
+            $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked','>',3)->count();
             if($count <= ($input['page']-1)*5){
                 return $this->error('2','get check history failed');
             }else{
-                $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',2)->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
+                $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked','>',3)->offset(($input['page']-1)*5)->limit(5)->get()->toArray();
                 foreach ($check_history as $k => $v){
                     if($v['match_arrears_id']){
                         $check_history[$k]['pay_tenement_name'] = RentArrears::where('id',$v['match_arrears_id'])->pluck('tenement_name')->first();
