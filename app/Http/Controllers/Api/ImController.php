@@ -42,7 +42,8 @@ class ImController extends Controller
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             foreach ($other_msg as $k => $v){
-                $total_msg[] = Im::where('from',$v['from'])->where('to',$user)->toArray();
+                dump($v);
+                /*$total_msg[] = Im::where('from',$v['from'])->where('to',$user)->toArray();*/
             }
             $msg['msg'] = $total_msg;
             return  $this->success('get im msg success',$msg);
