@@ -64,6 +64,7 @@ class ImController extends Controller
                 $user_id = explode('_',$v['im_id']);
                 $user_id = $user_id[1];
                 $to[$k]['headimg'] = User::where('id',$user_id)->pluck('head_img')->first();
+                $to[$k]['nickname'] = User::where('id',$user_id)->pluck('nickname')->first();
             }
             $msg['list'] = $to;
             return  $this->success('get im msg success',$msg);
