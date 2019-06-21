@@ -33,8 +33,7 @@ class ImController extends Controller
     public function getImInfo(Request $request)
     {
         $user = 'user_'.$request->user_id;
-        $group = Im::where('from',$user)->gruopBy('to')->get();
-
+        $group = Im::where('from',$user)->groupBy('to')->get();
         if($group){// 查看该用户发送的消息
             $group = $group->toArray();
             foreach ($group as $k => $v){
