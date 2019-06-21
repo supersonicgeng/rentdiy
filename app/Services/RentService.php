@@ -2288,6 +2288,7 @@ class RentService extends CommonService
             }
         }
         $data['tenement_res'] = $tenement_res;
+        $data['contract_info'] = $contract_info->toArray();
         $data['property_address'] = $property_address;
         $data['check_date'] = $check_date;
         $data['arrears_data'] = $arrears_data;
