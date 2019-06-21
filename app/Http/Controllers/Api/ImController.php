@@ -55,7 +55,10 @@ class ImController extends Controller
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             if($other_msg){
-                $to[]['im_id'] = $v['from'];
+                $other_msg = $other_msg->toArray();
+                foreach ($other_msg as $k => $v){
+                    $to[]['im_id'] = $v['from'];
+                }
             }
             foreach ($to as $k=> $v){
                 $user_id = explode('_',$v['im_id']);
