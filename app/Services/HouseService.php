@@ -428,13 +428,14 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $rent_house_id = $input['rent_house_id'];
-        $res = $model->where('id',$rent_house_id)->select('group_id','rent_category','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','room_short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','least_rent_time','address','lat','lon','available_date')->first();
+        $res = $model->where('id',$rent_house_id)->select('user_id','group_id','rent_category','property_name','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','room_short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','least_rent_time','address','lat','lon','available_date')->first();
         if($res){
             $res['house_pic'] =  RentPic::where('rent_house_id',$rent_house_id)->where('deleted_at',null)->pluck('house_pic')->toArray();
             $res['short_words'] = explode(',',$res['short_words']);
             if($res['rent_category'] == 2 || $res['rent_category'] == 3){
                 $res['short_words'] = explode(',',$res['room_short_words']);
             }
+            $res['im_id'] = 'user_'.$res['user_id'];
             return $this->success('get house info success',$res);
         }else{
             return $this->error('2','get house info failed');
