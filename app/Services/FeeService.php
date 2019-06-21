@@ -361,6 +361,7 @@ class FeeService extends CommonService
                 static $total_arrears = 0;
                 foreach ($res as $k => $v){
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
+                    dump($fee_res);
                     $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
@@ -369,6 +370,7 @@ class FeeService extends CommonService
                     foreach ($fee_res as $key => $value){
                         if($value['arrears_type'] == 3){
                             $total_arrears += $value['arrears_fee'];
+                            dump($total_arrears);
                             $fee_list[$k]['invoice_date'] = $value['created_at'];
                             $fee_list[$k]['payment_due'] = $value['expire_date'];
                         }
