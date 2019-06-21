@@ -39,7 +39,7 @@ class ImController extends Controller
             foreach ($group as $k => $v){
                 $send_msg = Im::where('from',$user)->where('to',$v['to']);
                 $recive_msg = Im::where('to',$user)->where('from',$v['to']);
-                $total_msg[] = $send_msg->union($recive_msg)->get()->toArray();// 已发消息 和对方返回的消息
+                $total_msg[] = $send_msg->union($recive_msg)->orderBy('id')->get()->toArray();// 已发消息 和对方返回的消息
                 $to[] = $v['to'];
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
