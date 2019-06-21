@@ -212,12 +212,13 @@ class FeeService extends CommonService
                 $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                 $fee_list[$k]['rent_per_week'] = RentHouse::where('id',$fee_res[0]['rent_house_id'])->pluck('rent_fee_pre_week')->first();
                 $fee_list[$k]['expire_date'] = $fee_res[$fee_count-1]['expire_date'];
-                static $total_arrears = 0;
-                static $total_rent = 0;
-                static $paid = 0;
-                static $rent_arrears = 0;
-                static $other_arrears = 0;
+
                 foreach ($fee_res as $key => $value){
+                    $total_arrears = 0;
+                    $total_rent = 0;
+                    $paid = 0;
+                    $rent_arrears = 0;
+                    $other_arrears = 0;
                     if($value['arrears_type'] == 1 || $value['arrears_type'] == 2 || $value['arrears_type'] == 3){
                         $total_arrears += $value['need_pay_fee'];
                         $total_rent += $value['arrears_fee'];
