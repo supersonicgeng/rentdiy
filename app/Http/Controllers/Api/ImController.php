@@ -44,7 +44,7 @@ class ImController extends Controller
             if($other_msg){
                 $other_msg = $other_msg->toArray();
                 foreach ($other_msg as $k => $v){
-                    $total_msg[] = Im::where('from',$v['from'])->where('to',$user)->toArray();
+                    $total_msg[] = Im::where('from',$v['from'])->where('to',$user)->get()->toArray();
                 }
             }
             $msg['msg'] = $total_msg;
