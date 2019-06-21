@@ -17,6 +17,7 @@ use App\Model\CheckBuilding;
 use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\HouseScore;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\Passport;
@@ -24,6 +25,7 @@ use App\Model\PassportReward;
 use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
+use App\Model\RentContract;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -276,5 +278,36 @@ class TenementService extends CommonService
             return $this->error('3','get tenement information failed');
         }
 
+    }
+
+
+    /**
+     * @description:房屋打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function houseScore(array $input)
+    {
+        $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+        $tenement_score_data = [
+            'user_id'           => $input['user_id'],
+            'pay_score'         => $input['pay_score'],
+            'hygiene_score'     => $input['hygiene_score'],
+            'facility_score'    => $input['facility_score'],
+            'detail'            => $input['detail'],
+            'contract_id'       => $input['contract_id'],
+            'rent_house_id'     => $rent_house_id,
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $score_data = HouseScore::insert($tenement_score_data);
+        if($score_data){
+            RentContract::where('id',$input['contract_id'])->update(['contract_status'   => 7,'updated_at'   => date('Y-m-d H:i:s',time()),]);
+            return $this->success('tenement score success');
+        }else{
+            return $this->error('2','tenement score failed');
+        }
     }
 }

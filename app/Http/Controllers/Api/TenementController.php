@@ -58,4 +58,17 @@ class TenementController extends CommonController
     {
         return service('Tenement')->deleteTenementInformation($request->all());
     }
+
+    /**
+     * @description:房屋打分
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function houseScore(Request $request)
+    {
+        return service('Tenement')->houseScore($request->all());
+    }
 }
