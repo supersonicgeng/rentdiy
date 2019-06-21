@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Model\Im;
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use link1st\Easemob\App\Easemob;
@@ -50,11 +51,16 @@ class ImController extends Controller
         if($group){// 查看该用户发送的消息
             $group = $group->toArray();
             foreach ($group as $k => $v){
-                $to[] = $v['to'];
+                $to[]['im_id'] = $v['to'];
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             if($other_msg){
-                $to[] = $v['from'];
+                $to[]['im_id'] = $v['from'];
+            }
+            foreach ($to as $k=> $v){
+                $user_id = explode('_',$v['im_id']);
+                $user_id = $user_id[1];
+                $to[$k]['headimg'] = User::where('id',$user_id)->pluck('head_img')->first();
             }
             $msg['list'] = $to;
             return  $this->success('get im msg success',$msg);
