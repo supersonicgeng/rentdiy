@@ -15,9 +15,10 @@ class ImController extends Controller
         $to = $request->to;
         $message = $request->msg;
         $im_data = [
-            'from'  => $send,
-            'to'    => $to,
-            'msg'   => $message
+            'from'          => $send,
+            'to'            => $to,
+            'msg'           => $message,
+            'created_at'    => date('Y-m-d H:i:s',time()),
         ];
         $im = new Im();
         $im::insert($im_data);
