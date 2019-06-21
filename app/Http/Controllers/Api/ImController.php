@@ -33,23 +33,29 @@ class ImController extends Controller
     public function getImInfo(Request $request)
     {
         $user = 'user_'.$request->user_id;
+        $contact_id = $request->contact_id;
+        $send_msg = Im::where('from',$user)->where('to',$contact_id);
+        $recive_msg = Im::where('to',$user)->where('from',$contact_id);
+        $total_msg = $send_msg->union($recive_msg)->orderBy('id')->get()->toArray();// 已发消息 和对方返回的消息
+        $msg['msg'] = $total_msg;
+        return  $this->success('get im msg success',$msg);
+    }
+
+
+    public function getImList(Request $request)
+    {
+        $user = 'user_'.$request->user_id;
         $group = Im::where('from',$user)->groupBy('to')->get();
         if($group){// 查看该用户发送的消息
             $group = $group->toArray();
             foreach ($group as $k => $v){
-                $send_msg = Im::where('from',$user)->where('to',$v['to']);
-                $recive_msg = Im::where('to',$user)->where('from',$v['to']);
-                $total_msg[] = $send_msg->union($recive_msg)->orderBy('id')->get()->toArray();// 已发消息 和对方返回的消息
                 $to[] = $v['to'];
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             if($other_msg){
-                $other_msg = $other_msg->toArray();
-                foreach ($other_msg as $k => $v){
-                    $total_msg[] = Im::where('from',$v['from'])->where('to',$user)->get()->toArray();
-                }
+                $to[] = $v['from'];
             }
-            $msg['msg'] = $total_msg;
+            $msg['list'] = $to;
             return  $this->success('get im msg success',$msg);
         }
     }
