@@ -41,9 +41,11 @@ class ImController extends Controller
                 $to[] = $v['to'];
             }
             $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
-            foreach ($other_msg as $k => $v){
-                dump($v);
-                /*$total_msg[] = Im::where('from',$v['from'])->where('to',$user)->toArray();*/
+            if($other_msg){
+                $other_msg = $other_msg->toArray();
+                foreach ($other_msg as $k => $v){
+                    $total_msg[] = Im::where('from',$v['from'])->where('to',$user)->toArray();
+                }
             }
             $msg['msg'] = $total_msg;
             return  $this->success('get im msg success',$msg);
