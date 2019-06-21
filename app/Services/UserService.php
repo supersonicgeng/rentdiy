@@ -62,6 +62,7 @@ class UserService extends CommonService
         $verify_code = $input['verify_code'];
         $user_role = $input['user_role'];
         $house_number = $input['house_number'];
+        $nickname = $input['nickname'];
         $jobs = $input['jobs'];
         $jobs = implode(',',$jobs);
         // 确认密码和密码一致性
@@ -90,6 +91,7 @@ class UserService extends CommonService
                 $data = [
                     'e_mail'        => $account,
                     'user_role'     => 1,
+                    'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
@@ -98,6 +100,7 @@ class UserService extends CommonService
                 $data = [
                     'phone'         => $account,
                     'user_role'     => 1,
+                    'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
@@ -108,6 +111,7 @@ class UserService extends CommonService
                 $data = [
                     'e_mail'        => $account,
                     'user_role'     => 2,
+                    'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
@@ -116,6 +120,7 @@ class UserService extends CommonService
                 $data = [
                     'phone'         => $account,
                     'user_role'     => 2,
+                    'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
@@ -126,6 +131,7 @@ class UserService extends CommonService
                 $data = [
                     'e_mail'        => $account,
                     'user_role'     => 4,
+                    'nickname'      => $nickname,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
@@ -133,6 +139,7 @@ class UserService extends CommonService
                 $data = [
                     'phone'         => $account,
                     'user_role'     => 4,
+                    'nickname'      => $nickname,
                     'password'      => md5($password),
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
