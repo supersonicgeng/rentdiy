@@ -61,6 +61,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'test'], function (Router $router){
         $router->get('test','TestController@test'); // 测试 pdf 5.28
         $router->post('testIM','ImController@sendMsg'); // 测试 pdf 5.28
+        $router->post('getImInfo','ImController@getImInfo'); // 获得im 历史消息 pdf 5.28
     });
 });
 
