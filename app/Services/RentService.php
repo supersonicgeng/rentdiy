@@ -23,6 +23,8 @@ use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\EntireContract;
+use App\Model\Inspect;
+use App\Model\InspectCheck;
 use App\Model\Level;
 use App\Model\LookHouse;
 use App\Model\Order;
@@ -2251,5 +2253,47 @@ class RentService extends CommonService
                 return $this->error('2','suspend contract failed');
             }
         }
+    }
+
+
+    /**
+     * @description:租金中止确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentSuspendSure(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_res = ContractTenement::where('contract_id',$contract_id)->first();
+        $contract_info = RentContract::where('id',$contract_id)->first();
+        $property_address = RentHouse::where('id',$contract_info->house_id)->pluck('address')->first();
+        $check_date = Inspect::where('rent_house_id',$contract_info->house_id)->orderBy('id','DESC')->pluck('inspect_completed_date')->first();
+        $arrears_data = RentArrears::where('contract_id',$contract_id)->whereIn('is_pay',[1,3])->where('arrears_type','<',4)->get();
+        $bond = 0;
+        $rent = 0;
+        $other = 0;
+        if($arrears_data){
+            $arrears_data = $arrears_data->toArray();
+            foreach ($arrears_data as $k => $v){
+                if($v['arrears_type'] == 1){
+                    $bond += $v['need_pay_fee'];
+                }elseif($v['arrears_type'] == 2){
+                    $rent += $v['need_pay_fee'];
+                }else{
+                    $other += $v['need_pay_fee'];
+                }
+            }
+        }
+        $data['tenement_res'] = $tenement_res;
+        $data['property_address'] = $property_address;
+        $data['check_date'] = $check_date;
+        $data['arrears_data'] = $arrears_data;
+        $data['bond'] = $bond;
+        $data['rent'] = $rent;
+        $data['other'] = $other;
+        return $this->success('get contract info success',$data);
     }
 }
