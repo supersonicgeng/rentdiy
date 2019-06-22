@@ -129,10 +129,17 @@ class OperatorService extends CommonService
             return $this->error('2','the account or password was wong');
         }else{
             $token = md5($res->id.time().mt_rand(100,999));
+            $user_id = $res->user_id;
+            $user_info = \App\Model\User::where('id',$user_id)->first();
+            $user_token = $user_info->login_token;
+            $user_info->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+            $user_info->update();
             $res->login_token = $token; //生成token
             $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
             $res->update();
-            return $this->success('login OK',$res->toArray());
+            $res = $res->toArray();
+            $res['user_token'] = $user_token;
+            return $this->success('login OK',$res);
         }
     }
 
