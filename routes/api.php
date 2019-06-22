@@ -174,6 +174,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getOperatorList', 'OperatorController@getOperatorList'); // 获得操作员列表 3.29
         $router->post('getOperatorDetail', 'OperatorController@getOperatorDetail'); // 获得操作员详细 3.29
         $router->post('changeOperatorStatus', 'OperatorController@changeOperatorStatus'); // 修改操作员是否禁用 3.29
+        $router->post('getHouseList', 'OperatorController@getHouseList'); // 操作员获取列表 4.10
     });
     // 服务商市场
     $router->group(['prefix' => 'providersMarket'], function (Router $router) {
@@ -277,7 +278,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
     // 欠款管理
     $router->group(['prefix' => 'operator'], function (Router $router) {
-        $router->post('getHouseList', 'OperatorController@getHouseList'); // 操作员获取列表 4.10
+       
 
     });
 });
