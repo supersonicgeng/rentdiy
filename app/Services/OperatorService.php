@@ -18,6 +18,7 @@ use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Landlord;
+use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\Operator;
 use App\Model\OperatorRoom;
@@ -129,6 +130,8 @@ class OperatorService extends CommonService
         $res = $model->where('operator_account',$account)->where('password',md5($password))->first();
         if(!$res){
             return $this->error('2','the account or password was wong');
+        }elseif (strtotime($res->start_date) <= time() && time() <= strtotime($res->end_date)+24*3600-1){
+            return $this->error('2','this account is not in the control time');
         }else{
             $token = md5($res->id.time().mt_rand(100,999));
             $user_id = $res->user_id;
@@ -349,7 +352,7 @@ class OperatorService extends CommonService
     }
 
     /**
-     * @description:房东操作员查看房屋列表
+     * @description:房东检查操作员获取列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -375,4 +378,49 @@ class OperatorService extends CommonService
         }
     }
 
+
+    /**
+     * @description:服务商检查操作员获取列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderList(array $input)
+    {
+        $operator_id = $input['operator_id'];
+        $user_id = $input['user_id'];
+        $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+        $service_ids = Providers::where('user_id',$user_id)->select('id')->get();
+        $model = new LandlordOrder();
+        $model = $model->whereIn('providers_id',$service_ids);
+        $model = $model->where('order_type',3);
+        $model = $model->where('order_status',2);
+        $model = $model->whereIn('rent_house_id',$room_list);
+        $model = $model->groupBy('rent_house_id');
+        $page = $input['page'];
+        $count = $model->get()->toArray();
+        $count = count($count);
+        if($count < ($page-1)*5){
+            return $this->error('3','no more order info');
+        }
+        $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id','inspect_id')->get()->toArray();
+        foreach($res as $k=>$v){
+            $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','address','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
+            $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+            $house_info[$k]['inspect_info'] = Inspect::where('id',$v['inspect_id'])->first();
+        }
+        if(!@$house_info){
+            return $this->error('4','no data');
+        }
+        $data['house_info'] = $house_info;
+        $data['total_page'] = ceil($count/5);
+        $data['current_page'] = $page;
+        if($res){
+            return $this->success('get house list success',$data);
+        }else{
+            return $this->error('3','get house list failed');
+        }
+    }
 }

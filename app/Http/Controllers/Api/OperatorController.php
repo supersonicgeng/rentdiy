@@ -104,7 +104,7 @@ class OperatorController extends Controller
     }
 
     /**
-     * @description: 房东操作员查看房屋列表
+     * @description: 房东检查操作员获取列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -114,6 +114,19 @@ class OperatorController extends Controller
     public function getHouseList(Request $request)
     {
         return service('Operator')->getHouseList($request->all());
+    }
+
+    /**
+     * @description: 服务商检查操作员获取列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderList(Request $request)
+    {
+        return service('Operator')->getOrderList($request->all());
     }
 
 }

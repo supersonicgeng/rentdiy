@@ -174,7 +174,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getOperatorList', 'OperatorController@getOperatorList'); // 获得操作员列表 3.29
         $router->post('getOperatorDetail', 'OperatorController@getOperatorDetail'); // 获得操作员详细 3.29
         $router->post('changeOperatorStatus', 'OperatorController@changeOperatorStatus'); // 修改操作员是否禁用 3.29
-        $router->post('getHouseList', 'OperatorController@getHouseList'); // 操作员获取列表 4.10
+        $router->post('getHouseList', 'OperatorController@getHouseList'); // 房东检查操作员获取列表 4.10
+        $router->post('getOrderList', 'OperatorController@getOrderList'); // 服务商检查操作员获取列表 4.10
     });
     // 服务商市场
     $router->group(['prefix' => 'providersMarket'], function (Router $router) {
