@@ -103,4 +103,17 @@ class OperatorController extends Controller
         return service('Operator')->changeOperatorStatus($request->all());
     }
 
+    /**
+     * @description: 房东操作员查看房屋列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseList(Request $request)
+    {
+        return service('Operator')->getHouseList($request->all());
+    }
+
 }
