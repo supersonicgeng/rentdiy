@@ -1162,7 +1162,7 @@ class RentService extends CommonService
         $res = $model->where('id',$input['contract_id'])->first();
         if($res->contract_type == 1){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
-                ->leftjoin('entire_contract','entire_contract.contract_id','=','id')->first();
+                ->leftjoin('rent_entire_contract','entire_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
             }else{
@@ -1170,7 +1170,7 @@ class RentService extends CommonService
             }
         }elseif($res->contract_type == 2 || $res->contract_type == 3){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
-                ->leftjoin('separate_contract','separate_contract.contract_id','=','id')->first();
+                ->leftjoin('rent_separate_contract','separate_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
             }else{
@@ -1178,7 +1178,7 @@ class RentService extends CommonService
             }
         }elseif($res->contract_type == 4){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
-                ->leftjoin('business_contract','business_contract.contract_id','=','id')->first();
+                ->leftjoin('rent_business_contract','business_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
             }else{
