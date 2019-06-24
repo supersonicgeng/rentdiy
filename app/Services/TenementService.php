@@ -326,6 +326,7 @@ class TenementService extends CommonService
     {
         $user_id = $input['user_id'];
         $tenement_id = Tenement::where('user_id',$user_id)->pluck('tenement_id')->first();
+        dump($tenement_id);
         $rent_house_ids = RentArrears::where('tenement_id',$tenement_id)->groupBy('rent_house_id')->pluck('rent_house_id');
         dd($rent_house_ids);
         foreach ($rent_house_ids as $k => $v){
