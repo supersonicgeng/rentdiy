@@ -1161,7 +1161,7 @@ class RentService extends CommonService
         $model = new RentContract();
         $res = $model->where('id',$input['contract_id'])->first();
         if($res->contract_type == 1){
-            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_entire_contract','entire_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
@@ -1169,7 +1169,7 @@ class RentService extends CommonService
                 return $this->error('2','get contact failed');
             }
         }elseif($res->contract_type == 2 || $res->contract_type == 3){
-            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_separate_contract','separate_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
@@ -1177,7 +1177,7 @@ class RentService extends CommonService
                 return $this->error('2','get contact failed');
             }
         }elseif($res->contract_type == 4){
-            $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_business_contract','business_contract.contract_id','=','id')->first();
             if($res){
                 return $this->success('get contact success',$res);
