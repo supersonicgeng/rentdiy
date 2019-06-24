@@ -331,8 +331,8 @@ class TenementService extends CommonService
         if($rent_house_id){
             foreach ($rent_house_ids as $k => $v){
                 $rent_house_info[$k]['rent_house_id'] = $v['rent_house_id'];
-                $rent_house_info[$k]['rent_house_property_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
-                $rent_house_info[$k]['rent_house_room_name'] = RentHouse::where('id',$v)->pluck('room_name')->first();
+                $rent_house_info[$k]['rent_house_property_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('property_name')->first();
+                $rent_house_info[$k]['rent_house_room_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first();
             }
             $data['rent_house_info'] = $rent_house_info;
             return $this->success('get arrears house list success',$data);
