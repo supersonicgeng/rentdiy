@@ -445,12 +445,9 @@ class RentService extends CommonService
         }else{
             $model = new RentApplication();
             $application_start_date = @$input['application_start_time'];
-            if($application_start_date){
-                $model = $model->where('created_at','>',$application_start_date);
-            }
             $application_end_date = @$input['application_end_time'];
-            if($application_end_date){
-                $model = $model->where('created_at','<',$application_end_date);
+            if($application_start_date && $application_end_date){
+                $model = $model->whereBetween('created_at',[$application_start_date,$application_end_date]);
             }
             $application_status = @$input['application_status'];
             if($application_status){
@@ -1134,6 +1131,7 @@ class RentService extends CommonService
                         $application_res[$k]['full_address'] = $house_info['address'].','.Region::getName($house_info['District']).','.Region::getName($house_info['TA']).','.Region::getName($house_info['Region']);
                         $application_res[$k]['contract_id'] = $v['id'];
                         $application_res[$k]['contract_status'] = $v['contract_status'];
+                        $application_res[$k]['contract_sn'] = $v['contract_id'];
                     }
                     $data['house_list'] = $application_res;
                     $data['total_page'] = ceil($count/5);
