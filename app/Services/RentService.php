@@ -1160,11 +1160,11 @@ class RentService extends CommonService
         //dd($input);
         $model = new RentContract();
         $res = $model->where('id',$input['contract_id'])->first();
-        if($res){
+        /*if($res){
 
         }else{
             return $this->error('2','get contract detail failed');
-        }
+        }*/
         if($res->contract_contract_type == 1){
             $res = $model->where('id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','id')
                 ->leftjoin('entire_contract','entire_contract.contract_id','=','id')->first();
