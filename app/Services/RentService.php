@@ -1132,6 +1132,8 @@ class RentService extends CommonService
                         $application_res[$k]['contract_id'] = $v['id'];
                         $application_res[$k]['contract_status'] = $v['contract_status'];
                         $application_res[$k]['contract_sn'] = $v['contract_id'];
+                        $application_res[$k]['rent_start_date'] = $v['rent_start_date'];
+                        $application_res[$k]['rent_end_date'] = $v['rent_end_date'];
                     }
                     $data['house_list'] = $application_res;
                     $data['total_page'] = ceil($count/5);
