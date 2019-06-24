@@ -204,9 +204,9 @@ class RentController extends CommonController
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function rentContactDetail(Request $request)
+    public function rentContractDetail(Request $request)
     {
-        return service('Rent')->rentContactDetail($request->all());
+        return service('Rent')->rentContractDetail($request->all());
     }
 
     /**

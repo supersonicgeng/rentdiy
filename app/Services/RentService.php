@@ -1155,7 +1155,7 @@ class RentService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function rentContactDetail(array $input)
+    public function rentContractDetail(array $input)
     {
         //dd($input);
         $model = new RentContract();
