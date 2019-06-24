@@ -84,4 +84,17 @@ class TenementController extends CommonController
     {
         return service('Tenement')->getArrearsHouseList($request->all());
     }
+
+    /**
+     * @description:账单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getArrearsList(Request $request)
+    {
+        return service('Tenement')->getArrearsList($request->all());
+    }
 }

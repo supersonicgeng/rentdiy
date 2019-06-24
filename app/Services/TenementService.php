@@ -15,6 +15,7 @@ use App\Model\AliPay\AliPayClient;
 use App\Model\AliPay\AliPayTransfer;
 use App\Model\CheckBuilding;
 use App\Model\Config;
+use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\HouseScore;
@@ -28,6 +29,7 @@ use App\Model\PlantOperateLog;
 use App\Model\RentArrears;
 use App\Model\RentContract;
 use App\Model\RentHouse;
+use App\Model\RentPic;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -339,6 +341,65 @@ class TenementService extends CommonService
         } else{
             return $this->error('2','you not have arrears house');
         }
+    }
 
+    /**
+     * @description:账单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getArrearsList(array $input)
+    {
+        $model = new RentArrears();
+        $rent_house_id = $input['rent_house_id'];
+        $model = $model->where('rent_house_id',$rent_house_id);
+        $user_id = $input['user_id'];
+        $tenement_id = Tenement::where('user_id',$user_id)->pluck('id')->first();
+        $model = $model->where('tenement_id',$tenement_id);
+        if($input['start_date'] && $input['end_date']){
+            $model = $model->whereBetween('created_at',[$input['start_date'],$input['end_date']]);
+        }
+        if($input['type']){
+            $model = $model->where('arrears_type',$input['type']);
+        }
+        if($input['is_pay'] == 2){
+            $model = $model->where('is_pay',2);
+        }elseif ($input['is_pay'] == 3){
+            $model = $model->whereIn('is_pay',[1,3]);
+        }
+        $model = $model->where('arrears_type','<',4);
+        $total_arrears = 0;
+        $need_pay_fee = 0;
+        $pay_fee = 0;
+        $count = $model->count();
+        if($count < ($input['page']-1)*10){
+            return $this->error('2','no more arrears info');
+        }
+        $arrears_res = $model->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
+        foreach ($arrears_res as $k => $v){
+            $total_arrears += $v['arrears_fee'];
+            $need_pay_fee += $v['need_pay_fee'];
+            $pay_fee += $v['pay_fee'];
+        }
+        $contract_id = $v[0]['contract_id'];
+        $landlord_full_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $tenement_name = ContractTenement::where('tenement_id',$tenement_id)->where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address');
+        $subject_code = Tenement::where('id',$tenement_id)->pluck('subject_code')->first();
+        $landlord_id = RentContract::where('id',$contract_id)->pluck('user_id')->first();
+        $rent_house_pic = RentPic::where('rent_house_id',$rent_house_id)->pluck('pic')->first();
+        $landlord_headimg = \App\Model\User::where('id',$landlord_id)->pluck('headimg')->first();
+        $data['arrears_list'] = $arrears_res;
+        $data['landlodr_full_name'] = $landlord_full_name;
+        $data['tenement_name'] = $tenement_name;
+        $data['property_address'] = $property_address;
+        $data['subject_code'] = $subject_code;
+        $data['landlord_id'] = $landlord_id;
+        $data['rent_house_pic'] = $rent_house_pic;
+        $data['landlord_headimg'] = $landlord_headimg;
+        return $this->success('get arrears list success',$data);
     }
 }
