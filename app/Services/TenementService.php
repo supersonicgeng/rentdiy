@@ -25,7 +25,9 @@ use App\Model\PassportReward;
 use App\Model\PassportStore;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
+use App\Model\RentArrears;
 use App\Model\RentContract;
+use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
 use App\Model\SignLog;
@@ -309,5 +311,33 @@ class TenementService extends CommonService
         }else{
             return $this->error('2','tenement score failed');
         }
+    }
+
+
+    /**
+     * @description:房屋账单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getArrearsHouseList(array $input)
+    {
+        $user_id = $input['user_id'];
+        $tenement_id = Tenement::where('user_id',$user_id)->pluck('tenement_id')->first();
+        $rent_house_ids = RentArrears::where('tenement_id',$tenement_id)->groupBy('rent_house_id')->pluck('rent_house_id');
+        foreach ($rent_house_ids as $k => $v){
+            $rent_house_info[$k]['rent_house_id'] = $v;
+            $rent_house_info[$k]['rent_house_property_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
+            $rent_house_info[$k]['rent_house_room_name'] = RentHouse::where('id',$v)->pluck('room_name')->first();
+        }
+        if($rent_house_info){
+            $data['rent_house_info'] = $rent_house_info;
+            return $this->success('get arrears house list success',$data);
+        }else{
+            return $this->error('2','you not have arrears house');
+        }
+
     }
 }

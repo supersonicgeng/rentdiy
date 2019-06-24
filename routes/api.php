@@ -125,6 +125,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('editTenementInformation', 'TenementController@editTenementInformation'); // 修改租户信息 3.22 接口done
         $router->post('deleteTenementInformation', 'TenementController@deleteTenementInformation'); // 删除租户信息 3.27
         $router->post('houseScore', 'TenementController@houseScore'); // 房屋打分 3.27
+        $router->post('getArrearsHouseList', 'TenementController@getArrearsHouseList'); // 房屋账单列表 3.27
     });
     // 房东管理
     $router->group(['prefix' => 'landlord'], function (Router $router) {
