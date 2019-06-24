@@ -844,7 +844,7 @@ class InspectService extends CommonService
             // 更改状态
             $inspect_method = Inspect::where('id',$input['inspect_id'])->first();
             if($inspect_method->inspect_method == 2){
-                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
             }else{
                 Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>2,'updated_at'=>date('Y-m-d H:i:s',time())]);
             }
