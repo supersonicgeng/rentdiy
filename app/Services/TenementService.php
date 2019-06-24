@@ -326,17 +326,17 @@ class TenementService extends CommonService
     {
         $user_id = $input['user_id'];
         $tenement_id = Tenement::where('user_id',$user_id)->pluck('id')->first();
+        $rent_house_id = RentArrears::where('tenement_id',$tenement_id)->first();
         $rent_house_ids = RentArrears::where('tenement_id',$tenement_id)->groupBy('rent_house_id')->select('rent_house_id')->get();
-        dd($rent_house_ids);
-        foreach ($rent_house_ids as $k => $v){
-            $rent_house_info[$k]['rent_house_id'] = $v['rent_house_id'];
-            $rent_house_info[$k]['rent_house_property_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
-            $rent_house_info[$k]['rent_house_room_name'] = RentHouse::where('id',$v)->pluck('room_name')->first();
-        }
-        if($rent_house_info){
+        if($rent_house_id){
+            foreach ($rent_house_ids as $k => $v){
+                $rent_house_info[$k]['rent_house_id'] = $v['rent_house_id'];
+                $rent_house_info[$k]['rent_house_property_name'] = RentHouse::where('id',$v)->pluck('property_name')->first();
+                $rent_house_info[$k]['rent_house_room_name'] = RentHouse::where('id',$v)->pluck('room_name')->first();
+            }
             $data['rent_house_info'] = $rent_house_info;
             return $this->success('get arrears house list success',$data);
-        }else{
+        } else{
             return $this->error('2','you not have arrears house');
         }
 
