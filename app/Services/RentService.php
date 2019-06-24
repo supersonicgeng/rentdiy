@@ -1160,7 +1160,6 @@ class RentService extends CommonService
         //dd($input);
         $model = new RentContract();
         $res = $model->where('id',$input['contract_id'])->first();
-        dd(222);
         dd($res);
         /*if($res){
 
