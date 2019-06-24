@@ -130,8 +130,6 @@ class OperatorService extends CommonService
         $res = $model->where('operator_account',$account)->where('password',md5($password))->first();
         if(!$res){
             return $this->error('2','the account or password was wong');
-        }elseif (strtotime($res->start_date) <= time() && time() <= strtotime($res->end_date)+24*3600-1){
-            return $this->error('2','this account is not in the control time');
         }else{
             $token = md5($res->id.time().mt_rand(100,999));
             $user_id = $res->user_id;
