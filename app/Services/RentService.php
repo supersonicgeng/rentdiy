@@ -2239,7 +2239,7 @@ class RentService extends CommonService
                 'updated_at'        => date('Y-m-d H:i:s',time()),
             ]);
             $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
-            RentHouse::where('id',$rent_house_id)->update(['rent_status'=>5,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            RentHouse::where('id',$rent_house_id)->update(['rent_status'=>1,'is_put'=>2,'updated_at'=>date('Y-m-d H:i:s',time())]);
             if($res){
                 // 增加最后一个租金单
                 // 获取最后一次的租金详情
