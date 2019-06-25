@@ -400,6 +400,8 @@ class TenementService extends CommonService
         $data['landlord_id'] = $landlord_id;
         $data['rent_house_pic'] = $rent_house_pic;
         $data['landlord_head_img'] = $landlord_headimg;
+        $data['current_page'] = $input['page'];
+        $data['total_page'] = ceil($count/10);
         return $this->success('get arrears list success',$data);
     }
 }
