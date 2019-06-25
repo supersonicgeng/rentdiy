@@ -390,7 +390,7 @@ class TenementService extends CommonService
         $property_address = RentHouse::where('id',$rent_house_id)->pluck('address');
         $subject_code = Tenement::where('id',$tenement_id)->pluck('subject_code')->first();
         $landlord_id = RentContract::where('id',$contract_id)->pluck('user_id')->first();
-        $rent_house_pic = RentPic::where('rent_house_id',$rent_house_id)->pluck('pic')->first();
+        $rent_house_pic = RentPic::where('rent_house_id',$rent_house_id)->pluck('house_pic')->first();
         $landlord_headimg = \App\Model\User::where('id',$landlord_id)->pluck('headimg')->first();
         $data['arrears_list'] = $arrears_res;
         $data['landlodr_full_name'] = $landlord_full_name;
