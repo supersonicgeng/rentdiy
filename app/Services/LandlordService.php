@@ -544,7 +544,9 @@ class LandlordService extends CommonService
                $providers_res[$k]['finish_order'] = LandlordOrder::where('providers_id',$v['id'])->where('order_type',3)->count();
                $providers_res[$k]['doing_order'] = LandlordOrder::where('providers_id',$v['id'])->where('order_type',2)->count();
            }
-           $data = $providers_res;
+           $data['providers_res'] = $providers_res;
+           $data['current_page'] = $page;
+           $data['total_page'] = ceil($count/5);
            return $this->success('get providers infomation success',$data);
        }
 
