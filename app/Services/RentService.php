@@ -1162,28 +1162,27 @@ class RentService extends CommonService
         $model = new RentContract();
         $res = $model->where('id',$input['contract_id'])->first();
         if($res->contract_type == 1){
-            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
-                ->leftjoin('rent_entire_contract','rent_entire_contract.contract_id','=','rent_contract.id')->first();
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('rent_entire_contract','rent_entire_contract.contract_id','=','rent_contract.id')->first()->toArray();
             if($res){
-                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+                $res['tenement_info'] = ContractTenement::where('contract_id',$input['contract_id'])->get()->toArray();
+                $res['chattel_info'] = ContractChattel::where('contract_id',$input['contract_id'])->get()->toArray();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
             }
         }elseif($res->contract_type == 2 || $res->contract_type == 3){
-            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
-                ->leftjoin('rent_separate_contract','rent_separate_contract.contract_id','=','rent_contract.id')->first();
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('rent_separate_contract','rent_separate_contract.contract_id','=','rent_contract.id')->first()->toArray();
             if($res){
-                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+                $res['tenement_info'] = ContractTenement::where('contract_id',$input['contract_id'])->get()->toArray();
+                $res['chattel'] = ContractChattel::where('contract_id',$input['contract_id'])->get()->toArray();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
             }
         }elseif($res->contract_type == 4){
-            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
-                ->leftjoin('rent_business_contract','rent_business_contract.contract_id','=','rent_contract.id')->first();
+            $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('rent_business_contract','rent_business_contract.contract_id','=','rent_contract.id')->first()->toArray();
             if($res){
-                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+                $res['tenement_info'] = ContractTenement::where('contract_id',$input['contract_id'])->get()->toArray();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
