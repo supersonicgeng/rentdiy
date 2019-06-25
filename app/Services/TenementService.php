@@ -362,7 +362,7 @@ class TenementService extends CommonService
         if($input['start_date'] && $input['end_date']){
             $model = $model->whereBetween('created_at',[$input['start_date'],$input['end_date']]);
         }
-        if($input['type']){
+        if(@$input['type']){
             $model = $model->where('arrears_type',$input['type']);
         }
         if($input['is_pay'] == 2){
