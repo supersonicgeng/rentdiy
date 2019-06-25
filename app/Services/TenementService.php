@@ -375,7 +375,7 @@ class TenementService extends CommonService
         $need_pay_fee = 0;
         $pay_fee = 0;
         $count = $model->count();
-        if($count < ($input['page']-1)*10){
+        if($count <= ($input['page']-1)*10){
             return $this->error('2','no more arrears info');
         }
         $arrears_res = $model->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
@@ -384,7 +384,7 @@ class TenementService extends CommonService
             $need_pay_fee += $v['need_pay_fee'];
             $pay_fee += $v['pay_fee'];
         }
-        $contract_id = $v[0]['contract_id'];
+        $contract_id = $arrears_res[0]['contract_id'];
         $landlord_full_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
         $tenement_name = ContractTenement::where('tenement_id',$tenement_id)->where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
         $property_address = RentHouse::where('id',$rent_house_id)->pluck('address');
