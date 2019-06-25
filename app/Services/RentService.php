@@ -1165,6 +1165,7 @@ class RentService extends CommonService
             $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_entire_contract','rent_entire_contract.contract_id','=','rent_contract.id')->first();
             if($res){
+                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
@@ -1173,6 +1174,7 @@ class RentService extends CommonService
             $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_separate_contract','rent_separate_contract.contract_id','=','rent_contract.id')->first();
             if($res){
+                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
@@ -1181,6 +1183,7 @@ class RentService extends CommonService
             $res = $model->where('rent_contract.id',$input['contract_id'])->leftjoin('contract_tenement','contract_tenement.contract_id','=','rent_contract.id')
                 ->leftjoin('rent_business_contract','rent_business_contract.contract_id','=','rent_contract.id')->first();
             if($res){
+                $res->contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
