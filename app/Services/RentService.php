@@ -1177,6 +1177,7 @@ class RentService extends CommonService
                 $res['tenement_info'] = ContractTenement::where('contract_id',$input['contract_id'])->get()->toArray();
                 $res['chattel'] = ContractChattel::where('contract_id',$input['contract_id'])->get()->toArray();
                 $res['contract_sn'] = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+                $res['service_fee_info'] = ContractService::where('contract_id',$input['contract_id'])->get()->toArray();
                 return $this->success('get contact success',$res);
             }else{
                 return $this->error('2','get contact failed');
