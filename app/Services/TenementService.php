@@ -359,7 +359,7 @@ class TenementService extends CommonService
         $user_id = $input['user_id'];
         $tenement_id = Tenement::where('user_id',$user_id)->pluck('id')->first();
         $model = $model->where('tenement_id',$tenement_id);
-        if($input['start_date'] && $input['end_date']){
+        if(@$input['start_date'] && @$input['end_date']){
             $model = $model->whereBetween('created_at',[$input['start_date'],$input['end_date']]);
         }
         if(@$input['type']){
