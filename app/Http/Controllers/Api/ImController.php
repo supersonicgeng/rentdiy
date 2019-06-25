@@ -71,6 +71,17 @@ class ImController extends Controller
         }
     }
 
+    public function getImUserInfo(Request $request)
+    {
+        $from = $request->from;
+        $from_user_id =  explode('_',$from);
+        $from_user_id = $from_user_id[1];
+        $from_info['headimg'] = User::where('id',$from_user_id)->pluck('head_img')->first();
+        $from_info['nickname'] = User::where('id',$from_user_id)->pluck('nickname')->first();
+        $data['from_info'] = $from_info;
+        return  $this->success('get im msg success',$data);
+    }
+
     /**
      * @description:操作成功处理
      * @author: hkw <hkw925@qq.com>

@@ -258,12 +258,16 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('bankAdjust', 'FeeController@bankAdjust'); // 银行对账手工调整 4.10
         $router->post('bankAdjustConfirm', 'FeeController@bankAdjustConfirm'); // 银行对账手工调整确认 4.10
         $router->post('bankCheckMatch', 'FeeController@bankCheckMatch'); // 银行对账详情 确认租户4.10
+        $router->post('providersFeeList', 'FeeController@providersFeeList'); // 服务商费用单列表 4.10
+        $router->post('providersFeeAdd', 'FeeController@providersFeeAdd'); // 服务商添加费用单 4.10
+        $router->post('providersFeeDetail', 'FeeController@providersFeeDetail'); // 服务商费用单详情 4.10
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
         $router->post('sendMsg', 'ImController@sendMsg'); // 发送消息 4.10
         $router->post('getImList', 'ImController@getImList'); // 获取列表 4.10
         $router->post('getImInfo', 'ImController@getImInfo'); // 获取消息 4.10
+        $router->post('getImUserInfo', 'ImController@getImUserInfo'); // 获取消息发送人信息 4.10
     });
 });
 
