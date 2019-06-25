@@ -1269,6 +1269,7 @@ class RentService extends CommonService
                         'rent_per_week'                             => $input['rent_per_week'],
                         'pay_method'                                => $input['pay_method'],
                         'bond_amount'                               => $input['bond_amount'],
+                        'to_be_paid'                                => $input['to_be_paid'],
                         'rent_to_be_paid_at'                        => $input['rent_to_be_paid_at'],
                         'bank_account'                              => $input['bank_account'],
                         'account_name'                              => $input['account_name'],
