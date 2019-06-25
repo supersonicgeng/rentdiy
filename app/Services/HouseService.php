@@ -1127,7 +1127,7 @@ class HouseService extends CommonService
         $tenement_id = $input['tenement_id'];
         $model = new RentHouse();
         $model = $model->where('is_put',2);
-        $model = $model->where('rent_status',1);
+        /*$model = $model->where('rent_status',1);*/
         // 房屋主档类型筛选
         $rent_category = @$input['rent_category'];
         if($rent_category){
