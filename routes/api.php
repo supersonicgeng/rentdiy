@@ -144,6 +144,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementNote','LandlordController@tenementNote'); // 租户行为记录
         $router->post('tenementManage','LandlordController@tenementManage'); // 租户管理
         $router->post('getTenementInfo','LandlordController@getTenementInfo'); // 租约生成时获取租户信息
+        $router->post('getProvidersList','LandlordController@getProvidersList'); // 获取服务商列表
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {
