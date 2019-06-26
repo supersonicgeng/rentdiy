@@ -129,7 +129,7 @@ class ImController extends Controller
             foreach ($group as $k => $v){
                 $to[]['im_id'] = $v['to'];
             }
-            $other_msg = Im::whereNotIn('from',$to)->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
+            $other_msg = Im::whereNotIn('from',$to)->where('from','!=','admin')->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             if($other_msg){
                 $other_msg = $other_msg->toArray();
                 foreach ($other_msg as $k => $v){
