@@ -198,7 +198,14 @@ class ImController extends Controller
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
         $res = $easemob->showFriends($owner_username);
-        $data = $res['data'];
+        foreach ($res as $k => $v){
+            $user_id = explode('_',$v);
+            $user_id = $user_id[1];
+            $to[$k]['headimg'] = User::where('id',$user_id)->pluck('head_img')->first();
+            $to[$k]['nickname'] = User::where('id',$user_id)->pluck('nickname')->first();
+            $to[$k]['im_id'] = $v;
+        }
+        $data['list'] = $to;
         return $this->success('get friend list success',$data);
     }
 
