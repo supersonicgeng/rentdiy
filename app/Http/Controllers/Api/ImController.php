@@ -40,6 +40,8 @@ class ImController extends Controller
         $recive_msg = Im::where('to',$user)->where('from',$im_id);
         $total_msg = $send_msg->union($recive_msg)->orderBy('id')->get()->toArray();// 已发消息 和对方返回的消息
         $msg['msg'] = $total_msg;
+        // 将获得的收到消息改成已读
+        Im::where('to',$user)->where('from',$im_id)->update(['is_read'=>1]);
         return  $this->success('get im msg success',$msg);
     }
 
@@ -61,6 +63,11 @@ class ImController extends Controller
                 }
             }
             foreach ($to as $k=> $v){
+                if(Im::where('to',$user)->where('from',$v['im_id'])->where('is_read',1)->first()){
+                    $to[$k]['is_read'] = 1;
+                }else{
+                    $to[$k]['is_read'] = 0;
+                }
                 $user_id = explode('_',$v['im_id']);
                 $user_id = $user_id[1];
                 $to[$k]['headimg'] = User::where('id',$user_id)->pluck('head_img')->first();
