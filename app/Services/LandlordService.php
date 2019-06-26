@@ -568,9 +568,9 @@ class LandlordService extends CommonService
         $providers_id = $input['providers_id'];
         $provider_info = Providers::where('id',$providers_id)->first()->toArray();
         $provider_info['jobs'] = explode(',',$provider_info['jobs']);
-        $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
-        $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$input['service_id'])->where('deleted_at',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
-        $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$input['service_id'])->where('deleted_at',null)->get()->toArray();
+        $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$providers_id)->where('deleted_at',null)->pluck('company_pic')->toArray(); // 公司图片
+        $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$providers_id->where('deleted_at',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
+        $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$providers_id)->where('deleted_at',null)->get()->toArray();
         return $this->success('get providers success',$provider_info);
     }
 }
