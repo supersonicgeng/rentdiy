@@ -268,7 +268,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getImList', 'ImController@getImList'); // 获取列表 4.10
         $router->post('getImInfo', 'ImController@getImInfo'); // 获取消息 4.10
         $router->post('getImUserInfo', 'ImController@getImUserInfo'); // 获取消息发送人信息 4.10
-        $router->post('addFriend', 'ImController@addFriend'); // 获取消息发送人信息 4.10
+        $router->post('addFriend', 'ImController@addFriend'); // 加好友 4.10
+        $router->post('getFriendList', 'ImController@getFriendList'); // 获取好友列表 4.10
     });
 });
 

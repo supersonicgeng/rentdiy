@@ -91,6 +91,14 @@ class ImController extends Controller
         dd($res);
     }
 
+    public function getFriendList(Request $request)
+    {
+        $easemob = new Easemob();
+        $owner_username = 'user_'.$request->user_id;
+        $res = $easemob->addFriend($owner_username);
+        dd($res);
+    }
+
     /**
      * @description:操作成功处理
      * @author: hkw <hkw925@qq.com>
