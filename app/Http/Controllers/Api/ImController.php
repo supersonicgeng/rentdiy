@@ -198,7 +198,7 @@ class ImController extends Controller
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
         $res = $easemob->showFriends($owner_username);
-        foreach ($res as $k => $v){
+        foreach ($res['data'] as $k => $v){
             $user_id = explode('_',$v);
             $user_id = $user_id[1];
             $to[$k]['headimg'] = User::where('id',$user_id)->pluck('head_img')->first();
