@@ -538,9 +538,9 @@ class LandlordService extends CommonService
        }else{
            $providers_res = $model->offset(($page-1)*5)->limit(5)->get()->toArray();
            foreach ($providers_res as $k => $v){
-               $providers_res[$k]['quality_score']  = ProvidersScore::where('service_id',$v['id'])->avg('quality_score');
-               $providers_res[$k]['community_score']  = ProvidersScore::where('service_id',$v['id'])->avg('community_score');
-               $providers_res[$k]['money_score']  = ProvidersScore::where('service_id',$v['id'])->avg('money_score');
+               $providers_res[$k]['quality_score']  = round(ProvidersScore::where('service_id',$v['id'])->avg('quality_score'));
+               $providers_res[$k]['community_score']  = round(ProvidersScore::where('service_id',$v['id'])->avg('community_score'));
+               $providers_res[$k]['money_score']  = round(ProvidersScore::where('service_id',$v['id'])->avg('money_score'));
                $providers_res[$k]['finish_order'] = LandlordOrder::where('providers_id',$v['id'])->where('order_type',3)->count();
                $providers_res[$k]['doing_order'] = LandlordOrder::where('providers_id',$v['id'])->where('order_type',2)->count();
            }
