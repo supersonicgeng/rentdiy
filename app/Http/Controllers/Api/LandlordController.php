@@ -214,4 +214,17 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->getProvidersList($request->all());
     }
+
+    /**
+     * @description:获取服务商详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProvidersDetail(Request $request)
+    {
+        return service('Landlord')->getProvidersDetail($request->all());
+    }
 }
