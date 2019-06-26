@@ -119,6 +119,17 @@ class ImController extends Controller
     }
 
 
+    public function getSystemInfo(Request $request)
+    {
+        $user = 'user_'.$request->user_id;
+        $recive_msg = Im::where('to',$user)->where('from','admin');
+        $total_msg = $recive_msg->orderBy('id')->get()->toArray();// 已发消息 和对方返回的消息
+        $msg['msg'] = $total_msg;
+        // 将获得的收到消息改成已读
+        Im::where('to',$user)->where('from','admin')->update(['is_read'=>1]);
+        return  $this->success('get system im msg success',$msg);
+    }
+
     public function getImList(Request $request)
     {
         $user = 'user_'.$request->user_id;
@@ -162,21 +173,33 @@ class ImController extends Controller
         return  $this->success('get im msg success',$data);
     }
 
+    public function searchFriend(Request $request)
+    {
+        $nickname = $request->nickname;
+
+    }
+
+
+
+
     public function addFriend(Request $request)
     {
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
         $friend_username = $request->friend_username;
         $res = $easemob->addFriend($owner_username,$friend_username);
-        dd($res);
+        return $this->success('add friend success');
     }
+
+
 
     public function getFriendList(Request $request)
     {
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
         $res = $easemob->showFriends($owner_username);
-        dd($res);
+        $data = $res['data'];
+        return $this->success('get friend list success',$data);
     }
 
     /**
