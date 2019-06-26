@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Model\Im;
+use App\Model\Landlord;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,6 +26,79 @@ class ImController extends Controller
         $im::insert($im_data);
         $easemob = new Easemob();
         $res = $easemob->sendMessageText([$to],'users',$message,$send);
+        if($res['data'][$to] == 'success'){
+            return $this->success('send im success');
+        }else{
+            return $this->error('2','send im failed');
+        }
+    }
+
+    public function sendSystemMsg(Request $request)
+    {
+        $toType = $request->toType;
+        if($toType == 1){
+            // 给房东发送消息
+            $send_user_id = User::whereIn('user_role',[1,3,5,7])->pluck('id');
+            foreach ($send_user_id as $k => $v){
+                $to[] = 'user_'.$v;
+                $message = $request->msg;
+                $im_data = [
+                    'from'          => 'admin',
+                    'to'            => 'user_'.$v,
+                    'msg'           => $message,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $im = new Im();
+                $im::insert($im_data);
+            }
+        }elseif ($toType == 2){
+            // 给服务商发送消息
+            $send_user_id = User::whereIn('user_role',[2,3,6,7])->pluck('id');
+            foreach ($send_user_id as $k => $v){
+                $to[] = 'user_'.$v;
+                $message = $request->msg;
+                $im_data = [
+                    'from'          => 'admin',
+                    'to'            => 'user_'.$v,
+                    'msg'           => $message,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $im = new Im();
+                $im::insert($im_data);
+            }
+        }elseif  ($toType == 3){
+            // 给租户发送消息
+            $send_user_id = User::whereIn('user_role',[4,5,6,7])->pluck('id');
+            foreach ($send_user_id as $k => $v){
+                $to[] = 'user_'.$v;
+                $message = $request->msg;
+                $im_data = [
+                    'from'          => 'admin',
+                    'to'            => 'user_'.$v,
+                    'msg'           => $message,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $im = new Im();
+                $im::insert($im_data);
+            }
+        }else{
+            // 给所有用户发送消息
+            $send_user_id = User::pluck('id');
+            foreach ($send_user_id as $k => $v){
+                $to[] = 'user_'.$v;
+                $message = $request->msg;
+                $im_data = [
+                    'from'          => 'admin',
+                    'to'            => 'user_'.$v,
+                    'msg'           => $message,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $im = new Im();
+                $im::insert($im_data);
+            }
+        }
+        $easemob = new Easemob();
+        $res = $easemob->sendMessageText([$to],'users',$message,'admin');
         if($res['data'][$to] == 'success'){
             return $this->success('send im success');
         }else{

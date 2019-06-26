@@ -265,9 +265,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
         $router->post('sendMsg', 'ImController@sendMsg'); // 发送消息 4.10
+        $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送消息 4.10
         $router->post('getImList', 'ImController@getImList'); // 获取列表 4.10
         $router->post('getImInfo', 'ImController@getImInfo'); // 获取消息 4.10
         $router->post('getImUserInfo', 'ImController@getImUserInfo'); // 获取消息发送人信息 4.10
+        $router->post('searchFriend', 'ImController@searchFriend'); // 搜索好友 4.10
         $router->post('addFriend', 'ImController@addFriend'); // 加好友 4.10
         $router->post('getFriendList', 'ImController@getFriendList'); // 获取好友列表 4.10
     });
