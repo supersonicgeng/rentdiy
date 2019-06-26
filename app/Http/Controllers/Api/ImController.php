@@ -198,8 +198,8 @@ class ImController extends Controller
     {
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
-        $friend_username = $request->friend_username;
-        $res = $easemob->addFriend($owner_username,$friend_username);
+        $im_id = $request->im_id;
+        $res = $easemob->addFriend($owner_username,$im_id);
         return $this->success('add friend success');
     }
 
