@@ -82,6 +82,15 @@ class ImController extends Controller
         return  $this->success('get im msg success',$data);
     }
 
+    public function addFriend(Request $request)
+    {
+        $easemob = new Easemob();
+        $owner_username = 'user_'.$request->user_id;
+        $friend_username = $request->friend_username;
+        $res = $easemob->addFriend($owner_username,$friend_username);
+        dd($res);
+    }
+
     /**
      * @description:操作成功处理
      * @author: hkw <hkw925@qq.com>

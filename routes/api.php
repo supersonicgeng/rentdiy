@@ -268,6 +268,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getImList', 'ImController@getImList'); // 获取列表 4.10
         $router->post('getImInfo', 'ImController@getImInfo'); // 获取消息 4.10
         $router->post('getImUserInfo', 'ImController@getImUserInfo'); // 获取消息发送人信息 4.10
+        $router->post('addFriend', 'ImController@addFriend'); // 获取消息发送人信息 4.10
     });
 });
 
@@ -286,7 +287,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
     // 欠款管理
     $router->group(['prefix' => 'operator'], function (Router $router) {
-       
+
 
     });
 });
