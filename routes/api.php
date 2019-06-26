@@ -63,6 +63,9 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('testIM','ImController@sendMsg'); // 测试 pdf 5.28
         $router->post('getImInfo','ImController@getImInfo'); // 获得im 历史消息 pdf 5.28
     });
+    $router->group(['prefix' => 'im'], function (Router $router) {
+        $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送系统消息 4.10
+    });
 });
 
 
@@ -265,7 +268,6 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
         $router->post('sendMsg', 'ImController@sendMsg'); // 发送消息 4.10
-        $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送消息 4.10
         $router->post('getImList', 'ImController@getImList'); // 获取列表 4.10
         $router->post('getImInfo', 'ImController@getImInfo'); // 获取消息 4.10
         $router->post('getImUserInfo', 'ImController@getImUserInfo'); // 获取消息发送人信息 4.10
