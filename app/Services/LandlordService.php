@@ -571,6 +571,7 @@ class LandlordService extends CommonService
         $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$providers_id)->where('deleted_at',null)->where('company_pic','!=',null)->pluck('company_pic')->toArray(); // 公司图片
         $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$providers_id)->where('deleted_at',null)->where('company_promo_pic','!=',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
         $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$providers_id)->where('deleted_at',null)->get()->toArray();
-        return $this->success('get providers success',$provider_info);
+        $data['provider_info'] = $provider_info;
+        return $this->success('get providers success',$data);
     }
 }
