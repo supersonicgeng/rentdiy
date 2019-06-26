@@ -95,7 +95,7 @@ class ImController extends Controller
     {
         $easemob = new Easemob();
         $owner_username = 'user_'.$request->user_id;
-        $res = $easemob->addFriend($owner_username);
+        $res = $easemob->showFriends($owner_username);
         dd($res);
     }
 
