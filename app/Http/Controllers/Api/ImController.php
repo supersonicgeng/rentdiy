@@ -221,6 +221,30 @@ class ImController extends Controller
         return $this->success('get friend list success',$data);
     }
 
+    public function searchHistory(Request $request)
+    {
+        $nickname = $request->nickname;
+        $user = 'user_'.$request->user_id;
+        $res = User::where('nickname','like','%'.$nickname.'%')->first();
+        if($res){
+            $res = User::where('nickname','like','%'.$nickname.'%')->pluck('id');
+            foreach ($res as $k => $v){
+                if(Im::where('to',$user)->where('from','user_'.$v)->first() ||Im::where('from',$user)->where('to','user_'.$v)->first()){
+                    $search_res[] = $v;
+                }
+            }
+            foreach ($search_res as $k => $v){
+                $to[$k]['headimg'] = User::where('id',$v)->pluck('head_img')->first();
+                $to[$k]['nickname'] = User::where('id',$v)->pluck('nickname')->first();
+                $to[$k]['im_id'] = 'user_'.$v;
+            }
+            $data['search_res'] = $to;
+            return $this->success('search success',$data);
+        }else{
+            return $this->error(2,'search failed');
+        }
+    }
+
     /**
      * @description:操作成功处理
      * @author: hkw <hkw925@qq.com>
