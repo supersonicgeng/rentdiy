@@ -176,7 +176,19 @@ class ImController extends Controller
     public function searchFriend(Request $request)
     {
         $nickname = $request->nickname;
-
+        $res = User::where('nickname','like','%'.$nickname.'%')->get();
+        if($res){
+            $res = $res->toArray();
+            foreach ($res as $k => $v){
+                $search_res[$k]['nickname'] = $v['nickname'];
+                $search_res[$k]['headimg'] = $v['head_img'];
+                $search_res[$k]['im_id'] = 'user_'.$v['id'];
+            }
+            $data['search_res'] = $search_res;
+            return $this->success('search success',$data);
+        }else{
+            return $this->error(2,'search failed');
+        }
     }
 
 
