@@ -63,10 +63,10 @@ class ImController extends Controller
                 }
             }
             foreach ($to as $k=> $v){
-                if(Im::where('to',$user)->where('from',$v['im_id'])->where('is_read',1)->first()){
-                    $to[$k]['is_read'] = 1;
-                }else{
+                if(Im::where('to',$user)->where('from',$v['im_id'])->where('is_read',0)->first()){
                     $to[$k]['is_read'] = 0;
+                }else{
+                    $to[$k]['is_read'] = 1;
                 }
                 $user_id = explode('_',$v['im_id']);
                 $user_id = $user_id[1];
