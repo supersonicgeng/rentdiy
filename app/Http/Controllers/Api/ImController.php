@@ -36,6 +36,7 @@ class ImController extends Controller
     public function sendSystemMsg(Request $request)
     {
         $toType = $request->toType;
+        $easemob = new Easemob();
         if($toType == 1){
             // 给房东发送消息
             $send_user_id = User::whereIn('user_role',[1,3,5,7])->pluck('id');
@@ -50,6 +51,7 @@ class ImController extends Controller
                 ];
                 $im = new Im();
                 $im::insert($im_data);
+                $res = $easemob->sendMessageText(['user_'.$v],'users',$message,'user_admin');
             }
         }elseif ($toType == 2){
             // 给服务商发送消息
@@ -65,6 +67,7 @@ class ImController extends Controller
                 ];
                 $im = new Im();
                 $im::insert($im_data);
+                $res = $easemob->sendMessageText(['user_'.$v],'users',$message,'user_admin');
             }
         }elseif  ($toType == 3){
             // 给租户发送消息
@@ -80,6 +83,7 @@ class ImController extends Controller
                 ];
                 $im = new Im();
                 $im::insert($im_data);
+                $res = $easemob->sendMessageText(['user_'.$v],'users',$message,'user_admin');
             }
         }else{
             // 给所有用户发送消息
@@ -95,16 +99,10 @@ class ImController extends Controller
                 ];
                 $im = new Im();
                 $im::insert($im_data);
+                $res = $easemob->sendMessageText(['user_'.$v],'users',$message,'user_admin');
             }
         }
-        $easemob = new Easemob();
-        $res = $easemob->sendMessageText([$to],'users',$message,'user_admin');
-        dd($res);
-        if(reset($res['data']) == 'success'){
-            return $this->success('send system im message success');
-        }else{
-            return $this->error('2','send im failed');
-        }
+        return $this->success('send system im message success');
     }
 
     public function getImInfo(Request $request)
