@@ -176,9 +176,9 @@ class ImController extends Controller
     public function searchFriend(Request $request)
     {
         $nickname = $request->nickname;
-        $res = User::where('nickname','like','%'.$nickname.'%')->get();
+        $res = User::where('nickname','like','%'.$nickname.'%')->first();
         if($res){
-            $res = $res->toArray();
+            $res = User::where('nickname','like','%'.$nickname.'%')->get()->toArray();
             foreach ($res as $k => $v){
                 $search_res[$k]['nickname'] = $v['nickname'];
                 $search_res[$k]['headimg'] = $v['head_img'];
