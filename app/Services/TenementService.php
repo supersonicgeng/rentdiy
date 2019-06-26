@@ -387,7 +387,7 @@ class TenementService extends CommonService
         $contract_id = $arrears_res[0]['contract_id'];
         $landlord_full_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
         $tenement_name = ContractTenement::where('tenement_id',$tenement_id)->where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
-        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address');
+        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
         $subject_code = Tenement::where('id',$tenement_id)->pluck('subject_code')->first();
         $landlord_id = RentContract::where('id',$contract_id)->pluck('user_id')->first();
         $rent_house_pic = RentPic::where('rent_house_id',$rent_house_id)->pluck('house_pic')->first();
@@ -402,6 +402,9 @@ class TenementService extends CommonService
         $data['landlord_head_img'] = $landlord_headimg;
         $data['current_page'] = $input['page'];
         $data['total_page'] = ceil($count/10);
+        $data['total_arrears'] = $total_arrears;
+        $data['need_pay_fee'] = $need_pay_fee;
+        $data['pay_fee'] = $pay_fee;
         return $this->success('get arrears list success',$data);
     }
 }
