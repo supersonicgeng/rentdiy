@@ -99,7 +99,8 @@ class ImController extends Controller
         }
         $easemob = new Easemob();
         $res = $easemob->sendMessageText([$to],'users',$message,'admin');
-        dd($res['data'][$to]);
+        dump($to);
+        dd($res['data']);
         if($res['data'][$to] == 'success'){
             return $this->success('send im success');
         }else{
