@@ -1997,10 +1997,10 @@ class FeeService extends CommonService
             $model = $model->where('Region',$Region);
         }
         if($TA){
-            $model = $model->where('District',$TA);
+            $model = $model->where('TA',$TA);
         }
         if($District){
-            $model = $model->where('TA',$District);
+            $model = $model->where('District',$District);
         }
         if($landlord_name){
             $model = $model->where('landlord_name','like','%'.$landlord_name.'%');
