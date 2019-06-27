@@ -577,7 +577,7 @@ class LandlordService extends CommonService
         $provider_info['money_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('money_score'),1);
         $order_score = LandlordOrderScore::where('providers_id',$providers_id)->orderBy('id','DESC')->limit(30)->get();
         if(LandlordOrderScore::where('providers_id',$providers_id)->first()){
-            $order_score->toArray();
+            $order_score = $order_score->toArray();
             foreach ($order_score as $k => $v){
                 $order_info = LandlordOrder::where('id',$v['order_id'])->first();
                 $order_res[$k]['order_type'] = $order_info->order_type;
