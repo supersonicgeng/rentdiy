@@ -1207,10 +1207,7 @@ class FeeService extends CommonService
                 $failed_count = 0;
                 while (!empty($data[$i][0])) {
                     // 处理数据
-                    dump($data[$i]);
-                    dump($data[$i][1]);
                     $match_data = explode('-',$data[$i][1]);
-                    dump($match_data);
                     if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
                         $particulars = $data[$i][4];
                         $code = $data[$i][3];
