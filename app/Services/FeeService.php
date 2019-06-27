@@ -1914,7 +1914,7 @@ class FeeService extends CommonService
                 'providers_id'      => $input['providers_id'],
                 'invoice_date'      => $input['invoice_date'],
                 'invoice_due_date'  => $input['invoice_due_date'],
-                'landlord_name'     => \App\Model\User::where('id',$order_info->user_id)->pluck('nickname'),
+                'landlord_name'     => Landlord::where('user_id',$order_info->user_id)->pluck('landlord_name')->first(),
                 'items_name'        => $v['items_name'],
                 'describe'          => $v['describe'],
                 'unit_price'        => $v['unit_price'],
@@ -1977,6 +1977,46 @@ class FeeService extends CommonService
     }
 
 
+    /**
+     * @description:服务商财务列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFinancialList(array $input)
+    {
+        $model = new OrderArrears();
+        $Region = $input['Region'];
+        $TA = $input['TA'];
+        $District = $input['District'];
+        $landlord_name = $input['landlord_name'];
+        $model = $model->where('user_id',$input['user_id']);
+        if($Region){
+            $model = $model->where('Region',$Region);
+        }
+        if($TA){
+            $model = $model->where('District',$TA);
+        }
+        if($District){
+            $model = $model->where('TA',$District);
+        }
+        if($landlord_name){
+            $model = $model->where('landlord_name','like','%'.$landlord_name.'%');
+        }
+        $page = $input['page'];
+        $count = $model->count();
+        if($count <($page-1)*10){
+            return $this->error('2','get fee list failed');
+        }else{
+            $res = $model->offset(($page-1)*10)->limit(10)->get();
+            $data['invoice_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get invoice list success',$data);
+        }
+    }
 
 
 
