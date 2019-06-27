@@ -1880,7 +1880,7 @@ class FeeService extends CommonService
     {
         $tenement_name = $input['tenement_name'];
         $model = new RentArrears();
-        $model = $model->where('tenement_name','like','%'.$tenement_name.'%')->where('user_id',$input['user_id']);
+        $model = $model->where('tenement_name','like','%'.$tenement_name.'%')->where('user_id',$input['user_id'])->where('is_pay','!=',2)->where('arrears_type','<',4);
         $page = $input['page'];
         $count = $model->count();
         if($count < ($page-1)*10){
