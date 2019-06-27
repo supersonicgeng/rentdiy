@@ -614,11 +614,12 @@ class ProvidersService extends CommonService
             if($count < ($page-1)*5){
                 return $this->error('3','no more order info');
             }
-            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id')->get()->toArray();
+            $res = $model->offset(($page-1)*5)->limit(5)->select('rent_house_id','group_id')->get()->toArray();
             foreach($res as $k=>$v){
                 $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
                 $house_info[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
                 $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
+                $house_info[$k]['order_group_id'] = $v['group_id'];
             }
             if(!@$house_info){
                 return $this->error('4','no data');
@@ -749,8 +750,9 @@ class ProvidersService extends CommonService
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
-            $model = $model->where('order_status',2);
+            /*$model = $model->where('order_status',2);*/
             $model = $model->where('rent_house_id',$input['rent_house_id']);
+            $model = $model->where('group_id',$input['order_group_id']);
             $res = $model->select('issue_id','group_id')->get()->toArray();
             foreach($res as $k=>$v){
                 $issue_data[$k] = InspectRoom::where('id',$v['issue_id'])->first();
