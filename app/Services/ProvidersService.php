@@ -355,7 +355,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $start_date = $input['start_date'];
@@ -406,7 +406,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',1);
@@ -455,7 +455,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',2);
@@ -504,7 +504,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',3);
@@ -553,7 +553,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
@@ -602,7 +602,7 @@ class ProvidersService extends CommonService
         if($user_info->user_role != 2 && $user_info->user_role != 3 && $user_info->user_role != 6 && $user_info->user_role != 7  ){
             return $this->error('2','this account is not a provider role');
         }else{
-            $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
+            $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',5);
