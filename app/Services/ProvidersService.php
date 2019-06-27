@@ -558,7 +558,7 @@ class ProvidersService extends CommonService
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
             $model = $model->where('order_status',2);
-            $model = $model->groupBy('rent_house_id');
+            /*$model = $model->groupBy('rent_house_id');*/
             $page = $input['page'];
             $count = $model->get()->toArray();
             $count = count($count);
