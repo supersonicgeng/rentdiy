@@ -576,6 +576,21 @@ class LandlordService extends CommonService
         $provider_info['community_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('community_score'),1);
         $provider_info['money_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('money_score'),1);
         $order_score = LandlordOrderScore::where('providers_id',$providers_id)->orderBy('id','DESC')->limit(30)->get();
+        if(LandlordOrderScore::where('providers_id',$providers_id)->first()){
+            $order_score->toArray();
+            foreach ($order_score as $k => $v){
+                $order_info = LandlordOrder::where('id',$v['order_id'])->first();
+                $order_res[$k]['order_type'] = $order_info->order_type;
+                $order_res[$k]['address'] = RentHouse::where('id',$order_info->rent_house_id)->pluck('address')->first();
+                $order_res[$k]['owner'] = Landlord::where('user_id',$order_info->user_id)->pluck('first_name')->first();
+                $order_res[$k]['quality_score'] = $v['quality_score'];
+                $order_res[$k]['community_score'] = $v['community_score'];
+                $order_res[$k]['money_score'] = $v['money_score'];
+            }
+            $provider_info['score'] = $order_res;
+        }else{
+            $provider_info['score'] = null;
+        }
         $data['provider_info'] = $provider_info;
         return $this->success('get providers success',$data);
     }
