@@ -140,7 +140,7 @@ class ImController extends Controller
                 $to[]['im_id'] = $v['to'];
             }
             if (!Im::where('from',$user)->groupBy('to')->first()){
-                $other_msg = Im::where('from','!=','admin')->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表 
+                $other_msg = Im::where('from','!=','admin')->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             }else{
                 $other_msg = Im::whereNotIn('from',$to)->where('from','!=','admin')->where('to',$user)->groupBy('from')->get(); // 无回复的 消息列表
             }
@@ -149,6 +149,9 @@ class ImController extends Controller
                 foreach ($other_msg as $k => $v){
                     $to[]['im_id'] = $v['from'];
                 }
+            }
+            if(!isset($to)){
+                return $this->error('2','no msg list to you');
             }
             foreach ($to as $k=> $v){
                 if(Im::where('to',$user)->where('from',$v['im_id'])->where('is_read',0)->first()){
