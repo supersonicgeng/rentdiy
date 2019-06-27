@@ -18,6 +18,7 @@ use App\Model\BondRefund;
 use App\Model\BondTransfer;
 use App\Model\ContractTenement;
 use App\Model\FeeReceive;
+use App\Model\Landlord;
 use App\Model\LandlordOrder;
 use App\Model\OrderArrears;
 use App\Model\Region;
@@ -2085,6 +2086,18 @@ class FeeService extends CommonService
         $res = $model->whereIn('providers_id',$service_ids)->first();
         if(!$res){
             return $this->error('2','no order doing');
+        }else{
+            $order_res = $model->whereIn('providers_id',$service_ids)->get()->toArray();
+            foreach ($order_res as $k => $v){
+                $order_list[$k]['order_id'] = $v['id'];
+                $order_list[$k]['order_sn'] = $v['order_sn'];
+                $order_list[$k]['landlord_name'] = Landlord::where('user_id',$v['user_id'])->pluck('landlord_name')->first();
+                $order_list[$k]['phone'] = Landlord::where('user_id',$v['user_id'])->pluck('phone')->first();
+                $order_list[$k]['email'] = Landlord::where('user_id',$v['user_id'])->pluck('email')->first();
+                $order_list[$k]['address'] = Landlord::where('user_id',$v['user_id'])->pluck('mail_address')->first();
+            }
+            $data['order_info'] = $order_list;
+            return $this->success('get order list success',$data);
         }
     }
 
