@@ -18,6 +18,8 @@ use App\Model\BondRefund;
 use App\Model\BondTransfer;
 use App\Model\ContractTenement;
 use App\Model\FeeReceive;
+use App\Model\LandlordOrder;
+use App\Model\OrderArrears;
 use App\Model\Region;
 use App\Model\RentArrears;
 use App\Model\RentContact;
@@ -1892,6 +1894,87 @@ class FeeService extends CommonService
             $data['total_page'] = ceil($count/10);
             return $this->success('gei arrears list success',$data);
         }
+    }
+
+    /**
+     * @description:银行手工对账
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function handAdjust(array $input)
+    {
+        $model = new RentArrears();
+        $pay_money = $input['pay_amount'];
+        $need_pay = $model->where('id',$input['arrears_id'])->first();
+        if($pay_money >= $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
+            // 更改此次费用
+            $change_arrears_data = [
+                'is_pay'    => 2,
+                'pay_fee'   => $need_pay->pay_fee+$need_pay->need_pay_fee,
+                'need_pay_fee'  => 0,
+                'pay_date'      => $input['pay_date'],
+                'updated_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $change_arrears_res = $model->where('id',$input['arrears_id'])->update($change_arrears_data);
+            if(!$change_arrears_res){
+                return $this->error('2','hand adjust failed');
+            }
+            // 增加收账数据
+            $receive_data = [
+                'arrears_id'    => $input['arrears_id'],
+                'pay_money'     => $need_pay->need_pay_fee,
+                'pay_date'      => $input['pay_date'],
+                'pay_method'    => 4,
+                'note'          => $input['note'],
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $receive_res = FeeReceive::insert($receive_data);
+            if(!$receive_res){
+                return $this->error('2','hand adjust failed');
+            }
+            // 修改余额
+            $pay_money -= $need_pay->need_pay_fee;
+        }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
+            // 更改此次费用
+            $change_arrears_data = [
+                'is_pay'        => 3,
+                'pay_fee'       => $need_pay->pay_fee+$pay_money,
+                'need_pay_fee'  => $need_pay->need_pay_fee-$pay_money,
+                'pay_date'      => $input['pay_date'],
+                'updated_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $change_arrears_res = $model->where('id',$input['arrears_id'])->update($change_arrears_data);
+            if(!$change_arrears_res){
+                return $this->error('2','hand adjust failed');
+            }
+            // 增加收账数据
+            $receive_data = [
+                'arrears_id'    => $input['arrears_id'],
+                'pay_money'     => $pay_money,
+                'pay_date'      => $input['pay_date'],
+                'pay_method'    => 4,
+                'note'          => $input['note'],
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            $receive_res = FeeReceive::insert($receive_data);
+            if(!$receive_res){
+                return $this->error('2','hand adjust failed');
+            }
+            // 修改余额
+            $pay_money = 0;
+        }
+        if($pay_money){
+            // 增加余额
+            $contract_id = $model->where('id',$input['arrears_id'])->pluck('contract_id')->first();
+            $balance_update_res = RentContract::where('id',$contract_id)->increment('balance',$pay_money);
+            if(!$balance_update_res){
+                return $this->error('2','hand adjust failed');
+            }
+        }
+        return $this->success('balance adjust success');
     }
 
     /**
