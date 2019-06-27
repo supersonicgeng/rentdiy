@@ -224,8 +224,12 @@ class ImController extends Controller
             $to[$k]['nickname'] = User::where('id',$user_id)->pluck('nickname')->first();
             $to[$k]['im_id'] = $v;
         }
-        $data['list'] = $to;
-        return $this->success('get friend list success',$data);
+        if(isset($to)) {
+            $data['list'] = $to;
+            return $this->success('get friend list success', $data);
+        }else{
+            return $this->error('2','no friend');
+        }
     }
 
     public function searchHistory(Request $request)
