@@ -409,4 +409,233 @@ class FeeController extends Controller
     {
         return service('Fee')->providersOrderList($request->all());
     }
+
+
+    /**
+     * @description:服务商财务列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFinancialList(Request $request)
+    {
+        return service('Fee')->providersFinancialList($request->all());
+    }
+
+    /**
+     * @description:银行对账上传CSV文件
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankCheck(Request $request)
+    {
+        $file   = $request->file('file');
+        return service('Fee')->providersBankCheck($request->all(),$file);
+        /*return service('Fee')->bankCheck($request->all());*/
+    }
+
+    /**
+     * @description:银行对账确认符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankCheckList(Request $request)
+    {
+        return service('Fee')->providersBankCheckList($request->all());
+    }
+    /**
+     * @description:银行对账获取符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankCheckDetail(Request $request)
+    {
+        return service('Fee')->providersBankCheckDetail($request->all());
+    }
+
+    /**
+     * @description:银行对账获取不符合费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankCheckTenementInfo(Request $request)
+    {
+        return service('Fee')->providersBankCheckTenementInfo($request->all());
+    }
+
+
+    /**
+     * @description:银行对账余额调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersMatchData(Request $request)
+    {
+        return service('Fee')->providersMatchData($request->all());
+    }
+
+    /**
+     * @description:银行对账余额调整确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersConfirmMatchCheck(Request $request)
+    {
+        return service('Fee')->providersConfirmMatchCheck($request->all());
+    }
+
+    /**
+     * @description:银行对账手工调整
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersUnMatchData(Request $request)
+    {
+        return service('Fee')->providersUnMatchData($request->all());
+    }
+
+    /**
+     * @description:银行对账手工调整确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBalanceAdjust(Request $request)
+    {
+        return service('Fee')->providersBalanceAdjust($request->all());
+    }
+
+    /**
+     * @description:银行对账已核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBalanceAdjustConfirm(Request $request)
+    {
+        return service('Fee')->providersBalanceAdjustConfirm($request->all());
+    }
+
+    /**
+     * @description:银行对账未核对完成列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersHistoryList(Request $request)
+    {
+        return service('Fee')->providersHistoryList($request->all());
+    }
+
+    /**
+     * @description:银行对账详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersUnMatchList(Request $request)
+    {
+        return service('Fee')->providersUnMatchList($request->all());
+    }
+
+
+
+    /**
+     * @description:银行对账列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankAdjust(Request $request)
+    {
+        return service('Fee')->providersBankAdjust($request->all());
+    }
+
+
+    /**
+     * @description:银行对账租户信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankAdjustConfirm(Request $request)
+    {
+        return service('Fee')->providersBankAdjustConfirm($request->all());
+    }
+
+
+    /**
+     * @description:银行对账租户信息 确认租户
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersBankCheckMatch(Request $request)
+    {
+        return service('Fee')->providersBankCheckMatch($request->all());
+    }
+
+    /**
+     * @description:银行手工对账列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersHandAdjustList(Request $request)
+    {
+        return service('Fee')->providersHandAdjustList($request->all());
+    }
+
+
+    /**
+     * @description:银行手工对账
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersHandAdjust(Request $request)
+    {
+        return service('Fee')->providersHandAdjust($request->all());
+    }
 }

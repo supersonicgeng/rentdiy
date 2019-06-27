@@ -268,6 +268,23 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('providersFeeAdd', 'FeeController@providersFeeAdd'); // 服务商添加费用单 4.10
         $router->post('providersFeeDetail', 'FeeController@providersFeeDetail'); // 服务商费用单详情 4.10
         $router->post('providersOrderList','FeeController@providersOrderList'); // 服务商已接订单列表
+        $router->post('providersFinancialList','FeeController@providersFinancialList'); // 服务商财务列表
+        $router->post('providersBankCheck', 'FeeController@providersBankCheck'); // 服务商银行对账上传CSV文件 4.10
+        $router->post('providersBankCheckList', 'FeeController@providersBankCheckList'); // 服务商银行对账列表 4.10
+        $router->post('providersBankCheckDetail', 'FeeController@providersBankCheckDetail'); // 服务商银行对账详情 4.10
+        $router->post('providersBankCheckTenementInfo', 'FeeController@providersBankCheckTenementInfo'); // 服务商银行对账详情 租户信息 4.10
+        $router->post('providersMatchData', 'FeeController@providersMatchData'); // 服务商银行对账符合费用单 4.10
+        $router->post('providersConfirmMatchCheck', 'FeeController@providersConfirmMatchCheck'); // 服务商银行对账确认符合费用单 4.10
+        $router->post('providersUnMatchData', 'FeeController@providersUnMatchData'); // 服务商银行对账符合费用单 4.10
+        $router->post('providersBalanceAdjust', 'FeeController@providersBalanceAdjust'); // 服务商银行对账余额调整 4.10
+        $router->post('providersBalanceAdjustConfirm', 'FeeController@providersBalanceAdjustConfirm'); // 服务商银行对账余额调整确认 4.10
+        $router->post('providersHistoryList', 'FeeController@providersHistoryList'); // 服务商银行对账历史账单 4.10
+        $router->post('providersUnMatchList', 'FeeController@providersUnMatchList'); // 服务商银行对账未对账单 4.10
+        $router->post('providersBankAdjust', 'FeeController@providersBankAdjust'); // 服务商银行对账手工调整 4.10
+        $router->post('providersBankAdjustConfirm', 'FeeController@providersBankAdjustConfirm'); // 服务商银行对账手工调整确认 4.10
+        $router->post('providersBankCheckMatch', 'FeeController@providersBankCheckMatch'); // 服务商银行对账详情 确认租户4.10
+        $router->post('providersHandAdjustList', 'FeeController@providersHandAdjustList'); // 服务商银行手工对账列表 4.10
+        $router->post('providersHandAdjust', 'FeeController@providersHandAdjust'); // 服务商银行手工对账 4.10
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
