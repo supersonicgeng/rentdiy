@@ -21,6 +21,7 @@ use App\Model\FeeReceive;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
 use App\Model\OrderArrears;
+use App\Model\Providers;
 use App\Model\Region;
 use App\Model\RentArrears;
 use App\Model\RentContact;
