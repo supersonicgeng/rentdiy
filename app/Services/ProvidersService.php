@@ -554,7 +554,6 @@ class ProvidersService extends CommonService
             return $this->error('2','this account is not a provider role');
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
-            dd($service_ids);
             $model = new LandlordOrder();
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
