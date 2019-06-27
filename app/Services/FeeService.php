@@ -1908,6 +1908,7 @@ class FeeService extends CommonService
     {
         $model = new RentArrears();
         $pay_money = $input['pay_amount'];
+        $pay_method = $input['pay_method'];
         $need_pay = $model->where('id',$input['arrears_id'])->first();
         if($pay_money >= $need_pay->need_pay_fee){ // 支付金额大于应付金额 直接 销账
             // 更改此次费用
@@ -1927,7 +1928,7 @@ class FeeService extends CommonService
                 'arrears_id'    => $input['arrears_id'],
                 'pay_money'     => $need_pay->need_pay_fee,
                 'pay_date'      => $input['pay_date'],
-                'pay_method'    => 4,
+                'pay_method'    => $pay_method,
                 'note'          => $input['note'],
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
@@ -1955,7 +1956,7 @@ class FeeService extends CommonService
                 'arrears_id'    => $input['arrears_id'],
                 'pay_money'     => $pay_money,
                 'pay_date'      => $input['pay_date'],
-                'pay_method'    => 4,
+                'pay_method'    => $pay_method,
                 'note'          => $input['note'],
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
