@@ -1989,75 +1989,29 @@ class FeeService extends CommonService
     public function providersFeeList(array $input)
     {
         $model = new OrderArrears();
-        if($input['amount']){
-            if($input['invoice_date'] && $input['tenement_name']){
-                $sql = '(SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM order_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'3\',\'4\') AND tenement_name like \'%'.$input['tenement_name'].'%\' AND created_at BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
-                $count = DB::table(DB::raw($sql))->get()->toArray();
-            }elseif(!$input['invoice_date']){
-                $sql = '(SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM order_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'3\',\'4\') AND tenement_name like \'%'.$input['tenement_name'].'%\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
-                $count = DB::table(DB::raw($sql))->get()->toArray();
-            }elseif(!$input['tenement_name']){
-                $sql = '(SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM order_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'3\',\'4\') AND created_at BETWEEN \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])).'\' AND \''.date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24-1).'\' GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
-                $count = DB::table(DB::raw($sql))->get()->toArray();
-            }else{
-                $sql = '(SELECT  SUM(arrears_fee) AS SUMM ,contract_id FROM order_arrears WHERE user_id = '.$input['user_id'].' AND arrears_type in (\'3\',\'4\') GROUP BY contract_id) AS T WHERE T.SUMM > '.$input['amount'];
-                $count = DB::table(DB::raw($sql))->get()->toArray();
-            }
-            $res_count = count($count);
-            if($res_count <= ($input['page']-1)*10){
-                return $this->error('2','no more fee information');
-            }else{
-                $res = DB::table(DB::raw($sql))->offset(($input['page']-1)*10)->limit(10)->get()->toArray();
-                foreach ($res as $k => $v){
-                    $v = (array)$v;
-                    $fee_res = OrderArrears::where('contract_id',$v['contract_id'])->get()->toArray();
-                    $fee_list[$k]['order_id'] = $fee_res[0]['order_id'];
-                    $fee_list[$k]['order_sn'] = $fee_res[0]['order_sn'];
-                    $fee_list[$k]['invoice_date'] = '';
-                    $fee_list[$k]['payment_due'] = '';
-                    $fee_list[$k]['amount'] = 0;
-                    foreach ($fee_res as $key => $value){
-                        $fee_list[$k]['invoice_date'] = $value['created_at'];
-                        $fee_list[$k]['payment_due'] = $value['expire_date'];
-                        $fee_list[$k]['amount'] += $value['arrears_fee'];
-                    }
-                }
-                $data['fee_list'] = $fee_list;
-                $data['current_page'] = $input['page'];
-                $data['total_page'] = ceil($res_count/10);
-                return $this->success('get fee list success',$data);
-            }
+        $bill_date = $input['bill_date'];
+        $invoice_sn = $input['invoice_sn'];
+        $providers_id = $input['providers_id'];
+        $model = $model->where('user_id',$input['user_id']);
+        if($bill_date){
+            $model = $model->where('invoice_date',$bill_date);
+        }
+        if($providers_id){
+            $model = $model->where('providers_id',$providers_id);
+        }
+        if($invoice_sn){
+            $model = $model->where('invoice_sn','like','%'.$invoice_sn.'%');
+        }
+        $page = $input['page'];
+        $count = $model->count();
+        if($count <($page-1)*10){
+            return $this->error('2','get fee list failed');
         }else{
-            if($input['invoice_date']){
-                $model = $model->where('created_at','>',date('Y-m-d H:i:s',strtotime($input['invoice_date'])))->where('created_at','<',date('Y-m-d H:i:s',strtotime($input['invoice_date'])+3600*24));
-            }
-            $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
-            $count = count($count);
-            if($count <= ($input['page']-1)*10){
-                return $this->error('2','no more fee information');
-            }else{
-                $res = $model->where('user_id',$input['user_id'])->offset(($input['page']-1)*10)->limit(10)->select('contract_id')->groupBy('contract_id')->get()->toArray();
-                foreach ($res as $k => $v){
-                    $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
-                    $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
-                    $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
-                    $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
-                    $fee_list[$k]['invoice_date'] = '';
-                    $fee_list[$k]['payment_due'] = '';
-                    $fee_list[$k]['amount'] = 0;
-                    foreach ($fee_res as $key => $value){
-                        if($value['arrears_type'] == 3){
-                            $fee_list[$k]['invoice_date'] = $value['created_at'];
-                            $fee_list[$k]['payment_due'] = $value['expire_date'];
-                            $fee_list[$k]['amount'] += $value['arrears_fee'];
-                        }
-                    }
-                }
-                $data['fee_list'] = $fee_list;
-                $data['current_page'] = $input['page'];
-                $data['total_page'] = ceil($count/10);
-                return $this->success('get fee list success',$data);
-            }
+            $res = $model->offset(($page-1)*10)->limit(10)->get();
+            $data['invoice_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get invoice list success',$data);
         }
     }
 
@@ -2082,12 +2036,15 @@ class FeeService extends CommonService
                 'order_sn'          => $order_info->order_sn,
                 'user_id'           => $input['user_id'],
                 'landlord_user_id'  => $order_info->user_id,
+                'providers_id'      => $input['providers_id'],
+                'invoice_date'      => $input['invoice_date'],
+                'invoice_due_date'  => $input['invoice_date_due_date'],
                 'landlord_name'     => \App\Model\User::where('id',$order_info->user_id)->pluck('nickname'),
                 'items_name'        => $v['items_name'],
                 'describe'          => $v['describe'],
                 'unit_price'        => $v['unit_price'],
                 'number'            => $v['number'],
-                'invoice_sn'        => invoiceSn(),
+                'invoice_sn'        => $input['invoice_sn'],
                 'subject_code'      => $v['subject_code'],
                 'discount'          => $v['discount'],
                 'tex'               => $v['tex'],
@@ -2098,6 +2055,7 @@ class FeeService extends CommonService
                 'District'          => $order_info->District,
                 'pay_fee'           => 0,
                 'is_pay'            => 1,
+                'note'              => $input['note'],
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $arrears_res = $model->insert($order_arrears_data);
