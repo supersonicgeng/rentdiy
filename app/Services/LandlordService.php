@@ -20,6 +20,7 @@ use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
+use App\Model\LandlordOrderScore;
 use App\Model\Level;
 use App\Model\Order;
 use App\Model\Passport;
@@ -571,6 +572,10 @@ class LandlordService extends CommonService
         $provider_info['service_company_pic'] = ProvidersCompanyPic::where('service_id',$providers_id)->where('deleted_at',null)->where('company_pic','!=',null)->pluck('company_pic')->toArray(); // 公司图片
         $provider_info['service_company_promo_pic'] = ProvidersCompanyPromoPic::where('service_id',$providers_id)->where('deleted_at',null)->where('company_promo_pic','!=',null)->pluck('company_promo_pic')->toArray(); // 公司宣传图片
         $provider_info['service_introduce'] = ServiceIntroduce::where('service_id',$providers_id)->where('deleted_at',null)->get()->toArray();
+        $provider_info['quality_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('quality_score'),1);
+        $provider_info['community_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('community_score'),1);
+        $provider_info['money_score']  = round(ProvidersScore::where('service_id',$providers_id)->avg('money_score'),1);
+        $order_score = LandlordOrderScore::where('providers_id',$providers_id)->orderBy('id','DESC')->limit(30)->get();
         $data['provider_info'] = $provider_info;
         return $this->success('get providers success',$data);
     }
