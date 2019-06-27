@@ -74,13 +74,13 @@ class FeeController extends Controller
 
 
     /**
- * @description:费用单列表
- * @author: syg <13971394623@163.com>
- * @param $code
- * @param $message
- * @param array|null $data
- * @return \Illuminate\Http\JsonResponse
- */
+     * @description:费用单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function feeList(Request $request)
     {
         return service('Fee')->feeList($request->all());
@@ -327,5 +327,72 @@ class FeeController extends Controller
     public function bankCheckMatch(Request $request)
     {
         return service('Fee')->bankCheckMatch($request->all());
+    }
+
+    /**
+     * @description:银行手工对账列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function handAdjustList(Request $request)
+    {
+        return service('Fee')->handAdjustList($request->all());
+    }
+
+    /**
+     * @description:服务商费用单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFeeList(Request $request)
+    {
+        return service('Fee')->providersFeeList($request->all());
+    }
+
+
+    /**
+     * @description:服务商添加费用单(开发票)
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFeeAdd(Request $request)
+    {
+        return service('Fee')->providersFeeAdd($request->all());
+    }
+
+    /**
+     * @description:服务商添加费用单详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFeeDetail(Request $request)
+    {
+        return service('Fee')->providersFeeDetail($request->all());
+    }
+
+
+    /**
+     * @description:服务商已接订单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersOrderList(Request $request)
+    {
+        return service('Fee')->providersOrderList($request->all());
     }
 }

@@ -262,9 +262,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('bankAdjust', 'FeeController@bankAdjust'); // 银行对账手工调整 4.10
         $router->post('bankAdjustConfirm', 'FeeController@bankAdjustConfirm'); // 银行对账手工调整确认 4.10
         $router->post('bankCheckMatch', 'FeeController@bankCheckMatch'); // 银行对账详情 确认租户4.10
+        $router->post('handAdjustList', 'FeeController@handAdjustList'); // 银行手工对账列表 4.10
         $router->post('providersFeeList', 'FeeController@providersFeeList'); // 服务商费用单列表 4.10
         $router->post('providersFeeAdd', 'FeeController@providersFeeAdd'); // 服务商添加费用单 4.10
         $router->post('providersFeeDetail', 'FeeController@providersFeeDetail'); // 服务商费用单详情 4.10
+        $router->post('providersOrderList','FeeController@providersOrderList'); // 服务商已接订单列表
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
