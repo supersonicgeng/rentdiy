@@ -2040,7 +2040,7 @@ class FeeService extends CommonService
                 'landlord_user_id'  => $order_info->user_id,
                 'providers_id'      => $input['providers_id'],
                 'invoice_date'      => $input['invoice_date'],
-                'invoice_due_date'  => $input['invoice_date_due_date'],
+                'invoice_due_date'  => $input['invoice_due_date'],
                 'landlord_name'     => \App\Model\User::where('id',$order_info->user_id)->pluck('nickname'),
                 'items_name'        => $v['items_name'],
                 'describe'          => $v['describe'],
