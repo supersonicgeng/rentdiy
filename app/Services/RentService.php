@@ -867,7 +867,7 @@ class RentService extends CommonService
                         'is_share_people'                           => $input['is_share_people'],
                         'allow_service'                             => $input['allow_service'],
                         'rule'                                      => $input['rule'],
-                        'rule_upload_url'                           => $input['rule_upload_url'],
+                        /*'rule_upload_url'                           => $input['rule_upload_url'],*/
                         'meter_readings'                            => $input['meter_readings'],
                         'is_ceiling_insulation'                     => $input['is_ceiling_insulation'],
                         'ceiling_insulation_detail'                 => $input['ceiling_insulation_detail'],
