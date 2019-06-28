@@ -1566,7 +1566,7 @@ class FeeService extends CommonService
      */
     public function historyList(array $input)
     {
-        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked','>',3)->get();
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('bank_check_type',1)->where('is_checked','>',3)->get();
         if($check_history){
             $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked','>',3)->count();
             if($count <= ($input['page']-1)*5){
@@ -1601,7 +1601,7 @@ class FeeService extends CommonService
      */
     public function unMatchList(array $input)
     {
-        $check_history = BankCheck::where('user_id',$input['user_id'])->where('is_checked',1)->get();
+        $check_history = BankCheck::where('user_id',$input['user_id'])->where('bank_check_type',1)->where('is_checked','<',4)->get();
         if($check_history){
             $count = BankCheck::where('user_id',$input['user_id'])->where('is_checked',1)->count();
             if($count <= ($input['page']-1)*5){
