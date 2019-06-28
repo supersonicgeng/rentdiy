@@ -241,11 +241,11 @@ class FeeService extends CommonService
                         }
                     }
                 }
-                $fee_list[$k]['total_arrears'] = $total_arrears;
-                $fee_list[$k]['total_rent'] = $total_rent;
-                $fee_list[$k]['paid'] = $paid;
-                $fee_list[$k]['rent_arrears'] = $rent_arrears;
-                $fee_list[$k]['other_arrears'] = $other_arrears;
+                $fee_list[$k]['total_arrears'] = round($total_arrears,2);
+                $fee_list[$k]['total_rent'] = round($total_rent,2);
+                $fee_list[$k]['paid'] = round($paid,2);
+                $fee_list[$k]['rent_arrears'] = round($rent_arrears,2);
+                $fee_list[$k]['other_arrears'] = round($other_arrears,2);
                 $total_arrears_all += $total_arrears;
                 $total_rent_all += $total_rent;
                 $paid_all += $paid;
@@ -253,11 +253,11 @@ class FeeService extends CommonService
                 $other_arrears_all += $other_arrears;
             }
             $data['fee_list'] = $fee_list;
-            $data['total_arrears_all'] = $total_arrears_all;
-            $data['total_rent_all'] = $total_rent_all;
-            $data['paid_all'] = $paid_all;
-            $data['rent_arrears_all'] = $rent_arrears_all;
-            $data['other_arrears_all'] = $other_arrears_all;
+            $data['total_arrears_all'] = round($total_arrears_all,2);
+            $data['total_rent_all'] = round($total_rent_all,2);
+            $data['paid_all'] = round($paid_all,2);
+            $data['rent_arrears_all'] = round($rent_arrears_all,2);
+            $data['other_arrears_all'] = round($other_arrears_all,2);
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
             return $this->success('get arrears success',$data);
