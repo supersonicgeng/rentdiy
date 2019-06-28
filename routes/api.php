@@ -272,7 +272,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('providersBankCheck', 'FeeController@providersBankCheck'); // 服务商银行对账上传CSV文件 4.10
         $router->post('providersBankCheckList', 'FeeController@providersBankCheckList'); // 服务商银行对账列表 4.10
         $router->post('providersBankCheckDetail', 'FeeController@providersBankCheckDetail'); // 服务商银行对账详情 4.10
-        $router->post('providersBankCheckTenementInfo', 'FeeController@providersBankCheckTenementInfo'); // 服务商银行对账详情 租户信息 4.10
+        $router->post('providersBankCheckLandlordInfo', 'FeeController@providersBankCheckLandlordInfo'); // 服务商银行对账详情 租户信息 4.10
         $router->post('providersMatchData', 'FeeController@providersMatchData'); // 服务商银行对账符合费用单 4.10
         $router->post('providersConfirmMatchCheck', 'FeeController@providersConfirmMatchCheck'); // 服务商银行对账确认符合费用单 4.10
         $router->post('providersUnMatchData', 'FeeController@providersUnMatchData'); // 服务商银行对账符合费用单 4.10

@@ -472,9 +472,9 @@ class FeeController extends Controller
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function providersBankCheckTenementInfo(Request $request)
+    public function providersBankCheckLandlordInfo(Request $request)
     {
-        return service('Fee')->providersBankCheckTenementInfo($request->all());
+        return service('Fee')->providersBankCheckLandlordInfo($request->all());
     }
 
 
