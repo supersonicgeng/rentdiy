@@ -816,14 +816,16 @@ class HouseService extends CommonService
                     }
                 }
                 // 删除不要的房屋主档
-                $delete_rent_house_id = $input['delete_rent_house_id'];
-                foreach ($delete_rent_house_id as $key => $value){
-                    //
-                    $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                    $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                    $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-                    if(!$res1 || !$res2 || !$res3){
-                        $error += 1;
+                if(isset($input['delete_rent_house_id'])){
+                    $delete_rent_house_id = $input['delete_rent_house_id'];
+                    foreach ($delete_rent_house_id as $key => $value){
+                        //
+                        $res1 = $model->where('id',$value)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res2 = RentPic::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        $res3 = RentContact::where('rent_house_id',$v['rent_house_id'])->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
+                        if(!$res1 || !$res2 || !$res3){
+                            $error += 1;
+                        }
                     }
                 }
                 if(!$error){
