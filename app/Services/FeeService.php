@@ -2010,8 +2010,13 @@ class FeeService extends CommonService
         if($count <($page-1)*10){
             return $this->error('2','get fee list failed');
         }else{
-            $res = $model->offset(($page-1)*10)->limit(10)->get();
-            $data['invoice_list'] = $res;
+            $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
+            foreach($res as $k => $v){
+                $invoice_list[$k][] = $v;
+                $invoice_list[$k]['email'] = Landlord::where('user_id',$v['landlord_user_id'])->pluck('landlord_name')->first();
+                $invoice_list[$k]['property_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('property_name')->first();
+            }
+            $data['invoice_list'] = $invoice_list;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
             return $this->success('get invoice list success',$data);
