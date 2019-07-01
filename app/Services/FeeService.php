@@ -1117,7 +1117,7 @@ class FeeService extends CommonService
                     // 处理数据
                     $match_data = explode('-',$data[$i][1]);
                     if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
-                        $particulars = $data[$i][4];
+                        $particulars = $data[$i][3];
                         $code = $data[$i][3];
                         $reference = $data[$i][2];
                         $amount = $data[$i][1];
