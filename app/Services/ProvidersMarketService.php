@@ -151,6 +151,7 @@ class ProvidersMarketService extends CommonService
         foreach ($res as $k => $v){
             $order_res[$k] = RentHouse::where('id',$v['rent_house_id'])->select('property_name','property_type','address','available_time','rent_fee_pre_week','rent_least_fee','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','require_renter','Region','available_date')->first()->toArray();
             $order_res[$k]['house_pic'] = RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();// 图片
+            $order_res[$k]['room_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first();
             $order_res[$k]['full_address'] = $order_res[$k]['address'].','.Region::getName($order_res[$k]['District']).','.Region::getName($order_res[$k]['TA']).','.Region::getName($order_res[$k]['Region']); //地址
             $order_res[$k]['order_id'] = $v['id'];
             $order_res[$k]['total_tender'] = $v['total_tender'];
