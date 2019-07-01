@@ -375,6 +375,7 @@ class ProvidersService extends CommonService
             static $amount = 0;
             foreach($res as $k=>$v){
                 $res[$k]['customer'] = Landlord::where('user_id',$v['user_id'])->pluck('landlord_name')->first();
+                $res[$k]['room_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first();
                 $amount += $v['budget'];
             }
             $data['order_list'] = $res;
