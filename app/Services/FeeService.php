@@ -3199,8 +3199,8 @@ class FeeService extends CommonService
         }
         if($pay_money){
             // 增加余额
-            $contract_id = $model->where('id',$input['arrears_id'])->pluck('contract_id')->first();
-            $balance_update_res = RentContract::where('id',$contract_id)->increment('balance',$pay_money);
+            $contract_id = $model->where('id',$input['arrears_id'])->pluck('order_id')->first();
+            $balance_update_res = LandlordOrder::where('id',$contract_id)->increment('balance',$pay_money);
             if(!$balance_update_res){
                 return $this->error('2','hand adjust failed');
             }
