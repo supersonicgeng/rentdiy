@@ -2612,7 +2612,7 @@ class FeeService extends CommonService
     {
         $bank_check_id = $input['bank_check_id'];
         $bank_check_res = BankCheck::where('id',$bank_check_id)->first()->toArray();
-        $providers_id = Providers::where('user_id',$input['user_id'])->pluck();
+        $providers_id = Providers::where('user_id',$input['user_id'])->pluck('id');
         $landlord_list = LandlordOrder::whereIn('providers_id',$providers_id)->get()->toArray();
         foreach ($landlord_list as $k => $v){
             $landlord_data[$k]['landlord_name'] = Landlord::where('id',$v['user_id'])->pluck('landlord_name')->first();
