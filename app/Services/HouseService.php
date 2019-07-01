@@ -616,17 +616,17 @@ class HouseService extends CommonService
                     if($v['rent_house_id']){
                         $rent_house_info = $model->where('id',$v['rent_house_id'])->first();
                         if($v['rent_period'] == 1){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]*7;
+                            $rent_fee_pre_week = $v['rent_fee']*7;
                         }elseif ($v['rent_period'] == 2){
-                            $rent_fee_pre_week = $v['rent_fee'][$k];
+                            $rent_fee_pre_week = $v['rent_fee'];
                         }elseif ($v['rent_period'] == 3){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/4;
+                            $rent_fee_pre_week = $v['rent_fee']/4;
                         }elseif ($v['rent_period'] == 4){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/13;
+                            $rent_fee_pre_week = $v['rent_fee']/13;
                         }elseif ($v['rent_period'] == 5){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/26;
+                            $rent_fee_pre_week = $v['rent_fee']/26;
                         }elseif ($v['rent_period'] == 6){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/52;
+                            $rent_fee_pre_week = $v['rent_fee']/52;
                         }
                         $data = [
                             'property_name'         => @$input['property_name']?$input['property_name']:$rent_house_info->property_name,
@@ -716,17 +716,17 @@ class HouseService extends CommonService
                         }
                     }else{
                         if($v['rent_period'] == 1){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]*7;
+                            $rent_fee_pre_week = $v['rent_fee']*7;
                         }elseif ($v['rent_period'] == 2){
-                            $rent_fee_pre_week = $v['rent_fee'][$k];
+                            $rent_fee_pre_week = $v['rent_fee'];
                         }elseif ($v['rent_period'] == 3){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/4;
+                            $rent_fee_pre_week = $v['rent_fee']/4;
                         }elseif ($v['rent_period'] == 4){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/13;
+                            $rent_fee_pre_week = $v['rent_fee']/13;
                         }elseif ($v['rent_period'] == 5){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/26;
+                            $rent_fee_pre_week = $v['rent_fee']/26;
                         }elseif ($v['rent_period'] == 6){
-                            $rent_fee_pre_week = $v['rent_fee'][$k]/52;
+                            $rent_fee_pre_week = $v['rent_fee']/52;
                         }
                         $rent_house_info = $model->where('id',$input['rent_house_id'])->first();
                         $data = [
