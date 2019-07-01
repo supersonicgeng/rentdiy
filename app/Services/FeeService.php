@@ -2015,7 +2015,7 @@ class FeeService extends CommonService
         }else{
             $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
             foreach($res as $k => $v){
-                $invoice_list[$k][] = $v;
+                $invoice_list[$k] = $v;
                 $invoice_list[$k]['email'] = Landlord::where('user_id',$v['landlord_user_id'])->pluck('landlord_name')->first();
                 $invoice_list[$k]['property_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('property_name')->first();
             }
