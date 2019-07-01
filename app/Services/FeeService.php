@@ -1882,7 +1882,7 @@ class FeeService extends CommonService
         if($count <($page-1)*10){
             return $this->error('2','get fee list failed');
         }else{
-            $res = $model->offset(($page-1)*10)->limit(10)->get();
+            $res = $model->offset(($page-1)*10)->limit(10)->orderBy('id','DESC')->get();
             foreach ($res as $k => $v){
                 $res[$k]['providers_name'] = Providers::where('id',$v['providers_id'])->pluck('service_name')->first();
             }
