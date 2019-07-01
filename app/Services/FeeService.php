@@ -2007,7 +2007,7 @@ class FeeService extends CommonService
         }
         $page = $input['page'];
         $count = $model->count();
-        if($count <($page-1)*10){
+        if($count <= ($page-1)*10){
             return $this->error('2','get fee list failed');
         }else{
             $res = $model->offset(($page-1)*10)->limit(10)->get()->toArray();
