@@ -1117,10 +1117,10 @@ class FeeService extends CommonService
                     // 处理数据
                     $match_data = explode('-',$data[$i][1]);
                     if($match_data[0] == 'DC' || $match_data[0] == 'DEPOSIT'){
-                        $particulars = $data[$i][3];
-                        $code = $data[$i][3];
-                        $reference = $data[$i][2];
-                        $amount = $data[$i][1];
+                        $particulars =$match_data[1];
+                        $code = $match_data[1];
+                        $reference = $match_data[1];
+                        $amount = $data[$i][2];
                         $date = $data[$i][0];
                         $transdate = explode('/',$date);
                         $date = $transdate[1].'/'.$transdate[0].'/'.$transdate[2];
@@ -1883,6 +1883,9 @@ class FeeService extends CommonService
             return $this->error('2','get fee list failed');
         }else{
             $res = $model->offset(($page-1)*10)->limit(10)->get();
+            foreach ($res as $k => $v){
+                $res[$k]['providers_name'] = Providers::where('id',$v['providers_id'])->pluck('service_name')->first();
+            }
             $data['invoice_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
