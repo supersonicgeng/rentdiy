@@ -3085,8 +3085,8 @@ class FeeService extends CommonService
             }
             if($bank_check_res->amount > 0){
                 // 增加余额
-                $contract_id = $model->where('id',$adjust_info[0]['arrears_id'])->pluck('contract_id')->first();
-                $balance = RentContract::where('id',$contract_id)->first();
+                $contract_id = $model->where('id',$adjust_info[0]['arrears_id'])->pluck('order_id')->first();
+                $balance = LandlordOrder::where('id',$contract_id)->first();
                 $balance->balance += $bank_check_res->amount;
                 $balance->update();
             }
