@@ -3224,7 +3224,7 @@ class FeeService extends CommonService
         if($is_check_match_code == 2){
             // 修改匹配码
             Landlord::where('id',$landlord_id)->update(['subject_code'=> $input['code']]);
-            OrderArrears::where('landlord_id',$landlord_id)->update(['subject_code'=> $input['code']]);
+            OrderArrears::where('landlord_user_id',$landlord_id)->update(['subject_code'=> $input['code']]);
             //
             $bank_check_id = $input['bank_check_id'];
             BankCheck::where('id',$bank_check_id)->update(['match_landlord_id'=> $landlord_id,'is_checked'=>2,'match_landlord_name'=>$input['landlord_name']]);
