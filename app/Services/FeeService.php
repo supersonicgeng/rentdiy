@@ -2782,7 +2782,7 @@ class FeeService extends CommonService
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
         // 用户余额
-        $providers_id = Providers::where('user_id',$input['user_id'])->pluck();
+        $providers_id = Providers::where('user_id',$input['user_id'])->pluck('id');
         $balance = LandlordOrder::whereIn('providers_id',$providers_id)->where('balance','>',0)->get();
         if($balance){
             $balance = $balance->toArray();
