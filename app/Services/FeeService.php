@@ -2812,8 +2812,8 @@ class FeeService extends CommonService
         if($arrears_un_confirm){
             $arrears_un_confirm = $arrears_un_confirm->toArray();
             foreach ($arrears_un_confirm as $k => $v){
-                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
-                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['expire_date']));
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['invoice_date']));
+                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['invoice_due_date']));
             }
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
@@ -2993,8 +2993,8 @@ class FeeService extends CommonService
         if($arrears_un_confirm){
             $arrears_un_confirm = $arrears_un_confirm->toArray();
             foreach ($arrears_un_confirm as $k => $v){
-                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['created_at']));
-                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['expire_date']));
+                $arrears_un_confirm[$k]['created_at'] = date('m/d/Y',strtotime($v['invoice_date']));
+                $arrears_un_confirm[$k]['expire_date'] = date('m/d/Y',strtotime($v['invoice_due_date']));
             }
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
