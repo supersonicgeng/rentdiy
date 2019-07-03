@@ -2615,7 +2615,7 @@ class FeeService extends CommonService
         $providers_id = Providers::where('user_id',$input['user_id'])->pluck('id');
         $landlord_list = LandlordOrder::whereIn('providers_id',$providers_id)->get()->toArray();
         foreach ($landlord_list as $k => $v){
-            $landlord_data[$k]['landlord_name'] = Landlord::where('id',$v['user_id'])->pluck('landlord_name')->first();
+            $landlord_data[$k]['landlord_name'] = Landlord::where('use_id',$v['user_id'])->pluck('landlord_name')->first();
             $landlord_data[$k]['landlord_id'] = $v['user_id'];
             $landlord_data[$k]['order_sn'] = $v['order_sn'];
             $landlord_data[$k]['order_id'] = $v['id'];
