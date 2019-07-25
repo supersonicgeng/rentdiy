@@ -363,13 +363,22 @@ class OperatorService extends CommonService
         $operator_id = $input['operator_id'];
         $user_id = $input['user_id'];
         $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
-        $res = $model->where('user_id',$user_id)->whereIn('id',$room_list)->where('deleted_at',null)->select('id','District','TA','Region','group_id','rent_category','property_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put')->get()->toArray();
+        $page = $input['page'];
+        $count = $model->where('user_id',$user_id)->whereIn('id',$room_list)->where('deleted_at',null)->count();
+        if($count < ($page-1)*9){
+            return $this->error('2','get house list failed');
+        }
+        $res = $model->where('user_id',$user_id)->whereIn('id',$room_list)->where('deleted_at',null)
+            ->select('id','District','TA','Region','group_id','rent_category','property_name','property_type','rent_fee_pre_week','building_area','actual_area','pre_rent','least_rent_time','margin_rent','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','short_words','rent_fee','rent_least_fee','can_party','can_pet','can_smoke','other_rule','address','lat','lon','available_date','is_put')
+            ->offset(($page-1)*9)->limit(9)->get()->toArray();
         if($res){
             foreach ($res as $k => $v){
                 $res[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
                 $res[$k]['full_address'] = $v['address'].','.Region::getName($v['District']).','.Region::getName($v['TA']).','.Region::getName($v['Region']); //地址
             }
             $data['house_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/9);
             return $this->success('get house list success',$data);
         }else{
             return $this->error('2','get house list failed');
