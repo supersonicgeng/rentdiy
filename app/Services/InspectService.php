@@ -311,11 +311,7 @@ class InspectService extends CommonService
             if($count < ($page-1)*3){
                 return $this->error('3','no more inspect info');
             }
-            if(@$input['operator_id']){
-                $res = $model->where('rent_house_id',$input['rent_house_id'])->where('inspect_method',1)->offset(($page-1)*3)->limit(3)->get()->toArray();
-            }else{
-                $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*3)->limit(3)->get()->toArray();
-            }
+            $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*3)->limit(3)->get()->toArray();
             if($res){
                 $data['inspect_list'] = $res;
                 $data['house_info'] = RentHouse::where('id',$input['rent_house_id'])->select('District','TA','Region','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','address')->first();
