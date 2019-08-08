@@ -95,6 +95,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getHouseList','HouseController@getHouseList'); // 租户获得房屋主档信息列表 4.27 // 接口done
         $router->post('getWatchList','HouseController@getWatchList'); // 租户获得关注主档信息列表 4.27 // 接口done
         $router->post('selectSelfHouseList','HouseController@selectSelfHouseList'); // 获得房屋主档信息列表 3.25 // 接口done
+        $router->post('getRoomName','HouseController@getRoomName'); // 获取房间名称 8.6
     });
     // 租房系统
     $router->group(['prefix' => 'rent'], function (Router $router){
@@ -149,6 +150,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getTenementInfo','LandlordController@getTenementInfo'); // 租约生成时获取租户信息
         $router->post('getProvidersList','LandlordController@getProvidersList'); // 获取服务商列表
         $router->post('getProvidersDetail','LandlordController@getProvidersDetail'); // 获取服务商列表
+        $router->post('getLine','LandlordController@getLine'); // 折线统计
+        $router->post('vacancyRate','LandlordController@vacancyRate'); // 空置率
+        $router->post('arrearsRate','LandlordController@arrearsRate'); // 欠租率
+        $router->post('rentReceive','LandlordController@rentReceive'); // 租金收取
+        $router->post('arrearsSend','LandlordController@arrearsSend'); // 租金生成
     });
     // 服务商管理
     $router->group(['prefix' => 'providers'], function (Router $router) {

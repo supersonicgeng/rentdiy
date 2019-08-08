@@ -454,11 +454,13 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $group_id = $input['group_id'];
-        $update_data = [
-            'is_put'            => 2,
-            'available_date'    => $input['available_date']
-        ];
-        $res = $model->where('group_id',$group_id)->update($update_data);
+        foreach ($group_id as $k => $v){
+            $update_data = [
+                'is_put'            => 2,
+                'available_date'    => $input['available_date']
+            ];
+            $res = $model->where('id',$v)->update($update_data);
+        }
         /*$res->is_put = 2;
         $res->available_date = $input['available_date'];
         $res->save();*/
@@ -478,11 +480,13 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $group_id = $input['group_id'];
-        $update_data = [
-            'is_put'            => 1,
-            'available_date'    => null,
-        ];
-        $res = $model->where('group_id',$group_id)->update($update_data);
+        foreach ($group_id as $k => $v){
+            $update_data = [
+                'is_put'            => 2,
+                'available_date'    => $input['available_date']
+            ];
+            $res = $model->where('id',$v)->update($update_data);
+        }
         /*$res->is_put = 2;
         $res->available_date = $input['available_date'];
         $res->save();*/
@@ -1312,6 +1316,27 @@ class HouseService extends CommonService
             $data['current_page'] = $page;
             $total_page = ceil($count/4);
             $data['total_page'] = $total_page;
+            return $this->success('get house list success',$data);
+        }else{
+            return $this->error('2','get house list failed');
+        }
+    }
+
+    /**
+     * @description:获取房间名称
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRoomName(array $input)
+    {
+        $model = new RentHouse();
+        $group_id = $input['group_id'];
+        $res = $model->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','room_name')->get();
+        if($res){
+            $data['room_list'] = $res;
             return $this->success('get house list success',$data);
         }else{
             return $this->error('2','get house list failed');

@@ -33,7 +33,9 @@ use App\Model\ProvidersCompanyPic;
 use App\Model\ProvidersCompanyPromoPic;
 use App\Model\ProvidersScore;
 use App\Model\RentApplication;
+use App\Model\RentArrears;
 use App\Model\RentContract;
+use App\Model\RentFee;
 use App\Model\RentHouse;
 use App\Model\RouteItems;
 use App\Model\ScoreLog;
@@ -593,5 +595,206 @@ class LandlordService extends CommonService
         }
         $data['provider_info'] = $provider_info;
         return $this->success('get providers success',$data);
+    }
+
+    /**
+     * @description:折线统计
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLine(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+
+            $six_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_end']])->sum('arrears_fee');
+            $six_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_end']])->sum('need_pay_fee');
+            $six_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_end']])->sum('pay_fee');
+            $five_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_end']])->sum('arrears_fee');
+            $five_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_end']])->sum('need_pay_fee');
+            $five_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*5)['week_end']])->sum('pay_fee');
+            $four_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_end']])->sum('arrears_fee');
+            $four_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_end']])->sum('need_pay_fee');
+            $four_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*4)['week_end']])->sum('pay_fee');
+            $three_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_end']])->sum('arrears_fee');
+            $three_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_end']])->sum('need_pay_fee');
+            $three_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*3)['week_end']])->sum('pay_fee');
+            $two_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*2)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*2)['week_end']])->sum('arrears_fee');
+            $two_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_end']])->sum('need_pay_fee');
+            $two_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*6)['week_end']])->sum('pay_fee');
+            $one_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_end']])->sum('arrears_fee');
+            $one_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_end']])->sum('need_pay_fee');
+            $one_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_end']])->sum('pay_fee');
+            $to_weeks_rent_amonut = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time())['week_start'],$this->getWeekMyActionAndEnd(time())['week_end']])->sum('arrears_fee');
+            $to_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time())['week_start'],$this->getWeekMyActionAndEnd(time())['week_end']])->sum('need_pay_fee');
+            $to_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time())['week_start'],$this->getWeekMyActionAndEnd(time())['week_end']])->sum('pay_fee');
+            $amount = [$six_weeks_rent_amonut,$five_weeks_rent_amonut,$four_weeks_rent_amonut,$three_weeks_rent_amonut,$two_weeks_rent_amonut,$one_weeks_rent_amonut,$to_weeks_rent_amonut];
+            $arrears = [$six_weeks_rent_arrears,$five_weeks_rent_arrears,$four_weeks_rent_arrears,$three_weeks_rent_arrears,$two_weeks_rent_arrears,$one_weeks_rent_arrears,$to_weeks_rent_arrears];
+            $receive = [$six_weeks_rent_receive,$five_weeks_rent_receive,$four_weeks_rent_receive,$three_weeks_rent_receive,$two_weeks_rent_receive,$one_weeks_rent_receive,$to_weeks_rent_receive];
+            $date = [date('W',time()-3600*24*7*6).'weeks',date('W',time()-3600*24*7*5).'weeks',date('W',time()-3600*24*7*4).'weeks',
+                date('W',time()-3600*24*7*3).'weeks',date('W',time()-3600*24*7*2).'weeks',date('W',time()-3600*24*7).'weeks',date('W',time()).'weeks'];
+            $data['amount'] = $amount;
+            $data['arrears'] = $arrears;
+            $data['receive'] = $receive;
+            $data['date'] = $date;
+            return $this->success('get line success',$data);
+        }
+    }
+
+    /**
+     * @description:欠租率
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsRate(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $amount = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('arrears_fee');
+            $receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('pay_fee');
+            $rate = round($receive/$amount,4)*100;
+            $rate = $rate.'%';
+            $data['amount'] = $amount;
+            $data['receive'] = $receive;
+            $data['rate'] = $rate;
+            return $this->success('get line success',$data);
+        }
+    }
+
+    /**
+     * @description:空置率
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vacancyRate(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $amount = RentHouse::where('user_id',$user_info->id)->where('rent_category','!=',4)->count();
+            $rent = RentHouse::where('user_id',$user_info->id)->where('rent_category','!=',4)->where('rent_status',4)->count();
+            $rate = round($rent/$amount,4)*100;
+            $rate = $rate.'%';
+            $data['amount'] = $amount;
+            $data['rent'] = $rent;
+            $data['rate'] = $rate;
+            return $this->success('get line success',$data);
+        }
+    }
+
+    /**
+     * @description:租金收取
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentReceive(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $one_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_end']])->sum('pay_fee');
+            $to_weeks_rent_receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time())['week_start'],$this->getWeekMyActionAndEnd(time())['week_end']])->sum('pay_fee');
+            $data['rentReceive'] = $to_weeks_rent_receive;
+            if($one_weeks_rent_receive == 0){
+                $rate = '100%';
+            }else{
+                $rate = round(($to_weeks_rent_receive-$one_weeks_rent_receive)/$one_weeks_rent_receive,4)*100;
+                $rate = $rate.'%';
+            }
+            $data['rate'] = $rate;
+            return $this->success('get line success',$data);
+        }
+    }
+
+
+    /**
+     * @description:租金生成
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsSend(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        if(!$user_info->user_role %2 ){
+            return $this->error('2','this account is not a landlord role');
+        }else{
+            $one_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_start'],$this->getWeekMyActionAndEnd(time()-3600*24*7*1)['week_end']])->sum('arrears_fee');
+            $to_weeks_rent_arrears = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)
+                ->whereBetween('created_at',[$this->getWeekMyActionAndEnd(time())['week_start'],$this->getWeekMyActionAndEnd(time())['week_end']])->sum('arrears_fee');
+            $data['rentReceive'] = $to_weeks_rent_arrears;
+            if($one_weeks_rent_arrears == 0){
+                $rate = '100%';
+            }else{
+                $rate = round(($to_weeks_rent_arrears-$one_weeks_rent_arrears)/$one_weeks_rent_arrears,4)*100;
+                $rate = $rate.'%';
+            }
+            $data['rate'] = $rate;
+            return $this->success('get line success',$data);
+        }
+    }
+
+    public function getWeekMyActionAndEnd($time = '', $first = 1)
+    {
+        //当前日期
+        if (!$time) $time = time();
+        $sdefaultDate = date("Y-m-d", $time);
+        //$first =1 表示每周星期一为开始日期 0表示每周日为开始日期
+        //获取当前周的第几天 周日是 0 周一到周六是 1 - 6
+        $w = date('w', strtotime($sdefaultDate));
+        //获取本周开始日期，如果$w是0，则表示周日，减去 6 天
+        $week_start = date('Y-m-d H:i:s', strtotime("$sdefaultDate -" . ($w ? $w - $first : 6) . ' days'));
+        //本周结束日期
+        $week_end = date('Y-m-d H:i:s', strtotime("$week_start +7 days")-1);
+        return array("week_start" => $week_start, "week_end" => $week_end);
     }
 }

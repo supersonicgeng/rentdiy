@@ -227,4 +227,71 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->getProvidersDetail($request->all());
     }
+
+
+    /**
+     * @description:折线统计
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLine(Request $request)
+    {
+        return service('Landlord')->getLine($request->all());
+    }
+
+    /**
+     * @description:欠租率
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsRate(Request $request)
+    {
+        return service('Landlord')->arrearsRate($request->all());
+    }
+
+
+    /**
+     * @description:空置率
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vacancyRate(Request $request)
+    {
+        return service('Landlord')->vacancyRate($request->all());
+    }
+
+    /**
+     * @description:租金收取
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentReceive(Request $request)
+    {
+        return service('Landlord')->rentReceive($request->all());
+    }
+
+    /**
+     * @description:租金生成
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsSend(Request $request)
+    {
+        return service('Landlord')->arrearsSend($request->all());
+    }
 }
