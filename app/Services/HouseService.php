@@ -1334,7 +1334,7 @@ class HouseService extends CommonService
     {
         $model = new RentHouse();
         $group_id = $input['group_id'];
-        $res = $model->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','room_name')->get();
+        $res = $model->where('group_id',$group_id)->where('deleted_at',null)->select('id as rent_house_id','room_name','is_put')->get();
         if($res){
             $data['room_list'] = $res;
             return $this->success('get house list success',$data);
