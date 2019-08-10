@@ -21,6 +21,7 @@ use App\Model\Region;
 use App\Model\RentContact;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\Task;
 use App\Model\Tender;
 use App\Model\Verify;
 use App\User;
@@ -63,6 +64,33 @@ class InspectService extends CommonService
                     'created_at' => date('Y-m-d H:i:s', time()),
                 ];
                 $res = $model->insertGetId($inspect_data);
+                if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                    $task_data = [
+                        'user_id'           => $input['user_id'],
+                        'task_type'         => 8,
+                        'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
+                        'task_status'       => 0,
+                        'task_title'        => 'new inspect',
+                        'task_content'      => 'your contract need relet',
+                        'inspect_id'        => $res,
+                        'task_role'         => 1,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    $task_res = Task::insert($task_data);
+                }else{
+                    $task_data = [
+                        'user_id'           => $input['user_id'],
+                        'task_type'         => 8,
+                        'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
+                        'task_status'       => 0,
+                        'task_title'        => 'new inspect',
+                        'task_content'      => 'your contract need relet',
+                        'inspect_id'        => $res,
+                        'task_role'         => 1,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    $task_res = Task::insert($task_data);
+                }
                 if ($res) {
                     static $error = 0;
                     // 财产清单
@@ -141,6 +169,33 @@ class InspectService extends CommonService
                     'created_at' => date('Y-m-d H:i:s', time()),
                 ];
                 $res = $model->insertGetId($inspect_data);
+                if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                    $task_data = [
+                        'user_id'           => $input['user_id'],
+                        'task_type'         => 8,
+                        'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
+                        'task_status'       => 0,
+                        'task_title'        => 'new inspect',
+                        'task_content'      => 'your contract need relet',
+                        'inspect_id'        => $res,
+                        'task_role'         => 1,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    $task_res = Task::insert($task_data);
+                }else{
+                    $task_data = [
+                        'user_id'           => $input['user_id'],
+                        'task_type'         => 8,
+                        'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
+                        'task_status'       => 0,
+                        'task_title'        => 'new inspect',
+                        'task_content'      => 'your contract need relet',
+                        'inspect_id'        => $res,
+                        'task_role'         => 1,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    $task_res = Task::insert($task_data);
+                }
                 if ($res) {
                     static $error = 0;
                     // 财产清单
@@ -221,6 +276,33 @@ class InspectService extends CommonService
                         'created_at'            => date('Y-m-d H:i:s', time()),
                     ];
                     $room_res = $model->insertGetId($inspect_data);
+                    if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                        $task_data = [
+                            'user_id'           => $input['user_id'],
+                            'task_type'         => 8,
+                            'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
+                            'task_status'       => 0,
+                            'task_title'        => 'new inspect',
+                            'task_content'      => 'your contract need relet',
+                            'inspect_id'        => $room_res,
+                            'task_role'         => 1,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        $task_res = Task::insert($task_data);
+                    }else{
+                        $task_data = [
+                            'user_id'           => $input['user_id'],
+                            'task_type'         => 8,
+                            'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
+                            'task_status'       => 0,
+                            'task_title'        => 'new inspect',
+                            'task_content'      => 'your contract need relet',
+                            'inspect_id'        => $room_res,
+                            'task_role'         => 1,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        $task_res = Task::insert($task_data);
+                    }
                     $inspect_id[] = $room_res;
                     if(!$room_res){
                         $error += 1;

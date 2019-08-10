@@ -98,6 +98,18 @@ class RentService extends CommonService
                     'end_rent_time'     => $input['departure_time'],
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 2,
+                    'task_start_time'   => date('Y-m-d H:i:s',time()),
+                    'task_status'       => 0,
+                    'task_title'        => 'new rent application',
+                    'task_content'      => 'you have a new rent application pls check',
+                    'rent_house_id'     => $input['rent_house_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                $task_res = Task::insert($task_data);
                 $model = new RentApplication();
                 $res = $model->insert($application_data);
                 // 更新房屋状态为2
@@ -2098,6 +2110,19 @@ class RentService extends CommonService
                 'rent_status'   => 4,
                 'updated_at'    => date('Y-m-d H:i:s',time()),
             ]);
+            // 生成任务
+            $task_data = [
+                'user_id'           => $input['user_id'],
+                'task_type'         => 4,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'insurance update',
+                'task_content'      => 'your house need update insurance',
+                'rent_house_id'     => $contract_data->house_id,
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
             return $this->success('contract effect success');
         }else{
             return $this->error('2','contact effect failed');
@@ -2212,11 +2237,11 @@ class RentService extends CommonService
             // 仅通知
             // 生成任务
             if($suspend_type == 1){
-                $task_start_time = date('Y-m-d',time()+3600*48);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*6);
             }elseif ($suspend_type == 2){
-                $task_start_time = date('Y-m-d',time()+3600*24*90);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*94);
             }elseif ($suspend_type == 3){
-                $task_start_time = date('Y-m-d',time()+3600*24*28);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*32);
             }
             $task_data = [
                 'user_id'   => $input['user_id'],
@@ -2255,6 +2280,42 @@ class RentService extends CommonService
                 }elseif ($last_rent_fee_date['rent_circle'] ==3){
                     $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*31-1;
                 }*/
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 10,
+                    'task_start_time'   => date('Y-m-d H:i:s',time()),
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => 'need suspend the rent contract',
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                $task_res = Task::insert($task_data);
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 13,
+                    'task_start_time'   => date('Y-m-d H:i:s',strtotime($input['rent_end_date']. '-7 day' )),
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => 'need suspend the rent contract',
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                $task_res = Task::insert($task_data);
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 13,
+                    'task_start_time'   => date('Y-m-d H:i:s',strtotime($input['rent_end_date'] )),
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => 'need suspend the rent contract',
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                $task_res = Task::insert($task_data);
                 return $this->success('suspend contract success');
             }else{
                 return $this->error('2','suspend contract failed');

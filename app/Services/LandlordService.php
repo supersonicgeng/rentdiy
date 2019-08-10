@@ -42,6 +42,7 @@ use App\Model\ScoreLog;
 use App\Model\ServiceIntroduce;
 use App\Model\SignLog;
 use App\Model\SysSign;
+use App\Model\Task;
 use App\Model\Tender;
 use App\Model\Tenement;
 use App\Model\TenementNote;
@@ -345,6 +346,18 @@ class LandlordService extends CommonService
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
             $res3 = LandlordOrder::where('id',$order_id)->update($order_change_data);
+            $task_data = [
+                'user_id'           => Providers::where('id',Tender::where('id',$tender_id)->pluck('service_id')->first())->pluck('user_id')->first(),
+                'task_type'         => 14,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'residential relet',
+                'task_content'      => 'your contract need relet',
+                'order_id'          => $input['order_id'],
+                'task_role'         => 2,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
             if($res1 && $res2 && $res3){
                 return $this->success('order accept success');
             }else{

@@ -39,6 +39,7 @@ use App\Model\ScoreLog;
 use App\Model\SignLog;
 use App\Model\Survey;
 use App\Model\SysSign;
+use App\Model\Task;
 use App\Model\Tender;
 use App\Model\Tenement;
 use App\Model\UserEvaluate;
@@ -307,6 +308,18 @@ class ProvidersMarketService extends CommonService
                 ];
                 Repair::insert($repair_data);
             }
+            $task_data = [
+                'user_id'           => LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first(),
+                'task_type'         => 7,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'new tender',
+                'task_content'      => 'your order have a new tender',
+                'order_id'          => $input['order_id'],
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
             return $this->success('tender success');
         }else{
             return $this->error('2','tender failed');

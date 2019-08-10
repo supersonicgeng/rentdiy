@@ -16,6 +16,7 @@ use App\Model\Region;
 use App\Model\RentContact;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\Task;
 use App\Model\Verify;
 use App\User;
 use Carbon\Carbon;
@@ -164,6 +165,18 @@ class KeyService extends CommonService
                 'updated_at'        => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->where('id',$input['key_id'])->update($key_data);
+            $task_data = [
+                'user_id'           => $input['user_id'],
+                'task_type'         => 12,
+                'task_start_time'   => date('Y-m-d H:i:s',$input['borrow_end_date']),
+                'task_status'       => 0,
+                'task_title'        => 'residential relet',
+                'task_content'      => 'your contract need relet',
+                'rent_house_id'     => $model->where('id',$input['key_id'])->pluck('house_id')->first(),
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
             if($res){
                 return $this->success('key edit success');
             }else{
