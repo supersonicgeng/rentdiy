@@ -676,6 +676,10 @@ class LandlordService extends CommonService
             $data['amount'] = $amount;
             $data['arrears'] = $arrears;
             $data['receive'] = $receive;
+            $max['amount'] = max($amount);
+            $max['arrears'] = max($arrears);
+            $max['receive'] = max($receive);
+            $data['max'] = max($max);
             $data['date'] = $date;
             return $this->success('get line success',$data);
         }
