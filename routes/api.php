@@ -304,6 +304,14 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getFriendList', 'ImController@getFriendList'); // 获取好友列表 4.10
         $router->post('searchHistory', 'ImController@searchHistory'); // 搜索历史 4.10
     });
+    // 钥匙管理
+    $router->group(['prefix' => 'task'], function (Router $router) {
+        $router->post('taskListMonth', 'TaskController@taskListMonth'); // 月列表 4.10
+        $router->post('taskListWeek', 'TaskController@taskListWeek'); // 周列表 4.10
+        $router->post('taskListDayDetail', 'TaskController@taskListDayDetail'); // 日详情 4.10
+        $router->post('taskListDay', 'TaskController@taskListDay'); // 日列表 4.10
+        $router->post('taskListHourDetail', 'TaskController@taskListHourDetail'); // 小时详情 4.10
+    });
 });
 
 
