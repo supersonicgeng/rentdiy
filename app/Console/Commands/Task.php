@@ -46,5 +46,6 @@ class Task extends Command
         $class->increaseRate();
         $class->ticket();
         $class->relet();
+        $class->testTask();
     }
 }

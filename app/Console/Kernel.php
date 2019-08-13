@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        //加入新建的命令类
+        Commands\Task::class
     ];
 
     /**
@@ -25,6 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('Task')->daily();  //每天凌晨零点运行任务
     }
 
     /**

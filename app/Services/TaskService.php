@@ -378,4 +378,9 @@ class TaskService extends CommonService
         }
     }
 
+
+    public function testTask(){
+        Log::info(1112);
+    }
+
 }
