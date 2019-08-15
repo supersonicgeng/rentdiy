@@ -120,7 +120,9 @@ class ReportService extends CommonService
             $res = DB::table('rent_contract as c')
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
-                ->where($where)->limit(10)->offset(($input['page']-1)*10)->get();
+                ->where($where)->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.rent_end_date','c.id')
+                ->get();
             $data['contract_list'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
@@ -176,7 +178,9 @@ class ReportService extends CommonService
             $res = DB::table('rent_contract as c')
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
-                ->where($where)->limit(10)->offset(($input['page']-1)*10)->get();
+                ->where($where)->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.rent_end_date','c.id')
+                ->get();
             $data['contract_list'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
