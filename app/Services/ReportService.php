@@ -91,20 +91,20 @@ class ReportService extends CommonService
     {
         $where = function ($query) use($input){
             //搜索词查询
-            if ($input['tenement_name'] and $input['tenement_name'] != '') {
-                $tenement_name = $input['tenement_name'];
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
-            if ($input['District'] and $input['District'] != '') {
-                $District = $input['District'];
+            if (@$input['District'] and @$input['District'] != '') {
+                $District = @$input['District'];
                 $query->where('h.District',$District);
             }
-            if ($input['TA'] and $input['TA'] != '') {
-                $TA = $input['TA'];
+            if (@$input['TA'] and @$input['TA'] != '') {
+                $TA = @$input['TA'];
                 $query->where('h.TA',$TA);
             }
-            if ($input['Region'] and $input['Region'] != '') {
-                $Region = $input['Region'];
+            if (@$input['Region'] and @$input['Region'] != '') {
+                $Region = @$input['Region'];
                 $query->where('h.Region',$Region);
             }
             $query->where('c.user_id',$input['user_id']);
@@ -142,20 +142,20 @@ class ReportService extends CommonService
     {
         $where = function ($query) use($input){
             //搜索词查询
-            if ($input['tenement_name'] and $input['tenement_name'] != '') {
-                $tenement_name = $input['tenement_name'];
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
-            if ($input['District'] and $input['District'] != '') {
-                $District = $input['District'];
+            if (@$input['District'] and @$input['District'] != '') {
+                $District = @$input['District'];
                 $query->where('h.District',$District);
             }
-            if ($input['TA'] and $input['TA'] != '') {
-                $TA = $input['TA'];
+            if (@$input['TA'] and @$input['TA'] != '') {
+                $TA = @$input['TA'];
                 $query->where('h.TA',$TA);
             }
-            if ($input['Region'] and $input['Region'] != '') {
-                $Region = $input['Region'];
+            if (@$input['Region'] and @$input['Region'] != '') {
+                $Region = @$input['Region'];
                 $query->where('h.Region',$Region);
             }
             $query->where('c.user_id',$input['user_id']);
