@@ -108,7 +108,7 @@ class ReportService extends CommonService
                 $query->where('h.Region',$Region);
             }
             $query->where('c.user_id',$input['user_id']);
-            $query->where('c.rent_end_date','<=',date('Y-m-d',time().'+30 days'));
+            $query->where('c.rent_end_date','<=',date('Y-m-d','+30 days'));
         };
         $count = DB::table('rent_contract as c')
             ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
@@ -161,7 +161,7 @@ class ReportService extends CommonService
             $query->where('c.user_id',$input['user_id']);
             $keywords= function ($querys) {
                 $querys/*->orwhere('a.alarm_code ','like', '%'.$keyword.'%')*/
-                    ->where('c.increment_date', '<=',  date('Y-m-d',time().'+30 days'))->orwhere('c.increment_date',  null);
+                    ->where('c.increment_date', '<=',  date('Y-m-d','+30 days'))->orwhere('c.increment_date',  null);
                 return $querys;
             };
             $query->where($keywords);
