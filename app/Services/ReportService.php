@@ -108,7 +108,7 @@ class ReportService extends CommonService
                 $query->where('h.Region',$Region);
             }
             $query->where('c.user_id',$input['user_id']);
-            $query->where('c.rent_end_date','<=',date('Y-m-d',date('Y-m-d',strtotime('+30 days'))));
+            $query->where('c.rent_end_date','<=',date('Y-m-d',strtotime('+30 days')));
         };
         $count = DB::table('rent_contract as c')
             ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
