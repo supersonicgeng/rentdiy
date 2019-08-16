@@ -368,7 +368,6 @@ class ProvidersService extends CommonService
             }
             $page = $input['page'];
             $count = $model->count();
-            dd($count);
             if($count < ($page-1)*10){
                 return $this->error('3','no more order info');
             }
@@ -383,11 +382,7 @@ class ProvidersService extends CommonService
             $data['total_amount'] = $amount;
             $data['total_page'] = ceil($count/10);
             $data['current_page'] = $page;
-            if($res){
-                return $this->success('get order list success',$data);
-            }else{
-                return $this->error('3','get order list failed');
-            }
+            return $this->success('get order list success',$data);
         }
     }
 
