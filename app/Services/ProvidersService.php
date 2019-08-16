@@ -368,6 +368,7 @@ class ProvidersService extends CommonService
             }
             $page = $input['page'];
             $count = $model->count();
+            dd($count);
             if($count < ($page-1)*10){
                 return $this->error('3','no more order info');
             }
