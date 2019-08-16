@@ -134,7 +134,7 @@ class ReportService extends CommonService
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
                 }else{
-                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('month_rent')->first();
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
                 }
@@ -208,7 +208,7 @@ class ReportService extends CommonService
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
                 }else{
-                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('month_rent')->first();
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
                 }
