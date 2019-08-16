@@ -121,8 +121,24 @@ class ReportService extends CommonService
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
                 ->where($where)->limit(10)->offset(($input['page']-1)*10)
-                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.rent_end_date','c.id')
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.contract_type','c.rent_start_date','c.rent_end_date','c.id')
                 ->get();
+            foreach ($res as $k => $v){
+                if($v->contract_type == 1){
+                    $res[$k]->rent_fee = EntireContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+
+                }elseif ($v->contract_type == 2 || $v->contract_type == 3){
+                    $res[$k]->rent_fee = SeparateContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+                }else{
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+                }
+            }
             $data['contract_list'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
@@ -179,8 +195,24 @@ class ReportService extends CommonService
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
                 ->where($where)->limit(10)->offset(($input['page']-1)*10)
-                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.rent_end_date','c.id')
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.contract_type','c.rent_start_date','c.rent_end_date','c.id')
                 ->get();
+            foreach ($res as $k => $v){
+                if($v->contract_type == 1){
+                    $res[$k]->rent_fee = EntireContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+
+                }elseif ($v->contract_type == 2 || $v->contract_type == 3){
+                    $res[$k]->rent_fee = SeparateContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+                }else{
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                    $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->sum('arrears_fee');
+                    $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type',2)->sum('arrears_fee');
+                }
+            }
             $data['contract_list'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
