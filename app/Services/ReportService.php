@@ -243,7 +243,7 @@ class ReportService extends CommonService
                 $query->where('h.property_name','like', '%'.$property_name.'%');
             }
             $query->where('c.user_id',$input['user_id']);
-            $query->where('t.arrears_type',1);
+            $query->where('r.arrears_type',1);
         };
         $count = DB::table('rent_contract as c')
             ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
