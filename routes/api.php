@@ -317,6 +317,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('chattelReport', 'ReportController@chattelReport'); // 物品清单 4.10
         $router->post('rentDeadLineReport', 'ReportController@rentDeadLineReport'); // 租约到期 4.10
         $router->post('rentIncrementReport', 'ReportController@rentIncrementReport'); // 涨租列表 4.10
+        $router->post('bondReport', 'ReportController@bondReport'); // 押金列表 4.10
     });
 });
 
