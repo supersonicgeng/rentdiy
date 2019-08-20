@@ -242,6 +242,18 @@ class ReportService extends CommonService
                 $property_name = @$input['property_name'];
                 $query->where('h.property_name','like', '%'.$property_name.'%');
             }
+            //状态
+            if (@$input['bond_status'] and @$input['bond_status'] != '') {
+                $bond_status = @$input['bond_status'];
+                if($bond_status == 2){
+                    $query->whereIn('r.bond_status',[1,2,3]);
+                }elseif ($bond_status == 3){
+                    $query->whereIn('r.bond_status',[3,4,5,6]);
+                }elseif ($bond_status == 4){
+                    $query->whereIn('r.bond_status',[3,7,8,9]);
+                }
+
+            }
             $query->where('c.user_id',$input['user_id']);
             $query->where('r.arrears_type',1);
         };
