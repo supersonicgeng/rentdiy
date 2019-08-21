@@ -323,6 +323,10 @@ class ReportService extends CommonService
                 $arrears_type = @$input['arrears_type'];
                 $query->where('r.arrears_type',$arrears_type);
             }
+            // 时间
+            if (@$input['start_time'] && @$input['end_time'] && @$input['start_time'] != '' && @$input['end_time'] != '') {
+               $query->whereBetween('r.created_at',[$input['start_time'],$input['end_time']]);
+            }
             $query->where('c.user_id',$input['user_id']);
         };
         $count = DB::table('rent_arrears as r')
