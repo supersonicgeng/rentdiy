@@ -462,8 +462,7 @@ class InspectService extends CommonService
     {
         $model = new Inspect();
         $inspect_res = $model->where('id',$input['inspect_id'])->first();
-        $chattel_info = InspectChattel::where('inspect_id',$input['inspect_id'])->get();
-        dd($chattel_info);
+        $chattel_info = InspectChattel::where('inspect_id',$input['inspect_id'])->get()->toArray();
         if($inspect_res->inspect_category == 1){
             $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
             if(!$room_name){
@@ -472,12 +471,14 @@ class InspectService extends CommonService
             foreach($room_name as $k => $v){
                 $data['data'][][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
             }
+            $data['chattel'] = $chattel_info;
             return $this->success('get inspect item success',$data);
         }elseif ($inspect_res->inspect_category == 2){
             $data['data'][]['room_name'] = InspectRoom::where('inspect_id',$input['inspect_id'])->get()->toArray();
             if(!$data){
                 return $this->error('2','no inspect info');
             }
+            $data['chattel'] = $chattel_info;
             return $this->success('get inspect item success',$data);
         }else {
             $room_name = InspectRoom::where('inspect_id', $input['inspect_id'])->groupBy('room_name')->get()->toArray();
