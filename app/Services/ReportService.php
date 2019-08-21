@@ -326,20 +326,20 @@ class ReportService extends CommonService
             $query->where('c.user_id',$input['user_id']);
         };
         $count = DB::table('rent_arrears as r')
+            ->leftJoin('rent_contract as c','r.contract_id','c.id')
             ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
             ->leftJoin('rent_house as h','h.id','c.house_id')
-            ->leftJoin('rent_contract as c','r.contract_id','c.id')
             ->where($where)->count();
         if($count < ($input['page']-1)*10){
             return $this->error('2','get contract list failed');
         }else{
             $res = DB::table('rent_arrears as r')
+                ->leftJoin('rent_contract as c','r.contract_id','c.id')
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
-                ->leftJoin('rent_contract as c','r.contract_id','c.id')
                 ->where($where)->limit(10)->offset(($input['page']-1)*10)
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
-                    'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.need_pay_fee','r.arrears_fee')
+                    'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','')
                 ->get();
             $total_arrears = 0;
             $total_pay_fee = 0;
@@ -389,17 +389,17 @@ class ReportService extends CommonService
             $query->where('c.user_id',$input['user_id']);
         };
         $count = DB::table('rent_arrears as r')
+            ->leftJoin('rent_contract as c','r.contract_id','c.id')
             ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
             ->leftJoin('rent_house as h','h.id','c.house_id')
-            ->leftJoin('rent_contract as c','r.contract_id','c.id')
             ->where($where)->count();
         if($count < ($input['page']-1)*10){
             return $this->error('2','get contract list failed');
         }else{
             $res = DB::table('rent_arrears as r')
+                ->leftJoin('rent_contract as c','r.contract_id','c.id')
                 ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
                 ->leftJoin('rent_house as h','h.id','c.house_id')
-                ->leftJoin('rent_contract as c','r.contract_id','c.id')
                 ->where($where)->orderByDesc('r.need_pay_fee')->limit(10)->offset(($input['page']-1)*10)
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
                     'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id')
