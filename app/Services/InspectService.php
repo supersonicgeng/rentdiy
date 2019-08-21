@@ -463,6 +463,7 @@ class InspectService extends CommonService
         $model = new Inspect();
         $inspect_res = $model->where('id',$input['inspect_id'])->first();
         $chattel_info = InspectChattel::where('inspect_id',$input['inspect_id'])->get();
+        dd($chattel_info);
         if($inspect_res->inspect_category == 1){
             $room_name = InspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
             if(!$room_name){
