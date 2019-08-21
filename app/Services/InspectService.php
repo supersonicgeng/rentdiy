@@ -567,6 +567,42 @@ class InspectService extends CommonService
             //TODO
 
         }
+
+        foreach ($input['chattel_list'] as $key => $value){
+            if(isset($value['id'])){
+                $room_data = [
+                    'chattel_num'   => $value['chattel_num'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'updated_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = InspectChattel::where('id',$value['id'])->update($room_data);
+            }else{
+                $room_data = [
+                    'inspect_id'    => $input['inspect_id'],
+                    'chattel_name'  => $value['chattel_name'],
+                    'chattel_num'   => $value['chattel_num'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = InspectChattel::insert($room_data);
+            }
+            if(!$res){
+                $error += 1;
+            }
+            // 将问题存入问题表中
+            //TODO
+
+        }
        if($error){
            return $this->error('2','check failed');
        }else{
@@ -888,6 +924,26 @@ class InspectService extends CommonService
             return $this->success('delete item success');
         }else{
             return $this->error('2','deleted item failed');
+        }
+
+    }
+
+    /**
+     * @description:房东开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectDeleteChattel(array $input)
+    {
+        $chattel_id = $input['chattel_id'];
+        $res = InspectChattel::whereIn('id',$chattel_id)->delete();
+        if($res){
+            return $this->success('delete chattel success');
+        }else{
+            return $this->error('2','deleted chattel failed');
         }
 
     }
