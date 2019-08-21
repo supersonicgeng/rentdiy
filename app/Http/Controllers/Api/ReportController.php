@@ -61,4 +61,44 @@ class ReportController extends CommonController
     {
         return service('Report')->bondReport($request->all());
     }
+
+
+    /**
+     * @description:欠款列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsReport(Request $request)
+    {
+        return service('Report')->arrearsReport($request->all());
+    }
+
+    /**
+     * @description:租客欠款列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReport(Request $request)
+    {
+        return service('Report')->tenementReport($request->all());
+    }
+
+    /**
+     * @description:租客行为记录详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReportDetail(Request $request)
+    {
+        return service('Report')->tenementReportDetail($request->all());
+    }
 }

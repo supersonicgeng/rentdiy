@@ -51,6 +51,7 @@ use App\Model\SysSign;
 use App\Model\Task;
 use App\Model\Tenement;
 use App\Model\TenementCertificate;
+use App\Model\TenementNote;
 use App\Model\TenementScore;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
@@ -293,5 +294,149 @@ class ReportService extends CommonService
             $data['total_page'] = ceil($count/10);
             return $this->success('get contract list success',$data);
         }
+    }
+
+
+    /**
+     * @description:欠款列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsReport(array $input)
+    {
+        $where = function ($query) use($input){
+            //搜索词查询
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
+                $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
+            }
+            //房屋搜索
+            if (@$input['property_name'] and @$input['property_name'] != '') {
+                $property_name = @$input['property_name'];
+                $query->where('h.property_name','like', '%'.$property_name.'%');
+            }
+            //状态
+            if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
+                $arrears_type = @$input['arrears_type'];
+                $query->where('r.arrears_type',$arrears_type);
+            }
+            $query->where('c.user_id',$input['user_id']);
+        };
+        $count = DB::table('rent_arrears as r')
+            ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+            ->leftJoin('rent_house as h','h.id','c.house_id')
+            ->leftJoin('rent_contract as c','r.contract_id','c.id')
+            ->where($where)->count();
+        if($count < ($input['page']-1)*10){
+            return $this->error('2','get contract list failed');
+        }else{
+            $res = DB::table('rent_arrears as r')
+                ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+                ->leftJoin('rent_house as h','h.id','c.house_id')
+                ->leftJoin('rent_contract as c','r.contract_id','c.id')
+                ->where($where)->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
+                    'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.need_pay_fee','r.arrears_fee')
+                ->get();
+            $total_arrears = 0;
+            $total_pay_fee = 0;
+            $total_need_pay_fee = 0;
+            foreach ($res as $k => $v){
+                $total_arrears += $v->arrears_fee;
+                $total_need_pay_fee += $v->need_pay_fee;
+                $total_pay_fee += $v->pay_fee;
+            }
+            $data['contract_list'] = $res;
+            $data['total_arrears'] = $total_arrears;
+            $data['total_pay_fee'] = $total_pay_fee;
+            $data['total_need_pay_fee'] = $total_need_pay_fee;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get contract list success',$data);
+        }
+    }
+
+
+    /**
+     * @description:租客欠款列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReport(array $input)
+    {
+        $where = function ($query) use($input){
+            //搜索词查询
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
+                $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
+            }
+            //房屋搜索
+            if (@$input['property_name'] and @$input['property_name'] != '') {
+                $property_name = @$input['property_name'];
+                $query->where('h.property_name','like', '%'.$property_name.'%');
+            }
+            //状态
+            if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
+                $arrears_type = @$input['arrears_type'];
+                $query->where('r.arrears_type',$arrears_type);
+            }
+            $query->where('c.user_id',$input['user_id']);
+        };
+        $count = DB::table('rent_arrears as r')
+            ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+            ->leftJoin('rent_house as h','h.id','c.house_id')
+            ->leftJoin('rent_contract as c','r.contract_id','c.id')
+            ->where($where)->count();
+        if($count < ($input['page']-1)*10){
+            return $this->error('2','get contract list failed');
+        }else{
+            $res = DB::table('rent_arrears as r')
+                ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+                ->leftJoin('rent_house as h','h.id','c.house_id')
+                ->leftJoin('rent_contract as c','r.contract_id','c.id')
+                ->where($where)->orderByDesc('r.need_pay_fee')->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
+                    'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id')
+                ->get();
+            $total_arrears = 0;
+            $total_pay_fee = 0;
+            $total_need_pay_fee = 0;
+            foreach ($res as $k => $v){
+                $total_arrears += $v->arrears_fee;
+                $total_need_pay_fee += $v->need_pay_fee;
+                $total_pay_fee += $v->pay_fee;
+            }
+            $data['contract_list'] = $res;
+            $data['total_arrears'] = $total_arrears;
+            $data['total_pay_fee'] = $total_pay_fee;
+            $data['total_need_pay_fee'] = $total_need_pay_fee;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get contract list success',$data);
+        }
+    }
+
+
+    /**
+     * @description:租客行为记录详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementReportDetail(array $input)
+    {
+        $arrears_id = $input['arrears_id'];
+        $user_id = $input['user_id'];
+        $tenement_id = RentArrears::where('id',$arrears_id)->pluck('tenement_id')->first();
+        $tenement_note = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->get();
+        return $this->success('get tenement note success',$tenement_note);
     }
 }

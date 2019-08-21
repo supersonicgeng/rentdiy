@@ -318,6 +318,9 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('rentDeadLineReport', 'ReportController@rentDeadLineReport'); // 租约到期 4.10
         $router->post('rentIncrementReport', 'ReportController@rentIncrementReport'); // 涨租列表 4.10
         $router->post('bondReport', 'ReportController@bondReport'); // 押金列表 4.10
+        $router->post('arrearsReport', 'ReportController@arrearsReport'); // 欠款列表 4.10
+        $router->post('tenementReport', 'ReportController@tenementReport'); // 租客欠款列表 4.10
+        $router->post('tenementReportDetail', 'ReportController@tenementReportDetail'); // 租客行为记录详情 4.10
     });
 });
 
