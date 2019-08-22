@@ -390,6 +390,7 @@ class ReportService extends CommonService
                 $arrears_type = @$input['arrears_type'];
                 $query->where('r.arrears_type',$arrears_type);
             }
+            $query->where('r.arrears_type','!=',4);
             $query->where('c.user_id',$input['user_id']);
         };
         $count = DB::table('rent_arrears as r')
