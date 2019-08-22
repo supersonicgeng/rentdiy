@@ -448,12 +448,18 @@ class ReportService extends CommonService
         $arrears_id = $input['arrears_id'];
         $user_id = $input['user_id'];
         $tenement_id = RentArrears::where('id',$arrears_id)->pluck('tenement_id')->first();
-        $tenement_note = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->get();
-        $tenement_res = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->first();
-        if($tenement_res){
+
+        $tenement_res = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->count();
+        if($tenement_res <= ($input['page']-1)*10){
+            return $this->error('2','get tenement note failed');
+        }else{
+            $tenement_note = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->offset(($input['page']-1)*10)->limit(10)->get();
             foreach ($tenement_note as $k => $v){
                 $tenement_note->tenement_name = Tenement::where('id',$tenement_id)->pluck('first_name')->first();
             }
+            $data['tenement_note'] = $tenement_note;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($tenement_res/10);
         }
         return $this->success('get tenement note success',$tenement_note);
     }
