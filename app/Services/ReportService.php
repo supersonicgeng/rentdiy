@@ -450,7 +450,7 @@ class ReportService extends CommonService
         $tenement_id = RentArrears::where('id',$arrears_id)->pluck('tenement_id')->first();
 
         $tenement_res = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->count();
-        if($tenement_res <= ($input['page']-1)*10){
+        if($tenement_res < ($input['page']-1)*10){
             return $this->error('2','get tenement note failed');
         }else{
             $tenement_note = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->offset(($input['page']-1)*10)->limit(10)->get();
