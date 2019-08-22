@@ -461,6 +461,6 @@ class ReportService extends CommonService
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($tenement_res/10);
         }
-        return $this->success('get tenement note success',$tenement_note);
+        return $this->success('get tenement note success',$data);
     }
 }
