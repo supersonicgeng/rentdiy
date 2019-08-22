@@ -449,6 +449,12 @@ class ReportService extends CommonService
         $user_id = $input['user_id'];
         $tenement_id = RentArrears::where('id',$arrears_id)->pluck('tenement_id')->first();
         $tenement_note = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->get();
+        $tenement_res = TenementNote::where('user_id',$user_id)->where('tenement_id',$tenement_id)->first();
+        if($tenement_res){
+            foreach ($tenement_note as $k => $v){
+                $tenement_note->tenement_name = Tenement::where('id',$tenement_id)->pluck('first_name')->first();
+            }
+        }
         return $this->success('get tenement note success',$tenement_note);
     }
 }
