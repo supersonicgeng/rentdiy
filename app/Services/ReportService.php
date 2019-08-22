@@ -412,6 +412,13 @@ class ReportService extends CommonService
             $total_pay_fee = 0;
             $total_need_pay_fee = 0;
             foreach ($res as $k => $v){
+                if($v->contract_type == 1){
+                    $res[$k]->rent_fee = EntireContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                }elseif ($v->contract_type == 2 || $v->contract_type == 3){
+                    $res[$k]->rent_fee = SeparateContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                }else{
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('month_rent')->first();
+                }
                 $total_arrears += $v->arrears_fee;
                 $total_need_pay_fee += $v->need_pay_fee;
                 $total_pay_fee += $v->pay_fee;
