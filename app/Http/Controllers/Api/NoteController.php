@@ -28,8 +28,8 @@ class NoteController extends CommonController
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendArrearsNote(Request $request)
+    public function sendNote(Request $request)
     {
-        return service('Note')->sendArrearsNote($request->all());
+        return service('Note')->sendNote($request->all());
     }
 }

@@ -326,7 +326,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 通知管理
     $router->group(['prefix' => 'note'], function (Router $router) {
         $router->post('getArrearsNote', 'NoteController@getArrearsNote'); // 欠款提示通知 4.10
-        $router->post('sendArrearsNote', 'NoteController@sendArrearsNote'); // 发送欠款提示通知 4.10
+        $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
     });
 });
 
