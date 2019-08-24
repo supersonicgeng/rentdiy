@@ -323,6 +323,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementReport', 'ReportController@tenementReport'); // 租客欠款列表 4.10
         $router->post('tenementReportDetail', 'ReportController@tenementReportDetail'); // 租客行为记录详情 4.10
     });
+    // 通知管理
+    $router->group(['prefix' => 'note'], function (Router $router) {
+        $router->post('getArrearsNote', 'NoteController@getArrearsNote'); // 欠款提示通知 4.10
+        $router->post('sendArrearsNote', 'NoteController@sendArrearsNote'); // 发送欠款提示通知 4.10
+    });
 });
 
 
