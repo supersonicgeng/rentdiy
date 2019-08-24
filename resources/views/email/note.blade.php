@@ -1,0 +1,4 @@
+RentDIY
+<br>
+{{$content}};
+<br>
