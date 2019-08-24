@@ -21,6 +21,7 @@ use App\Model\InspectRoom;
 use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\Order;
+use App\Model\OrderArrears;
 use App\Model\OtherRentApplication;
 use App\Model\Passport;
 use App\Model\PassportReward;
@@ -158,6 +159,8 @@ class ProvidersMarketService extends CommonService
             $order_res[$k]['total_tender'] = $v['total_tender'];
             $order_res[$k]['order_type'] = $v['order_type'];
             $order_res[$k]['budget'] = $v['budget'];
+            $order_res[$k]['invoice'] = OrderArrears::where('order_id',$v['id'])->sum('arrears_fee');
+            $order_res[$k]['payment'] = OrderArrears::where('order_id',$v['id'])->sum('pay_fee');
             $order_res[$k]['created_at'] = $v['created_at'];
             $order_res[$k]['rent_house_id'] = $v['rent_house_id'];
         }
