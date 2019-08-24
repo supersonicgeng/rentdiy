@@ -702,7 +702,11 @@ class LandlordService extends CommonService
         }else{
             $amount = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('arrears_fee');
             $receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('pay_fee');
-            $rate = round($receive/$amount,4)*100;
+            if($amount != 0){
+                $rate = round($receive/$amount,4)*100;
+            }else{
+                $rate = 100;
+            }
             $rate = $rate.'%';
             $data['amount'] = $amount;
             $data['receive'] = $receive;
@@ -728,7 +732,11 @@ class LandlordService extends CommonService
         }else{
             $amount = RentHouse::where('user_id',$user_info->id)->where('rent_category','!=',4)->count();
             $rent = RentHouse::where('user_id',$user_info->id)->where('rent_category','!=',4)->where('rent_status',4)->count();
-            $rate = round($rent/$amount,4)*100;
+            if($amount != 0){
+                $rate = round($rent/$amount,4)*100;
+            }else{
+                $rate = 100;
+            }
             $rate = $rate.'%';
             $data['amount'] = $amount;
             $data['rent'] = $rent;
