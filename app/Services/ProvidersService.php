@@ -26,6 +26,7 @@ use App\Model\Level;
 use App\Model\LookHouse;
 use App\Model\Operator;
 use App\Model\Order;
+use App\Model\OrderArrears;
 use App\Model\Passport;
 use App\Model\PassportReward;
 use App\Model\PassportStore;
@@ -376,6 +377,8 @@ class ProvidersService extends CommonService
             foreach($res as $k=>$v){
                 $res[$k]['customer'] = Landlord::where('user_id',$v['user_id'])->pluck('landlord_name')->first();
                 $res[$k]['room_name'] = RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first();
+                $res[$k]['invoice'] = OrderArrears::where('order_id',$v['id'])->sum('arrears_fee');
+                $res[$k]['payment'] = OrderArrears::where('order_id',$v['id'])->sum('pay_fee');
                 $amount += $v['budget'];
             }
             $data['order_list'] = $res;
