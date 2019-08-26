@@ -331,6 +331,12 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('contactLandLord', 'NoteController@contactLandLord'); // 联系房东通知 4.10
         $router->post('contactNotSignAgain', 'NoteController@contactNotSignAgain'); // 固定租约到期不续约通知 4.10
         $router->post('subletLeaseUp', 'NoteController@subletLeaseUp'); // 分租涨租通知 4.10
+        $router->post('leaseUp', 'NoteController@leaseUp'); // 涨租通知 4.10
+        $router->post('landlordMoveIn', 'NoteController@landlordMoveIn'); // 房东搬入通知 4.10
+        $router->post('stopRent', 'NoteController@stopRent'); // 开放式合约结束租约 4.10
+        $router->post('homeIn', 'NoteController@homeIn'); // 家庭成员搬回 4.10
+        $router->post('saleHouse', 'NoteController@saleHouse'); // 房东卖房 4.10
+        $router->post('fourteenDaysNote', 'NoteController@fourteenDaysNote'); // 14天违约警告 4.10
         $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
     });
 });

@@ -362,7 +362,76 @@ Please contact me if you have any questions.
         $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
         $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
         $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
-        $end_time = RentContract::where('id',$contract_id)->pluck('rent_end_date')->first();
+        $date = date('Y-m-d');
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+         This letter serves as a notice of rent increase for the tenancy at the above address.
+
+The new weekly rental will be  and will be payable from 
+
+The Residential Tenancies Act 1986 requires me to give you not less than 28 days notice of a rent increase.
+
+Please contact me if you have any questions.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:涨租通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function leaseUp(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
         $date = date('Y-m-d');
         $content = "
          $date
@@ -410,6 +479,368 @@ Please contact me if you have any questions.
     }
 
     /**
+     * @description:房东搬入通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordMoveIn(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $date = date('Y-m-d');
+        $fourtytwo_date = date('Y-m-d',strtotime('+ 42 days'));
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+        This letter serves as notice to terminate the periodic tenancy agreement at the above address.
+
+The last day of the tenancy will be $fourtytwo_date
+
+The Residential Tenancies Act 1986 requires me to give you not less than 42 days notice to terminate the agreement.
+
+As clearly stated on the Tenancy Agreement, these premises are customarily used for occupation by employees of the landlord, and the premises are now required for this purpose.
+
+Please contact me if you have any questions.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:开放式合约结束租约
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function stopRent(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $date = date('Y-m-d');
+        $ninety_date = date('Y-m-d',strtotime('+ 90 days'));
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+        This letter serves as notice to terminate the periodic tenancy agreement at the above address.
+
+The last day of the tenancy will be $ninety_date
+
+The Residential Tenancies Act 1986 requires me to give you not less than 90 days notice to terminate the agreement.
+
+Please contact me if you have any questions.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:家庭成员搬回
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function homeIn(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $date = date('Y-m-d');
+        $fourtytwo_date = date('Y-m-d',strtotime('+ 42 days'));
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+        This letter serves as notice to terminate the periodic tenancy agreement at the above address.
+
+The last day of the tenancy will be $fourtytwo_date
+
+The Residential Tenancies Act 1986 requires me to give you not less than 42 days notice to terminate the agreement.
+
+The premises are required as the principal place of residence for the owner or a member of the owner’s family.
+
+Please contact me if you have any questions.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:房东卖房
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saleHouse(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $date = date('Y-m-d');
+        $fourtytwo_date = date('Y-m-d',strtotime('+ 42 days'));
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+       This letter serves as notice to terminate the periodic tenancy agreement at the above address.
+
+The last day of the tenancy will be $fourtytwo_date
+
+The Residential Tenancies Act 1986 requires me to give you not less than 42 days notice to terminate the agreement.
+
+The owner is required, having entered into an unconditional agreement for the sale of the premises, to give the purchaser vacant possession of the premises.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+    /**
+     * @description:房东卖房
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function fourteenDaysNote(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $date = date('Y-m-d');
+        $fourteen_days = date('Y-m-d',strtotime('+ 14 days'));
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+       I am writing to let you know that you have not kept to your tenancy responsibilities by:（
+ ................................................................................................................................................................
+ ................................................................................................................................................................
+ ................................................................................................................................................................
+This letter is not an eviction notice.  It is a notice giving you until $fourteen_days  (at least 14 days from but not including today*) (the Remedy Date) to remedy the situation by doing the following:(整改要求)
+ ................................................................................................................................................................
+ ................................................................................................................................................................
+ ................................................................................................................................................................
+
+I can apply to the Tenancy Tribunal to end your tenancy if this is not remedied on or before the Remedy Date.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                  
+                    $landlord_name
+                 
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+
+    /**
      * @description:发送欠款提示通知
      * @author: syg <13971394623@163.com>
      * @param $code
@@ -427,7 +858,6 @@ Please contact me if you have any questions.
             'msg_send'          => $input['msg_send'],
             'email_send'        => $input['email_send'],
             'paper_send'        => $input['paper_send'],
-            'msg_type'          => $input['msg_type'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $res = SendMessage::insert($data);

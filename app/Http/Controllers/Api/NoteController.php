@@ -89,6 +89,86 @@ class NoteController extends CommonController
         return service('Note')->subletLeaseUp($request->all());
     }
 
+    /**
+     * @description:涨租通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function leaseUp(Request $request)
+    {
+        return service('Note')->leaseUp($request->all());
+    }
+
+    /**
+     * @description:房东搬入通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordMoveIn(Request $request)
+    {
+        return service('Note')->landlordMoveIn($request->all());
+    }
+
+
+    /**
+     * @description:开放式合约结束租约
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function stopRent(Request $request)
+    {
+        return service('Note')->stopRent($request->all());
+    }
+
+    /**
+     * @description:家庭成员搬回
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function homeIn(Request $request)
+    {
+        return service('Note')->homeIn($request->all());
+    }
+
+
+    /**
+     * @description:房东卖房
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function saleHouse(Request $request)
+    {
+        return service('Note')->saleHouse($request->all());
+    }
+
+
+    /**
+     * @description:14天违约警告
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function fourteenDaysNote(Request $request)
+    {
+        return service('Note')->fourteenDaysNote($request->all());
+    }
 
     /**
      * @description:发送欠款提示通知
