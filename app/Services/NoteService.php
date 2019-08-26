@@ -270,6 +270,74 @@ class NoteService extends CommonService
     }
 
 
+    /**
+     * @description:联系房东通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function contactNotSignAgain(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $house_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
+        $end_time = RentContract::where('id',$contract_id)->pluck('rent_end_date')->first();
+        $date = date('Y-m-d');
+        $content = "
+         $date
+          $tenement_name
+                    $tenement_address   
+                    Dear  $tenement_name
+                    Tenancy at: $house_address
+          This letter serves as notice that the fixed-term tenancy at the above address will expire on $end_time and will not be continued past this date.
+            The Residential Tenancies Act 1986 requires this notice to be served not more than 90 days and not less than 21 days before the date on which the tenancy expires.
+Please contact me if you have any questions.
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+              Yours sincerely
+                    Form:
+                    $landlord_name
+                    $landlord_mobile
+                    $landlord_email   
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                   mail (*allow 4 extra working days)
+                   placed into letterbox or attached to the door (* allow 2 extra working days)
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    Sent via email or faxed to tenant after 5pm (*allow 1 extra working day)
+                    hand to tenant, sent via email or faxed before 5pm on the date of the notice 
+(the first day of the notice period will be the next calendar day)
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
 
     /**
      * @description:发送欠款提示通知

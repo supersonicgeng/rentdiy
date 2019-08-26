@@ -329,6 +329,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getFourteenDaysArrearsNote', 'NoteController@getFourteenDaysArrearsNote'); // 欠款14天提示通知 4.10
         $router->post('getArrearsWarning', 'NoteController@getArrearsWarning'); // 欠款警告通知 4.10
         $router->post('contactLandLord', 'NoteController@contactLandLord'); // 联系房东通知 4.10
+        $router->post('contactNotSignAgain', 'NoteController@contactNotSignAgain'); // 固定租约到期不续约通知 4.10
         $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
     });
 });

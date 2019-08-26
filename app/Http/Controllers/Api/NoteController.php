@@ -63,6 +63,19 @@ class NoteController extends CommonController
 
 
     /**
+     * @description:联系房东通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function contactNotSignAgain(Request $request)
+    {
+        return service('Note')->contactNotSignAgain($request->all());
+    }
+
+    /**
      * @description:发送欠款提示通知
      * @author: syg <13971394623@163.com>
      * @param $code
