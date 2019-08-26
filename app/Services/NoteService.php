@@ -66,7 +66,8 @@ class NoteService extends CommonService
             Form:
                     $landlord_name
                     $landlord_mobile
-                    $landlord_email   
+                    $landlord_email 
+            Date:  	$date  
         ";
 
         $data = [
@@ -100,8 +101,8 @@ class NoteService extends CommonService
         $arrears_ids = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->pluck('id');
         $last_pay_fee = FeeReceive::whereIn('arrears_id',$arrears_ids)->orderByDesc('id')->pluck('pay_money')->first();
         $last_pay_date = FeeReceive::whereIn('arrears_id',$arrears_ids)->orderByDesc('id')->pluck('created_at')->first();
-        $fourteen_days = date('Y-m-d','+ 14 days');
-        $next_day = date('Y-m-d','+ 7 days');
+        $fourteen_days = date('Y-m-d',strtotime('+ 14 days'));
+        $next_day = date('Y-m-d',strtotime('+ 7 days'));
         $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
         $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
         $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
@@ -129,6 +130,16 @@ class NoteService extends CommonService
                     $landlord_name
                     $landlord_mobile
                     $landlord_email   
+                     Delivery:
+                    Date:  	$date
+                    By (tick):
+                    mail (*allow 4 extra working days from but not including today)
+                    hand into letterbox (*allow 2 extra working days from but not including today)
+                    email to an email address given as an additional address for service
+                    (*if sent by email after 5pm, allow 1 extra working day from but not including today)
+                    fax to a facsimile number given as an additional address for service
+                    (*if sent by fax after 5pm, allow 1 extra working day from but not including today)
+                    hand to tenant
                     ";
 
         $data = [
@@ -158,12 +169,6 @@ class NoteService extends CommonService
     {
         $contract_id = $input['contract_id'];
         $arrears_fee = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->sum('need_pay_fee');
-        $content = 'Dear
-        We have not received your payment of $'.$arrears_fee.'. Please arrange this payment to be paid as soon as you receive this message. 
-        We might have no choice but to take further action if this matter can not be resloved soon. 
-        If you already paid this, please ignore this message.
-        We would be appreciated if you can make this payment as soon as possible.
-        Please contact with us if you have any questions, thank you.   ';
         $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
         $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
         $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
@@ -172,6 +177,23 @@ class NoteService extends CommonService
         $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
         $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
         $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $date = date('Y-m-d');
+        $content = "
+         $date
+                    $tenement_name
+                    $tenement_address
+                Dear
+        We have not received your payment of $ $arrears_fee . Please arrange this payment to be paid as soon as you receive this message. 
+        We might have no choice but to take further action if this matter can not be resloved soon. 
+        If you already paid this, please ignore this message.
+        We would be appreciated if you can make this payment as soon as possible.
+        Please contact with us if you have any questions, thank you. 
+        Form:
+                    $landlord_name
+                    $landlord_mobile
+                    $landlord_email 
+            Date:  	$date    
+        ";
         $data = [
             'tenement_id'       => $tenement_id,
             'tenement_name'     => $tenement_name,
