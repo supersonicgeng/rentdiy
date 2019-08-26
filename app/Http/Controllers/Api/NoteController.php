@@ -20,6 +20,34 @@ class NoteController extends CommonController
         return service('Note')->getArrearsNote($request->all());
     }
 
+
+    /**
+     * @description:欠款14天提示通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFourteenDaysArrearsNote(Request $request)
+    {
+        return service('Note')->getFourteenDaysArrearsNote($request->all());
+    }
+
+
+    /**
+     * @description:欠款警告通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getArrearsWarning(Request $request)
+    {
+        return service('Note')->getArrearsWarning($request->all());
+    }
+
     /**
      * @description:发送欠款提示通知
      * @author: syg <13971394623@163.com>
