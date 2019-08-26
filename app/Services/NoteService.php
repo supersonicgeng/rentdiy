@@ -44,12 +44,6 @@ class NoteService extends CommonService
     {
         $contract_id = $input['contract_id'];
         $arrears_fee = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->sum('need_pay_fee');
-        $content = 'Dear
-            We have not received your payment of $'.$arrears_fee.' Please arrange this payment to be paid as soon as you receive this message. 
-            We might have no choice but to take further action if this matter can not be resloved soon. 
-            If you already paid this, please ignore this message.
-            We would be appreciated if you can make this payment as soon as possible.
-            Please contact with us if you have any questions, thank you.  ';
         $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
         $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
         $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
@@ -58,6 +52,23 @@ class NoteService extends CommonService
         $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
         $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
         $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $date = date('Y-m-d');
+        $content = "
+                    $date
+                    $tenement_name
+                    $tenement_address
+            Dear
+            We have not received your payment of $ $arrears_fee Please arrange this payment to be paid as soon as you receive this message. 
+            We might have no choice but to take further action if this matter can not be resloved soon. 
+            If you already paid this, please ignore this message.
+            We would be appreciated if you can make this payment as soon as possible.
+            Please contact with us if you have any questions, thank you.  
+            Form:
+                    $landlord_name
+                    $landlord_mobile
+                    $landlord_email   
+        ";
+
         $data = [
             'tenement_id'       => $tenement_id,
             'tenement_name'     => $tenement_name,
