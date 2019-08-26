@@ -24,6 +24,7 @@ use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\EntireContract;
 use App\Model\Inspect;
+use App\Model\InspectChattel;
 use App\Model\InspectCheck;
 use App\Model\Level;
 use App\Model\LookHouse;
@@ -76,7 +77,58 @@ class ReportService extends CommonService
      */
     public function chattelReport(array $input)
     {
+        $where = function ($query) use($input){
+            //搜索词查询
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
+                $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
+            }
+            if (@$input['District'] and @$input['District'] != '') {
+                $District = @$input['District'];
+                $query->where('h.District',$District);
+            }
+            if (@$input['TA'] and @$input['TA'] != '') {
+                $TA = @$input['TA'];
+                $query->where('h.TA',$TA);
+            }
+            if (@$input['Region'] and @$input['Region'] != '') {
+                $Region = @$input['Region'];
+                $query->where('h.Region',$Region);
+            }
+            if (@$input['contract_status'] and @$input['contract_status'] != ''){
+                $query->where('c.contract_status',$input['contract_status']);
+            }
+            $query->where('c.user_id',$input['user_id']);
 
+        };
+        $count = DB::table('rent_contract as c')
+            ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+            ->leftJoin('rent_house as h','h.id','c.house_id')
+            ->where($where)->count();
+        if($count < ($input['page']-1)*10){
+            return $this->error('2','get contract list failed');
+        }else{
+            $res = DB::table('rent_contract as c')
+                ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+                ->leftJoin('rent_house as h','h.id','c.house_id')
+                ->where($where)->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.contract_id','c.contract_type','c.rent_start_date','c.rent_end_date','c.id')
+                ->get();
+            foreach ($res as $k => $v){
+                $inspect_id = Inspect::where('contract_id',$v->id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
+                if($inspect_id){
+                    $res[$k]->inspect_date = Inspect::where('id',$inspect_id)->where('inspect_status',4)->pluck('inspect_completed_date')->first();
+                    $res[$k]->total_chattel = InspectChattel::where('inspect_id',$inspect_id)->sum('chattel_num');
+                    $res[$k]->inspector = Inspect::where('id',$inspect_id)->where('inspect_status',4)->pluck('check_name')->first();
+                }else{
+                    $res[$k]->total_chattel = ContractChattel::where('contract_id',$v->id)->sum('chattel_num');
+                }
+            }
+            }
+            $data['contract_list'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get contract list success',$data);
     }
 
 
