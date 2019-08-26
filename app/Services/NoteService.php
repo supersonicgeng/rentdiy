@@ -766,7 +766,7 @@ The owner is required, having entered into an unconditional agreement for the sa
     }
 
     /**
-     * @description:房东卖房
+     * @description:14天租客违约警告
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -796,11 +796,11 @@ The owner is required, having entered into an unconditional agreement for the sa
                     $tenement_address   
                     Dear  $tenement_name
                     Tenancy at: $house_address
-       I am writing to let you know that you have not kept to your tenancy responsibilities by:（
+       I am writing to let you know that you have not kept to your tenancy responsibilities by:
  ................................................................................................................................................................
  ................................................................................................................................................................
  ................................................................................................................................................................
-This letter is not an eviction notice.  It is a notice giving you until $fourteen_days  (at least 14 days from but not including today*) (the Remedy Date) to remedy the situation by doing the following:(整改要求)
+This letter is not an eviction notice.  It is a notice giving you until $fourteen_days  (at least 14 days from but not including today*) (the Remedy Date) to remedy the situation by doing the following:
  ................................................................................................................................................................
  ................................................................................................................................................................
  ................................................................................................................................................................

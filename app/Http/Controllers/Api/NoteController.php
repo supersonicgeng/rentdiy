@@ -170,6 +170,20 @@ class NoteController extends CommonController
         return service('Note')->fourteenDaysNote($request->all());
     }
 
+
+    /**
+     * @description:14天违约警告
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function invoiceNote(Request $request)
+    {
+        return service('Note')->invoiceNote($request->all());
+    }
+
     /**
      * @description:发送欠款提示通知
      * @author: syg <13971394623@163.com>
