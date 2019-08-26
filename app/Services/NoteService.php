@@ -99,17 +99,26 @@ class NoteService extends CommonService
         $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
         $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
         $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
-        $content = 'Dear 
+        $date = date('Y-m-d');
+        $content = "$date
+                    $tenement_name
+                    $tenement_address
+                    Dear 
                         Tenancy at: 
                         This is not an eviction notice.  This is a 14-day Notice to Remedy regarding rent arrears.
-                        Your rent is behind by $'.$arrears_fee.'  This is a breach of the Residential Tenancies Act 1986 and our tenancy agreement.  
-                        The last payment received was $'.$last_pay_fee.' on '.$last_pay_date.'.  You are required by law to pay rent when it is due.
-                        Please pay $'.$arrears_fee.'by '.$fourteen_days.' (at least 14 days from but not including today*) (the Payment Date.  
-                        You will also need to pay your current rent due on '.$next_day.' to bring your rent payments up to date. 
-                        Please call me on '.$landlord_mobile.' or email '.$landlord_email.' to discuss arrangements for you to pay the missed rent.
+                        Your rent is behind by $ $arrears_fee  This is a breach of the Residential Tenancies Act 1986 and our tenancy agreement.  
+                        The last payment received was $ $last_pay_fee on $last_pay_date  You are required by law to pay rent when it is due.
+                        Please pay $ $arrears_fee by $fourteen_days (at least 14 days from but not including today*) (the Payment Date.  
+                        You will also need to pay your current rent due on $next_day to bring your rent payments up to date. 
+                        Please call me on $landlord_mobile or email $landlord_email to discuss arrangements for you to pay the missed rent.
                         If you do not make this payment on or before the Payment Date, or make an arrangement with me to pay, I can apply to the Tenancy Tribunal to end your tenancy, and for you to pay all the rent owed.
                         I enclose a copy of your rent record for you to check with your bank statements or receipts.
-                        Yours sincerely';
+                        Yours sincerely
+                    Form:
+                    $landlord_name
+                    $landlord_mobile
+                    $landlord_email   
+                    ";
 
         $data = [
             'tenement_id'       => $tenement_id,
