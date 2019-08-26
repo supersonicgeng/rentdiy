@@ -122,6 +122,8 @@ class ReportService extends CommonService
                     $res[$k]->inspector = Inspect::where('id',$inspect_id)->where('inspect_status',4)->pluck('check_name')->first();
                 }else{
                     $res[$k]->total_chattel = ContractChattel::where('contract_id',$v->id)->sum('chattel_num');
+                    $res[$k]->inspect_date = '';
+                    $res[$k]->inspector = '';
                 }
             }
             }
