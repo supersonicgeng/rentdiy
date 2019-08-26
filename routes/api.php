@@ -328,6 +328,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('getArrearsNote', 'NoteController@getArrearsNote'); // 欠款提示通知 4.10
         $router->post('getFourteenDaysArrearsNote', 'NoteController@getFourteenDaysArrearsNote'); // 欠款14天提示通知 4.10
         $router->post('getArrearsWarning', 'NoteController@getArrearsWarning'); // 欠款警告通知 4.10
+        $router->post('contactLandLord', 'NoteController@contactLandLord'); // 联系房东通知 4.10
         $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
     });
 });

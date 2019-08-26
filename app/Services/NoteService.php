@@ -208,6 +208,68 @@ class NoteService extends CommonService
         return $this->success('get message success',$data);
     }
 
+    /**
+     * @description:联系房东通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function contactLandLord(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $tenement_id = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_address = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_post_address')->first();
+        $tenement_email = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_e_mail')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
+        $landlord_hm = RentContract::where('contract_id',$contract_id)->pluck('landlord_hm')->first();
+        $landlord_wk = RentContract::where('contract_id',$contract_id)->pluck('landlord_wk')->first();
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $landlord_mobile = RentContract::where('id',$contract_id)->pluck('landlord_mobile_phone')->first();
+        $landlord_email = RentContract::where('id',$contract_id)->pluck('landlord_e_mail')->first();
+        $date = date('Y-m-d');
+        $content = "
+         $date
+                    $tenement_address
+                     $tenement_name
+            Contact details
+            Please contact me at the details below if any urgent repairs are needed.
+            Landlord contact details
+            Home phone: $landlord_hm
+            Work phone: $landlord_wk
+            Mobile phone: $landlord_mobile
+            Email: $landlord_email
+            Alternative contact details (partner, friend, relative)
+            Name:
+            Home phone:
+            Work phone:
+            Mobile phone:
+            Email:
+            If you are not able to contact me, or the alternative contact person, and the repairs are urgent, please contact one of the following tradespeople:
+            Tradespeople contact details
+            Plumber name:	Phone:
+            Electrician name:	Phone:
+            Glazier name:	Phone:
+            Kind regards
+            $landlord_name
+        ";
+        $data = [
+            'tenement_id'       => $tenement_id,
+            'tenement_name'     => $tenement_name,
+            'tenement_address'  => $tenement_address,
+            'send_email'        => $tenement_email,
+            'send_phone'        => $tenement_phone,
+            'content'           => $content,
+            'landlord_name'     => $landlord_name,
+            'landlord_mobile'   => $landlord_mobile,
+            'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
 
     /**
      * @description:发送欠款提示通知
