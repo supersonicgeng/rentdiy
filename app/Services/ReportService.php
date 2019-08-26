@@ -517,4 +517,76 @@ class ReportService extends CommonService
         }
         return $this->success('get tenement note success',$data);
     }
+
+
+
+    /**
+     * @description:租客账单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementArrearsReport(array $input)
+    {
+        $where = function ($query) use($input){
+            //房屋搜索
+            if (@$input['property_name'] and @$input['property_name'] != '') {
+                $property_name = @$input['property_name'];
+                $query->where('h.property_name','like', '%'.$property_name.'%');
+            }
+            //状态
+            if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
+                $arrears_type = @$input['arrears_type'];
+                $query->where('r.arrears_type',$arrears_type);
+            }
+            // 时间
+            if (@$input['start_time'] && @$input['end_time'] && @$input['start_time'] != '' && @$input['end_time'] != '') {
+                $query->whereBetween('r.created_at',[$input['start_time'],$input['end_time']]);
+            }
+            $query->where('r.arrears_type','!=',4);
+            $query->where('c.user_id',$input['user_id']);
+        };
+        $count = DB::table('rent_arrears as r')
+            ->leftJoin('rent_contract as c','r.contract_id','c.id')
+            ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+            ->leftJoin('rent_house as h','h.id','c.house_id')
+            ->where($where)->count();
+        if($count < ($input['page']-1)*10){
+            return $this->error('2','get contract list failed');
+        }else{
+            $res = DB::table('rent_arrears as r')
+                ->leftJoin('rent_contract as c','r.contract_id','c.id')
+                ->leftJoin('contract_tenement as ct','c.id','ct.contract_id')
+                ->leftJoin('rent_house as h','h.id','c.house_id')
+                ->where($where)->orderByDesc('r.need_pay_fee')->limit(10)->offset(($input['page']-1)*10)
+                ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
+                    'c.rent_start_date','c.rent_end_date','r.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id','r.arrears_type')
+                ->get();
+            $total_arrears = 0;
+            $total_pay_fee = 0;
+            $total_need_pay_fee = 0;
+            foreach ($res as $k => $v){
+                if($v->contract_type == 1){
+                    $res[$k]->rent_fee = EntireContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                }elseif ($v->contract_type == 2 || $v->contract_type == 3){
+                    $res[$k]->rent_fee = SeparateContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
+                }else{
+                    $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('month_rent')->first();
+                }
+                $total_arrears += $v->arrears_fee;
+                $total_need_pay_fee += $v->need_pay_fee;
+                $total_pay_fee += $v->pay_fee;
+            }
+            $data['contract_list'] = $res;
+            $data['total_arrears'] = $total_arrears;
+            $data['total_pay_fee'] = $total_pay_fee;
+            $data['total_need_pay_fee'] = $total_need_pay_fee;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get contract list success',$data);
+        }
+    }
+
 }

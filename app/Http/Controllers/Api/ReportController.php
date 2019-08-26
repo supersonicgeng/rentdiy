@@ -90,6 +90,19 @@ class ReportController extends CommonController
     }
 
     /**
+     * @description:租客账单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tenementArrearsReport(Request $request)
+    {
+        return service('Report')->tenementArrearsReport($request->all());
+    }
+
+    /**
      * @description:租客行为记录详情
      * @author: syg <13971394623@163.com>
      * @param $code
