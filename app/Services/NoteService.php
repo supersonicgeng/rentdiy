@@ -893,7 +893,7 @@ $providers_email
         $landlord_user_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
         $landlord_name = Landlord::where('user_id',$landlord_user_id)->pluck('landlord_name')->first();
         $landlord_email = Landlord::where('user_id',$landlord_user_id)->pluck('email')->first();
-        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('address')->first();
+        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('property_address')->first();
         $landlord_phone = Landlord::where('user_id',$landlord_user_id)->pluck('phone')->first();
         $arrears_fee = OrderArrears::where('order_id',$order_id)->sum('need_pay_fee');
         $providers_id = LandlordOrder::where('id',$order_id)->pluck('providers_id')->first();
@@ -941,7 +941,7 @@ We would be appreciated if you can make this payment as soon as possible.  Pleas
         $landlord_user_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
         $landlord_name = Landlord::where('user_id',$landlord_user_id)->pluck('landlord_name')->first();
         $landlord_email = Landlord::where('user_id',$landlord_user_id)->pluck('email')->first();
-        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('address')->first();
+        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('property_address')->first();
         $landlord_phone = Landlord::where('user_id',$landlord_user_id)->pluck('phone')->first();
         $arrears_fee = OrderArrears::where('order_id',$order_id)->sum('need_pay_fee');
         $providers_id = LandlordOrder::where('id',$order_id)->pluck('providers_id')->first();
