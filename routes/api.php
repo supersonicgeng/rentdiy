@@ -339,6 +339,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('saleHouse', 'NoteController@saleHouse'); // 房东卖房 4.10
         $router->post('fourteenDaysNote', 'NoteController@fourteenDaysNote'); // 14天违约警告 4.10
         $router->post('invoiceNote', 'NoteController@invoiceNote'); // 发票通知 4.10
+        $router->post('landlordArrearsNote', 'NoteController@landlordArrearsNote'); // 房东欠款 4.10
+        $router->post('landlordArrearsWarning', 'NoteController@landlordArrearsWarning'); // 房东欠款警告 4.10
         $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
     });
 });

@@ -13,6 +13,10 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\ContractTenement;
 use App\Model\FeeReceive;
+use App\Model\Landlord;
+use App\Model\LandlordOrder;
+use App\Model\OrderArrears;
+use App\Model\Providers;
 use App\Model\Region;
 use App\Model\RentArrears;
 use App\Model\RentContact;
@@ -834,6 +838,140 @@ I can apply to the Tenancy Tribunal to end your tenancy if this is not remedied 
             'landlord_name'     => $landlord_name,
             'landlord_mobile'   => $landlord_mobile,
             'landlord_email'    => $landlord_email,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:发票通知
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function invoiceNote(array $input)
+    {
+        $order_id = $input['order_id'];
+        $landlord_user_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
+        $landlord_email = Landlord::where('user_id',$landlord_user_id)->pluck('email')->first();
+        $landlord_phone = Landlord::where('user_id',$landlord_user_id)->pluck('phone')->first();
+        $providers_id = Landlord::where('id',$order_id)->pluck('providers_id')->first();
+        $providers_email = Providers::where('id',$providers_id)->pluck('email')->first();
+        $providers_company_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
+        $providers_name = Providers::where('id',$providers_id)->pluck('first_name')->first();
+        $providers_phone = Providers::where('id',$providers_id)->pluck('phone')->first();
+        $content = "
+         We have send you an invoice to $landlord_email please check it and arrange the payment. thank you. 
+
+From: $providers_name $providers_company_name
+$providers_phone
+$providers_email
+        ";
+        $data = [
+            'landlord_user_id'  => $landlord_user_id,
+            'content'           => $content,
+            'send_email'        => $landlord_email,
+            'send_phone'        => $landlord_phone,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:房东欠款
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordArrearsNote(array $input)
+    {
+        $order_id = $input['order_id'];
+        $landlord_user_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
+        $landlord_name = Landlord::where('user_id',$landlord_user_id)->pluck('landlord_name')->first();
+        $landlord_email = Landlord::where('user_id',$landlord_user_id)->pluck('email')->first();
+        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('address')->first();
+        $landlord_phone = Landlord::where('user_id',$landlord_user_id)->pluck('phone')->first();
+        $arrears_fee = OrderArrears::where('order_id',$order_id)->sum('need_pay_fee');
+        $providers_id = Landlord::where('id',$order_id)->pluck('providers_id')->first();
+        $providers_email = Providers::where('id',$providers_id)->pluck('email')->first();
+        $providers_company_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
+        $providers_name = Providers::where('id',$providers_id)->pluck('first_name')->first();
+        $providers_phone = Providers::where('id',$providers_id)->pluck('phone')->first();
+        $date = date('Y-m-d');
+        $content = "
+                    $date
+                    $landlord_name
+                    $landlord_address
+            Dear
+        This is a reminder that we have not received your payment of $ $arrears_fee . If you already paid this, please ignore this message.
+
+We would be appreciated if you can make this payment as soon as possible.  Please contact with us if you have any questions, thank you. 
+            Form:
+                    $providers_name
+                    $providers_phone
+                    $providers_email 
+            Date:  	$date  
+        ";
+
+        $data = [
+            'landlord_user_id'  => $landlord_user_id,
+            'content'           => $content,
+            'send_email'        => $landlord_email,
+            'send_phone'        => $landlord_phone,
+        ];
+        return $this->success('get message success',$data);
+    }
+
+
+    /**
+     * @description:房东欠款警告
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordArrearsWarning(array $input)
+    {
+        $order_id = $input['order_id'];
+        $landlord_user_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
+        $landlord_name = Landlord::where('user_id',$landlord_user_id)->pluck('landlord_name')->first();
+        $landlord_email = Landlord::where('user_id',$landlord_user_id)->pluck('email')->first();
+        $landlord_address = Landlord::where('user_id',$landlord_user_id)->pluck('address')->first();
+        $landlord_phone = Landlord::where('user_id',$landlord_user_id)->pluck('phone')->first();
+        $arrears_fee = OrderArrears::where('order_id',$order_id)->sum('need_pay_fee');
+        $providers_id = Landlord::where('id',$order_id)->pluck('providers_id')->first();
+        $providers_email = Providers::where('id',$providers_id)->pluck('email')->first();
+        $providers_company_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
+        $providers_name = Providers::where('id',$providers_id)->pluck('first_name')->first();
+        $providers_phone = Providers::where('id',$providers_id)->pluck('phone')->first();
+        $date = date('Y-m-d');
+        $content = "
+                    $date
+                    $landlord_name
+                    $landlord_address
+            Dear
+           We have not received your payment of $ $arrears_fee. Please arrange this payment to be paid as soon as you receive this message. 
+We might have no choice but to take further action if this matter can not be resloved soon. 
+If you already paid this, please ignore this message.
+We would be appreciated if you can make this payment as soon as possible.
+Please contact with us if you have any questions, thank you.  
+            Form:
+                    $providers_name
+                    $providers_phone
+                    $providers_email 
+            Date:  	$date  
+        ";
+
+        $data = [
+            'landlord_user_id'  => $landlord_user_id,
+            'content'           => $content,
+            'send_email'        => $landlord_email,
+            'send_phone'        => $landlord_phone,
         ];
         return $this->success('get message success',$data);
     }

@@ -172,7 +172,7 @@ class NoteController extends CommonController
 
 
     /**
-     * @description:14天违约警告
+     * @description:发票通知
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -182,6 +182,33 @@ class NoteController extends CommonController
     public function invoiceNote(Request $request)
     {
         return service('Note')->invoiceNote($request->all());
+    }
+
+
+    /**
+     * @description:房东欠款
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordArrearsNote(Request $request)
+    {
+        return service('Note')->landlordArrearsNote($request->all());
+    }
+
+    /**
+     * @description:房东欠款警告
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function landlordArrearsWarning(Request $request)
+    {
+        return service('Note')->landlordArrearsWarning($request->all());
     }
 
     /**
