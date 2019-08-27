@@ -21,6 +21,19 @@ class ReportController extends CommonController
     }
 
     /**
+     * @description:物品清单详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function chattelDetail(Request $request)
+    {
+        return service('Report')->chattelDetail($request->all());
+    }
+
+    /**
      * @description:租约到期
      * @author: syg <13971394623@163.com>
      * @param $code

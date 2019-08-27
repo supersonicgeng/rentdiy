@@ -135,6 +135,40 @@ class ReportService extends CommonService
 
 
     /**
+     * @description:物品清单详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function chattelDetail(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $inspect_id = Inspect::where('contract_id',$contract_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
+        if($inspect_id){
+            $count =  InspectChattel::where('inspect_id',$inspect_id)->count();
+            if($count < ($input['page']-1)*10){
+                return $this->error('2','get contract list failed');
+            }else{
+                $res = InspectChattel::where('inspect_id',$inspect_id)->offset(($input['page']-1)*10)->limit(10)->get();
+            }
+        }else{
+            $count = ContractChattel::where('contract_id',$contract_id)->count();
+            if($count < ($input['page']-1)*10){
+                return $this->error('2','get contract list failed');
+            }else{
+                $res = ContractChattel::where('contract_id',$contract_id)->offset(($input['page']-1)*10)->limit(10)->get();
+            }
+        }
+
+        $data['contract_list'] = $res;
+        $data['current_page'] = $input['page'];
+        $data['total_page'] = ceil($count/10);
+        return $this->success('get contract list success',$data);
+    }
+
+    /**
      * @description:租约到期
      * @author: syg <13971394623@163.com>
      * @param $code
@@ -531,10 +565,10 @@ class ReportService extends CommonService
     public function tenementArrearsReport(array $input)
     {
         $where = function ($query) use($input){
-            //房屋搜索
-            if (@$input['property_name'] and @$input['property_name'] != '') {
-                $property_name = @$input['property_name'];
-                $query->where('h.property_name','like', '%'.$property_name.'%');
+            //搜索词查询
+            if (@$input['tenement_name'] and @$input['tenement_name'] != '') {
+                $tenement_name = @$input['tenement_name'];
+                $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
             //状态
             if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
@@ -562,7 +596,7 @@ class ReportService extends CommonService
                 ->leftJoin('rent_house as h','h.id','c.house_id')
                 ->where($where)->orderByDesc('r.need_pay_fee')->limit(10)->offset(($input['page']-1)*10)
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
-                    'c.rent_start_date','c.rent_end_date','r.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id','r.arrears_type')
+                    'c.rent_start_date','c.rent_end_date','r.id','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id','r.arrears_type','r.created_at as invoice_date')
                 ->get();
             $total_arrears = 0;
             $total_pay_fee = 0;
