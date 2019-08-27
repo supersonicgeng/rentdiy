@@ -996,6 +996,7 @@ Please contact with us if you have any questions, thank you.
             'msg_send'          => $input['msg_send'],
             'email_send'        => $input['email_send'],
             'paper_send'        => $input['paper_send'],
+            'msg_type'          => $input['msg_type'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $res = SendMessage::insert($data);
