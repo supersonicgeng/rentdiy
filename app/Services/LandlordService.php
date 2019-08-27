@@ -703,13 +703,13 @@ class LandlordService extends CommonService
             $amount = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('arrears_fee');
             $receive = RentArrears::where('user_id',$user_info->id)->where('arrears_type','!=',4)->sum('pay_fee');
             if($amount != 0){
-                $rate = round($receive/$amount,4)*100;
+                $rate = round(($amount-$receive)/$amount,4)*100;
             }else{
                 $rate = 100;
             }
             $rate = $rate.'%';
             $data['amount'] = $amount;
-            $data['receive'] = $receive;
+            $data['receive'] = ($amount-$receive);
             $data['rate'] = $rate;
             return $this->success('get line success',$data);
         }
