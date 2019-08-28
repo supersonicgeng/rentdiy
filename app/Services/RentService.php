@@ -100,7 +100,7 @@ class RentService extends CommonService
                 ];
                 $task_data = [
                     'user_id'           => $input['user_id'],
-                    'task_type'         => 2,
+                    'task_type'         => 4,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
                     'task_title'        => 'new rent application',
@@ -2113,7 +2113,7 @@ class RentService extends CommonService
             // 生成任务
             $task_data = [
                 'user_id'           => $input['user_id'],
-                'task_type'         => 4,
+                'task_type'         => 6,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'insurance update',
@@ -2237,15 +2237,15 @@ class RentService extends CommonService
             // 仅通知
             // 生成任务
             if($suspend_type == 1){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*6);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*2);
             }elseif ($suspend_type == 2){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*94);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*90);
             }elseif ($suspend_type == 3){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*32);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*28);
             }
             $task_data = [
-                'user_id'   => $input['user_id'],
-                'task_type' => 1,
+                'user_id'           => $input['user_id'],
+                'task_type'         => $suspend_type,
                 'task_start_time'   => $task_start_time,
                 'task_status'       => 0,
                 'task_title'        => 'rent suspend inform',
@@ -2363,6 +2363,37 @@ class RentService extends CommonService
         $data['bond'] = $bond;
         $data['rent'] = $rent;
         $data['other'] = $other;
+        return $this->success('get contract info success',$data);
+    }
+
+    /**
+     * @description:租约诉讼
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentLitigation(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $landlord_name = RentContract::where('id',$contract_id)->pluck('landlord_full_name')->first();
+        $property_addres = RentContract::where('id',$contract_id)->pluck('house_address')->first();
+        $contract_sn = RentContract::where('id',$contract_id)->pluck('contract_id')->first();
+        $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $arrears_res = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->where('is_pay','!=',2)->get();
+        $total_arrears = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->sum('need_pay_fee');
+        $total_rent_fee = RentArrears::where('contract_id',$contract_id)->where('arrears_type',2)->sum('need_pay_fee');
+        $first_arrears_date = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->where('is_pay','!=',2)->pluck('created_at')->first();
+        $arrears_date = ceil((time()-strtotime($first_arrears_date))/3600/24);
+        $data['landlord_name'] = $landlord_name;
+        $data['property_address'] = $property_addres;
+        $data['contract_sn'] = $contract_sn;
+        $data['tenement_name'] = $tenement_name;
+        $data['arrears_res'] = $arrears_res;
+        $data['total_arrears'] = $total_arrears;
+        $data['total_rent_fee'] = $total_rent_fee;
+        $data['arrears_date'] = $arrears_date;
         return $this->success('get contract info success',$data);
     }
 }

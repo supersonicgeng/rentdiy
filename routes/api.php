@@ -121,6 +121,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('changeRentFee', 'RentController@changeRentFee'); // 租金调整 5.13
         $router->post('rentSuspend', 'RentController@rentSuspend'); // 租金中止 5.13
         $router->post('rentSuspendSure', 'RentController@rentSuspendSure'); // 租金中止确认 5.13
+        $router->post('rentLitigation', 'RentController@rentLitigation'); // 租约诉讼 5.13
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {
