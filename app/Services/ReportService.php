@@ -115,11 +115,11 @@ class ReportService extends CommonService
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.house_id','c.contract_id','c.contract_type','c.contract_status','c.rent_start_date','c.rent_end_date','c.id')
                 ->get();
             foreach ($res as $k => $v){
-                $inspect_id = Inspect::where('house_id',$v->house_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
+                $inspect_id = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
                 if($inspect_id){
-                    $res[$k]->inspect_date = Inspect::where('house_id',$v->house_id)->where('inspect_status',4)->pluck('inspect_completed_date')->first();
+                    $res[$k]->inspect_date = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->pluck('inspect_completed_date')->first();
                     $res[$k]->total_chattel = InspectChattel::where('inspect_id',$inspect_id)->sum('chattel_num');
-                    $res[$k]->inspector = Inspect::where('house_id',$v->house_id)->where('inspect_status',4)->pluck('check_name')->first();
+                    $res[$k]->inspector = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->pluck('check_name')->first();
                 }else{
                     $res[$k]->total_chattel = ContractChattel::where('contract_id',$v->id)->sum('chattel_num');
                     $res[$k]->inspect_date = '';
@@ -146,7 +146,7 @@ class ReportService extends CommonService
     {
         $contract_id = $input['contract_id'];
         $house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
-        $inspect_id = Inspect::where('house_id',$house_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
+        $inspect_id = Inspect::where('rent_house_id',$house_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
         if($inspect_id){
             $count =  InspectChattel::where('inspect_id',$inspect_id)->count();
             if($count < ($input['page']-1)*10){
