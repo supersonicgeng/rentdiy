@@ -457,7 +457,7 @@ class FeeService extends CommonService
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
                     $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
-                    $fee_list[$k]['contract_tpe'] = RentContract::where('id',$fee_res[0]['contract_id'])->pluck('contract_tpe')->first();
+                    $fee_list[$k]['contract_tpe'] = RentContract::where('id',$fee_res[0]['contract_id'])->pluck('contract_type')->first();
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
                     $fee_list[$k]['payment_due'] = '';
@@ -492,7 +492,7 @@ class FeeService extends CommonService
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
                     $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
-                    $fee_list[$k]['contract_tpe'] = RentContract::where('id',$fee_res[0]['contract_id'])->pluck('contract_tpe')->first();
+                    $fee_list[$k]['contract_tpe'] = RentContract::where('id',$fee_res[0]['contract_id'])->pluck('contract_type')->first();
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
                     $fee_list[$k]['payment_due'] = '';
