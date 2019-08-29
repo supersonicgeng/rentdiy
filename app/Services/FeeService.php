@@ -20,6 +20,7 @@ use App\Model\ContractTenement;
 use App\Model\FeeReceive;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
+use App\Model\OperatorRoom;
 use App\Model\OrderArrears;
 use App\Model\Providers;
 use App\Model\Region;
@@ -133,6 +134,121 @@ class FeeService extends CommonService
     }
 
 
+    /**
+     * @description:商业费用单获取分摊率
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRate(array $input)
+    {
+        $model = new RentArrears();
+        $contract_id = $input['contract_id'];
+        $items_name = $input['items_name'];
+        $res = $model->where('contract_id',$contract_id)->where('items_name',$items_name)->orderByDesc('id')->pluck('rate')->first();
+        if(!$res){
+            $res = 100;
+            return $this->success('get rate success',$res);
+        }else{
+            return $this->success('get rate success',$res);
+        }
+    }
+
+    /**
+     * @description:添加费用单
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feedAddBusiness(array $input)
+    {
+        $model = new RentArrears();
+        if($input['arrears_type'] == 3){
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            $contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+            $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
+            $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
+            $fee_data = [
+                'user_id'           => $input['user_id'],
+                'contract_id'       => $input['contract_id'],
+                'contract_sn'       => $contract_sn,
+                'rent_house_id'     => $rent_house_id,
+                'tenement_id'       => $tenement_info->tenement_id,
+                'tenement_name'     => $tenement_info->tenement_full_name,
+                'tenement_email'    => $tenement_info->tenement_email,
+                'tenement_phone'    => $tenement_info->tenement_phone,
+                'arrears_type'      => 3,
+                'property_name'     => $rent_house_info->property_name,
+                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'is_pay'            => 1,
+                'pay_fee'           => 0,
+                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'number'            => $input['number'],
+                'unit_price'        => $input['unit_price'],
+                'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
+                'tex'               => $input['tex'],
+                'discount'          => $input['discount'],
+                'items_name'        => $input['items_name'],
+                'describe'          => $input['describe'],
+                'note'              => $input['note'],
+                'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                'District'          => $rent_house_info->District,
+                'TA'                => $rent_house_info->TA,
+                'Region'            => $rent_house_info->Region,
+                'upload_url'        => $input['upload_url'],
+                'rate'              => $input['rate'],
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($fee_data);
+        }else{
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            $contract_sn = RentContract::where('id',$input['contract_id'])->pluck('contract_id')->first();
+            $tenement_info = ContractTenement::where('contract_id',$input['contract_id'])->first();
+            $rent_house_info = RentHouse::where('id',$rent_house_id)->first();
+            $fee_data = [
+                'user_id'           => $input['user_id'],
+                'contract_id'       => $input['contract_id'],
+                'contract_sn'       => $contract_sn,
+                'rent_house_id'     => $rent_house_id,
+                'tenement_id'       => $tenement_info->tenement_id,
+                'tenement_name'     => $tenement_info->tenement_full_name,
+                'tenement_email'    => $tenement_info->tenement_email,
+                'tenement_phone'    => $tenement_info->tenement_phone,
+                'arrears_type'      => 4,
+                'property_name'     => $rent_house_info->property_name,
+                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'is_pay'            => 1,
+                'pay_fee'           => 0,
+                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'number'            => $input['number'],
+                'unit_price'        => $input['unit_price'],
+                'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
+                'tex'               => $input['tex'],
+                'discount'          => $input['discount'],
+                'items_name'        => $input['items_name'],
+                'describe'          => $input['describe'],
+                'note'              => $input['note'],
+                'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                'District'          => $rent_house_info->District,
+                'TA'                => $rent_house_info->TA,
+                'Region'            => $rent_house_info->Region,
+                'upload_url'        => $input['upload_url'],
+                'rate'              => $input['rate'],
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($fee_data);
+        }
+        if(!$res){
+            return $this->error('2','add rent fee failed');
+        }else{
+            return $this->success('add rent fee success');
+        }
+    }
+
 
     /**
      * @description:获得租约列表
@@ -145,6 +261,11 @@ class FeeService extends CommonService
     public function getContractList(array $input)
     {
         $model = new RentContract();
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('house_id',$room_list);
+        }
         $res = $model->where('user_id',$input['user_id'])->select('id','contract_id')->get();
         if($res){
             $res = $res->toArray();
@@ -193,6 +314,11 @@ class FeeService extends CommonService
         }
         if($input['Region']){
             $model = $model->where('Region',$input['Region']);
+        }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
         }
         $model = $model->whereIn('arrears_type',[1,2,3]);
         $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');

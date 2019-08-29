@@ -247,6 +247,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 欠款管理
     $router->group(['prefix' => 'fee'], function (Router $router) {
         $router->post('feeAdd', 'FeeController@feeAdd'); // 添加费用单 4.10
+        $router->post('getRate', 'FeeController@getRate'); // 商业费用单获取分摊率 4.10
+        $router->post('feedAddBusiness', 'FeeController@feedAddBusiness'); // 商业费用单添加 4.10
         $router->post('getContractList', 'FeeController@getContractList'); // 获得租约列表 4.10
         $router->post('sendNotice', 'FeeController@sendNotice'); // 发布通知 4.10
         $router->post('arrearsList', 'FeeController@arrearsList'); // 追欠款列表 4.10
@@ -293,6 +295,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('providersBankCheckMatch', 'FeeController@providersBankCheckMatch'); // 服务商银行对账详情 确认租户4.10
         $router->post('providersHandAdjustList', 'FeeController@providersHandAdjustList'); // 服务商银行手工对账列表 4.10
         $router->post('providersHandAdjust', 'FeeController@providersHandAdjust'); // 服务商银行手工对账 4.10
+        $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
@@ -325,6 +328,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementReport', 'ReportController@tenementReport'); // 租客欠款列表 4.10
         $router->post('tenementArrearsReport', 'ReportController@tenementArrearsReport'); // 租客账单列表 4.10
         $router->post('tenementReportDetail', 'ReportController@tenementReportDetail'); // 租客行为记录详情 4.10
+        $router->post('businessArrearsReport', 'ReportController@businessArrearsReport'); // 商业费用单 4.10
     });
     // 通知管理
     $router->group(['prefix' => 'note'], function (Router $router) {
@@ -344,6 +348,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('landlordArrearsNote', 'NoteController@landlordArrearsNote'); // 房东欠款 4.10
         $router->post('landlordArrearsWarning', 'NoteController@landlordArrearsWarning'); // 房东欠款警告 4.10
         $router->post('sendNote', 'NoteController@sendNote'); // 发送通知 4.10
+    });
+    // 诉讼管理
+    $router->group(['prefix' => 'litigation'], function (Router $router) {
+        $router->post('addLitigation', 'LitigationController@addLitigation'); // 添加诉讼 4.10
     });
 });
 
