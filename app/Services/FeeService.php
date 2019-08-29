@@ -183,10 +183,10 @@ class FeeService extends CommonService
                 'tenement_phone'    => $tenement_info->tenement_phone,
                 'arrears_type'      => 3,
                 'property_name'     => $rent_house_info->property_name,
-                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate']/100,
                 'is_pay'            => 1,
                 'pay_fee'           => 0,
-                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate']/100,
                 'number'            => $input['number'],
                 'unit_price'        => $input['unit_price'],
                 'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
@@ -220,10 +220,10 @@ class FeeService extends CommonService
                 'tenement_phone'    => $tenement_info->tenement_phone,
                 'arrears_type'      => 4,
                 'property_name'     => $rent_house_info->property_name,
-                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'arrears_fee'       => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate']/100,
                 'is_pay'            => 1,
                 'pay_fee'           => 0,
-                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate'],
+                'need_pay_fee'      => ($input['number']*$input['unit_price'])*(1-$input['discount']/100)*(1+$input['tex']/100)*$input['rate']/100,
                 'number'            => $input['number'],
                 'unit_price'        => $input['unit_price'],
                 'subject_code'      => Tenement::where('id',$tenement_info->tenement_id)->pluck('subject_code')->first(),
@@ -457,6 +457,7 @@ class FeeService extends CommonService
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
                     $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
+                    $fee_list[$k]['contract_tpe'] = $fee_res[0]['contract_type'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
                     $fee_list[$k]['payment_due'] = '';
@@ -491,6 +492,7 @@ class FeeService extends CommonService
                     $fee_res = RentArrears::where('contract_id',$v['contract_id'])->get()->toArray();
                     $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                     $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
+                    $fee_list[$k]['contract_tpe'] = $fee_res[0]['contract_type'];
                     $fee_list[$k]['tenement_name'] = $fee_res[0]['tenement_name'];
                     $fee_list[$k]['invoice_date'] = '';
                     $fee_list[$k]['payment_due'] = '';
