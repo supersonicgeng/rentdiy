@@ -20,6 +20,20 @@ class FeeController extends Controller
         return service('Fee')->feeAdd($request->all());
     }
 
+
+    /**
+     * @description:商业费用单添加
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeAddBusiness(Request $request)
+    {
+        return service('Fee')->feeAddBusiness($request->all());
+    }
+
     /**
      * @description:商业费用单获取分摊率
      * @author: syg <13971394623@163.com>

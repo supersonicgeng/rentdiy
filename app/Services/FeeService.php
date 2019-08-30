@@ -164,7 +164,7 @@ class FeeService extends CommonService
      * @param array|null $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function feedAddBusiness(array $input)
+    public function feeAddBusiness(array $input)
     {
         $model = new RentArrears();
         if($input['arrears_type'] == 3){
