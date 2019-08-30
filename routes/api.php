@@ -248,7 +248,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     $router->group(['prefix' => 'fee'], function (Router $router) {
         $router->post('feeAdd', 'FeeController@feeAdd'); // 添加费用单 4.10
         $router->post('getRate', 'FeeController@getRate'); // 商业费用单获取分摊率 4.10
-        $router->post('feedAddBusiness', 'FeeController@feedAddBusiness'); // 商业费用单添加 4.10
+        $router->post('feeAddBusiness', 'FeeController@feedAddBusiness'); // 商业费用单添加 4.10
         $router->post('getContractList', 'FeeController@getContractList'); // 获得租约列表 4.10
         $router->post('sendNotice', 'FeeController@sendNotice'); // 发布通知 4.10
         $router->post('arrearsList', 'FeeController@arrearsList'); // 追欠款列表 4.10
