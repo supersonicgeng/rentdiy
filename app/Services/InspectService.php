@@ -1234,7 +1234,6 @@ class InspectService extends CommonService
                 'created_at' => date('Y-m-d H:i:s', time()),
             ];
             $res = $model->insertGetId($inspect_data);
-            dd($res);
             if ($res) {
                 static $error = 0;
                 // 财产清单
@@ -1265,6 +1264,7 @@ class InspectService extends CommonService
                         }
                     }
                 }
+                return $this->success('inspect add success');
             } else {
                 return $this->error('3', 'inspect add failed');
             }
