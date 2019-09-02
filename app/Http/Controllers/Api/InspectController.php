@@ -279,4 +279,73 @@ class InspectController extends Controller
     {
         return service('Inspect')->unPlatInspectDetail($request->all());
     }
+
+
+    /**
+     * @description:非平台检查项目
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectItem(Request $request)
+    {
+        return service('Inspect')->unPlatInspectItem($request->all());
+    }
+
+
+    /**
+     * @description:非平台检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectEdit(Request $request)
+    {
+        return service('Inspect')->unPlatInspectEdit($request->all());
+    }
+
+    /**
+     * @description:非平台检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteRoom(Request $request)
+    {
+        return service('Inspect')->unPlatInspectDeleteRoom($request->all());
+    }
+
+
+    /**
+     * @description:非平台检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteItem(Request $request)
+    {
+        return service('Inspect')->unPlatInspectDeleteItem($request->all());
+    }
+
+
+    /**
+     * @description:非平台检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteChattel(Request $request)
+    {
+        return service('Inspect')->unPlatInspectDeleteChattel($request->all());
+    }
 }

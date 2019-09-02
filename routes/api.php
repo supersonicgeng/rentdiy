@@ -229,6 +229,11 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('unPlatInspectAdd','InspectController@unPlatInspectAdd'); // 添加非平台房屋检查 5.11
         $router->post('unPlatInspectList', 'InspectController@unPlatInspectList'); // 非平台检查列表 5.7
         $router->post('unPlatInspectDetail', 'InspectController@unPlatInspectDetail'); // 非平台检查详细 5.10
+        $router->post('unPlatInspectItem', 'InspectController@unPlatInspectItem'); // 非平台检查项目 5.7
+        $router->post('unPlatInspectEdit', 'InspectController@unPlatInspectEdit'); // 非平台检查编辑 5.10
+        $router->post('unPlatInspectDeleteRoom', 'InspectController@unPlatInspectDeleteRoom'); // 非平台删除房间 5.10
+        $router->post('unPlatInspectDeleteItem', 'InspectController@unPlatInspectDeleteItem'); // 非平台删除项目 5.10
+        $router->post('unPlatInspectDeleteChattel', 'InspectController@unPlatInspectDeleteChattel'); // 删除动产 5.10
     });
     // 押金管理
     $router->group(['prefix' => 'bond'], function (Router $router) {

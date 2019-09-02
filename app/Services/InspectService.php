@@ -1540,4 +1540,165 @@ class InspectService extends CommonService
             return $this->success('get inspect detail success', $data);
         }
     }
+
+
+    /**
+     * @description:非平台检查项目
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectItem(array $input)
+    {
+        $model = new UnPlatInspectList();
+        $inspect_res = $model->where('id',$input['inspect_id'])->first();
+        $chattel_info = UnPlatInspectChattel::where('inspect_id',$input['inspect_id'])->get()->toArray();
+        $room_name = UnPlatInspectRoom::where('inspect_id',$input['inspect_id'])->groupBy('room_name')->get()->toArray();
+        if(!$room_name){
+            return $this->error('2','no inspect info');
+        }
+        foreach($room_name as $k => $v){
+            $data['data'][][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+        }
+        $data['chattel'] = $chattel_info;
+        return $this->success('get inspect item success',$data);
+    }
+
+
+    /**
+     * @description:非平台检查编辑
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectEdit(array $input)
+    {
+        $model = new UnPlatInspectList();
+        $inspect_data = [
+            'user_id' => $input['user_id'],
+            'property_name' => $input['property_name'],
+            'property_address' => $input['property_address'],
+            'bedroom_num' => $input['bedroom_num'],
+            'bathroom_num' => $input['bathroom_num'],
+            'landlord_name' => $input['landlord_name'],
+            'landlord_post_address' => $input['landlord_post_address'],
+            'landlord_email' => $input['landlord_email'],
+            'landlord_phone' => $input['landlord_phone'],
+            'property_type' => $input['property_type'],
+            'start_time' => $input['start_time'],
+            'end_time' => $input['end_time'],
+            'inspect_category' => $input['inspect_category'],
+            'chattel_note'  => $input['chattel_note'],
+            'inspect_note'  => $input['inspect_note'],
+            'created_at' => date('Y-m-d H:i:s', time()),
+        ];
+        $res = $model->where('id',$input['inspect_id'])->update($inspect_data);
+        if ($res) {
+            static $error = 0;
+            // 清除所有的检查清单 和财产清单
+            UnPlatInspectChattel::where('inspect_id',$input['inspect_id'])->delete();
+            UnPlatInspectRoom::where('inspect_id',$input['inspect_id'])->delete();
+            // 财产清单
+            foreach ($input['chattel_list'] as $k => $v) {
+                $chattel_data = [
+                    'inspect_id' => $input['inspect_id'],
+                    'chattel_name' => $v['chattel_name'],
+                    'chattel_num' => $v['chattel_num'],
+                    'created_at' => date('Y-m-d H:i:s', time()),
+                ];
+                $chattel_res = UnPlatInspectChattel::insert($chattel_data);
+                if (!$chattel_res) {
+                    $error += 1;
+                }
+            }
+            // 检查房间存入
+            foreach ($input['room_list'] as $k => $v) {
+                foreach ($v['items'] as $key => $value) {
+                    $room_data = [
+                        'inspect_id' => $input['inspect_id'],
+                        'room_name' => $v['room_name'],
+                        'items' => $value,
+                        'created_at' => date('Y-m-d H:i:s', time()),
+                    ];
+                    $room_res = UnPlatInspectRoom::insert($room_data);
+                    if (!$room_res) {
+                        $error += 1;
+                    }
+                }
+            }
+            if ($res && !$error) {
+                return $this->success('inspect add success');
+            } else {
+                return $this->error('3', 'inspect add failed');
+            }
+        } else {
+            return $this->error('3', 'inspect add failed');
+        }
+    }
+
+
+    /**
+     * @description:房东开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteRoom(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $room_name = $input['room_name'];
+        $res = UnPlatInspectRoom::where('inspect_id',$inspect_id)->where('room_name',$room_name)->delete();
+        if($res){
+            return $this->success('delete room success');
+        }else{
+            return $this->error('2','deleted room failed');
+        }
+
+    }
+
+    /**
+     * @description:房东开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteItem(array $input)
+    {
+        $item_id = $input['item_id'];
+        $res = UnPlatInspectRoom::whereIn('id',$item_id)->delete();
+        if($res){
+            return $this->success('delete item success');
+        }else{
+            return $this->error('2','deleted item failed');
+        }
+
+    }
+
+    /**
+     * @description:房东开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDeleteChattel(array $input)
+    {
+        $chattel_id = $input['chattel_id'];
+        $res = UnPlatInspectChattel::whereIn('id',$chattel_id)->delete();
+        if($res){
+            return $this->success('delete chattel success');
+        }else{
+            return $this->error('2','deleted chattel failed');
+        }
+
+    }
 }
