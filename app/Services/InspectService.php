@@ -1233,8 +1233,8 @@ class InspectService extends CommonService
                 'inspect_note'  => $input['inspect_note'],
                 'created_at' => date('Y-m-d H:i:s', time()),
             ];
-            dd($inspect_data);
             $res = $model->insertGetId($inspect_data);
+            dd($res);
             if ($res) {
                 static $error = 0;
                 // 财产清单
