@@ -1500,7 +1500,7 @@ class InspectService extends CommonService
         if($count < ($page-1)*5){
             return $this->error('3','no more inspect info');
         }
-        $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*5)->limit(5)->get()->toArray();
+        $res = $model->where('user_id',$input['user_id'])->offset(($page-1)*5)->limit(5)->get()->toArray();
         if($res){
             $data['inspect_list'] = $res;
             $data['total_page'] = ceil($count/5);
