@@ -234,6 +234,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('unPlatInspectDeleteRoom', 'InspectController@unPlatInspectDeleteRoom'); // 非平台删除房间 5.10
         $router->post('unPlatInspectDeleteItem', 'InspectController@unPlatInspectDeleteItem'); // 非平台删除项目 5.10
         $router->post('unPlatInspectDeleteChattel', 'InspectController@unPlatInspectDeleteChattel'); // 删除动产 5.10
+        $router->post('unPlatInspectCheck','InspectController@unPlatInspectCheck'); // 非平台服务商开始检查 5.9
+        $router->post('unPlatInspectConfirm','InspectController@unPlatInspectConfirm'); // 检查确认信息 5.10
     });
     // 押金管理
     $router->group(['prefix' => 'bond'], function (Router $router) {

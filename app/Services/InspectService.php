@@ -24,6 +24,7 @@ use App\Model\RentPic;
 use App\Model\Task;
 use App\Model\Tender;
 use App\Model\UnPlatInspectChattel;
+use App\Model\UnPlatInspectCheck;
 use App\Model\UnPlatInspectList;
 use App\Model\UnPlatInspectRoom;
 use App\Model\Verify;
@@ -1701,4 +1702,142 @@ class InspectService extends CommonService
         }
 
     }
+
+
+    /**
+     * @description:非平台服务商开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectCheck(array $input)
+    {
+        // 修改检查表
+        static $error = 0;
+        $model = new UnPlatInspectRoom();
+        foreach ($input['items_list'] as $key => $value){
+            if(isset($value['id'])){
+                $room_data = [
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'video_url'     => $value['video_url'],
+                    'updated_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = $model->where('id',$value['id'])->update($room_data);
+            }else{
+                $room_data = [
+                    'inspect_id'    => $input['inspect_id'],
+                    'room_name'     => $value['room_name'],
+                    'items'         => $value['items'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'video_url'     => $value['video_url'],
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = $model->insert($room_data);
+            }
+            if(!$res){
+                $error += 1;
+            }
+            // 将问题存入问题表中
+            //TODO
+
+        }
+
+        foreach ($input['chattel_list'] as $key => $value){
+            if(isset($value['id'])){
+                $room_data = [
+                    'chattel_num'   => $value['chattel_num'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'updated_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = UnPlatInspectChattel::where('id',$value['id'])->update($room_data);
+            }else{
+                $room_data = [
+                    'inspect_id'    => $input['inspect_id'],
+                    'chattel_name'  => $value['chattel_name'],
+                    'chattel_num'   => $value['chattel_num'],
+                    'accept'        => $value['accept'],
+                    'photo1'        => $value['photo1'],
+                    'photo2'        => $value['photo2'],
+                    'photo3'        => $value['photo3'],
+                    'photo4'        => $value['photo4'],
+                    'inspect_note'  => $value['inspect_note'],
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                $res = InspectChattel::insert($room_data);
+            }
+            if(!$res){
+                $error += 1;
+            }
+            // 将问题存入问题表中
+            //TODO
+
+        }
+        if($error){
+            return $this->error('2','check failed');
+        }else{
+            return $this->success('check success');
+        }
+
+    }
+
+
+    /**
+     * @description:检查确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectConfirm(array $input)
+    {
+        $check = UnPlatInspectCheck::where('inspect_id',$input['inspect_id'])->first();
+        if($check){
+            return $this->error('3','already confirm');
+        }
+        $check_data =  [
+            'inspect_id'        => $input['inspect_id'],
+            'inspector_note'    => $input['inspector_note'],
+            'tenement_note'     => $input['tenement_note'],
+            'other_note'        => $input['other_note'],
+            'upload_url'        => $input['upload_url'],
+            'inspector_sign'    => $input['inspector_sign'],
+            'tenement_sign'     => $input['tenement_sign'],
+            'select1'           => $input['select1'],
+            'select2'           => $input['select2'],
+            'select3'           => $input['select3'],
+            'select4'           => $input['select4'],
+            'select5'           => $input['select5'],
+            'select6'           => $input['select6'],
+            'select7'           => $input['select7'],
+            'repair_note'       => $input['repair_note'],
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $res = InspectCheck::insert($check_data);
+        if($res){
+            // 更改状态
+            UnPlatInspectList::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            return $this->success('inspect confirm success');
+        }else{
+            return $this->error('2','inspect confirm failed');
+        }
+    }
+
 }

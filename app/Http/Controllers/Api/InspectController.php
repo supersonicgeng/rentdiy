@@ -348,4 +348,32 @@ class InspectController extends Controller
     {
         return service('Inspect')->unPlatInspectDeleteChattel($request->all());
     }
+
+
+    /**
+     * @description:非平台服务商开始检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectCheck(Request $request)
+    {
+        return service('Inspect')->unPlatInspectCheck($request->all());
+    }
+
+
+    /**
+     * @description:非平台服务商确认
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectConfirm(Request $request)
+    {
+        return service('Inspect')->unPlatInspectConfirm($request->all());
+    }
 }
