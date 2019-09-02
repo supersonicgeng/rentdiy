@@ -1318,7 +1318,7 @@ class InspectService extends CommonService
                         'chattel_num' => $v['chattel_num'],
                         'created_at' => date('Y-m-d H:i:s', time()),
                     ];
-                    $chattel_res = InspectChattel::insert($chattel_data);
+                    $chattel_res = UnPlatInspectChattel::insert($chattel_data);
                     if (!$chattel_res) {
                         $error += 1;
                     }
@@ -1332,7 +1332,7 @@ class InspectService extends CommonService
                             'items' => $value,
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
-                        $room_res = InspectRoom::insert($room_data);
+                        $room_res = UnPlatInspectRoom::insert($room_data);
                         if (!$room_res) {
                             $error += 1;
                         }
@@ -1507,6 +1507,37 @@ class InspectService extends CommonService
             return $this->success('get inspect list success',$data);
         }else{
             return $this->error('2','get inspect list fail');
+        }
+    }
+
+
+    /**
+     * @description:非平台检查详细
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDetail(array $input)
+    {
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        $model = new UnPlatInspectList();
+        $inspect_id = $input['inspect_id'];
+        $res = $model->where('id',$inspect_id)->first()->toArray();
+        if(!$res){
+            return $this->error('2','get inspect detail failed');
+        }else {
+            $chattel_info = UnPlatInspectChattel::where('inspect_id', $inspect_id)->select('chattel_name', 'chattel_num')->get()->toArray();
+            $room_name = UnPlatInspectRoom::where('inspect_id', $input['inspect_id'])->groupBy('room_name')->get()->toArray();
+            foreach ($room_name as $k => $v) {
+                $item_info[$k]['room_name'] = $v['room_name'];
+                $item_info[$k]['items'] = UnPlatInspectRoom::where('inspect_id', $input['inspect_id'])->where('room_name', $v['room_name'])->pluck('items');
+            }
+            $data['inspect_info'] = $res;
+            $data['chattel_info'] = $chattel_info;
+            $data['item_info'] = $item_info;
+            return $this->success('get inspect detail success', $data);
         }
     }
 }

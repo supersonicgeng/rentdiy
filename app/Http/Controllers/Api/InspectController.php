@@ -266,4 +266,17 @@ class InspectController extends Controller
     {
         return service('Inspect')->unPlatInspectList($request->all());
     }
+
+    /**
+     * @description:非平台检查详细
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectDetail(Request $request)
+    {
+        return service('Inspect')->unPlatInspectDetail($request->all());
+    }
 }
