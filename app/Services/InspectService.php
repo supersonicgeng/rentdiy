@@ -1227,7 +1227,6 @@ class InspectService extends CommonService
                 'property_type' => $input['property_type'],
                 'start_time' => $input['start_time'],
                 'end_time' => $input['end_time'],
-                'inspect_status' => $input['inspect_status'],
                 'inspect_category' => $input['inspect_category'],
                 'chattel_note'  => $input['chattel_note'],
                 'inspect_note'  => $input['inspect_note'],
@@ -1479,6 +1478,35 @@ class InspectService extends CommonService
             }else{
                 return $this->error('3', 'inspect add failed');
             }
+        }
+    }
+
+
+    /**
+     * @description:非平台房屋检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectList(array $input)
+    {
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        $model = new UnPlatInspectList();
+        $page = $input['page'];
+        $count = $model->where('user_id',$input['user_id'])->count();
+        if($count < ($page-1)*5){
+            return $this->error('3','no more inspect info');
+        }
+        $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*5)->limit(5)->get()->toArray();
+        if($res){
+            $data['inspect_list'] = $res;
+            $data['total_page'] = ceil($count/5);
+            $data['current_page'] = $page;
+            return $this->success('get inspect list success',$data);
+        }else{
+            return $this->error('2','get inspect list fail');
         }
     }
 }

@@ -227,6 +227,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('issueRecord','InspectController@issueRecord'); // 待维修记录 5.10
         $router->post('addIssues','InspectController@addIssues'); // 增加维修单 5.11
         $router->post('unPlatInspectAdd','InspectController@unPlatInspectAdd'); // 添加非平台房屋检查 5.11
+        $router->post('unPlatInspectList', 'InspectController@unPlatInspectList'); // 非平台检查列表 5.7
     });
     // 押金管理
     $router->group(['prefix' => 'bond'], function (Router $router) {
