@@ -240,4 +240,17 @@ class InspectController extends Controller
     {
         return service('Inspect')->addIssues($request->all());
     }
+
+    /**
+     * @description:添加非平台房屋检查
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlatInspectAdd(Request $request)
+    {
+        return service('Inspect')->unPlatInspectAdd($request->all());
+    }
 }
