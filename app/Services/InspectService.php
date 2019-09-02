@@ -1833,11 +1833,34 @@ class InspectService extends CommonService
         $res = InspectCheck::insert($check_data);
         if($res){
             // 更改状态
-            UnPlatInspectList::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+            UnPlatInspectList::where('id',$input['inspect_id'])->update(['inspect_status'=>2,'updated_at'=>date('Y-m-d H:i:s',time())]);
             return $this->success('inspect confirm success');
         }else{
             return $this->error('2','inspect confirm failed');
         }
+    }
+
+    /**
+     * @description:检查记录
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unPlanInspectRecord(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $model = new UnPlatInspectRoom();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $data['res'] = $res;
+        $data['inspect_method'] = Inspect::where('id',$inspect_id)->pluck('inspect_method')->first();
+        if($res){
+            return $this->success('get record success',$data);
+        }else{
+            return $this->error('2','no record');
+        }
+
     }
 
 }
