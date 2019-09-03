@@ -1366,7 +1366,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                             'chattel_num' => $value['chattel_num'],
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
-                        $chattel_res = InspectChattel::insert($chattel_data);
+                        $chattel_res = UnPlatInspectChattel::insert($chattel_data);
                         if (!$chattel_res) {
                             $error += 1;
                         }
@@ -1378,7 +1378,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                             'items' => $value,
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
-                        $res = InspectRoom::insert($room_data);
+                        $res = UnPlatInspectRoom::insert($room_data);
                         if (!$res) {
                             $error += 1;
                         }
