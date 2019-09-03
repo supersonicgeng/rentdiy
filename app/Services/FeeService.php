@@ -2066,6 +2066,30 @@ class FeeService extends CommonService
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $arrears_res = $model->insert($order_arrears_data);
+            $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
+            $order_required = LandlordOrder::where('id',$input['order_id'])->pluck('requirement')->first();
+            $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
+            $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+            $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
+            $landlord_name = \App\Model\User::where('id',$landlord_user_id)->pluck('nickname')->first();
+            $task_data = [
+                'user_id'           => $landlord_user_id,
+                'task_type'         => 23,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'residential relet',
+                'task_content'      => "INVOICE
+Property:$property_address
+Landlord: $landlord_name
+Details: $order_required
+The above work has been completed, you can issue an invoice to the landlord..",
+                'order_id'          => $input['order_id'],
+                'task_role'         => 2,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
             if(!$arrears_res){
                 $error += 1;
             }

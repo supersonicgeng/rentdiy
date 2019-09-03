@@ -346,13 +346,24 @@ class LandlordService extends CommonService
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
             $res3 = LandlordOrder::where('id',$order_id)->update($order_change_data);
+            $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
+            $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
+            $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
+            $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+            $landlord_name = \App\Model\User::where('id',$landlord_user_id)->pluck('nickname')->first();
             $task_data = [
                 'user_id'           => Providers::where('id',Tender::where('id',$tender_id)->pluck('service_id')->first())->pluck('user_id')->first(),
-                'task_type'         => 14,
+                'task_type'         => 22,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "TENDER ACCEPTED
+Property:$property_address
+Landlord: $landlord_name
+Tender number: $order_sn
+Good news! Your tender has been accepted by the landlord please go to view the details and contact with landlord for this job as soon as possible..",
                 'order_id'          => $input['order_id'],
                 'task_role'         => 2,
                 'created_at'        => date('Y-m-d H:i:s',time()),

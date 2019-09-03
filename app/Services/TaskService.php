@@ -15,10 +15,12 @@ use App\Model\CheckBuilding;
 use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\OrderArrears;
 use App\Model\Plant;
 use App\Model\PlantOperateLog;
+use App\Model\Providers;
 use App\Model\RentAdjust;
 use App\Model\RentArrears;
 use App\Model\RentContract;
@@ -28,12 +30,14 @@ use App\Model\ScoreLog;
 use App\Model\SignLog;
 use App\Model\SysSign;
 use App\Model\Task;
+use App\Model\Tenement;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
 use App\Model\Verify;
 use App\Model\VerifyLog;
 use App\User;
 use Carbon\Carbon;
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -122,22 +126,31 @@ Please negotiate with tenant to renew this lease or to issue a notice to end the
             ];
             $task_res = Task::insert($task_data);
         }
-       /* // 7天提醒
+        // 7天提醒
         $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+7 day'))->select('id','user_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $rent_house_id = $value['house_id'];
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 5,
+                'task_type'         => 21,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "ENDING / RENEW TENANCY
+Property: $property_address
+Tenant name: $tenement_full_name
+Your lease will be expired after 7 days.
+Please negotiate with tenant to renew this tenancy.",
                 'contract_id'       => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $task_res = Task::insert($task_data);
-        }*/
+        }
     }
 
 
@@ -204,15 +217,27 @@ You have an option to increase the rent if you like to reflect the market rent c
     public function bondCheck()
     {
         $out_time_house_id = RentArrears::where('created_at','<=',date('Y-m-d H:i:s','-7 day'))->where('arrears_type',1)
-            ->where('is_pay','!=',2)->select('contract_id','user_id')->get();
+            ->where('is_pay','!=',2)->select('contract_id','user_id','tenement_id','need_pay_fee','created_at')->get();
         foreach ($out_time_house_id as $k => $value){
+            $contract_id = $value['contract_id'];
+            $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
+            $need_pay_fee = $value['need_pay_fee'];
+            $dates = ceil((time()-strtotime($value['created_at']))/(3600*24));
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 9,
+                'task_type'         => 14,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "BOND ARREARS
+Property: $room_name $property_address
+Tenant name: $tenement_name
+Bond due : $need_pay_fee
+Due date: $dates
+The tenant did not pay the bond or not pay in full. Please take any necessary action immediately.",
                 'contract_id'       => $value['contract_id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -231,13 +256,23 @@ You have an option to increase the rent if you like to reflect the market rent c
         $out_time_house_id = RentArrears::where('updated_at','<=',date('Y-m-d H:i:s'))->where('arrears_type',1)
             ->where('is_pay',2)->select('contract_id','user_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $contact_id = $value['contract_id'];
+            $rent_house_id = RentContract::where('id',$value['contract_id'])->pluck('house_id')->first();
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
+
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 11,
+                'task_type'         => 16,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_title'        => 'rent suspend inform',
+                'task_content'      => "BOND LODGEMENT
+Property: $room_name $property_address
+Tenant name: $tenement_full_name
+You received a bond from above tenancy. You are required to lodge a bond with Tenancy Services within 23 working days of receiving the bond.  Please arrange the bond to be lodged before the deadline to avoid exemplary damages through the Tenancy Tribunal..",
                 'contract_id'       => $value['contract_id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -263,6 +298,81 @@ You have an option to increase the rent if you like to reflect the market rent c
                 'task_title'        => 'residential relet',
                 'task_content'      => 'your contract need relet',
                 'order_id'          => $value['order_id'],
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
+        }
+
+    }
+
+
+    /**
+     * 催款 任务
+     */
+    public function arrearsNote()
+    {
+        $out_time_house_id = RentArrears::where('created_at','<=',date('Y-m-d H:i:s','-7 day'))->whereIn('arrears_type',[2,3])
+            ->where('is_pay','!=',2)->select('contract_id','user_id','tenement_id','need_pay_fee','created_at')->get();
+        foreach ($out_time_house_id as $k => $value){
+            $contract_id = $value['contract_id'];
+            $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
+            $need_pay_fee = $value['need_pay_fee'];
+            $dates = ceil((time()-strtotime($value['created_at']))/(3600*24));
+            $task_data = [
+                'user_id'           => $value['user_id'],
+                'task_type'         => 18,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'residential relet',
+                'task_content'      => "ARREARS
+Property: $room_name $property_address
+Tenant name: $tenement_name
+Rent due : $need_pay_fee
+Due date: $dates
+This tenant is in arrears. You have options to issue: a reminder, 14 days notices, ending the tenancy or submit a tenancy tribunal application.
+Please take any necessary action immediately.",
+                'contract_id'       => $value['contract_id'],
+                'task_role'         => 1,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            $task_res = Task::insert($task_data);
+        }
+
+    }
+
+
+    /**
+     * 催款 任务
+     */
+    public function landlordArrearsNote()
+    {
+        $out_time_house_id = OrderArrears::where('created_at','<=',date('Y-m-d H:i:s','-7 day'))
+            ->where('is_pay','!=',2)->select('order_id','user_id','tenement_id','need_pay_fee','created_at')->get();
+        foreach ($out_time_house_id as $k => $value){
+            $contract_id = $value['order_id'];
+            $providers_id = LandlordOrder::where('id',$contract_id)->pluck('providers_id')->first();
+            $rent_house_id = LandlordOrder::where('id',$contract_id)->pluck('rent_house_id')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
+            $need_pay_fee = $value['need_pay_fee'];
+            $providers_user_id = Providers::where('id',$providers_id)->pluck('user_id')->first();
+            $dates = ceil((time()-strtotime($value['created_at']))/(3600*24));
+            $task_data = [
+                'user_id'           => $providers_user_id,
+                'task_type'         => 24,
+                'task_start_time'   => date('Y-m-d H:i:s',time()),
+                'task_status'       => 0,
+                'task_title'        => 'residential relet',
+                'task_content'      => "OVER DUE PAYMENT
+Property:$property_address
+Landlord: 房东名字
+The above landlord did not pay the invoice on time. Please take any necessary action immediately.",
+                'order_id'       => $value['order_id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
@@ -423,7 +533,7 @@ You have an option to increase the rent if you like to reflect the market rent c
 
         $task_data = [
             'user_id'           => $input['user_id'],
-            'task_type'         => 20,
+            'task_type'         => 25,
             'task_start_time'   => $input['task_start_time'],
             'task_end_time'     => $input['task_end_time'],
             'task_status'       => 0,

@@ -81,6 +81,9 @@ class RentService extends CommonService
             return $this->error('2','this account is not a tenement role');
         }else{
             $tenement_info = Tenement::where('user_id',$input['user_id'])->first()->toArray();
+            $tenement_name = $tenement_info['first_name'];
+            $property_name = RentHouse::where('id',$input['rent_house_id'])->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$input['rent_house_id'])->pluck('room_name')->first();
             if(!$tenement_info){
                 return $this->error('3','you must update your tenement info');
             }else{
@@ -100,11 +103,14 @@ class RentService extends CommonService
                 ];
                 $task_data = [
                     'user_id'           => $input['user_id'],
-                    'task_type'         => 4,
+                    'task_type'         => 1,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
                     'task_title'        => 'new rent application',
-                    'task_content'      => 'you have a new rent application pls check',
+                    'task_content'      => "RENTAL APPLICATION
+Property: $property_name $room_name
+Applicant name: $tenement_name
+You have received a new tenancy application from above, please deal with it in time.",
                     'rent_house_id'     => $input['rent_house_id'],
                     'task_role'         => 1,
                     'created_at'        => date('Y-m-d H:i:s',time()),
@@ -2110,14 +2116,21 @@ class RentService extends CommonService
                 'rent_status'   => 4,
                 'updated_at'    => date('Y-m-d H:i:s',time()),
             ]);
+            $property_name = $rent_house_info->property_name;
+            $room_name = $rent_house_info->room_name;
+            $property_address = $rent_house_info->property_address;
+            $tenement_full_name = $contract_tenement_data->tenement_full_name;
             // 生成任务
             $task_data = [
                 'user_id'           => $input['user_id'],
-                'task_type'         => 6,
+                'task_type'         => 3,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'insurance update',
-                'task_content'      => 'your house need update insurance',
+                'task_content'      => "NEW PROPERTY INSPECTION
+Property: $property_name $room_name $property_address
+Tenant name: $tenement_full_name
+Your property required the first inspection for the tenancy record. Please to create an new inspection in the system.",
                 'rent_house_id'     => $contract_data->house_id,
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -2236,24 +2249,62 @@ class RentService extends CommonService
         if($suspend_type <4){
             // 仅通知
             // 生成任务
+            $contact_id = $input['contract_id'];
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
             if($suspend_type == 1){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*2);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*6);
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 10,
+                    'task_start_time'   => $task_start_time,
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => "ENDING TENANCY – 90 DAYS NOTICE
+Property: $property_address
+Tenant name: $tenement_full_name
+Your tenancy at above property is end today. You will need to arrange the final inspection and also end this tenancy in the system.",
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
             }elseif ($suspend_type == 2){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*90);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*94);
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 8,
+                    'task_start_time'   => $task_start_time,
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => "ENDING TENANCY – 28 DAYS NOTICE
+Property: $property_address
+Tenant name: $tenement_full_name
+Your tenancy at above property is end today. You will need to arrange the final inspection and also end this tenancy in the system.",
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
             }elseif ($suspend_type == 3){
-                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*28);
+                $task_start_time = date('Y-m-d H:i:s',time()+3600*24*32);
+                $task_data = [
+                    'user_id'           => $input['user_id'],
+                    'task_type'         => 9,
+                    'task_start_time'   => $task_start_time,
+                    'task_status'       => 0,
+                    'task_title'        => 'rent suspend inform',
+                    'task_content'      => "ENDING TENANCY – 48 HOURS NOTICE
+Property: $property_address
+Tenant name: $tenement_full_name
+Your tenancy at above property is end today. You will need to arrange the final inspection and also end this tenancy in the system.",
+                    'contract_id'       => $input['contract_id'],
+                    'task_role'         => 1,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
             }
-            $task_data = [
-                'user_id'           => $input['user_id'],
-                'task_type'         => $suspend_type,
-                'task_start_time'   => $task_start_time,
-                'task_status'       => 0,
-                'task_title'        => 'rent suspend inform',
-                'task_content'      => 'need suspend the rent contract',
-                'contract_id'       => $input['contract_id'],
-                'task_role'         => 1,
-                'created_at'        => date('Y-m-d H:i:s',time()),
-            ];
+
             $task_res = Task::insert($task_data);
             if($task_res){
                 return $this->success('rent suspend task add success');
@@ -2280,42 +2331,49 @@ class RentService extends CommonService
                 }elseif ($last_rent_fee_date['rent_circle'] ==3){
                     $fee_date = strtotime($last_rent_fee_date['effect_date'])+3600*24*31-1;
                 }*/
+                $contact_id = $input['contract_id'];
+                $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+                $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
+
                 $task_data = [
                     'user_id'           => $input['user_id'],
-                    'task_type'         => 10,
+                    'task_type'         => 15,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
                     'task_title'        => 'rent suspend inform',
-                    'task_content'      => 'need suspend the rent contract',
+                    'task_content'      => "BOND REFUND
+Property: $room_name  $property_address
+Tenant name: $tenement_full_name
+This tenant’s tenancy is end. Please arrange the bond refund with the tenant.
+Before the bond refund, a final inspection needs to be done at above property address and a final rent statement need to agree by both party. The tenant need to pay for any rent arrears, damages and other bills they may have to the landlord or the reasonable amount shall be deducted from the bond.",
                     'contract_id'       => $input['contract_id'],
                     'task_role'         => 1,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $task_res = Task::insert($task_data);
-                $task_data = [
+                $task_data1 = [
                     'user_id'           => $input['user_id'],
-                    'task_type'         => 13,
-                    'task_start_time'   => date('Y-m-d H:i:s',strtotime($input['rent_end_date']. '-7 day' )),
+                    'task_type'         => 20,
+                    'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
                     'task_title'        => 'rent suspend inform',
-                    'task_content'      => 'need suspend the rent contract',
+                    'task_content'      => "FINAL INSPECTION
+Property: $room_name $property_address
+Tenant name: $tenement_full_name
+Tenancy ending date:
+The above tenancy shall end soon. If you have not arranged an final inspection with the tenant, please do it as soon as possible. You will need,
+l To do a final inspection for the above property.
+l To discuss with the tenant if they have any rent arrears, damages and any other money they need to you.
+l To arrange the key to be returned after tenancy end.
+The bond can only refund if you satisfied with above or agree the amount with the tenant. If both parties cannot reach the agreement, you may wish to submit a tenancy tribunal application to resolve the matter.",
                     'contract_id'       => $input['contract_id'],
                     'task_role'         => 1,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
-                $task_res = Task::insert($task_data);
-                $task_data = [
-                    'user_id'           => $input['user_id'],
-                    'task_type'         => 13,
-                    'task_start_time'   => date('Y-m-d H:i:s',strtotime($input['rent_end_date'] )),
-                    'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
-                    'task_content'      => 'need suspend the rent contract',
-                    'contract_id'       => $input['contract_id'],
-                    'task_role'         => 1,
-                    'created_at'        => date('Y-m-d H:i:s',time()),
-                ];
-                $task_res = Task::insert($task_data);
+                $task_res = Task::insert($task_data1);
                 return $this->success('suspend contract success');
             }else{
                 return $this->error('2','suspend contract failed');

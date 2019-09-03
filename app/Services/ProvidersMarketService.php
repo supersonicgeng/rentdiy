@@ -228,6 +228,26 @@ class ProvidersMarketService extends CommonService
             'end_date'      => $input['end_date'],
             'created_at'    => date('Y-m-d H:i:s',time()),
         ];
+        $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
+        $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
+        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+        $providers_name = Providers::where('id',$input['service_id'])->piuck('service_name')->first();
+        $task_data = [
+            'user_id'           => $input['user_id'],
+            'task_type'         => 12,
+            'task_start_time'   => date('Y-m-d H:i:s',time()),
+            'task_status'       => 0,
+            'task_title'        => 'new rent application',
+            'task_content'      => "NEW TENDER
+Property:$property_address
+Tradesman: $providers_name
+Tender number: $order_sn
+You just receive a new tender from service market; please go to view the details and accept this tender if you wish to.",
+            'rent_house_id'     => $input['rent_house_id'],
+            'task_role'         => 1,
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $task_res = Task::insert($task_data);
         if($model->where('order_id',$input['order_id'])->where('service_id',$input['service_id'])->first()){
             return $this->error('3','you already tender this order');
         }

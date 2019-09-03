@@ -839,6 +839,27 @@ class ProvidersService extends CommonService
             if($res){
                 // 更改订单状态
                 LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',2)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
+                $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
+                $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+                $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
+                $task_data = [
+                    'user_id'           => $landlord_user_id,
+                    'task_type'         => 13,
+                    'task_start_time'   => date('Y-m-d H:i:s',time()),
+                    'task_status'       => 0,
+                    'task_title'        => 'residential relet',
+                    'task_content'      => "TENDER WORK
+Property:房屋地址
+Tradesman: 供应商名称
+Tender number: 订单号
+Your tender work has been completed by the above tradesman, please go to view the details and confirm this work.",
+                    'order_id'          => $input['order_id'],
+                    'task_role'         => 2,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
                 return $this->success('tenement review success');
             }else{
                 return $this->error('3','tenement review failed');
@@ -880,6 +901,27 @@ class ProvidersService extends CommonService
             if($res){
                 // 更改订单状态
                 LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',1)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
+                $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
+                $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+                $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
+                $task_data = [
+                    'user_id'           => $landlord_user_id,
+                    'task_type'         => 13,
+                    'task_start_time'   => date('Y-m-d H:i:s',time()),
+                    'task_status'       => 0,
+                    'task_title'        => 'residential relet',
+                    'task_content'      => "TENDER WORK
+Property:房屋地址
+Tradesman: 供应商名称
+Tender number: 订单号
+Your tender work has been completed by the above tradesman, please go to view the details and confirm this work.",
+                    'order_id'          => $input['order_id'],
+                    'task_role'         => 2,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
                 return $this->success('look house success');
             }else{
                 return $this->error('3','look house failed');

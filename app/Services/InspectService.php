@@ -69,26 +69,48 @@ class InspectService extends CommonService
                 ];
                 $res = $model->insertGetId($inspect_data);
                 if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                    $rent_house_id = $input['rent_house_id'];
+                    $contract_id = $input['contract_id'];
+                    $start_time = $input['inspect_start_date'];
+                    $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                    $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
-                        'task_type'         => 8,
+                        'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                         'task_status'       => 0,
                         'task_title'        => 'new inspect',
-                        'task_content'      => 'your contract need relet',
+                        'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                         'inspect_id'        => $res,
                         'task_role'         => 1,
                         'created_at'        => date('Y-m-d H:i:s',time()),
                     ];
                     $task_res = Task::insert($task_data);
                 }else{
+                    $rent_house_id = $input['rent_house_id'];
+                    $contract_id = $input['contract_id'];
+                    $start_time = $input['inspect_start_date'];
+                    $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                    $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
-                        'task_type'         => 8,
+                        'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                         'task_status'       => 0,
                         'task_title'        => 'new inspect',
-                        'task_content'      => 'your contract need relet',
+                        'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                         'inspect_id'        => $res,
                         'task_role'         => 1,
                         'created_at'        => date('Y-m-d H:i:s',time()),
@@ -174,31 +196,54 @@ class InspectService extends CommonService
                 ];
                 $res = $model->insertGetId($inspect_data);
                 if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                    $rent_house_id = $input['rent_house_id'];
+                    $contract_id = $input['contract_id'];
+                    $start_time = $input['inspect_start_date'];
+                    $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                    $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
-                        'task_type'         => 8,
+                        'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                         'task_status'       => 0,
                         'task_title'        => 'new inspect',
-                        'task_content'      => 'your contract need relet',
+                        'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                         'inspect_id'        => $res,
                         'task_role'         => 1,
                         'created_at'        => date('Y-m-d H:i:s',time()),
                     ];
                     $task_res = Task::insert($task_data);
                 }else{
+                    $rent_house_id = $input['rent_house_id'];
+                    $contract_id = $input['contract_id'];
+                    $start_time = $input['inspect_start_date'];
+                    $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                    $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
-                        'task_type'         => 8,
+                        'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                         'task_status'       => 0,
                         'task_title'        => 'new inspect',
-                        'task_content'      => 'your contract need relet',
+                        'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                         'inspect_id'        => $res,
                         'task_role'         => 1,
                         'created_at'        => date('Y-m-d H:i:s',time()),
                     ];
                     $task_res = Task::insert($task_data);
+
                 }
                 if ($res) {
                     static $error = 0;
@@ -281,26 +326,48 @@ class InspectService extends CommonService
                     ];
                     $room_res = $model->insertGetId($inspect_data);
                     if(strtotime($input['inspect_start_date'])-time() > 3600*48 ){
+                        $rent_house_id = $input['rent_house_id'];
+                        $contract_id = $input['contract_id'];
+                        $start_time = $input['inspect_start_date'];
+                        $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                        $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                        $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                         $task_data = [
                             'user_id'           => $input['user_id'],
-                            'task_type'         => 8,
+                            'task_type'         => 7,
                             'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                             'task_status'       => 0,
                             'task_title'        => 'new inspect',
-                            'task_content'      => 'your contract need relet',
+                            'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                             'inspect_id'        => $room_res,
                             'task_role'         => 1,
                             'created_at'        => date('Y-m-d H:i:s',time()),
                         ];
                         $task_res = Task::insert($task_data);
                     }else{
+                        $rent_house_id = $input['rent_house_id'];
+                        $contract_id = $input['contract_id'];
+                        $start_time = $input['inspect_start_date'];
+                        $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+                        $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                        $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                         $task_data = [
                             'user_id'           => $input['user_id'],
-                            'task_type'         => 8,
+                            'task_type'         => 7,
                             'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                             'task_status'       => 0,
                             'task_title'        => 'new inspect',
-                            'task_content'      => 'your contract need relet',
+                            'task_content'      => "PROPERTY INSPECTION REMINDER
+Property: $property_address
+Tenant name: $tenement_full_name
+Scheduled inspection date: $start_time
+An inspection has been scheduled about date, please communicate with the tenant and available on the date for the inspection.",
                             'inspect_id'        => $room_res,
                             'task_role'         => 1,
                             'created_at'        => date('Y-m-d H:i:s',time()),

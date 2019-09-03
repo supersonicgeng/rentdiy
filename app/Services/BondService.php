@@ -15,6 +15,7 @@ use App\Model\Bond;
 use App\Model\BondRefund;
 use App\Model\BondTransfer;
 use App\Model\ContractTenement;
+use App\Model\OperatorRoom;
 use App\Model\Region;
 use App\Model\RentArrears;
 use App\Model\RentContact;
@@ -60,6 +61,11 @@ class BondService extends CommonService
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
         }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
+        }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
@@ -93,6 +99,11 @@ class BondService extends CommonService
         }
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
+        }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
         }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
@@ -128,6 +139,11 @@ class BondService extends CommonService
         }
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
+        }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
         }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
@@ -170,6 +186,11 @@ class BondService extends CommonService
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
         }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
+        }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
@@ -211,6 +232,11 @@ class BondService extends CommonService
         }
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
+        }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
         }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
@@ -271,6 +297,11 @@ class BondService extends CommonService
             'updated_at'    => date('Y-m-d H:i:s',time()),
         ];
         $res = $model->where('id',$bond_id)->update($lodged_data);
+        if(isset($input['operator_id'])){ // 操作员写入日志
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
+        }
         if($res){
             return $this->success('add bond sn success');
         }else{
@@ -427,6 +458,20 @@ class BondService extends CommonService
                 'created_at'            => date('Y-m-d H:i:s',time()),
             ];
             $res = $model->insert($refund_data);
+            if(!$res){
+                $error += 1;
+            }
+        }
+        $landlord_info = $input['landlord_info'];
+        foreach ($landlord_info as $k => $v){
+            $refund_data = [
+                'bond_id'               => $input['bond_id'],
+                'landlord_id'           => $v['landlord_id'],
+                'landlord_full_name'    => $v['landlord_full_name'],
+                'landlord_account'      => $v['landlord_account'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $model->insert($refund_data);
             if(!$res){
                 $error += 1;
             }
