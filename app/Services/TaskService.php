@@ -400,7 +400,7 @@ class TaskService extends CommonService
             'task_status'       => 0,
             'task_title'        => $input['task_name'],
             'task_content'      => $input['task_details'],
-            'task_role'         => 1,
+            'task_role'         => $input['task_role'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $task_res = Task::insert($task_data);
