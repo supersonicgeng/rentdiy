@@ -12,6 +12,7 @@ namespace App\Services;
 
 use App\Lib\Util\QueryPager;
 use App\Model\CheckBuilding;
+use App\Model\ContractTenement;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
 use App\Model\Level;
@@ -49,11 +50,12 @@ class TaskService extends CommonService
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 5,
+                'task_type'         => 2,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'insurance update',
-                'task_content'      => 'your house need update insurance',
+                'task_content'      => 'INSURANCE
+Your property insurance will be expired after 90 days. Please be prepared if you need to renew or obtain a quotation from a new insurance company.',
                 'rent_house_id'     => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -68,15 +70,25 @@ class TaskService extends CommonService
     public function relet()
     {
         // 待续约整租租约
-        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+60 day'))->where('contract_type',1)->select('id','user_id')->get();
+        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+60 day'))->where('contract_type',1)->select('id','user_id','house_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $rent_house_id = $value['house_id'];
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 7,
+                'task_type'         => 4,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "ENDING / RENEW FIXED TERM TENANCY
+Property: $property_name $room_name $property_address
+Tenant name: $tenement_full_name
+Your fixed term tenancy will be expired after 60days.
+If you wish not to continue this tenancy, a notice must be given to the tenant between 90 and 21 days before the end of the fixed term.
+If neither party gives notice the tenancy will automatically become a periodic tenancy once the fixed term ends.",
                 'contract_id'       => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -86,22 +98,31 @@ class TaskService extends CommonService
 
 
         // 待续约商业租约
-        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+90 day'))->where('contract_type',4)->select('id','user_id')->get();
+        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+90 day'))->where('contract_type',4)->select('id','user_id','house_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $rent_house_id = $value['house_id'];
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 8,
+                'task_type'         => 5,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "ENDING / RENEW COMMERCIAL PROPERTY LEASE
+Property: $property_address
+Tenant name: $tenement_full_name
+Your lease will be expired after 60days.
+Please negotiate with tenant to renew this lease or to issue a notice to end the lease if you do not wish to continue this leasing.",
                 'contract_id'       => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $task_res = Task::insert($task_data);
         }
-        // 7天提醒
+       /* // 7天提醒
         $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+7 day'))->select('id','user_id')->get();
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
@@ -116,7 +137,7 @@ class TaskService extends CommonService
                 'created_at'        => date('Y-m-d H:i:s',time()),
             ];
             $task_res = Task::insert($task_data);
-        }
+        }*/
     }
 
 
@@ -126,15 +147,23 @@ class TaskService extends CommonService
     public function increaseRate()
     {
         // 整租租约
-        $out_time_house_id = RentContract::where('rent_start_date',date('Y-m-d','-120 day'))->select('id','user_id')->get();
+        $out_time_house_id = RentContract::where('rent_start_date',date('Y-m-d','-120 day'))->select('id','user_id','house_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $rent_house_id = $value['house_id'];
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 9,
+                'task_type'         => 6,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "RENT INCREASES
+Property: $property_address
+Tenant name: $tenement_full_name
+You have an option to increase the rent if you like to reflect the market rent changes. For residential tenancy, If you would like to increase the rent you must give the tenant at least 60 days’ written notice of a rent increase.",
                 'contract_id'       => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -146,13 +175,21 @@ class TaskService extends CommonService
 
         $out_time_house_id = RentAdjust::where('effective_date',date('Y-m-d','-120 day'))->select('contract_id')->get();
         foreach ($out_time_house_id as $k => $value){
+            $rent_house_id = RentContract::where('id',$value['contract_id'])->pluck('house_id')->first();
+            $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
+            $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $tenement_full_name = ContractTenement::where('contract_id',$value['contract_id'])->pluck('tenement_full_name')->first();
             $task_data = [
-                'user_id'           => RentContract::where('id',$value['id'])->pluck('user_id')->first(),
-                'task_type'         => 9,
+                'user_id'           => RentContract::where('id',$value['contract_id'])->pluck('user_id')->first(),
+                'task_type'         => 6,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
-                'task_content'      => 'your contract need relet',
+                'task_content'      => "RENT INCREASES
+Property: $property_address
+Tenant name: $tenement_full_name
+You have an option to increase the rent if you like to reflect the market rent changes. For residential tenancy, If you would like to increase the rent you must give the tenant at least 60 days’ written notice of a rent increase.",
                 'contract_id'       => $value['id'],
                 'task_role'         => 1,
                 'created_at'        => date('Y-m-d H:i:s',time()),
@@ -247,9 +284,7 @@ class TaskService extends CommonService
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
-        if(!$user_info->user_role %2 ){
-            return $this->error('2','this account is not a landlord role');
-        }else{
+
             $month = $input['month'];
             $month = strtotime($month);
             $sdefaultDate = date("Y-m-01", $month);
@@ -264,10 +299,10 @@ class TaskService extends CommonService
             for($i=0;$i<$days;$i++){
                 $data[date('Y-m-d',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i)] =
                     Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i),
-                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->count();
+                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
             }
             return $this->success('get task list success',$data);
-        }
+
     }
 
 
@@ -283,9 +318,7 @@ class TaskService extends CommonService
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
-        if(!$user_info->user_role %2 ){
-            return $this->error('2','this account is not a landlord role');
-        }else{
+
             $day = $input['day'];
             $day = strtotime($day);
             $sdefaultDate = date("Y-m-d", $day);
@@ -297,10 +330,10 @@ class TaskService extends CommonService
             for($i=0;$i<7;$i++){
                 $data[date('Y-m-d',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i)] =
                     Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i),
-                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->count();
+                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
             }
             return $this->success('get task list success',$data);
-        }
+
     }
 
 
@@ -316,13 +349,11 @@ class TaskService extends CommonService
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
-        if(!$user_info->user_role %2 ){
-            return $this->error('2','this account is not a landlord role');
-        }else{
+
             $day = $input['day'];
-            $data = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])->where('user_id',$input['user_id'])->get();
+            $data = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->get();
             return $this->success('get task list success',$data);
-        }
+
     }
 
     /**
@@ -337,24 +368,22 @@ class TaskService extends CommonService
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
-        if(!$user_info->user_role %2 ){
-            return $this->error('2','this account is not a landlord role');
-        }else{
+
             $day = $input['day'];
-            $data[0] = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 01:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[1] = Task::whereBetween('task_start_time',[date('Y-m-d 02:00:00',strtotime($day)), date('Y-m-d 03:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[2] = Task::whereBetween('task_start_time',[date('Y-m-d 04:00:00',strtotime($day)), date('Y-m-d 05:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[3] = Task::whereBetween('task_start_time',[date('Y-m-d 06:00:00',strtotime($day)), date('Y-m-d 07:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[4] = Task::whereBetween('task_start_time',[date('Y-m-d 08:00:00',strtotime($day)), date('Y-m-d 09:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[5] = Task::whereBetween('task_start_time',[date('Y-m-d 10:00:00',strtotime($day)), date('Y-m-d 11:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[6] = Task::whereBetween('task_start_time',[date('Y-m-d 12:00:00',strtotime($day)), date('Y-m-d 13:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[7] = Task::whereBetween('task_start_time',[date('Y-m-d 14:00:00',strtotime($day)), date('Y-m-d 15:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[8] = Task::whereBetween('task_start_time',[date('Y-m-d 16:00:00',strtotime($day)), date('Y-m-d 17:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[9] = Task::whereBetween('task_start_time',[date('Y-m-d 18:00:00',strtotime($day)), date('Y-m-d 19:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[10] = Task::whereBetween('task_start_time',[date('Y-m-d 20:00:00',strtotime($day)), date('Y-m-d 21:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
-            $data[11] = Task::whereBetween('task_start_time',[date('Y-m-d 22:00:00',strtotime($day)), date('Y-m-d 24:59:59',strtotime($day))])->where('user_id',$input['user_id'])->count();
+            $data[0] = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 01:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[1] = Task::whereBetween('task_start_time',[date('Y-m-d 02:00:00',strtotime($day)), date('Y-m-d 03:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[2] = Task::whereBetween('task_start_time',[date('Y-m-d 04:00:00',strtotime($day)), date('Y-m-d 05:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[3] = Task::whereBetween('task_start_time',[date('Y-m-d 06:00:00',strtotime($day)), date('Y-m-d 07:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[4] = Task::whereBetween('task_start_time',[date('Y-m-d 08:00:00',strtotime($day)), date('Y-m-d 09:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[5] = Task::whereBetween('task_start_time',[date('Y-m-d 10:00:00',strtotime($day)), date('Y-m-d 11:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[6] = Task::whereBetween('task_start_time',[date('Y-m-d 12:00:00',strtotime($day)), date('Y-m-d 13:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[7] = Task::whereBetween('task_start_time',[date('Y-m-d 14:00:00',strtotime($day)), date('Y-m-d 15:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[8] = Task::whereBetween('task_start_time',[date('Y-m-d 16:00:00',strtotime($day)), date('Y-m-d 17:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[9] = Task::whereBetween('task_start_time',[date('Y-m-d 18:00:00',strtotime($day)), date('Y-m-d 19:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[10] = Task::whereBetween('task_start_time',[date('Y-m-d 20:00:00',strtotime($day)), date('Y-m-d 21:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[11] = Task::whereBetween('task_start_time',[date('Y-m-d 22:00:00',strtotime($day)), date('Y-m-d 24:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
             return $this->success('get task list success',$data);
-        }
+
     }
 
     /**
