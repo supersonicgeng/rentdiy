@@ -327,6 +327,15 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('taskListDayDetail', 'TaskController@taskListDayDetail'); // 日详情 4.10
         $router->post('taskListDay', 'TaskController@taskListDay'); // 日列表 4.10
         $router->post('taskListHourDetail', 'TaskController@taskListHourDetail'); // 小时详情 4.10
+        $router->post('noteTaskDayDetail', 'TaskController@noteTaskDayDetail'); // 提示详情 4.10
+        $router->post('inspectTaskDayDetail', 'TaskController@inspectTaskDayDetail'); // 检查详情 4.10
+        $router->post('bondTaskDayDetail', 'TaskController@bondTaskDayDetail'); // 押金详情 4.10
+        $router->post('arrearsTaskDayDetail', 'TaskController@arrearsTaskDayDetail'); // 租金详情 4.10
+        $router->post('increaseTaskDayDetail', 'TaskController@increaseTaskDayDetail'); // 涨租详情 4.10
+        $router->post('applicationTaskDayDetail', 'TaskController@applicationTaskDayDetail'); // 申请详情 4.10
+        $router->post('noteProviderTaskDayDetail', 'TaskController@noteProviderTaskDayDetail'); // 服务商提示详情 4.10
+        $router->post('arrearsProvidersTaskDayDetail', 'TaskController@arrearsProvidersTaskDayDetail'); // 服务商催款详情 4.10
+        $router->post('invoiceProvidersTaskDayDetail', 'TaskController@invoiceProvidersTaskDayDetail'); // 服务商发票详情 4.10
         $router->post('newTask', 'TaskController@newTask'); // 新建任务 4.10
     });
     // 列表管理

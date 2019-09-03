@@ -669,7 +669,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
 
 
     /**
-     * @description:小时详情
+     * @description:新任务
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -694,6 +694,261 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         ];
         $task_res = Task::insert($task_data);
         return $this->success('add task success');
+    }
+
+
+    /**
+     * @description:房东通知列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function noteTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21,25];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $inspect_task_type = [3,11];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东押金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $bond_task_type = [15,16];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东租金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $arrears_task_type = [14,18];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东租金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function increaseTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $increase_task_type = [6];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+
+    /**
+     * @description:房东申请列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function applicationTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $application_task_type = [1];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+
+    /**
+     * @description:房东通知列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function noteProviderTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $note_task_type = [22,25];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsProvidersTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $arrears_task_type = [24];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
+    }
+
+    /**
+     * @description:房东押金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function invoiceProvidersTaskDayDetail(array $input)
+    {
+        //dd($input);
+        $day = $input['day'];
+        $invoice_task_type = [23];
+        $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->count();
+        if($count < ($input['page']-1)*3){
+            return $this->error('2','no more information');
+        }else{
+            $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->offset(($input-1)*3)->limit(3)->get();
+            $data['res'] = $res;
+            $data['current_page'] = $input['page'];
+            $data['total_page'] = ceil($count/3);
+            return $this->success('get task success',$data);
+        }
+
     }
 
     public function testTask(){

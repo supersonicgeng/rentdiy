@@ -88,4 +88,127 @@ class TaskController extends Controller
     {
         return service('Task')->newTask($request->all());
     }
+
+    /**
+     * @description:房东通知列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function noteTaskDayDetail(Request $request)
+    {
+        return service('Task')->noteTaskDayDetail($request->all());
+    }
+
+
+    /**
+     * @description:房东检查列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function inspectTaskDayDetail(Request $request)
+    {
+        return service('Task')->inspectTaskDayDetail($request->all());
+    }
+
+    /**
+     * @description:房东押金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function bondTaskDayDetail(Request $request)
+    {
+        return service('Task')->bondTaskDayDetail($request->all());
+    }
+
+
+
+    /**
+     * @description:房东租金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsTaskDayDetail(Request $request)
+    {
+        return service('Task')->arrearsTaskDayDetail($request->all());
+    }
+
+    /**
+     * @description:房东涨租列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function increaseTaskDayDetail(Request $request)
+    {
+        return service('Task')->increaseTaskDayDetail($request->all());
+    }
+
+
+    /**
+     * @description:房东申请列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function applicationTaskDayDetail(Request $request)
+    {
+        return service('Task')->applicationTaskDayDetail($request->all());
+    }
+
+
+    /**
+     * @description:房东租金列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function noteProviderTaskDayDetail(Request $request)
+    {
+        return service('Task')->noteProviderTaskDayDetail($request->all());
+    }
+
+    /**
+     * @description:房东涨租列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function arrearsProvidersTaskDayDetail(Request $request)
+    {
+        return service('Task')->arrearsProvidersTaskDayDetail($request->all());
+    }
+
+
+    /**
+     * @description:房东申请列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function invoiceProvidersTaskDayDetail(Request $request)
+    {
+        return service('Task')->invoiceProvidersTaskDayDetail($request->all());
+    }
 }
