@@ -1375,7 +1375,6 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     foreach ($v['items'] as $key => $value) {
                         $room_data = [
                             'inspect_id' => $res,
-                            'rent_house_id' => $v['rent_house_id'],
                             'room_name' => RentHouse::where('id',$v['rent_house_id'])->pluck('room_name')->first(),
                             'items' => $value,
                             'created_at' => date('Y-m-d H:i:s', time()),
