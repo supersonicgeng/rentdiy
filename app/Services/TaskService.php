@@ -404,7 +404,7 @@ class TaskService extends CommonService
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
         $task_res = Task::insert($task_data);
-
+        return $this->success('add task success');
     }
 
     public function testTask(){
