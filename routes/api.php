@@ -337,6 +337,15 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('arrearsProvidersTaskDayDetail', 'TaskController@arrearsProvidersTaskDayDetail'); // 服务商催款详情 4.10
         $router->post('invoiceProvidersTaskDayDetail', 'TaskController@invoiceProvidersTaskDayDetail'); // 服务商发票详情 4.10
         $router->post('newTask', 'TaskController@newTask'); // 新建任务 4.10
+        $router->post('noteTaskHourDetail', 'TaskController@noteTaskHourDetail'); // 提示详情 4.10
+        $router->post('inspectTaskHourDetail', 'TaskController@inspectTaskHourDetail'); // 检查详情 4.10
+        $router->post('bondTaskHourDetail', 'TaskController@bondTaskHourDetail'); // 押金详情 4.10
+        $router->post('arrearsTaskHourDetail', 'TaskController@arrearsTaskHourDetail'); // 租金详情 4.10
+        $router->post('increaseTaskHourDetail', 'TaskController@increaseTaskHourDetail'); // 涨租详情 4.10
+        $router->post('applicationTaskHourDetail', 'TaskController@applicationTaskHourDetail'); // 申请详情 4.10
+        $router->post('noteProviderTaskHourDetail', 'TaskController@noteProviderTaskHourDetail'); // 服务商提示详情 4.10
+        $router->post('arrearsProvidersTaskHourDetail', 'TaskController@arrearsProvidersTaskHourDetail'); // 服务商催款详情 4.10
+        $router->post('invoiceProvidersTaskHourDetail', 'TaskController@invoiceProvidersTaskHourDetail'); // 服务商发票详情 4.10
     });
     // 列表管理
     $router->group(['prefix' => 'report'], function (Router $router) {
