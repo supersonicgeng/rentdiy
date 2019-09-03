@@ -49,7 +49,7 @@ class TaskService extends CommonService
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 3,
+                'task_type'         => 5,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'insurance update',
@@ -72,7 +72,7 @@ class TaskService extends CommonService
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 5,
+                'task_type'         => 7,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
@@ -86,11 +86,11 @@ class TaskService extends CommonService
 
 
         // 待续约商业租约
-        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+60 day'))->where('contract_type',4)->select('id','user_id')->get();
+        $out_time_house_id = RentContract::where('rent_end_date',date('Y-m-d','+90 day'))->where('contract_type',4)->select('id','user_id')->get();
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 5,
+                'task_type'         => 8,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
@@ -130,7 +130,7 @@ class TaskService extends CommonService
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => $value['user_id'],
-                'task_type'         => 6,
+                'task_type'         => 9,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
@@ -148,7 +148,7 @@ class TaskService extends CommonService
         foreach ($out_time_house_id as $k => $value){
             $task_data = [
                 'user_id'           => RentContract::where('id',$value['id'])->pluck('user_id')->first(),
-                'task_type'         => 6,
+                'task_type'         => 9,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
@@ -378,6 +378,34 @@ class TaskService extends CommonService
         }
     }
 
+
+    /**
+     * @description:小时详情
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function newTask(array $input)
+    {
+        //dd($input);
+        $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+
+        $task_data = [
+            'user_id'           => $input['user_id'],
+            'task_type'         => 20,
+            'task_start_time'   => $input['task_start_time'],
+            'task_end_time'     => $input['task_end_time'],
+            'task_status'       => 0,
+            'task_title'        => $input['task_name'],
+            'task_content'      => $input['task_details'],
+            'task_role'         => 1,
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        $task_res = Task::insert($task_data);
+
+    }
 
     public function testTask(){
         Log::info(1112);

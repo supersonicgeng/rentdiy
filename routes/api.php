@@ -327,6 +327,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('taskListDayDetail', 'TaskController@taskListDayDetail'); // 日详情 4.10
         $router->post('taskListDay', 'TaskController@taskListDay'); // 日列表 4.10
         $router->post('taskListHourDetail', 'TaskController@taskListHourDetail'); // 小时详情 4.10
+        $router->post('newTask', 'TaskController@newTask'); // 新建任务 4.10
     });
     // 列表管理
     $router->group(['prefix' => 'report'], function (Router $router) {
@@ -373,7 +374,8 @@ Route::group(['middleware' => ['auth']], function ($api) {
     Route::get('redirect/{service}','Auth\SocialAuthController@redirectToProvider');
     Route::get('callback/{service}','Auth\SocialAuthController@handleProviderCallback');
 });
-
+Route::get('login/github', 'Auth\LoginController@redirectToProvider');
+Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

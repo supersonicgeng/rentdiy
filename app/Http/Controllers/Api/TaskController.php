@@ -75,4 +75,17 @@ class TaskController extends Controller
     {
         return service('Task')->taskListHourDetail($request->all());
     }
+
+    /**
+     * @description:新任务
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function newTask(Request $request)
+    {
+        return service('Task')->newTask($request->all());
+    }
 }
