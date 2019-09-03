@@ -1379,8 +1379,8 @@ An inspection has been scheduled about date, please communicate with the tenant 
                             'items' => $value,
                             'created_at' => date('Y-m-d H:i:s', time()),
                         ];
-                        $res = UnPlatInspectRoom::insert($room_data);
-                        if (!$res) {
+                        $item_res = UnPlatInspectRoom::insert($room_data);
+                        if (!$item_res) {
                             $error += 1;
                         }
                     }
