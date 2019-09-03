@@ -459,11 +459,85 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
     {
         //dd($input);
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
+        $day = $input['day'];
+        if($input['task_role'] == 1){
+            $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21,25];
+            $inspect_task_type = [3,11];
+            $bond_task_type = [15,16];
+            $arrears_task_type = [14,18];
+            $increase_task_type = [6];
+            $application_task_type = [1];
+            $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+            if($note_res){
+                $data['note_res'] = 1;
+            }else{
+                $data['note_res'] = 2;
+            }
+            $inspect_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->first();
+            if($inspect_res){
+                $data['inspect_res'] = 1;
+            }else{
+                $data['inspect_res'] = 2;
+            }
+            $bond_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->first();
+            if($bond_res){
+                $data['bond_res'] = 1;
+            }else{
+                $data['bond_res'] = 2;
+            }
+            $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+            if($arrears_res){
+                $data['arrears_res'] = 1;
+            }else{
+                $data['arrears_res'] = 2;
+            }
+            $increase_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->first();
+            if($increase_res){
+                $data['increase_res'] = 1;
+            }else{
+                $data['increase_res'] = 2;
+            }
+            $application_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->first();
+            if($application_res){
+                $data['application_res'] = 1;
+            }else{
+                $data['application_res'] = 2;
+            }
+        }else{
+            $note_task_type = [22,25];
+            $arrears_task_type = [24];
+            $invoice_task_type = [23];
+            $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+            if($note_res){
+                $data['note_res'] = 1;
+            }else{
+                $data['note_res'] = 2;
+            }
 
-            $day = $input['day'];
-            $data = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->get();
-            return $this->success('get task list success',$data);
+            $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+            if($arrears_res){
+                $data['arrears_res'] = 1;
+            }else{
+                $data['arrears_res'] = 2;
+            }
 
+            $invoice_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->first();
+            if($invoice_res){
+                $data['invoice_res'] = 1;
+            }else{
+                $data['invoice_res'] = 2;
+            }
+        }
+        return $this->success('get task list success',$data);
     }
 
     /**
@@ -512,7 +586,83 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             return $this->error('2','this account is not a landlord role');
         }else{
             $day = $input['day'];
-            $data = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])->where('user_id',$input['user_id'])->get();
+            if($input['task_role'] == 1){
+                $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21,25];
+                $inspect_task_type = [3,11];
+                $bond_task_type = [15,16];
+                $arrears_task_type = [14,18];
+                $increase_task_type = [6];
+                $application_task_type = [1];
+                $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                if($note_res){
+                    $data['note_res'] = 1;
+                }else{
+                    $data['note_res'] = 2;
+                }
+                $inspect_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->first();
+                if($inspect_res){
+                    $data['inspect_res'] = 1;
+                }else{
+                    $data['inspect_res'] = 2;
+                }
+                $bond_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->first();
+                if($bond_res){
+                    $data['bond_res'] = 1;
+                }else{
+                    $data['bond_res'] = 2;
+                }
+                $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                if($arrears_res){
+                    $data['arrears_res'] = 1;
+                }else{
+                    $data['arrears_res'] = 2;
+                }
+                $increase_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->first();
+                if($increase_res){
+                    $data['increase_res'] = 1;
+                }else{
+                    $data['increase_res'] = 2;
+                }
+                $application_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->first();
+                if($application_res){
+                    $data['application_res'] = 1;
+                }else{
+                    $data['application_res'] = 2;
+                }
+            }else{
+                $note_task_type = [22,25];
+                $arrears_task_type = [24];
+                $invoice_task_type = [23];
+                $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                if($note_res){
+                    $data['note_res'] = 1;
+                }else{
+                    $data['note_res'] = 2;
+                }
+
+                $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                if($arrears_res){
+                    $data['arrears_res'] = 1;
+                }else{
+                    $data['arrears_res'] = 2;
+                }
+
+                $invoice_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->first();
+                if($invoice_res){
+                    $data['invoice_res'] = 1;
+                }else{
+                    $data['invoice_res'] = 2;
+                }
+            }
             return $this->success('get task list success',$data);
         }
     }
