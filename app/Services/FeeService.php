@@ -546,7 +546,7 @@ class FeeService extends CommonService
         if($input['arrears_type']){
             $model = $model->where('arrears_type',$input['arrears_type']);
         }
-        $count = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[3,4])->get();
+        $count = $model->where('user_id',$input['user_id'])->where('fee_sn',$input['fee_sn'])->whereIn('arrears_type',[3,4])->get();
         $count = count($count);
         if($count <= ($input['page']-1)*10){
             return $this->error('2','no more fee information');
@@ -3396,5 +3396,37 @@ The above work has been completed, you can issue an invoice to the landlord..",
         return $this->success('check match update success');
     }
 
+
+    /**
+     * @description:费用单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeListBatch(array $input)
+    {
+        $model = new RentArrears();
+        $page = $input['page'];
+        $count = $model->where('contract_id',$input['contract_id'])->groupBy('fee_sn')->count();
+        if($count < ($page-1)*10){
+            return $this->error('2','get fee list failed');
+        }else{
+            $fee_sns = $model->where('contract_id',$input['contract_id'])->groupBy('fee_sn')->offset(($page-1)*10)->limit(10)->pluck('fee_sn');
+            foreach ($fee_sns as $k => $v){
+                $invoice[$k]['invoice_sn'] = $v;
+                $invoice[$k]['tenement_name'] = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_full_name')->first();
+                $invoice[$k]['invoice_date'] = $model->where('fee_sn',$v)->pluck('effect_date')->first();
+                $invoice[$k]['due_date'] = $model->where('fee_sn',$v)->pluck('expire_date')->first();
+                $invoice[$k]['amount'] = $model->where('fee_sn',$v)->sum('arrears_fee');
+                $invoice[$k]['note'] = $model->where('fee_sn',$v)->pluck('note')->first();
+            }
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            $data['fee_list'] = $invoice;
+            return $this->success('get fee list success',$data);
+        }
+    }
 
 }
