@@ -26,7 +26,7 @@ Route::get('/qrcode/{passport_id}', 'Api\PublicController@qrcode');
 Route::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detailCode');
 Route::get('/system/announcement', 'Api\PublicController@announcement');
 Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
-Route::get('/test/testLogin','Api\TestController@testLogin');
+Route::get('/test/testLogin/{token}','Api\TestController@testLogin');
 
 
 
