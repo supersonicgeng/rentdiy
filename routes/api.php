@@ -27,6 +27,7 @@ Route::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detai
 Route::get('/system/announcement', 'Api\PublicController@announcement');
 Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
 Route::get('/test/testLogin','Api\TestController@testLogin');
+Route::get('/test/testFacebookLogin','Api\TestController@testFacebookLogin');
 
 
 
@@ -307,6 +308,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('providersHandAdjustList', 'FeeController@providersHandAdjustList'); // 服务商银行手工对账列表 4.10
         $router->post('providersHandAdjust', 'FeeController@providersHandAdjust'); // 服务商银行手工对账 4.10
         $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
+        $router->post('feeListBatch', 'FeeController@feeListBatch'); // 费用单列表 4.10
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
