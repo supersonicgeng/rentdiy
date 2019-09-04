@@ -654,7 +654,7 @@ class FeeController extends Controller
 
 
     /**
-     * @description:银行手工对账
+     * @description:费用单列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -664,5 +664,18 @@ class FeeController extends Controller
     public function providersHandAdjust(Request $request)
     {
         return service('Fee')->providersHandAdjust($request->all());
+    }
+
+    /**
+     * @description:银行手工对账
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feeListBatch(Request $request)
+    {
+        return service('Fee')->feeListBatch($request->all());
     }
 }
