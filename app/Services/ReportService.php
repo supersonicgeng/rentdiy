@@ -363,24 +363,39 @@ class ReportService extends CommonService
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
                     'c.rent_start_date','c.rent_end_date','c.id','r.pay_fee','r.bond_status')
                 ->get();
+            $rent_fee = 0;
+            $arrears = 0;
+            $rent = 0;
             foreach ($res as $k => $v){
                 if($v->contract_type == 1){
                     $res[$k]->rent_fee = EntireContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('need_pay_fee');
+                    $rent_fee += $res[$k]->rent_fee;
+                    $arrears +=  $res[$k]->arrears;
+                    $rent += $res[$k]->rent;
                 }elseif ($v->contract_type == 2 || $v->contract_type == 3){
                     $res[$k]->rent_fee = SeparateContract::where('contract_id',$v->id)->pluck('rent_per_week')->first();
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('need_pay_fee');
+                    $rent_fee += $res[$k]->rent_fee;
+                    $arrears +=  $res[$k]->arrears;
+                    $rent += $res[$k]->rent;
                 }else{
                     $res[$k]->rent_fee = BusinessContract::where('contract_id',$v->id)->pluck('month_rent')->first();
                     $res[$k]->arrears = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('arrears_fee');
                     $res[$k]->rent = RentArrears::where('contract_id',$v->id)->where('arrears_type','!=',4)->sum('need_pay_fee');
+                    $rent_fee += $res[$k]->rent_fee;
+                    $arrears +=  $res[$k]->arrears;
+                    $rent += $res[$k]->rent;
                 }
             }
             $data['contract_list'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
+            $data['rent_fee'] = $rent_fee;
+            $data['rent'] = $rent;
+            $data['arreares'] = $arrears;
             return $this->success('get contract list success',$data);
         }
     }
