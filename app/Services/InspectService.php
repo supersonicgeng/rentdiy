@@ -1472,7 +1472,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
             return $this->error('2','no inspect info');
         }
         foreach($room_name as $k => $v){
-            $data['data'][][$v['room_name']] =  InspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
+            $data['data'][][$v['room_name']] =  UnPlatInspectRoom::where('inspect_id',$input['inspect_id'])->where('room_name',$v['room_name'])->get()->toArray();
         }
         $data['chattel'] = $chattel_info;
         return $this->success('get inspect item success',$data);
