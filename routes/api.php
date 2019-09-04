@@ -26,7 +26,7 @@ Route::get('/qrcode/{passport_id}', 'Api\PublicController@qrcode');
 Route::get('/detailQrcode/{passport_id}/{goods_id}', 'Api\PublicController@detailCode');
 Route::get('/system/announcement', 'Api\PublicController@announcement');
 Route::get('/system/rewardRate', 'Api\PublicController@rewardRate');
-
+Route::get('/test/testLogin','Api\TestController@testLogin');
 
 
 
@@ -396,6 +396,8 @@ Route::get('login/github', 'Auth\LoginController@redirectToProvider');
 Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
 
 //需要登录的路由写在这里
 Route::group(['namespace' => 'Api','middleware' => 'CheckOperatorLogin'], function (Router $router) {
