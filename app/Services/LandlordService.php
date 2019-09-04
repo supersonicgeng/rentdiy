@@ -97,6 +97,7 @@ class LandlordService extends CommonService
                     'mail_code'         => $input['mail_code'],
                     'bank_account'      => $input['bank_account'],
                     'notice'            => $input['notice'],
+                    'subject_code'      => subjectCode(),
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $model = new Landlord();
