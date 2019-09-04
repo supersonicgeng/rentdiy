@@ -2125,6 +2125,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 $order_list[$k]['phone'] = Landlord::where('user_id',$v['user_id'])->pluck('phone')->first();
                 $order_list[$k]['email'] = Landlord::where('user_id',$v['user_id'])->pluck('email')->first();
                 $order_list[$k]['address'] = Landlord::where('user_id',$v['user_id'])->pluck('mail_address')->first();
+                $order_list[$k]['subject_code'] = Landlord::where('user_id',$v['user_id'])->pluck('subject_code')->first();
             }
             $data['order_info'] = $order_list;
             return $this->success('get order list success',$data);
