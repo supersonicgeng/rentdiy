@@ -558,10 +558,12 @@ class FeeService extends CommonService
             static $amount_price = 0;
             static $discount = 0;
             static $gts = 0;
+            $rate = 0;
             foreach ($fee_data as $k => $v){
                 $amount_price += $v['unit_price']*$v['number'];
                 $discount += ($v['unit_price']*$v['number'])*$v['discount']/100;
                 $gts += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100;
+                $rate += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100*$v['rate']/100;
             }
             $tenement_id = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_id')->first();
             $data['subject_code'] = Tenement::where('id',$tenement_id)->pluck('subject_code')->first();
@@ -569,6 +571,7 @@ class FeeService extends CommonService
             $data['amount_price'] = round($amount_price,2);
             $data['discount'] = round($discount,2);
             $data['gts'] = round($gts,2);
+            $data['rate'] = $rate;
             $data['fee_data'] = $fee_data;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/10);
