@@ -3607,7 +3607,9 @@ The above work has been completed, you can issue an invoice to the landlord..",
     {
         $model = new RentArrears();
         $arrears_id = $input['arrears_id'];
-        $res = $model->where('id',$arrears_id)->delete();
+        foreach ($arrears_id as $k => $v){
+            $res = $model->where('id',$v)->delete();
+        }
         return $this->success('deleted arrears record success');
     }
 }
