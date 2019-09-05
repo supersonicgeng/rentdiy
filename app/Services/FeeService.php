@@ -3532,7 +3532,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText(175,238,(string)$total);
                     $mpdf->WriteText(35,266,(string)$bank);
                     $mpdf->WriteText(157,266,(string)$bank_account);
-                    $mpdf->SetWatermarkImage("http://".$ip."/pdf/watermark.png",0.1);//参数一是图片的位置，参数二是透明度
+                    $mpdf->SetWatermarkImage("http://".$ip."/pdf/watermark.png",0.8);//参数一是图片的位置，参数二是透明度
                     $mpdf->showWatermarkImage = true;
                 }
                 if($i < $pagecount){
