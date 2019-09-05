@@ -67,6 +67,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'im'], function (Router $router) {
         $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送系统消息 4.10
     });
+    $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
 });
 
 
@@ -310,7 +311,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
         $router->post('feeListBatch', 'FeeController@feeListBatch'); // 费用单列表 4.10
         $router->post('feeDelete', 'FeeController@feeDelete'); // 费用单删除 4.10
-        $router->get('feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
+
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
