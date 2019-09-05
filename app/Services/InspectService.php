@@ -11,6 +11,7 @@ namespace App\Services;
 
 
 use App\Lib\Util\QueryPager;
+use App\Model\ContractTenement;
 use App\Model\Inspect;
 use App\Model\InspectChattel;
 use App\Model\InspectCheck;
