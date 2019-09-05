@@ -184,7 +184,7 @@ class HelpService extends CommonService
     public function test()
     {
         $ip = "{$_SERVER['SERVER_NAME']}";
-        $dashboard_pdf_file = "http://".$ip."/pdf/4.pdf";
+        $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
         $fileContent = file_get_contents($dashboard_pdf_file,'rb');
         $mpdf = new Mpdf();
         $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
@@ -193,6 +193,10 @@ class HelpService extends CommonService
             $mpdf->useTemplate($import_page);
             if($i == 1){
                 $mpdf->WriteText('30',45,'leo');
+                $mpdf->WriteText('190','45','100');
+                $mpdf->WriteText('60','52','X');
+                $mpdf->WriteText('92','52','161819');
+                $mpdf->WriteText('172','52','86461234');
             }
             if($i < $pagecount){
                 $mpdf->AddPage();
