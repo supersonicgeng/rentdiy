@@ -79,7 +79,7 @@ Your property insurance will be expired after 90 days. Please be prepared if you
             $rent_house_id = $value['house_id'];
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
@@ -107,7 +107,7 @@ If neither party gives notice the tenancy will automatically become a periodic t
             $rent_house_id = $value['house_id'];
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
@@ -132,7 +132,7 @@ Please negotiate with tenant to renew this lease or to issue a notice to end the
             $rent_house_id = $value['house_id'];
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
@@ -165,7 +165,7 @@ Please negotiate with tenant to renew this tenancy.",
             $rent_house_id = $value['house_id'];
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$value['id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => $value['user_id'],
@@ -191,7 +191,7 @@ You have an option to increase the rent if you like to reflect the market rent c
             $rent_house_id = RentContract::where('id',$value['contract_id'])->pluck('house_id')->first();
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$value['contract_id'])->pluck('tenement_full_name')->first();
             $task_data = [
                 'user_id'           => RentContract::where('id',$value['contract_id'])->pluck('user_id')->first(),
@@ -222,7 +222,7 @@ You have an option to increase the rent if you like to reflect the market rent c
             $contract_id = $value['contract_id'];
             $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
             $need_pay_fee = $value['need_pay_fee'];
             $dates = ceil((time()-strtotime($value['created_at']))/(3600*24));
@@ -260,7 +260,7 @@ The tenant did not pay the bond or not pay in full. Please take any necessary ac
             $rent_house_id = RentContract::where('id',$value['contract_id'])->pluck('house_id')->first();
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
 
             $task_data = [
@@ -318,7 +318,7 @@ You received a bond from above tenancy. You are required to lodge a bond with Te
             $contract_id = $value['contract_id'];
             $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
             $need_pay_fee = $value['need_pay_fee'];
             $dates = ceil((time()-strtotime($value['created_at']))/(3600*24));
@@ -357,7 +357,7 @@ Please take any necessary action immediately.",
             $providers_id = LandlordOrder::where('id',$contract_id)->pluck('providers_id')->first();
             $rent_house_id = LandlordOrder::where('id',$contract_id)->pluck('rent_house_id')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_name = Tenement::where('id',$value['tenement_id'])->pluck('first_name')->first();
             $need_pay_fee = $value['need_pay_fee'];
             $providers_user_id = Providers::where('id',$providers_id)->pluck('user_id')->first();

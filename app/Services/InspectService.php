@@ -74,7 +74,7 @@ class InspectService extends CommonService
                     $start_time = $input['inspect_start_date'];
                     $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                     $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                     $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
@@ -98,7 +98,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     $start_time = $input['inspect_start_date'];
                     $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                     $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                     $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
@@ -201,7 +201,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     $start_time = $input['inspect_start_date'];
                     $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                     $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                     $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
@@ -225,7 +225,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     $start_time = $input['inspect_start_date'];
                     $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                     $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                    $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                     $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                     $task_data = [
                         'user_id'           => $input['user_id'],
@@ -331,7 +331,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         $start_time = $input['inspect_start_date'];
                         $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                         $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                         $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                         $task_data = [
                             'user_id'           => $input['user_id'],
@@ -355,7 +355,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         $start_time = $input['inspect_start_date'];
                         $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                         $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                         $tenement_full_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
                         $task_data = [
                             'user_id'           => $input['user_id'],

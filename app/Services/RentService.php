@@ -2118,7 +2118,7 @@ You have received a new tenancy application from above, please deal with it in t
             ]);
             $property_name = $rent_house_info->property_name;
             $room_name = $rent_house_info->room_name;
-            $property_address = $rent_house_info->property_address;
+            $property_address = $rent_house_info->address;
             $tenement_full_name = $contract_tenement_data->tenement_full_name;
             // 生成任务
             $task_data = [
@@ -2335,7 +2335,7 @@ Your tenancy at above property is end today. You will need to arrange the final 
                 $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
                 $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
                 $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                 $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
 
                 $task_data = [

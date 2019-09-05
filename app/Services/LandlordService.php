@@ -352,7 +352,7 @@ class LandlordService extends CommonService
             $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
             $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
-            $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+            $providers_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
             $landlord_name = \App\Model\User::where('id',$landlord_user_id)->pluck('nickname')->first();
             $task_data = [
                 'user_id'           => Providers::where('id',Tender::where('id',$tender_id)->pluck('service_id')->first())->pluck('user_id')->first(),

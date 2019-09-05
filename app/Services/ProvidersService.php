@@ -841,9 +841,9 @@ class ProvidersService extends CommonService
                 LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',2)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
                 $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
-                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                 $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
-                $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+                $providers_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
                 $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
                 $task_data = [
                     'user_id'           => $landlord_user_id,
@@ -903,9 +903,9 @@ Your tender work has been completed by the above tradesman, please go to view th
                 LandlordOrder::where('rent_application_id',$input['rent_application_id'])->where('order_type',1)->update(['order_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
                 $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
-                $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+                $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
                 $providers_id = LandlordOrder::where('id',$input['order_id'])->pluck('providers_id')->first();
-                $providers_name = Providers::where('id',$providers_id)->piuck('service_name')->first();
+                $providers_name = Providers::where('id',$providers_id)->pluck('service_name')->first();
                 $landlord_user_id = LandlordOrder::where('id',$input['order_id'])->pluck('user_id')->first();
                 $task_data = [
                     'user_id'           => $landlord_user_id,

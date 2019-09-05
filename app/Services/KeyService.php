@@ -168,7 +168,7 @@ class KeyService extends CommonService
             $rent_house_id = $model->where('id',$input['key_id'])->pluck('house_id')->first();
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $borrow_name = $input['borrow_name'];
             $borrow_end_date = $input['borrow_end_date'];
             $task_data = [
