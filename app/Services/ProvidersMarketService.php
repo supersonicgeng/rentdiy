@@ -230,7 +230,7 @@ class ProvidersMarketService extends CommonService
         ];
         $order_sn = LandlordOrder::where('id',$input['order_id'])->pluck('order_sn')->first();
         $rent_house_id = LandlordOrder::where('id',$input['order_id'])->pluck('rent_house_id')->first();
-        $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+        $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
         $providers_name = Providers::where('id',$input['service_id'])->piuck('service_name')->first();
         $task_data = [
             'user_id'           => $input['user_id'],
