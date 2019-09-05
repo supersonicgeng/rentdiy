@@ -3498,13 +3498,13 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
                     $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
                     foreach ($fee_list as $k => $v){
-                        $mpdf->WriteText(16+$v*10,'155',$v->items_name);
-                        $mpdf->WriteText(42+$v*10,'155',$v->describe);
-                        $mpdf->WriteText(85+$v*10,'155',$v->rate);
-                        $mpdf->WriteText(107+$v*10,'155',(string)$v->number);
-                        $mpdf->WriteText(12,'155',$v->discount);
-                        $mpdf->WriteText('155','155',$v->tex);
-                        $mpdf->WriteText('175','155',$v->arrears_fee);
+                        $mpdf->WriteText(16+$k*10,'155',$v->items_name);
+                        $mpdf->WriteText(42+$k*10,'155',$v->describe);
+                        $mpdf->WriteText(85+$k*10,'155',$v->rate);
+                        $mpdf->WriteText(107+$k*10,'155',(string)$v->number);
+                        $mpdf->WriteText(122+$k*10,'155',$v->discount);
+                        $mpdf->WriteText(155+$k*10,'155',$v->tex);
+                        $mpdf->WriteText(175+$k*10,'155',$v->arrears_fee);
                     }
                 }
                 if($i < $pagecount){
