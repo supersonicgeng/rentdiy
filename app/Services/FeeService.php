@@ -3513,10 +3513,10 @@ The above work has been completed, you can issue an invoice to the landlord..",
                         $gst += ($v->unit_price*$v->number)*(1-$v->discount/100)*$v->tex/100;
                     }
                     $total = $subtotal-$discount+$gts;
-                    $mpdf->WriteText(175,236,$v->items_name);
-                    $mpdf->WriteText(175,246,$v->describe);
-                    $mpdf->WriteText(175,256,$v->unit_price);
-                    $mpdf->WriteText(175,266,(string)$v->number);
+                    $mpdf->WriteText(175,206,$subtotal);
+                    $mpdf->WriteText(175,216,$discount);
+                    $mpdf->WriteText(175,226,$gst);
+                    $mpdf->WriteText(175,236,$total);
                 }
                 if($i < $pagecount){
                     $mpdf->AddPage();
