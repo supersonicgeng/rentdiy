@@ -3474,7 +3474,10 @@ The above work has been completed, you can issue an invoice to the landlord..",
             $tenement_info = ContractTenement::where('contract_id',$contract_id)->first();
             $landlord_info = RentContract::where('id',$contract_id)->first();
             $fee_list = $model->where('fee_sn',$fee_sn)->get();
-
+            $subtotal = 0;
+            $discount = 0;
+            $gts = 0;
+            $total = 0;
             // PDF
             $ip = "{$_SERVER['SERVER_NAME']}";
             $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
@@ -3498,14 +3501,22 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
                     $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
                     foreach ($fee_list as $k => $v){
-                        $mpdf->WriteText(16+$k*10,'155',$v->items_name);
-                        $mpdf->WriteText(42+$k*10,'155',$v->describe);
-                        $mpdf->WriteText(92+$k*10,'155',$v->rate);
-                        $mpdf->WriteText(118+$k*10,'155',(string)$v->number);
-                        $mpdf->WriteText(138+$k*10,'155',$v->discount);
-                        $mpdf->WriteText(158+$k*10,'155',$v->tex);
-                        $mpdf->WriteText(175+$k*10,'155',$v->arrears_fee);
+                        $mpdf->WriteText(16,155+$k*10,$v->items_name);
+                        $mpdf->WriteText(42,155+$k*10,$v->describe);
+                        $mpdf->WriteText(92,155+$k*10,$v->unit_price);
+                        $mpdf->WriteText(118,155+$k*10,(string)$v->number);
+                        $mpdf->WriteText(138,155+$k*10,$v->discount);
+                        $mpdf->WriteText(158,155+$k*10,$v->tex);
+                        $mpdf->WriteText(175,155+$k*10,$v->arrears_fee);
+                        $subtotal += $v->unit_price*$v->number;
+                        $discount += $v->unit_price*$v->number*$v->discount/100;
+                        $gst += ($v->unit_price*$v->number)*(1-$v->discount/100)*$v->tex/100;
                     }
+                    $total = $subtotal-$discount+$gts;
+                    $mpdf->WriteText(175,236,$v->items_name);
+                    $mpdf->WriteText(175,246,$v->describe);
+                    $mpdf->WriteText(175,256,$v->unit_price);
+                    $mpdf->WriteText(175,266,(string)$v->number);
                 }
                 if($i < $pagecount){
                     $mpdf->AddPage();
