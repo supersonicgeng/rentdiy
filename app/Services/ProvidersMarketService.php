@@ -243,7 +243,7 @@ Property:$property_address
 Tradesman: $providers_name
 Tender number: $order_sn
 You just receive a new tender from service market; please go to view the details and accept this tender if you wish to.",
-            'rent_house_id'     => $input['rent_house_id'],
+            'rent_house_id'     => $rent_house_id,
             'task_role'         => 1,
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
