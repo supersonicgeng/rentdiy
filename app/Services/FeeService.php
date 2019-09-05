@@ -16,7 +16,9 @@ use App\Model\BankCheck;
 use App\Model\Bond;
 use App\Model\BondRefund;
 use App\Model\BondTransfer;
+use App\Model\BusinessContract;
 use App\Model\ContractTenement;
+use App\Model\EntireContract;
 use App\Model\FeeReceive;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
@@ -29,6 +31,7 @@ use App\Model\RentContact;
 use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\SeparateContract;
 use App\Model\Tenement;
 use App\Model\TenementNote;
 use App\Model\Verify;
@@ -3477,7 +3480,17 @@ The above work has been completed, you can issue an invoice to the landlord..",
             $subtotal = 0;
             $discount = 0;
             $gts = 0;
-            $total = 0;
+            $contract_type = RentContract::where('id',$contract_id)->pluck('contract_type')->first();
+            if($contract_type == 1){
+                $bank = EntireContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = EntireContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }elseif ($contract_type == 2 || $contract_type == 3){
+                $bank = SeparateContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = SeparateContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }else{
+                $bank = BusinessContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = BusinessContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }
             // PDF
             $ip = "{$_SERVER['SERVER_NAME']}";
             $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
@@ -3505,26 +3518,101 @@ The above work has been completed, you can issue an invoice to the landlord..",
                         $mpdf->WriteText(42,155+$k*10,$v->describe);
                         $mpdf->WriteText(92,155+$k*10,$v->unit_price);
                         $mpdf->WriteText(118,155+$k*10,(string)$v->number);
-                        $mpdf->WriteText(138,155+$k*10,$v->discount);
+                        $mpdf->WriteText(138,155+$k*10,(string)round($v->unit_price*$v->number*$v->discount,2));
                         $mpdf->WriteText(158,155+$k*10,$v->tex);
                         $mpdf->WriteText(175,155+$k*10,$v->arrears_fee);
                         $subtotal += $v->unit_price*$v->number;
                         $discount += $v->unit_price*$v->number*$v->discount/100;
-                        $gst += ($v->unit_price*$v->number)*(1-$v->discount/100)*$v->tex/100;
+                        $gts += round(($v->unit_price*$v->number)*(100-$v->discount)/100*($v->tex)/100,2);
                     }
                     $total = $subtotal-$discount+$gts;
-                    $mpdf->WriteText(175,206,$subtotal);
-                    $mpdf->WriteText(175,216,$discount);
-                    $mpdf->WriteText(175,226,$gst);
-                    $mpdf->WriteText(175,236,$total);
+                    $mpdf->WriteText(175,214,(string)$subtotal);
+                    $mpdf->WriteText(175,222,(string)$discount);
+                    $mpdf->WriteText(175,230,$gst);
+                    $mpdf->WriteText(175,238,(string)$total);
+                    $mpdf->WriteText(35,266,(string)$bank);
+                    $mpdf->WriteText(157,266,(string)$bank_account);
+                    $mpdf->SetWatermarkImage("http://".$ip."/pdf/watermark.png",0.1);//参数一是图片的位置，参数二是透明度
+                    $mpdf->showWatermarkImage = true;
                 }
                 if($i < $pagecount){
                     $mpdf->AddPage();
                 }
+                //
+                //$model->where('fee_sn',$fee_sn)->increment('is_print');
             }
             return $this->success('get pdf success',$mpdf->Output());
         }else{
-
+            $contract_id = $model->where('fee_sn',$fee_sn)->pluck('contract_id')->first();
+            $landlord_id = RentContract::where('id',$contract_id)->pluck('landlord_id')->first();
+            $issues_day = date('Y-m-d');
+            $due_day = $model->where('fee_sn',$fee_sn)->pluck('expire_date')->first();
+            $gst = Landlord::where('id',$landlord_id)->pluck('tax_no')->first();
+            $tenement_info = ContractTenement::where('contract_id',$contract_id)->first();
+            $landlord_info = RentContract::where('id',$contract_id)->first();
+            $fee_list = $model->where('fee_sn',$fee_sn)->get();
+            $subtotal = 0;
+            $discount = 0;
+            $gts = 0;
+            $contract_type = RentContract::where('id',$contract_id)->pluck('contract_type')->first();
+            if($contract_type == 1){
+                $bank = EntireContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = EntireContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }elseif ($contract_type == 2 || $contract_type == 3){
+                $bank = SeparateContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = SeparateContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }else{
+                $bank = BusinessContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
+                $bank_account = BusinessContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
+            }
+            // PDF
+            $ip = "{$_SERVER['SERVER_NAME']}";
+            $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
+            $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+            $mpdf = new Mpdf();
+            $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+            for($i=1; $i<=$pagecount;$i++){
+                $import_page = $mpdf->importPage($i);
+                $mpdf->useTemplate($import_page);
+                if($i == 1){
+                    $mpdf->WriteText('42',35,$issues_day);
+                    $mpdf->WriteText('40','43',$due_day);
+                    $mpdf->WriteText('172','35',$gst);
+                    $mpdf->WriteText('172','43',$fee_sn);
+                    $mpdf->WriteText('29','66',$tenement_info->tenement_full_name);
+                    $mpdf->WriteText('34','73',$tenement_info->tenement_service_address);
+                    $mpdf->WriteText('30','81',$tenement_info->tenement_mobile);
+                    $mpdf->WriteText('29','88',$tenement_info->tenement_e_mail);
+                    $mpdf->WriteText('29','111',$landlord_info->landlord_full_name);
+                    $mpdf->WriteText('34','118',$landlord_info->landlord_additional_address);
+                    $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
+                    $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
+                    foreach ($fee_list as $k => $v){
+                        $mpdf->WriteText(16,155+$k*10,$v->items_name);
+                        $mpdf->WriteText(42,155+$k*10,$v->describe);
+                        $mpdf->WriteText(92,155+$k*10,$v->unit_price);
+                        $mpdf->WriteText(118,155+$k*10,(string)$v->number);
+                        $mpdf->WriteText(138,155+$k*10,(string)round($v->unit_price*$v->number*$v->discount,2));
+                        $mpdf->WriteText(158,155+$k*10,$v->tex);
+                        $mpdf->WriteText(175,155+$k*10,$v->arrears_fee);
+                        $subtotal += $v->unit_price*$v->number;
+                        $discount += $v->unit_price*$v->number*$v->discount/100;
+                        $gts += round(($v->unit_price*$v->number)*(100-$v->discount)/100*($v->tex)/100,2);
+                    }
+                    $total = $subtotal-$discount+$gts;
+                    $mpdf->WriteText(175,214,(string)$subtotal);
+                    $mpdf->WriteText(175,222,(string)$discount);
+                    $mpdf->WriteText(175,230,$gst);
+                    $mpdf->WriteText(175,238,(string)$total);
+                    $mpdf->WriteText(35,266,(string)$bank);
+                    $mpdf->WriteText(157,266,(string)$bank_account);
+                }
+                if($i < $pagecount){
+                    $mpdf->AddPage();
+                }
+                //
+            }
+            return $this->success('get pdf success',$mpdf->Output());
         }
 
     }
