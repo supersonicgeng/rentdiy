@@ -39,6 +39,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Mpdf\Mpdf;
+use setasign\Fpdi\PdfParser\StreamReader;
 
 class FeeService extends CommonService
 {
@@ -3609,5 +3611,46 @@ The above work has been completed, you can issue an invoice to the landlord..",
         $arrears_id = $input['arrears_id'];
         $res = $model->where('id',$arrears_id)->delete();
         return $this->success('deleted arrears record success');
+    }
+
+    /**
+     * @description:费用单打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feePrint(array $input)
+    {
+        $model = new RentArrears();
+        $fee_sn = $input['fee_sn'];
+        $is_print = $model->where('fee_sn',$fee_sn)->pluck('is_print')->first();
+        if(!$is_print){
+            $issues_day = date('Y-m-d');
+            $ip = "{$_SERVER['SERVER_NAME']}";
+            $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
+            $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+            $mpdf = new Mpdf();
+            $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+            for($i=1; $i<=$pagecount;$i++){
+                $import_page = $mpdf->importPage($i);
+                $mpdf->useTemplate($import_page);
+                if($i == 1){
+                    $mpdf->WriteText('45',30,$issues_day);
+                    $mpdf->WriteText('190','45','100');
+                    $mpdf->WriteText('60','52','X');
+                    $mpdf->WriteText('92','52','161819');
+                    $mpdf->WriteText('172','52','86461234');
+                }
+                if($i < $pagecount){
+                    $mpdf->AddPage();
+                }
+            }
+            return $this->success('get pdf success',$mpdf->Output());
+        }else{
+
+        }
+
     }
 }

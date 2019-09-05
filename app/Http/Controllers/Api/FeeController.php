@@ -691,4 +691,17 @@ class FeeController extends Controller
     {
         return service('Fee')->feeDelete($request->all());
     }
+
+    /**
+     * @description:费用单删除
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function feePrint(Request $request)
+    {
+        return service('Fee')->feePrint($request->all());
+    }
 }
