@@ -84,6 +84,7 @@ class RentService extends CommonService
             $tenement_name = $tenement_info['first_name'];
             $property_name = RentHouse::where('id',$input['rent_house_id'])->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$input['rent_house_id'])->pluck('room_name')->first();
+            $user_id = RentHouse::where('id',$input['rent_house_id'])->pluck('user_id')->first();
             if(!$tenement_info){
                 return $this->error('3','you must update your tenement info');
             }else{
@@ -102,7 +103,7 @@ class RentService extends CommonService
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
                 $task_data = [
-                    'user_id'           => $input['user_id'],
+                    'user_id'           => $user_id,
                     'task_type'         => 1,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
