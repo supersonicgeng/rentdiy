@@ -60,6 +60,6 @@ class TestController extends Controller
             exit;
         }
 
-        dd($response);
+        dd($response->getBody());
     }
 }
