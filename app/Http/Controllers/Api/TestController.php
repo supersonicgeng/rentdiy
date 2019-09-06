@@ -21,7 +21,7 @@ class TestController extends Controller
         $payload = $client->verifyIdToken($token);
         if ($payload) {
 
-            return json_encode($payload);
+            dd($payload);
 
             $userid = $payload['sub'];
             // If request specified a G Suite domain:
