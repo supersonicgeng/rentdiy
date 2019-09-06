@@ -39,6 +39,10 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('userLogin','UserController@userLogin'); // 用户登录 接口done
         $router->post('changePassword','UserController@changePassword'); // 修改密码 接口done
         $router->post('forgetPassword','UserController@forgetPassword'); // 找回密码 接口done
+        $router->post('facebookLogin','UserController@facebookLogin'); // facebook 授权登陆
+        $router->post('facebookBind','UserController@facebookBind'); // facebook 绑定账号
+        $router->post('googleLogin','UserController@googleLogin'); // google 授权登陆
+        $router->post('googleBind','UserController@googleBind'); // google 绑定账号
     });
     // 公共模块
     $router->group(['prefix' => 'public'], function (Router $router){

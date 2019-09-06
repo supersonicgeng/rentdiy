@@ -148,4 +148,58 @@ class UserController extends CommonController
     {
         return service('User')->addEmail($request->all());
     }
+
+
+    /**
+     * @description:facebook授权
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function facebookLogin(Request $request)
+    {
+        return service('User')->facebookLogin($request->all());
+    }
+
+    /**
+     * @description:绑定facebook
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function facebookBind(Request $request)
+    {
+        return service('User')->facebookBind($request->all());
+    }
+
+
+    /**
+     * @description:google授权
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function googleLogin(Request $request)
+    {
+        return service('User')->googleLogin($request->all());
+    }
+
+    /**
+     * @description:绑定google
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function googleBind(Request $request)
+    {
+        return service('User')->googleBind($request->all());
+    }
 }

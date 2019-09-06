@@ -3501,26 +3501,26 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 $import_page = $mpdf->importPage($i);
                 $mpdf->useTemplate($import_page);
                 if($i == 1){
-                    $mpdf->WriteText('42',35,$issues_day);
-                    $mpdf->WriteText('40','43',$due_day);
-                    $mpdf->WriteText('172','35',$gst);
-                    $mpdf->WriteText('172','43',$fee_sn);
-                    $mpdf->WriteText('29','66',$tenement_info->tenement_full_name);
-                    $mpdf->WriteText('34','73',$tenement_info->tenement_service_address);
-                    $mpdf->WriteText('30','81',$tenement_info->tenement_mobile);
-                    $mpdf->WriteText('29','88',$tenement_info->tenement_e_mail);
-                    $mpdf->WriteText('29','111',$landlord_info->landlord_full_name);
-                    $mpdf->WriteText('34','118',$landlord_info->landlord_additional_address);
-                    $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
-                    $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
+                    $mpdf->WriteText('42',35,(string)$issues_day);
+                    $mpdf->WriteText('40','43',(string)$due_day);
+                    $mpdf->WriteText('172','35',(string)$gst);
+                    $mpdf->WriteText('172','43',(string)$fee_sn);
+                    $mpdf->WriteText('29','66',(string)$tenement_info->tenement_full_name);
+                    $mpdf->WriteText('34','73',(string)$tenement_info->tenement_service_address);
+                    $mpdf->WriteText('30','81',(string)$tenement_info->tenement_mobile);
+                    $mpdf->WriteText('29','88',(string)$tenement_info->tenement_e_mail);
+                    $mpdf->WriteText('29','111',(string)$landlord_info->landlord_full_name);
+                    $mpdf->WriteText('34','118',(string)$landlord_info->landlord_additional_address);
+                    $mpdf->WriteText('30','126',(string)$landlord_info->landlord_mobile_phone);
+                    $mpdf->WriteText('29','133',(string)$landlord_info->landlord_e_mail);
                     foreach ($fee_list as $k => $v){
-                        $mpdf->WriteText(16,155+$k*10,$v->items_name);
-                        $mpdf->WriteText(42,155+$k*10,$v->describe);
-                        $mpdf->WriteText(92,155+$k*10,$v->unit_price);
+                        $mpdf->WriteText(16,155+$k*10,(string)$v->items_name);
+                        $mpdf->WriteText(42,155+$k*10,(string)$v->describe);
+                        $mpdf->WriteText(92,155+$k*10,(string)$v->unit_price);
                         $mpdf->WriteText(118,155+$k*10,(string)$v->number);
                         $mpdf->WriteText(138,155+$k*10,(string)round($v->unit_price*$v->number*$v->discount,2));
-                        $mpdf->WriteText(158,155+$k*10,$v->tex);
-                        $mpdf->WriteText(175,155+$k*10,$v->arrears_fee);
+                        $mpdf->WriteText(158,155+$k*10,(string)$v->tex);
+                        $mpdf->WriteText(175,155+$k*10,(string)$v->arrears_fee);
                         $subtotal += $v->unit_price*$v->number;
                         $discount += $v->unit_price*$v->number*$v->discount/100;
                         $gts += round(($v->unit_price*$v->number)*(100-$v->discount)/100*($v->tex)/100,2);
@@ -3528,7 +3528,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $total = $subtotal-$discount+$gts;
                     $mpdf->WriteText(175,214,(string)$subtotal);
                     $mpdf->WriteText(175,222,(string)$discount);
-                    $mpdf->WriteText(175,230,$gst);
+                    $mpdf->WriteText(175,230,(string)$gts);
                     $mpdf->WriteText(175,238,(string)$total);
                     $mpdf->WriteText(35,266,(string)$bank);
                     $mpdf->WriteText(157,266,(string)$bank_account);
@@ -3601,7 +3601,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $total = $subtotal-$discount+$gts;
                     $mpdf->WriteText(175,214,(string)$subtotal);
                     $mpdf->WriteText(175,222,(string)$discount);
-                    $mpdf->WriteText(175,230,$gst);
+                    $mpdf->WriteText(175,230,$gts);
                     $mpdf->WriteText(175,238,(string)$total);
                     $mpdf->WriteText(35,266,(string)$bank);
                     $mpdf->WriteText(157,266,(string)$bank_account);
@@ -3682,7 +3682,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $total = $subtotal-$discount+$gts;
                     $mpdf->WriteText(175,214,(string)$subtotal);
                     $mpdf->WriteText(175,222,(string)$discount);
-                    $mpdf->WriteText(175,230,(string)$gst);
+                    $mpdf->WriteText(175,230,(string)$gts);
                     $mpdf->WriteText(175,238,(string)$total);
                     /*$mpdf->WriteText(35,266,(string)$bank);*/
                     $mpdf->WriteText(157,266,(string)$providers_info->bank_account);
@@ -3692,7 +3692,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->AddPage();
                 }
                 //
-                $model->where('invoice',$invoice_sn)->increment('is_print');
+                $model->where('invoice_sn',$invoice_sn)->increment('is_print');
             }
             return $this->success('get pdf success',$mpdf->Output());
         }else{
@@ -3746,7 +3746,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $total = $subtotal-$discount+$gts;
                     $mpdf->WriteText(175,214,(string)$subtotal);
                     $mpdf->WriteText(175,222,(string)$discount);
-                    $mpdf->WriteText(175,230,(string)$gst);
+                    $mpdf->WriteText(175,230,(string)$gts);
                     $mpdf->WriteText(175,238,(string)$total);
                     /*$mpdf->WriteText(35,266,(string)$bank);*/
                     $mpdf->WriteText(157,266,(string)$providers_info->bank_account);
@@ -3756,8 +3756,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 if($i < $pagecount){
                     $mpdf->AddPage();
                 }
-                //
-                $model->where('invoice',$invoice_sn)->increment('is_print');
+
             }
             return $this->success('get pdf success',$mpdf->Output());
         }

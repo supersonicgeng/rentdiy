@@ -65,6 +65,8 @@ class UserService extends CommonService
         $nickname = $input['nickname'];
         $jobs = $input['jobs'];
         $jobs = implode(',',$jobs);
+        $google_id = $input['google_id'];
+        $facebook_id = $input['facebook_id'];
         // 确认密码和密码一致性
         if($password != $r_password){
             return $this->error('2','the confirm_password is not match password ,pls try again');
@@ -94,6 +96,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -103,6 +107,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -114,6 +120,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -123,6 +131,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -133,6 +143,8 @@ class UserService extends CommonService
                     'user_role'     => 4,
                     'nickname'      => $nickname,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -141,6 +153,8 @@ class UserService extends CommonService
                     'user_role'     => 4,
                     'nickname'      => $nickname,
                     'password'      => md5($password),
+                    'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -558,4 +572,345 @@ class UserService extends CommonService
         $user_info->save();
         return $this->success('add e_mail success');
     }
+
+    /**
+     * @description:facebook授权登陆
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function facebookLogin(array $input)
+    {
+        $fb = new \Facebook\Facebook([
+            'app_id' => env('FACEBOOK_CLIENT_ID'),
+            'app_secret' => env('FACEBOOK_CLIENT_SECRET'),
+            'default_graph_version' => 'v3.2',
+            //'default_access_token' => '{access-token}', // optional
+        ]);
+        $token = $input['token'];
+// Use one of the helper classes to get a Facebook\Authentication\AccessToken entity.
+//   $helper = $fb->getRedirectLoginHelper();
+//   $helper = $fb->getJavaScriptHelper();
+//   $helper = $fb->getCanvasHelper();
+//   $helper = $fb->getPageTabHelper();
+
+        try {
+            // Get the \Facebook\GraphNodes\GraphUser object for the current user.
+            // If you provided a 'default_access_token', the '{access-token}' is optional.
+            $response = $fb->get('/me', $token);
+        } catch(\Facebook\Exceptions\FacebookResponseException $e) {
+            // When Graph returns an error
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(\Facebook\Exceptions\FacebookSDKException $e) {
+            // When validation fails or other local issues
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+
+        $res = $response->getBody();
+        $res = json_decode($res,true);
+        $facebook_id = $res['id'];
+        $res = \App\Model\User::where('facebook_id',$facebook_id)->first();
+        if($res){ // 查找有这个facebookid
+            $token = md5($res->id.time().mt_rand(100,999));
+            $res->login_token = $token; //生成token
+            $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+            $res->update();
+            $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+            $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+            $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+            if(!$res1){
+                $res['landlord_info'] = [
+                    'landlord_id'   => '',
+                    'landlord_name' => '',
+                ];
+            }else{
+                $res['landlord_info'] = $res1;
+            }
+            if(!$res2){
+                $res['tenement_info'] = [
+                    'tenement_id'   => '',
+                ];
+            }else{
+                $res['tenement_info'] = $res2;
+            }
+            if(!$res3){
+                $res['providers_info'] = [
+                    'providers_id'   => '',
+                    'providers_name' => '',
+                ];
+            }else{
+                $res['providers_info'] = $res3;
+            }
+            $res = $res->toArray();
+            return $this->success('login OK',$res);
+        }else{
+            return $this->error('2','this account not have a rent-diy account pls bind on Account',$facebook_id);
+        }
+
+    }
+
+
+    /**
+     * @description:facebook授权登陆
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function facebookBind(array $input)
+    {
+        $facebook_id = $input['facebook_id'];
+        $account = $input['account'];
+        $password = $input['password'];
+// 验证账号
+        $model = new \App\Model\User();
+        if(strpos($account,'@') ) { // 邮箱登陆
+            $res = $model->where('e_mail',$account)->first();
+            if(!$res){
+                return $this->error('2','this email is not register');
+            }elseif ($res->password != md5($password)){
+                return $this->error('3','the password is wrong');
+            }else{
+                $token = md5($res->id.time().mt_rand(100,999));
+                $res->login_token = $token; //生成token
+                $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+                $res->facebook_id = $facebook_id;
+                $res->update();
+                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                if(!$res1){
+                    $res['landlord_info'] = [
+                        'landlord_id'   => '',
+                        'landlord_name' => '',
+                    ];
+                }else{
+                    $res['landlord_info'] = $res1;
+                }
+                if(!$res2){
+                    $res['tenement_info'] = [
+                        'tenement_id'   => '',
+                    ];
+                }else{
+                    $res['tenement_info'] = $res2;
+                }
+                if(!$res3){
+                    $res['providers_info'] = [
+                        'providers_id'   => '',
+                        'providers_name' => '',
+                    ];
+                }else{
+                    $res['providers_info'] = $res3;
+                }
+                $res = $res->toArray();
+                return $this->success('login OK',$res);
+            }
+        }else{
+            $res = $model->where('phone',$account)->first();
+            if(!$res){
+                return $this->error('4','this phone is not register');
+            }elseif ($res->password != md5($password)){
+                return $this->error('3','the password is wrong');
+            }else{
+                $token = md5($res->id.time().mt_rand(100,999));
+                $res->login_token = $token; // 生成token
+                $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+                $res->facebook_id = $facebook_id;
+                $res->update();
+                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                if(!$res1){
+                    $res['landlord_info'] = [
+                        'landlord_id'   => '',
+                        'landlord_name' => '',
+                    ];
+                }else{
+                    $res['landlord_info'] = $res1;
+                }
+                if(!$res2){
+                    $res['tenement_info'] = [
+                        'tenement_id'   => '',
+                    ];
+                }else{
+                    $res['tenement_info'] = $res2;
+                }
+                if(!$res3){
+                    $res['providers_info'] = [
+                        'providers_id'   => '',
+                        'providers_name' => '',
+                    ];
+                }else{
+                    $res['providers_info'] = $res3;
+                }
+                $res = $res->toArray();
+                return $this->success('login OK',$res);
+            }
+        }
+    }
+
+
+    /**
+     * @description:facebook授权登陆
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function googleLogin(array $input)
+    {
+        $client = new \Google_Client(['client_id' => '288789996790-8j11as1hninv897nor26l6aulu6v1chr.apps.googleusercontent.com']);
+        $token = $input['token'];
+        $payload = $client->verifyIdToken($token);
+
+        $google_id = $payload['sub'];
+        $res = \App\Model\User::where('google_id',$google_id)->first();
+        if($res){ // 查找有这个facebookid
+            $token = md5($res->id.time().mt_rand(100,999));
+            $res->login_token = $token; //生成token
+            $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+            $res->update();
+            $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+            $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+            $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+            if(!$res1){
+                $res['landlord_info'] = [
+                    'landlord_id'   => '',
+                    'landlord_name' => '',
+                ];
+            }else{
+                $res['landlord_info'] = $res1;
+            }
+            if(!$res2){
+                $res['tenement_info'] = [
+                    'tenement_id'   => '',
+                ];
+            }else{
+                $res['tenement_info'] = $res2;
+            }
+            if(!$res3){
+                $res['providers_info'] = [
+                    'providers_id'   => '',
+                    'providers_name' => '',
+                ];
+            }else{
+                $res['providers_info'] = $res3;
+            }
+            $res = $res->toArray();
+            return $this->success('login OK',$res);
+        }else{
+            return $this->error('2','this account not have a rent-diy account pls bind on Account',$google_id);
+        }
+
+    }
+
+
+    /**
+     * @description:facebook授权登陆
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function googleBind(array $input)
+    {
+        $google_id = $input['google_id'];
+        $account = $input['account'];
+        $password = $input['password'];
+// 验证账号
+        $model = new \App\Model\User();
+        if(strpos($account,'@') ) { // 邮箱登陆
+            $res = $model->where('e_mail',$account)->first();
+            if(!$res){
+                return $this->error('2','this email is not register');
+            }elseif ($res->password != md5($password)){
+                return $this->error('3','the password is wrong');
+            }else{
+                $token = md5($res->id.time().mt_rand(100,999));
+                $res->login_token = $token; //生成token
+                $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+                $res->google_id = $google_id;
+                $res->update();
+                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                if(!$res1){
+                    $res['landlord_info'] = [
+                        'landlord_id'   => '',
+                        'landlord_name' => '',
+                    ];
+                }else{
+                    $res['landlord_info'] = $res1;
+                }
+                if(!$res2){
+                    $res['tenement_info'] = [
+                        'tenement_id'   => '',
+                    ];
+                }else{
+                    $res['tenement_info'] = $res2;
+                }
+                if(!$res3){
+                    $res['providers_info'] = [
+                        'providers_id'   => '',
+                        'providers_name' => '',
+                    ];
+                }else{
+                    $res['providers_info'] = $res3;
+                }
+                $res = $res->toArray();
+                return $this->success('login OK',$res);
+            }
+        }else{
+            $res = $model->where('phone',$account)->first();
+            if(!$res){
+                return $this->error('4','this phone is not register');
+            }elseif ($res->password != md5($password)){
+                return $this->error('3','the password is wrong');
+            }else{
+                $token = md5($res->id.time().mt_rand(100,999));
+                $res->login_token = $token; // 生成token
+                $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
+                $res->google_id = $google_id;
+                $res->update();
+                $res1 = Landlord::where('user_id',$res->id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+                $res2 = Tenement::where('user_id',$res->id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+                $res3 = Providers::where('user_id',$res->id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+                if(!$res1){
+                    $res['landlord_info'] = [
+                        'landlord_id'   => '',
+                        'landlord_name' => '',
+                    ];
+                }else{
+                    $res['landlord_info'] = $res1;
+                }
+                if(!$res2){
+                    $res['tenement_info'] = [
+                        'tenement_id'   => '',
+                    ];
+                }else{
+                    $res['tenement_info'] = $res2;
+                }
+                if(!$res3){
+                    $res['providers_info'] = [
+                        'providers_id'   => '',
+                        'providers_name' => '',
+                    ];
+                }else{
+                    $res['providers_info'] = $res3;
+                }
+                $res = $res->toArray();
+                return $this->success('login OK',$res);
+            }
+        }
+    }
+
+
+
 }
