@@ -693,7 +693,7 @@ class FeeController extends Controller
     }
 
     /**
-     * @description:费用单删除
+     * @description:费用单打印
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -703,5 +703,19 @@ class FeeController extends Controller
     public function feePrint(Request $request)
     {
         return service('Fee')->feePrint($request->all());
+    }
+
+
+    /**
+     * @description:发票打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function invoicePrint(Request $request)
+    {
+        return service('Fee')->invoicePrint($request->all());
     }
 }

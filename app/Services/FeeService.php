@@ -3628,32 +3628,23 @@ The above work has been completed, you can issue an invoice to the landlord..",
      */
     public function invoicePrint(array $input)
     {
-        $model = new RentArrears();
-        $fee_sn = $input['fee_sn'];
-        $is_print = $model->where('fee_sn',$fee_sn)->pluck('is_print')->first();
+        $model = new OrderArrears();
+        $invoice_sn = $input['invoice_sn'];
+        $is_print = $model->where('invoice_sn',$invoice_sn)->pluck('is_print')->first();
         if(!$is_print){
-            $contract_id = $model->where('fee_sn',$fee_sn)->pluck('contract_id')->first();
-            $landlord_id = RentContract::where('id',$contract_id)->pluck('landlord_id')->first();
+            $order_id = $model->where('invoice_sn',$invoice_sn)->pluck('order_id')->first();
+            $providers_id = LandlordOrder::where('id',$order_id)->pluck('providers_id')->first();
+            $providers_info = Providers::where('id',$providers_id)->first();
             $issues_day = date('Y-m-d');
-            $due_day = $model->where('fee_sn',$fee_sn)->pluck('expire_date')->first();
-            $gst = Landlord::where('id',$landlord_id)->pluck('tax_no')->first();
-            $tenement_info = ContractTenement::where('contract_id',$contract_id)->first();
-            $landlord_info = RentContract::where('id',$contract_id)->first();
-            $fee_list = $model->where('fee_sn',$fee_sn)->get();
+            $due_day = $model->where('invoice_sn',$invoice_sn)->pluck('invoice_due_date')->first();
+            $gst = Providers::where('id',$providers_id)->pluck('tax_no')->first();
+            $landlord_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
+            $landlord_info = Landlord::where('user_id',$landlord_id)->first();
+            $fee_list = $model->where('invoice_sn',$invoice_sn)->get();
             $subtotal = 0;
             $discount = 0;
             $gts = 0;
-            $contract_type = RentContract::where('id',$contract_id)->pluck('contract_type')->first();
-            if($contract_type == 1){
-                $bank = EntireContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = EntireContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }elseif ($contract_type == 2 || $contract_type == 3){
-                $bank = SeparateContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = SeparateContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }else{
-                $bank = BusinessContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = BusinessContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }
+
             // PDF
             $ip = "{$_SERVER['SERVER_NAME']}";
             $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
@@ -3667,15 +3658,15 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText('42',35,$issues_day);
                     $mpdf->WriteText('40','43',$due_day);
                     $mpdf->WriteText('172','35',$gst);
-                    $mpdf->WriteText('172','43',$fee_sn);
-                    $mpdf->WriteText('29','66',$tenement_info->tenement_full_name);
-                    $mpdf->WriteText('34','73',$tenement_info->tenement_service_address);
-                    $mpdf->WriteText('30','81',$tenement_info->tenement_mobile);
-                    $mpdf->WriteText('29','88',$tenement_info->tenement_e_mail);
-                    $mpdf->WriteText('29','111',$landlord_info->landlord_full_name);
-                    $mpdf->WriteText('34','118',$landlord_info->landlord_additional_address);
-                    $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
-                    $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
+                    $mpdf->WriteText('172','43',$invoice_sn);
+                    $mpdf->WriteText('29','66',$landlord_info->landlord_name);
+                    $mpdf->WriteText('34','73',$landlord_info->property_address);
+                    $mpdf->WriteText('30','81',$landlord_info->tenement_mobile);
+                    $mpdf->WriteText('29','88',$landlord_info->email);
+                    $mpdf->WriteText('29','111',$providers_info->service_name);
+                    $mpdf->WriteText('34','118',$providers_info->mail_address);
+                    $mpdf->WriteText('30','126',$providers_info->mobile);
+                    $mpdf->WriteText('29','133',$providers_info->email);
                     foreach ($fee_list as $k => $v){
                         $mpdf->WriteText(16,155+$k*10,$v->items_name);
                         $mpdf->WriteText(42,155+$k*10,$v->describe);
@@ -3693,40 +3684,31 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText(175,222,(string)$discount);
                     $mpdf->WriteText(175,230,$gst);
                     $mpdf->WriteText(175,238,(string)$total);
-                    $mpdf->WriteText(35,266,(string)$bank);
-                    $mpdf->WriteText(157,266,(string)$bank_account);
+                    /*$mpdf->WriteText(35,266,(string)$bank);*/
+                    $mpdf->WriteText(157,266,(string)$providers_info->bank_account);
 
                 }
                 if($i < $pagecount){
                     $mpdf->AddPage();
                 }
                 //
-                $model->where('fee_sn',$fee_sn)->increment('is_print');
+                $model->where('invoice',$invoice_sn)->increment('is_print');
             }
             return $this->success('get pdf success',$mpdf->Output());
         }else{
-            $contract_id = $model->where('fee_sn',$fee_sn)->pluck('contract_id')->first();
-            $landlord_id = RentContract::where('id',$contract_id)->pluck('landlord_id')->first();
+            $order_id = $model->where('invoice_sn',$invoice_sn)->pluck('order_id')->first();
+            $providers_id = LandlordOrder::where('id',$order_id)->pluck('providers_id')->first();
+            $providers_info = Providers::where('id',$providers_id)->first();
             $issues_day = date('Y-m-d');
-            $due_day = $model->where('fee_sn',$fee_sn)->pluck('expire_date')->first();
-            $gst = Landlord::where('id',$landlord_id)->pluck('tax_no')->first();
-            $tenement_info = ContractTenement::where('contract_id',$contract_id)->first();
-            $landlord_info = RentContract::where('id',$contract_id)->first();
-            $fee_list = $model->where('fee_sn',$fee_sn)->get();
+            $due_day = $model->where('invoice_sn',$invoice_sn)->pluck('invoice_due_date')->first();
+            $gst = Providers::where('id',$providers_id)->pluck('tax_no')->first();
+            $landlord_id = LandlordOrder::where('id',$order_id)->pluck('user_id')->first();
+            $landlord_info = Landlord::where('user_id',$landlord_id)->first();
+            $fee_list = $model->where('invoice_sn',$invoice_sn)->get();
             $subtotal = 0;
             $discount = 0;
             $gts = 0;
-            $contract_type = RentContract::where('id',$contract_id)->pluck('contract_type')->first();
-            if($contract_type == 1){
-                $bank = EntireContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = EntireContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }elseif ($contract_type == 2 || $contract_type == 3){
-                $bank = SeparateContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = SeparateContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }else{
-                $bank = BusinessContract::where('contract_id',$contract_id)->pluck('bank')->first().EntireContract::where('contract_id',$contract_id)->pluck('branch')->first();
-                $bank_account = BusinessContract::where('contract_id',$contract_id)->pluck('bank_account')->first();
-            }
+
             // PDF
             $ip = "{$_SERVER['SERVER_NAME']}";
             $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
@@ -3740,15 +3722,15 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText('42',35,$issues_day);
                     $mpdf->WriteText('40','43',$due_day);
                     $mpdf->WriteText('172','35',$gst);
-                    $mpdf->WriteText('172','43',$fee_sn);
-                    $mpdf->WriteText('29','66',$tenement_info->tenement_full_name);
-                    $mpdf->WriteText('34','73',$tenement_info->tenement_service_address);
-                    $mpdf->WriteText('30','81',$tenement_info->tenement_mobile);
-                    $mpdf->WriteText('29','88',$tenement_info->tenement_e_mail);
-                    $mpdf->WriteText('29','111',$landlord_info->landlord_full_name);
-                    $mpdf->WriteText('34','118',$landlord_info->landlord_additional_address);
-                    $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
-                    $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
+                    $mpdf->WriteText('172','43',$invoice_sn);
+                    $mpdf->WriteText('29','66',$landlord_info->landlord_name);
+                    $mpdf->WriteText('34','73',$landlord_info->property_address);
+                    $mpdf->WriteText('30','81',$landlord_info->tenement_mobile);
+                    $mpdf->WriteText('29','88',$landlord_info->email);
+                    $mpdf->WriteText('29','111',$providers_info->service_name);
+                    $mpdf->WriteText('34','118',$providers_info->mail_address);
+                    $mpdf->WriteText('30','126',$providers_info->mobile);
+                    $mpdf->WriteText('29','133',$providers_info->email);
                     foreach ($fee_list as $k => $v){
                         $mpdf->WriteText(16,155+$k*10,$v->items_name);
                         $mpdf->WriteText(42,155+$k*10,$v->describe);
@@ -3766,8 +3748,8 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText(175,222,(string)$discount);
                     $mpdf->WriteText(175,230,$gst);
                     $mpdf->WriteText(175,238,(string)$total);
-                    $mpdf->WriteText(35,266,(string)$bank);
-                    $mpdf->WriteText(157,266,(string)$bank_account);
+                    /*$mpdf->WriteText(35,266,(string)$bank);*/
+                    $mpdf->WriteText(157,266,(string)$providers_info->bank_account);
                     $mpdf->SetWatermarkImage("http://".$ip."/pdf/watermark.png",0.8);//参数一是图片的位置，参数二是透明度
                     $mpdf->showWatermarkImage = true;
                 }
@@ -3775,6 +3757,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->AddPage();
                 }
                 //
+                $model->where('invoice',$invoice_sn)->increment('is_print');
             }
             return $this->success('get pdf success',$mpdf->Output());
         }

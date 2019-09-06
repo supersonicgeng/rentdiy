@@ -68,6 +68,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
         $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送系统消息 4.10
     });
     $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
+    $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
 });
 
 
