@@ -59,7 +59,8 @@ class TestController extends Controller
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
         }
-
-        dd($response->getBody());
+        $res = $response->getBody();
+        $res = json_decode($res,true);
+        dd($res);
     }
 }
