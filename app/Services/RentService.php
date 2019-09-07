@@ -2455,4 +2455,46 @@ The bond can only refund if you satisfied with above or agree the amount with th
         $data['arrears_date'] = $arrears_date;
         return $this->success('get contract info success',$data);
     }
+
+    /**
+     * @description:租约打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function contractPrint(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $model = new RentContract();
+        $contract_type = $model->where('id',$contract_id)->pluck('contract_type')->first();
+        if($contract_type == 1){
+
+        }elseif ($contract_type == 2 || $contract_type == 3){
+
+        }else{
+            
+        }
+        // PDF
+        $ip = "{$_SERVER['SERVER_NAME']}";
+        $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
+        $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+        $mpdf = new Mpdf();
+        $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+        for($i=1; $i<=$pagecount;$i++){
+            $import_page = $mpdf->importPage($i);
+            $mpdf->useTemplate($import_page);
+            if($i == 1){
+
+
+            }
+            if($i < $pagecount){
+                $mpdf->AddPage();
+            }
+            //
+
+        }
+        return $this->success('get pdf success',$mpdf->Output());
+    }
 }
