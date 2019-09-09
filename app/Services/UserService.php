@@ -770,6 +770,7 @@ class UserService extends CommonService
         $payload = $client->verifyIdToken($token);
 
         $google_id = $payload['sub'];
+        dd($google_id);
         $res = \App\Model\User::where('google_id',$google_id)->first();
         if($res){ // 查找有这个facebookid
             $token = md5($res->id.time().mt_rand(100,999));
