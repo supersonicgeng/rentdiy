@@ -202,4 +202,18 @@ class UserController extends CommonController
     {
         return service('User')->googleBind($request->all());
     }
+
+
+    /**
+     * @description:查看账户余额
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkBalance(Request $request)
+    {
+        return service('User')->checkBalance($request->all());
+    }
 }

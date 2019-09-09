@@ -756,7 +756,7 @@ class UserService extends CommonService
 
 
     /**
-     * @description:facebook授权登陆
+     * @description:google授权登陆
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -812,7 +812,7 @@ class UserService extends CommonService
 
 
     /**
-     * @description:facebook授权登陆
+     * @description:google授权登陆
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -912,5 +912,27 @@ class UserService extends CommonService
     }
 
 
+
+    /**
+     * @description:查看账户余额
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkBalance(array $input)
+    {
+        $user_id = $input['user_id'];
+        $user_info = \App\Model\User::where('id',$user_id)->first();
+        $balance = $user_info->balance+$user_info->free_balance;
+        $least_balance = DB::table('sys_config')->where('code','LB')->pluck('value')->first();
+        if($balance < $least_balance){
+            return $this->error('2','the balance ');
+        }else{
+            return $this->success('balance enough');
+        }
+
+    }
 
 }
