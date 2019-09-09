@@ -174,7 +174,7 @@ class KeyService extends CommonService
             $task_data = [
                 'user_id'           => $input['user_id'],
                 'task_type'         => 17,
-                'task_start_time'   => date('Y-m-d H:i:s',$input['borrow_end_date']),
+                'task_start_time'   => date('Y-m-d H:i:s',strtotime($input['borrow_end_date'])),
                 'task_status'       => 0,
                 'task_title'        => 'residential relet',
                 'task_content'      => "KEY MANAGEMENT
