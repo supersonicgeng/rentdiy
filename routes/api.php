@@ -400,6 +400,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     $router->group(['prefix' => 'litigation'], function (Router $router) {
         $router->post('addLitigation', 'LitigationController@addLitigation'); // 添加诉讼 4.10
     });
+    // 诉讼管理
+    $router->group(['prefix' => 'charge'], function (Router $router) {
+        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
+    });
 });
 
 
