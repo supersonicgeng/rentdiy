@@ -1299,4 +1299,77 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         }
 
     }
+
+
+    /**
+     * @description:完成任务
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function finishTask(array $input)
+    {
+        //dd($input);
+        $task_id = $input['task_id'];
+        $model = new Task();
+        $res = $model->where('id',$task_id)->update(['task_status' => 1,'updated_at'=>date('Y-h-d H:i:s',time())]);
+        if($res){
+            return $this->success('finish task success');
+        }else{
+            return $this->error('2','finish task failed');
+        }
+
+    }
+
+
+
+    /**
+     * @description:修改任务时间
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function extensionTask(array $input)
+    {
+        //dd($input);
+        $task_id = $input['task_id'];
+        $task_start_time = $input['task_start_time'];
+        $model = new Task();
+        $res = $model->where('id',$task_id)->update(['task_start_time' => $task_start_time,'updated_at'=>date('Y-h-d H:i:s',time())]);
+        if($res){
+            return $this->success('extension task success');
+        }else{
+            return $this->error('2','extension task failed');
+        }
+
+    }
+
+
+
+    /**
+     * @description:未完成任务
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unsolveTask(array $input)
+    {
+        //dd($input);
+        $task_id = $input['task_id'];
+        $model = new Task();
+        $res = $model->where('id',$task_id)->update(['task_status' => 2,'updated_at'=>date('Y-h-d H:i:s',time())]);
+        if($res){
+            return $this->success('unsolve  task success');
+        }else{
+            return $this->error('2','unsolve task failed');
+        }
+
+    }
+
 }

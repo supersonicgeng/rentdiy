@@ -363,4 +363,46 @@ class TaskController extends Controller
     {
         return service('Task')->newTaskHourDetail($request->all());
     }
+
+    /**
+     * @description:完成任务
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function finishTask(Request $request)
+    {
+        return service('Task')->finishTask($request->all());
+    }
+
+
+    /**
+     * @description:修改任务时间
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function extensionTask(Request $request)
+    {
+        return service('Task')->extensionTask($request->all());
+    }
+
+
+
+    /**
+     * @description:未完成任务
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unsolveTask(Request $request)
+    {
+        return service('Task')->unsolveTask($request->all());
+    }
 }
