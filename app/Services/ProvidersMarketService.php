@@ -237,7 +237,7 @@ class ProvidersMarketService extends CommonService
             'task_type'         => 12,
             'task_start_time'   => date('Y-m-d H:i:s',time()),
             'task_status'       => 0,
-            'task_title'        => 'new rent application',
+            'task_title'        => 'NEW TENDER',
             'task_content'      => "NEW TENDER
 Property:$property_address
 Tradesman: $providers_name
@@ -340,7 +340,7 @@ You just receive a new tender from service market; please go to view the details
                 'task_type'         => 12,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'new rent application',
+                'task_title'        => 'NEW TENDER',
                 'task_content'      => "NEW TENDER
 Property:$property_address
 Tradesman: $providers_name

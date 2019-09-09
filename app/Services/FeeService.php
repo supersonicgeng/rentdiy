@@ -2096,7 +2096,7 @@ class FeeService extends CommonService
                 'task_type'         => 23,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'INVOICE',
                 'task_content'      => "INVOICE
 Property:$property_address
 Landlord: $landlord_name

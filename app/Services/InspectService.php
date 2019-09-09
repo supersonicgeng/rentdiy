@@ -82,7 +82,7 @@ class InspectService extends CommonService
                         'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                         'task_status'       => 0,
-                        'task_title'        => 'new inspect',
+                        'task_title'        => 'PROPERTY INSPECTION REMINDER',
                         'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -106,7 +106,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                         'task_status'       => 0,
-                        'task_title'        => 'new inspect',
+                        'task_title'        => 'PROPERTY INSPECTION REMINDER',
                         'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -209,7 +209,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                         'task_status'       => 0,
-                        'task_title'        => 'new inspect',
+                        'task_title'        => 'PROPERTY INSPECTION REMINDER',
                         'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -233,7 +233,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         'task_type'         => 7,
                         'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                         'task_status'       => 0,
-                        'task_title'        => 'new inspect',
+                        'task_title'        => 'PROPERTY INSPECTION REMINDER',
                         'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -339,7 +339,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                             'task_type'         => 7,
                             'task_start_time'   => date('Y-m-d H:i:s',time()+3600*48),
                             'task_status'       => 0,
-                            'task_title'        => 'new inspect',
+                            'task_title'        => 'PROPERTY INSPECTION REMINDER',
                             'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -363,7 +363,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
                             'task_type'         => 7,
                             'task_start_time'   => date('Y-m-d H:i:s',time()+3600*24),
                             'task_status'       => 0,
-                            'task_title'        => 'new inspect',
+                            'task_title'        => 'PROPERTY INSPECTION REMINDER',
                             'task_content'      => "PROPERTY INSPECTION REMINDER
 Property: $property_address
 Tenant name: $tenement_full_name

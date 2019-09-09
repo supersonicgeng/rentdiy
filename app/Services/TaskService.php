@@ -57,7 +57,7 @@ class TaskService extends CommonService
                 'task_type'         => 2,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'insurance update',
+                'task_title'        => 'INSURANCE',
                 'task_content'      => 'INSURANCE
 Your property insurance will be expired after 90 days. Please be prepared if you need to renew or obtain a quotation from a new insurance company.',
                 'rent_house_id'     => $value['id'],
@@ -86,7 +86,7 @@ Your property insurance will be expired after 90 days. Please be prepared if you
                 'task_type'         => 4,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'ENDING / RENEW FIXED TERM TENANCY',
                 'task_content'      => "ENDING / RENEW FIXED TERM TENANCY
 Property: $property_name $room_name $property_address
 Tenant name: $tenement_full_name
@@ -114,7 +114,7 @@ If neither party gives notice the tenancy will automatically become a periodic t
                 'task_type'         => 5,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'ENDING / RENEW COMMERCIAL PROPERTY LEASE',
                 'task_content'      => "ENDING / RENEW COMMERCIAL PROPERTY LEASE
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -139,7 +139,7 @@ Please negotiate with tenant to renew this lease or to issue a notice to end the
                 'task_type'         => 21,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'ENDING / RENEW TENANCY',
                 'task_content'      => "ENDING / RENEW TENANCY
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -172,7 +172,7 @@ Please negotiate with tenant to renew this tenancy.",
                 'task_type'         => 6,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'RENT INCREASES',
                 'task_content'      => "RENT INCREASES
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -198,7 +198,7 @@ You have an option to increase the rent if you like to reflect the market rent c
                 'task_type'         => 6,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'RENT INCREASES',
                 'task_content'      => "RENT INCREASES
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -231,7 +231,7 @@ You have an option to increase the rent if you like to reflect the market rent c
                 'task_type'         => 14,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'BOND ARREARS',
                 'task_content'      => "BOND ARREARS
 Property: $room_name $property_address
 Tenant name: $tenement_name
@@ -268,7 +268,7 @@ The tenant did not pay the bond or not pay in full. Please take any necessary ac
                 'task_type'         => 16,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'rent suspend inform',
+                'task_title'        => 'BOND LODGEMENT',
                 'task_content'      => "BOND LODGEMENT
 Property: $room_name $property_address
 Tenant name: $tenement_full_name
@@ -327,7 +327,7 @@ You received a bond from above tenancy. You are required to lodge a bond with Te
                 'task_type'         => 18,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'ARREARS',
                 'task_content'      => "ARREARS
 Property: $room_name $property_address
 Tenant name: $tenement_name
@@ -367,7 +367,7 @@ Please take any necessary action immediately.",
                 'task_type'         => 24,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'OVER DUE PAYMENT',
                 'task_content'      => "OVER DUE PAYMENT
 Property:$property_address
 Landlord: 房东名字

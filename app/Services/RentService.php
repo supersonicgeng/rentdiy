@@ -107,7 +107,7 @@ class RentService extends CommonService
                     'task_type'         => 1,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
-                    'task_title'        => 'new rent application',
+                    'task_title'        => 'RENTAL APPLICATION',
                     'task_content'      => "RENTAL APPLICATION
 Property: $property_name $room_name
 Applicant name: $tenement_name
@@ -2127,7 +2127,7 @@ You have received a new tenancy application from above, please deal with it in t
                 'task_type'         => 3,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'insurance update',
+                'task_title'        => 'NEW PROPERTY INSPECTION',
                 'task_content'      => "NEW PROPERTY INSPECTION
 Property: $property_name $room_name $property_address
 Tenant name: $tenement_full_name
@@ -2263,7 +2263,7 @@ Your property required the first inspection for the tenancy record. Please to cr
                     'task_type'         => 10,
                     'task_start_time'   => $task_start_time,
                     'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
+                    'task_title'        => 'ENDING TENANCY – 90 DAYS NOTICE',
                     'task_content'      => "ENDING TENANCY – 90 DAYS NOTICE
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -2279,7 +2279,7 @@ Your tenancy at above property is end today. You will need to arrange the final 
                     'task_type'         => 8,
                     'task_start_time'   => $task_start_time,
                     'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
+                    'task_title'        => 'ENDING TENANCY – 28 DAYS NOTICE',
                     'task_content'      => "ENDING TENANCY – 28 DAYS NOTICE
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -2295,7 +2295,7 @@ Your tenancy at above property is end today. You will need to arrange the final 
                     'task_type'         => 9,
                     'task_start_time'   => $task_start_time,
                     'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
+                    'task_title'        => 'ENDING TENANCY – 48 HOURS NOTICE',
                     'task_content'      => "ENDING TENANCY – 48 HOURS NOTICE
 Property: $property_address
 Tenant name: $tenement_full_name
@@ -2344,7 +2344,7 @@ Your tenancy at above property is end today. You will need to arrange the final 
                     'task_type'         => 15,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
+                    'task_title'        => 'BOND REFUND',
                     'task_content'      => "BOND REFUND
 Property: $room_name  $property_address
 Tenant name: $tenement_full_name
@@ -2360,7 +2360,7 @@ Before the bond refund, a final inspection needs to be done at above property ad
                     'task_type'         => 20,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
-                    'task_title'        => 'rent suspend inform',
+                    'task_title'        => 'FINAL INSPECTION',
                     'task_content'      => "FINAL INSPECTION
 Property: $room_name $property_address
 Tenant name: $tenement_full_name
@@ -2474,7 +2474,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
         }elseif ($contract_type == 2 || $contract_type == 3){
 
         }else{
-            
+
         }
         // PDF
         $ip = "{$_SERVER['SERVER_NAME']}";

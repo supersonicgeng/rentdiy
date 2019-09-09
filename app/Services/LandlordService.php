@@ -359,7 +359,7 @@ class LandlordService extends CommonService
                 'task_type'         => 22,
                 'task_start_time'   => date('Y-m-d H:i:s',time()),
                 'task_status'       => 0,
-                'task_title'        => 'residential relet',
+                'task_title'        => 'TENDER ACCEPTED',
                 'task_content'      => "TENDER ACCEPTED
 Property:$property_address
 Landlord: $landlord_name

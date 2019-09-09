@@ -44,6 +44,7 @@ use App\Model\ScoreLog;
 use App\Model\ServiceIntroduce;
 use App\Model\SignLog;
 use App\Model\SysSign;
+use App\Model\Task;
 use App\Model\Tenement;
 use App\Model\UserEvaluate;
 use App\Model\UserEvaluateTag;
@@ -850,7 +851,7 @@ class ProvidersService extends CommonService
                     'task_type'         => 13,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
-                    'task_title'        => 'residential relet',
+                    'task_title'        => 'TENDER WORK',
                     'task_content'      => "TENDER WORK
 Property:房屋地址
 Tradesman: 供应商名称
@@ -860,6 +861,7 @@ Your tender work has been completed by the above tradesman, please go to view th
                     'task_role'         => 2,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
+                Task::insert($task_data);
                 return $this->success('tenement review success');
             }else{
                 return $this->error('3','tenement review failed');
@@ -912,7 +914,7 @@ Your tender work has been completed by the above tradesman, please go to view th
                     'task_type'         => 13,
                     'task_start_time'   => date('Y-m-d H:i:s',time()),
                     'task_status'       => 0,
-                    'task_title'        => 'residential relet',
+                    'task_title'        => 'TENDER WORK',
                     'task_content'      => "TENDER WORK
 Property:房屋地址
 Tradesman: 供应商名称
@@ -922,6 +924,7 @@ Your tender work has been completed by the above tradesman, please go to view th
                     'task_role'         => 2,
                     'created_at'        => date('Y-m-d H:i:s',time()),
                 ];
+                Task::insert($task_data);
                 return $this->success('look house success');
             }else{
                 return $this->error('3','look house failed');
