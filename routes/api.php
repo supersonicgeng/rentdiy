@@ -89,7 +89,6 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('addPhone','UserController@addPhone'); // 增加手机 4.17 //接口done
         $router->post('addEmail','UserController@addEmail'); // 增加邮箱 4.17  // 接口done
         $router->post('checkBalance','UserController@checkBalance'); // 检查余额
-        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
     });
     //房屋主档系统
     $router->group(['prefix' => 'house'], function (Router $router) {
