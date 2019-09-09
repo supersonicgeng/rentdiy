@@ -765,12 +765,11 @@ class UserService extends CommonService
      */
     public function googleLogin(array $input)
     {
-        $client = new \Google_Client(['client_id' => '288789996790-8j11as1hninv897nor26l6aulu6v1chr.apps.googleusercontent.com']);
+        $client = new \Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
         $token = $input['token'];
         $payload = $client->verifyIdToken($token);
 
         $google_id = $payload['sub'];
-        dd($payload);
         $res = \App\Model\User::where('google_id',$google_id)->first();
         if($res){ // 查找有这个facebookid
             $token = md5($res->id.time().mt_rand(100,999));
