@@ -409,7 +409,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             for($i=0;$i<$days;$i++){
                 $data[date('Y-m-d',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i)] =
                     Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i),
-                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
             }
             return $this->success('get task list success',$data);
 
@@ -440,7 +440,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             for($i=0;$i<7;$i++){
                 $data[date('Y-m-d',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i)] =
                     Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*$i),
-                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+                        date('Y-m-d H:i:s',strtotime("$sdefaultDate -" . $w . ' days')+3600*24*($i+1)-1)])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
             }
             return $this->success('get task list success',$data);
 
@@ -469,49 +469,49 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             $application_task_type = [1];
             $new_type = [25];
             $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->where('task_status',0)->first();
             if($note_res){
                 $data['note_res'] = 1;
             }else{
                 $data['note_res'] = 2;
             }
             $inspect_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->where('task_status',0)->first();
             if($inspect_res){
                 $data['inspect_res'] = 1;
             }else{
                 $data['inspect_res'] = 2;
             }
             $bond_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->where('task_status',0)->first();
             if($bond_res){
                 $data['bond_res'] = 1;
             }else{
                 $data['bond_res'] = 2;
             }
             $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->where('task_status',0)->first();
             if($arrears_res){
                 $data['arrears_res'] = 1;
             }else{
                 $data['arrears_res'] = 2;
             }
             $increase_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->where('task_status',0)->first();
             if($increase_res){
                 $data['increase_res'] = 1;
             }else{
                 $data['increase_res'] = 2;
             }
             $application_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->where('task_status',0)->first();
             if($application_res){
                 $data['application_res'] = 1;
             }else{
                 $data['application_res'] = 2;
             }
             $new_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->where('task_status',0)->first();
             if($new_res){
                 $data['new_res'] = 1;
             }else{
@@ -523,7 +523,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             $invoice_task_type = [23];
             $new_type = [25];
             $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->where('task_status',0)->first();
             if($note_res){
                 $data['note_res'] = 1;
             }else{
@@ -531,7 +531,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             }
 
             $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->where('task_status',0)->first();
             if($arrears_res){
                 $data['arrears_res'] = 1;
             }else{
@@ -539,14 +539,14 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
             }
 
             $invoice_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->where('task_status',0)->first();
             if($invoice_res){
                 $data['invoice_res'] = 1;
             }else{
                 $data['invoice_res'] = 2;
             }
             $new_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->first();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->where('task_status',0)->first();
             if($new_res){
                 $data['new_res'] = 1;
             }else{
@@ -570,18 +570,18 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $user_info = \App\Model\User::where('id',$input['user_id'])->first();
 
             $day = $input['day'];
-            $data[0] = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 01:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[1] = Task::whereBetween('task_start_time',[date('Y-m-d 02:00:00',strtotime($day)), date('Y-m-d 03:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[2] = Task::whereBetween('task_start_time',[date('Y-m-d 04:00:00',strtotime($day)), date('Y-m-d 05:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[3] = Task::whereBetween('task_start_time',[date('Y-m-d 06:00:00',strtotime($day)), date('Y-m-d 07:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[4] = Task::whereBetween('task_start_time',[date('Y-m-d 08:00:00',strtotime($day)), date('Y-m-d 09:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[5] = Task::whereBetween('task_start_time',[date('Y-m-d 10:00:00',strtotime($day)), date('Y-m-d 11:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[6] = Task::whereBetween('task_start_time',[date('Y-m-d 12:00:00',strtotime($day)), date('Y-m-d 13:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[7] = Task::whereBetween('task_start_time',[date('Y-m-d 14:00:00',strtotime($day)), date('Y-m-d 15:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[8] = Task::whereBetween('task_start_time',[date('Y-m-d 16:00:00',strtotime($day)), date('Y-m-d 17:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[9] = Task::whereBetween('task_start_time',[date('Y-m-d 18:00:00',strtotime($day)), date('Y-m-d 19:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[10] = Task::whereBetween('task_start_time',[date('Y-m-d 20:00:00',strtotime($day)), date('Y-m-d 21:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
-            $data[11] = Task::whereBetween('task_start_time',[date('Y-m-d 22:00:00',strtotime($day)), date('Y-m-d 24:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->count();
+            $data[0] = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 01:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[1] = Task::whereBetween('task_start_time',[date('Y-m-d 02:00:00',strtotime($day)), date('Y-m-d 03:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[2] = Task::whereBetween('task_start_time',[date('Y-m-d 04:00:00',strtotime($day)), date('Y-m-d 05:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[3] = Task::whereBetween('task_start_time',[date('Y-m-d 06:00:00',strtotime($day)), date('Y-m-d 07:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[4] = Task::whereBetween('task_start_time',[date('Y-m-d 08:00:00',strtotime($day)), date('Y-m-d 09:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[5] = Task::whereBetween('task_start_time',[date('Y-m-d 10:00:00',strtotime($day)), date('Y-m-d 11:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[6] = Task::whereBetween('task_start_time',[date('Y-m-d 12:00:00',strtotime($day)), date('Y-m-d 13:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[7] = Task::whereBetween('task_start_time',[date('Y-m-d 14:00:00',strtotime($day)), date('Y-m-d 15:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[8] = Task::whereBetween('task_start_time',[date('Y-m-d 16:00:00',strtotime($day)), date('Y-m-d 17:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[9] = Task::whereBetween('task_start_time',[date('Y-m-d 18:00:00',strtotime($day)), date('Y-m-d 19:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[10] = Task::whereBetween('task_start_time',[date('Y-m-d 20:00:00',strtotime($day)), date('Y-m-d 21:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
+            $data[11] = Task::whereBetween('task_start_time',[date('Y-m-d 22:00:00',strtotime($day)), date('Y-m-d 24:59:59',strtotime($day))])->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->count();
             return $this->success('get task list success',$data);
 
     }
@@ -611,49 +611,49 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
                 $application_task_type = [1];
                 $new_type = [25];
                 $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->where('task_status',0)->first();
                 if($note_res){
                     $data['note_res'] = 1;
                 }else{
                     $data['note_res'] = 2;
                 }
                 $inspect_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->where('task_status',0)->first();
                 if($inspect_res){
                     $data['inspect_res'] = 1;
                 }else{
                     $data['inspect_res'] = 2;
                 }
                 $bond_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->where('task_status',0)->first();
                 if($bond_res){
                     $data['bond_res'] = 1;
                 }else{
                     $data['bond_res'] = 2;
                 }
                 $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->where('task_status',0)->first();
                 if($arrears_res){
                     $data['arrears_res'] = 1;
                 }else{
                     $data['arrears_res'] = 2;
                 }
                 $increase_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->where('task_status',0)->first();
                 if($increase_res){
                     $data['increase_res'] = 1;
                 }else{
                     $data['increase_res'] = 2;
                 }
                 $application_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->where('task_status',0)->first();
                 if($application_res){
                     $data['application_res'] = 1;
                 }else{
                     $data['application_res'] = 2;
                 }
                 $new_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->where('task_status',0)->first();
                 if($new_res){
                     $data['new_res'] = 1;
                 }else{
@@ -665,7 +665,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
                 $invoice_task_type = [23];
                 $new_type = [25];
                 $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->where('task_status',0)->first();
                 if($note_res){
                     $data['note_res'] = 1;
                 }else{
@@ -673,7 +673,7 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
                 }
 
                 $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->where('task_status',0)->first();
                 if($arrears_res){
                     $data['arrears_res'] = 1;
                 }else{
@@ -681,14 +681,14 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
                 }
 
                 $invoice_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->where('task_status',0)->first();
                 if($invoice_res){
                     $data['invoice_res'] = 1;
                 }else{
                     $data['invoice_res'] = 2;
                 }
                 $new_res =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->first();
+                    ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->where('task_status',0)->first();
                 if($new_res){
                     $data['new_res'] = 1;
                 }else{
@@ -743,12 +743,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -771,12 +771,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $inspect_task_type = [3,11];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$inspect_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$inspect_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -799,12 +799,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $bond_task_type = [15,16];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$bond_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$bond_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -827,12 +827,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $arrears_task_type = [14,18];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -855,12 +855,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $increase_task_type = [6];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$increase_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$increase_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -884,12 +884,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $application_task_type = [1];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$application_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$application_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -913,12 +913,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $note_task_type = [22];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -941,12 +941,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $arrears_task_type = [24];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -969,12 +969,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $invoice_task_type = [23];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -997,12 +997,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $invoice_task_type = [25];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1031,12 +1031,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1059,12 +1059,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $inspect_task_type = [3,11];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$inspect_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$inspect_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1087,12 +1087,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $bond_task_type = [15,16];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$bond_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$bond_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1115,12 +1115,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $arrears_task_type = [14,18];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1143,12 +1143,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $increase_task_type = [6];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$increase_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$increase_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1172,12 +1172,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $application_task_type = [1];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$application_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$application_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1201,12 +1201,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $note_task_type = [22];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$note_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1229,12 +1229,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $arrears_task_type = [24];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$arrears_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1257,12 +1257,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $invoice_task_type = [23];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);
@@ -1286,12 +1286,12 @@ The above landlord did not pay the invoice on time. Please take any necessary ac
         $day = $input['day'];
         $invoice_task_type = [25];
         $count =  Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->count();
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->count();
         if($count < ($input['page']-1)*3){
             return $this->error('2','no more information');
         }else{
             $res = Task::whereBetween('task_start_time',[date('Y-m-d H:i:s',strtotime($day)), date('Y-m-d H:i:s',strtotime($day)+7200-1)])
-                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
+                ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->where('task_status',0)->whereIn('task_type',$invoice_task_type)->offset(($input['page']-1)*3)->limit(3)->get();
             $data['res'] = $res;
             $data['current_page'] = $input['page'];
             $data['total_page'] = ceil($count/3);

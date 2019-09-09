@@ -88,6 +88,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('updateHeadImg','UserController@updateHeadImg'); // 更新头像 4.17 // 接口done
         $router->post('addPhone','UserController@addPhone'); // 增加手机 4.17 //接口done
         $router->post('addEmail','UserController@addEmail'); // 增加邮箱 4.17  // 接口done
+        $router->post('checkBalance','UserController@checkBalance'); // 检查余额
     });
     //房屋主档系统
     $router->group(['prefix' => 'house'], function (Router $router) {
@@ -347,6 +348,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('noteProviderTaskDayDetail', 'TaskController@noteProviderTaskDayDetail'); // 服务商提示详情 4.10
         $router->post('arrearsProvidersTaskDayDetail', 'TaskController@arrearsProvidersTaskDayDetail'); // 服务商催款详情 4.10
         $router->post('invoiceProvidersTaskDayDetail', 'TaskController@invoiceProvidersTaskDayDetail'); // 服务商发票详情 4.10
+        $router->post('newTaskDayDetail', 'TaskController@newTaskDayDetail'); // 新任务详情 4.10
         $router->post('newTask', 'TaskController@newTask'); // 新建任务 4.10
         $router->post('noteTaskHourDetail', 'TaskController@noteTaskHourDetail'); // 提示详情 4.10
         $router->post('inspectTaskHourDetail', 'TaskController@inspectTaskHourDetail'); // 检查详情 4.10
@@ -357,6 +359,10 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('noteProviderTaskHourDetail', 'TaskController@noteProviderTaskHourDetail'); // 服务商提示详情 4.10
         $router->post('arrearsProvidersTaskHourDetail', 'TaskController@arrearsProvidersTaskHourDetail'); // 服务商催款详情 4.10
         $router->post('invoiceProvidersTaskHourDetail', 'TaskController@invoiceProvidersTaskHourDetail'); // 服务商发票详情 4.10
+        $router->post('newTaskHourDetail', 'TaskController@newTaskHourDetail'); //新任务详情 4.10
+        $router->post('finishTask', 'TaskController@finishTask'); //完成任务 4.10
+        $router->post('extensionTask', 'TaskController@extensionTask'); //修改任务时间 4.10
+        $router->post('unsolveTask', 'TaskController@unsolveTask'); //未完成任务 4.10
     });
     // 列表管理
     $router->group(['prefix' => 'report'], function (Router $router) {

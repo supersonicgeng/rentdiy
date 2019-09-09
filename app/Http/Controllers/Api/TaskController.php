@@ -214,6 +214,20 @@ class TaskController extends Controller
 
 
     /**
+     * @description:房东申请列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function newTaskDayDetail(Request $request)
+    {
+        return service('Task')->newTaskDayDetail($request->all());
+    }
+
+
+    /**
      * @description:房东通知列表
      * @author: syg <13971394623@163.com>
      * @param $code
@@ -334,5 +348,19 @@ class TaskController extends Controller
     public function invoiceProvidersTaskHourDetail(Request $request)
     {
         return service('Task')->invoiceProvidersTaskHourDetail($request->all());
+    }
+
+
+    /**
+     * @description:房东申请列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function newTaskHourDetail(Request $request)
+    {
+        return service('Task')->newTaskHourDetail($request->all());
     }
 }
