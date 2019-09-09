@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('Task')->daily();  //每天凌晨零点运行任务
+        $schedule->command('Test')->everyMinute();  //每分钟
     }
 
     /**
