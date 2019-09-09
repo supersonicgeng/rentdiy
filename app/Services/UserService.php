@@ -65,8 +65,8 @@ class UserService extends CommonService
         $nickname = $input['nickname'];
         $jobs = $input['jobs'];
         $jobs = implode(',',$jobs);
-        $google_id = $input['google_id'];
-        $facebook_id = $input['facebook_id'];
+        /*$google_id = $input['google_id'];
+        $facebook_id = $input['facebook_id'];*/
         // 确认密码和密码一致性
         if($password != $r_password){
             return $this->error('2','the confirm_password is not match password ,pls try again');
@@ -96,8 +96,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -107,8 +107,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'house_number'  => $house_number,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -120,8 +120,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -131,8 +131,8 @@ class UserService extends CommonService
                     'nickname'      => $nickname,
                     'jobs'          => $jobs,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -143,8 +143,8 @@ class UserService extends CommonService
                     'user_role'     => 4,
                     'nickname'      => $nickname,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -153,8 +153,8 @@ class UserService extends CommonService
                     'user_role'     => 4,
                     'nickname'      => $nickname,
                     'password'      => md5($password),
-                    'facebook_id'   => $facebook_id,
-                    'google_id'     => $google_id,
+                    /*'facebook_id'   => $facebook_id,
+                    'google_id'     => $google_id,*/
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
