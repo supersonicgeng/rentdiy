@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ChangeController extends CommonController
+class ChargeController extends CommonController
 {
     /**
      * @description:充值列表
