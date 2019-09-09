@@ -927,7 +927,6 @@ class UserService extends CommonService
         $user_info = \App\Model\User::where('id',$user_id)->first();
         $balance = $user_info->balance+$user_info->free_balance;
         $least_balance = DB::table('sys_config')->where('code','LB')->pluck('value')->first();
-        dd($user_info);
         if($balance < $least_balance){
             return $this->error('2','the balance ');
         }else{
