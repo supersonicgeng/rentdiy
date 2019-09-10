@@ -82,7 +82,7 @@ class ChargeService extends CommonService
                 'Authorization' => 'Basic ' . $auth
             ]
         ]);
-
+        $amount = 0.01;
         $response = $http->post('https://poliapi.apac.paywithpoli.com/api/v2/Transaction/Initiate', [
             'json' => [
                 'Amount' => $amount,//金额
