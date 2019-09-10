@@ -97,7 +97,6 @@ class HelpService extends CommonService
             $url = 'http://200000.frp.zhan2345.com/sms/'.$input['account'].'/Your Verify Code is '.$code;
             $http = new \GuzzleHttp\Client();
             $response = $http->get($url);
-            dd($response);
             return $this->success('verify_code send success',['code' => $code]);
         }else{
             return $this->error('3','send verify failed pls try again');
