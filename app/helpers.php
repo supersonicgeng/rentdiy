@@ -70,6 +70,12 @@ function contractId()
     return $contract_id;
 }
 
+function chargeSn()
+{
+    $contract_id = 'cha'.date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    return $contract_id;
+}
+
 /**
  * 把返回的数据集转换成Tree
  * @param array $list 要转换的数据集
