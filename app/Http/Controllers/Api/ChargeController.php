@@ -20,4 +20,17 @@ class ChargeController extends CommonController
         return service('Charge')->chargeList($request->all());
     }
 
+
+    /**
+     * @description:充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function charge(Request $request)
+    {
+        return service('Charge')->charge($request->all());
+    }
 }

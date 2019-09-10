@@ -71,6 +71,11 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'im'], function (Router $router) {
         $router->post('sendSystemMsg', 'ImController@sendSystemMsg'); // 发送系统消息 4.10
     });
+    // 充值管理
+    $router->group(['prefix' => 'charge'], function (Router $router) {
+        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
+        $router->post('charge', 'ChargeController@charge'); // 充值 4.10
+    });
     $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
     $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
     $router->get('rent/contractPrint', 'RentController@contractPrint'); // 租约打印 5.13
@@ -399,10 +404,6 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 诉讼管理
     $router->group(['prefix' => 'litigation'], function (Router $router) {
         $router->post('addLitigation', 'LitigationController@addLitigation'); // 添加诉讼 4.10
-    });
-    // 诉讼管理
-    $router->group(['prefix' => 'charge'], function (Router $router) {
-        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
     });
 });
 
