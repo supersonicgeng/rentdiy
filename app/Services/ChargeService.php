@@ -135,7 +135,7 @@ class ChargeService extends CommonService
             $charge_type = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('charge_type')->first();
             if($charge_type == 1){
                 // 更改状态
-                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_type' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_status' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加余额
                 $charge_fee = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('charge_fee')->first();
                 $user_id = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('user_id')->first();
@@ -146,7 +146,7 @@ class ChargeService extends CommonService
 
             }elseif ($charge_type == 2){
                 // 更改状态
-                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_type' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_status' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加余额
                 $user_id = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('user_id')->first();
                 $free_fee = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('free_fee')->first();
@@ -175,7 +175,7 @@ class ChargeService extends CommonService
                 $vip_insert_res = DB::table('vip_list')->insert($vip_data);
             }elseif ($charge_type == 3){
                 // 更改状态
-                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_type' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_status' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加余额
                 $user_id = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('user_id')->first();
                 $free_fee = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('free_fee')->first();
@@ -204,7 +204,7 @@ class ChargeService extends CommonService
                 $vip_insert_res = DB::table('vip_list')->insert($vip_data);
             }elseif ($charge_type == 4){
                 // 更改状态
-                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_type' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_status' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加余额
                 $user_id = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('user_id')->first();
                 $free_fee = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('free_fee')->first();
@@ -233,7 +233,7 @@ class ChargeService extends CommonService
                 $vip_insert_res = DB::table('vip_list')->insert($vip_data);
             }elseif ($charge_type == 5){
                 // 更改状态
-                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_type' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                DB::table('charge_list')->where('charge_sn',$charge_sn)->update(['charge_status' => 2,'updated_at'=>date('Y-m-d H:i:s',time())]);
                 // 添加余额
                 $user_id = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('user_id')->first();
                 $free_fee = DB::table('charge_list')->where('charge_sn',$charge_sn)->pluck('free_fee')->first();
