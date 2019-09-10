@@ -75,6 +75,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'charge'], function (Router $router) {
         $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
         $router->post('charge', 'ChargeController@charge'); // 充值 4.10
+        $router->post('notify', 'ChargeController@notify'); // 充值回调 4.10
     });
     $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
     $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
