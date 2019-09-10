@@ -92,7 +92,7 @@ class ChargeService extends CommonService
                 'SuccessURL' => 'https://rent-diy.com/',//支付成功用户跳往地址
                 'FailureURL' => '',//用户在银行支付失败跳往网站地址
                 'CancellationURL' => '',//用户支付取消跳往地址
-                'NotificationURL' => ''//异步回调地址
+                'NotificationURL' => 'https://renting.zhan2345.com/api/charge/notify'//异步回调地址
             ]
         ]);
 
