@@ -75,8 +75,8 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->group(['prefix' => 'charge'], function (Router $router) {
         $router->post('notify', 'ChargeController@notify'); // 充值回调 4.10
     });
-    $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
-    $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
+    $router->get('fee/feePrint/{fee_sn}', 'FeeController@feePrint'); // 费用单打印 4.10
+    $router->get('fee/invoicePrint/{invoice_sn}', 'FeeController@invoicePrint'); // 发票打印 4.10
     $router->get('rent/contractPrint', 'RentController@contractPrint'); // 租约打印 5.13
 });
 
@@ -366,6 +366,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('finishTask', 'TaskController@finishTask'); //完成任务 4.10
         $router->post('extensionTask', 'TaskController@extensionTask'); //修改任务时间 4.10
         $router->post('unsolveTask', 'TaskController@unsolveTask'); //未完成任务 4.10
+        $router->post('sendKeyMessage', 'TaskController@sendKeyMessage'); // 发送钥匙短信4.10
     });
     // 列表管理
     $router->group(['prefix' => 'report'], function (Router $router) {
