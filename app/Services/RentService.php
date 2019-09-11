@@ -2254,7 +2254,7 @@ Your property required the first inspection for the tenancy record. Please to cr
             $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
             $property_name = RentHouse::where('id',$rent_house_id)->pluck('property_name')->first();
             $room_name = RentHouse::where('id',$rent_house_id)->pluck('room_name')->first();
-            $property_address = RentHouse::where('id',$rent_house_id)->pluck('property_address')->first();
+            $property_address = RentHouse::where('id',$rent_house_id)->pluck('address')->first();
             $tenement_full_name = ContractTenement::where('contract_id',$contact_id)->pluck('tenement_full_name')->first();
             if($suspend_type == 1){
                 $task_start_time = date('Y-m-d H:i:s',time()+3600*24*6);
