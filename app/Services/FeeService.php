@@ -3762,4 +3762,36 @@ The above work has been completed, you can issue an invoice to the landlord..",
         }
 
     }
+
+    /**
+     * @description:服务商费用单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function providersFeeDetail(array $input)
+    {
+        $model = new OrderArrears();
+        $invoice_sn = $input['invoice_sn'];
+        $model = $model->where('user_id',$input['user_id']);
+        $model = $model->where('invoice_sn',$invoice_sn);
+        $res = $model->get();
+        static $amount_price = 0;
+        static $discount = 0;
+        static $gts = 0;
+        foreach ($res as $k => $v){
+            $amount_price += $v['unit_price']*$v['number'];
+            $discount += ($v['unit_price']*$v['number'])*$v['discount']/100;
+            $gts += ($v['unit_price']*$v['number'])*(1-$v['discount']/100)*$v['tex']/100;
+            $res[$k]['providers_name'] = Providers::where('id',$v['providers_id'])->pluck('service_name')->first();
+        }
+        $data['invoice_list'] = $res;
+        $data['total_price'] = round(($amount_price-$discount+$gts),2);
+        $data['amount_price'] = round($amount_price,2);
+        $data['discount'] = round($discount,2);
+        $data['gts'] = round($gts,2);
+        return $this->success('get invoice list success',$data);
+    }
 }

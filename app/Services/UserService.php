@@ -67,6 +67,7 @@ class UserService extends CommonService
         $jobs = implode(',',$jobs);
         /*$google_id = $input['google_id'];
         $facebook_id = $input['facebook_id'];*/
+        $free_balance = DB::table('sys_config')->where('code','NUB')->pluck('value')->first();
         // 确认密码和密码一致性
         if($password != $r_password){
             return $this->error('2','the confirm_password is not match password ,pls try again');
@@ -98,6 +99,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -109,6 +111,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -122,6 +125,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -133,6 +137,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -145,6 +150,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }else{ // 手机注册
@@ -155,6 +161,7 @@ class UserService extends CommonService
                     'password'      => md5($password),
                     /*'facebook_id'   => $facebook_id,
                     'google_id'     => $google_id,*/
+                    'free_balance'  => $free_balance,
                     'created_at'    => date('Y-m-d H:i:s', time()),
                 ];
             }
@@ -928,7 +935,7 @@ class UserService extends CommonService
         $balance = $user_info->balance+$user_info->free_balance;
         $least_balance = DB::table('sys_config')->where('code','LB')->pluck('value')->first();
         if($balance < $least_balance){
-            return $this->error('2','the balance ');
+            return $this->error('2','the balance not enough pls charging');
         }else{
             return $this->success('balance enough');
         }

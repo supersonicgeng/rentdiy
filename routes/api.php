@@ -73,8 +73,6 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     });
     // 充值管理
     $router->group(['prefix' => 'charge'], function (Router $router) {
-        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
-        $router->post('charge', 'ChargeController@charge'); // 充值 4.10
         $router->post('notify', 'ChargeController@notify'); // 充值回调 4.10
     });
     $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
@@ -324,7 +322,6 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
         $router->post('feeListBatch', 'FeeController@feeListBatch'); // 费用单列表 4.10
         $router->post('feeDelete', 'FeeController@feeDelete'); // 费用单删除 4.10
-
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
@@ -405,6 +402,15 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
     // 诉讼管理
     $router->group(['prefix' => 'litigation'], function (Router $router) {
         $router->post('addLitigation', 'LitigationController@addLitigation'); // 添加诉讼 4.10
+    });
+    // 充值管理
+    $router->group(['prefix' => 'charge'], function (Router $router) {
+        $router->post('chargeList', 'ChargeController@chargeList'); // 充值列表 4.10
+        $router->post('charge', 'ChargeController@charge'); // 充值 4.10
+        $router->post('vipCharge', 'ChargeController@vipCharge'); // 充值 4.10
+        $router->post('vipChargeList', 'ChargeController@vipChargeList'); // VIP充值列表 4.10
+        $router->post('chargedList', 'ChargeController@chargedList'); // 充值结果列表 4.10
+        $router->post('vipChargedList', 'ChargeController@vipChargedList'); // VIP充值结果列表 4.10
     });
 });
 

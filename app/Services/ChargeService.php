@@ -48,8 +48,34 @@ class ChargeService extends CommonService
     }
 
 
+
     /**
      * @description:充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vipChargeList(array $input)
+    {
+        $data['residential_fee'] = DB::table('sys_config')->where('code','RF')->pluck('value')->first();
+        $data['residential_charge_fee'] = DB::table('sys_config')->where('code','RVF')->pluck('value')->first();
+        $data['residential_free_fee'] = DB::table('sys_config')->where('code','RFB')->pluck('value')->first();
+        $data['boarding_fee'] = DB::table('sys_config')->where('code','BF')->pluck('value')->first();
+        $data['boarding_charge_fee'] = DB::table('sys_config')->where('code','BVF')->pluck('value')->first();
+        $data['boarding_free_fee'] = DB::table('sys_config')->where('code','BFB')->pluck('value')->first();
+        $data['flatmate_fee'] = DB::table('sys_config')->where('code','FF')->pluck('value')->first();
+        $data['flatmate_charge_fee'] = DB::table('sys_config')->where('code','FVF')->pluck('value')->first();
+        $data['flatmate_free_fee'] = DB::table('sys_config')->where('code','FFB')->pluck('value')->first();
+        $data['commercial_fee'] = DB::table('sys_config')->where('code','CF')->pluck('value')->first();
+        $data['commercial_charge_fee'] = DB::table('sys_config')->where('code','CVF')->pluck('value')->first();
+        $data['commercial_free_fee'] = DB::table('sys_config')->where('code','CFB')->pluck('value')->first();
+        return $this->success('get bond list success',$data);
+    }
+
+    /**
+     * @description:余额充值
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -68,6 +94,78 @@ class ChargeService extends CommonService
             'charge_fee'    => $amount,
             'free_fee'      => $free,
             'charge_type'   => 1,
+            'charge_status' => 1,
+        ];
+        $res = DB::table('charge_list')->insert($charge_data);
+        //生成订单操作
+
+
+        $auth = base64_encode('SS64008062:pY9^KFwY9!U5b');
+
+        $http = new \GuzzleHttp\Client([
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ' . $auth
+            ]
+        ]);
+        $amount = 1;
+        $response = $http->post('https://poliapi.apac.paywithpoli.com/api/v2/Transaction/Initiate', [
+            'json' => [
+                'Amount' => $amount,//金额
+                'CurrencyCode' => 'NZD',
+                'MerchantReference' => $charge_sn,//唯一订单号  前面生成
+                'MerchantHomepageURL' => 'https://rent-diy.com/',
+                'SuccessURL' => 'https://rent-diy.com/',//支付成功用户跳往地址
+                'FailureURL' => '',//用户在银行支付失败跳往网站地址
+                'CancellationURL' => '',//用户支付取消跳往地址
+                'NotificationURL' => 'https://renting.zhan2345.com/api/charge/notify'//异步回调地址
+            ]
+        ]);
+
+        $result = json_decode($response->getBody());
+
+        if ($result->Success == true) {
+
+            return $this->success('success', $result->NavigateURL);//返回支付地址给前端
+        }else{
+            return $this->error('2','pay failed');
+        }
+    }
+
+
+    /**
+     * @description:VIP充值
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vipCharge(array $input)
+    {
+        $vip_type = $input['vip_type'];
+        if($vip_type == 1){
+            $code = 'RVF';
+            $free_code = 'RFB';
+        }elseif ($vip_type == 2){
+            $code = 'BVF';
+            $free_code = 'BVB';
+        }elseif ($vip_type == 3){
+            $code = 'FVF';
+            $free_code = 'FVB';
+        }elseif ($vip_type == 4){
+            $code = 'CVF';
+            $free_code = 'CFB';
+        }
+        $amount = DB::table('sys_config')->where('code',$code)->pluck('value')->first();
+        $free = DB::table('sys_config')->where('code',$free_code)->pluck('value')->first();
+        $charge_sn = chargeSn();
+        $charge_data = [
+            'user_id'   => $input['user_id'],
+            'charge_sn' => $charge_sn,
+            'charge_fee'    => $amount,
+            'free_fee'      => $free,
+            'charge_type'   => $vip_type+1,
             'charge_status' => 1,
         ];
         $res = DB::table('charge_list')->insert($charge_data);
@@ -261,6 +359,57 @@ class ChargeService extends CommonService
                 // 添加VIP记录
                 $vip_insert_res = DB::table('vip_list')->insert($vip_data);
             }
+        }
+    }
+
+    /**
+     * @description:充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function chargedList(array $input)
+    {
+        $page = $input['page'];
+        $user_id = $input['user_id'];
+        $count = DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type',1)->count();
+        if($count < ($page-1)*10){
+            return $this->error('2','no more information');
+        }else{
+            $res =  DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type',1)->offset(($page-1)*10)->limit(10)->get();
+            $data['charged_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get bond list success',$data);
+        }
+
+    }
+
+
+
+    /**
+     * @description:充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function vipChargedList(array $input)
+    {
+        $page = $input['page'];
+        $user_id = $input['user_id'];
+        $count = DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type','!=',1)->count();
+        if($count < ($page-1)*10){
+            return $this->error('2','no more information');
+        }else{
+            $res =  DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type','!=',1)->offset(($page-1)*10)->limit(10)->get();
+            $data['charged_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get bond list success',$data);
         }
     }
 
