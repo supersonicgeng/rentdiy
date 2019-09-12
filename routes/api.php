@@ -78,6 +78,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->get('fee/feePrint', 'FeeController@feePrint'); // 费用单打印 4.10
     $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
     $router->get('rent/contractPrint', 'RentController@contractPrint'); // 租约打印 5.13
+    $router->post('rent/marketRentFee', 'RentController@marketRentFee'); // 市场租金 5.13
 });
 
 

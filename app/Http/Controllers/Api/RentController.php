@@ -329,4 +329,17 @@ class RentController extends CommonController
     {
         return service('Rent')->contractPrint($request->all());
     }
+
+    /**
+     * @description:市场租金
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function marketRentFee(Request $request)
+    {
+        return service('Rent')->marketRentFee($request->all());
+    }
 }

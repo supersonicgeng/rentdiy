@@ -2497,4 +2497,34 @@ The bond can only refund if you satisfied with above or agree the amount with th
         }
         return $this->success('get pdf success',$mpdf->Output());
     }
+
+    /**
+     * @description:租约打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function marketRentFee(array $input)
+    {
+        $District = $input['District'];
+        $property_type = $input['property_type'];
+        $time = date('Y-m',strtotime('-3 month'));
+        $token = 'c2839b211876bdd05c6511edfd198eeb';
+        $header = [
+            'headers' => [
+                'Accept'        => 'application/json',
+                'Authorization' => 'Bearer ' . $token
+            ]
+        ];
+        $url = "https://api.business.govt.nz/services/v1/tenancy-services/market-rent/statistics?
+        period-ending=$time&num-months=24&area-definition=AU2016&include-aggregates=false
+        &statistics=nLodged%2Cmed%2Clq%2Cuq%2Cbrr
+        &dwelling-type=$property_type&num-bedrooms=1%2C2%2C3%2C4%2C5%2B
+        &area-codes=$District";
+        $http = new \GuzzleHttp\Client();
+        $response = $http->request('get',$url,$header);
+        dd($response);
+    }
 }
