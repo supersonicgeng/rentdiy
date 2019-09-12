@@ -89,7 +89,8 @@ class FeeService extends CommonService
                     'items_name'        => $v['items_name'],
                     'describe'          => $v['describe'],
                     'note'              => $v['note'],
-                    'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                    'effect_date'       => $input['effect_date'],
+                    'expire_date'       => $input['expire_date'],
                     'District'          => $rent_house_info->District,
                     'TA'                => $rent_house_info->TA,
                     'Region'            => $rent_house_info->Region,
@@ -126,7 +127,8 @@ class FeeService extends CommonService
                     'items_name' => $v['items_name'],
                     'describe' => $v['describe'],
                     'note' => $v['note'],
-                    'expire_date' => date('Y-m-d ', time() + 3600 * 24 * 8),
+                    'effect_date'       => $input['effect_date'],
+                    'expire_date'       => $input['expire_date'],
                     'District' => $rent_house_info->District,
                     'TA' => $rent_house_info->TA,
                     'Region' => $rent_house_info->Region,
@@ -208,7 +210,8 @@ class FeeService extends CommonService
                     'items_name'        => $v['items_name'],
                     'describe'          => $v['describe'],
                     'note'              => $v['note'],
-                    'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                    'effect_date'       => $input['effect_date'],
+                    'expire_date'       => $input['expire_date'],
                     'District'          => $rent_house_info->District,
                     'TA'                => $rent_house_info->TA,
                     'Region'            => $rent_house_info->Region,
@@ -245,7 +248,8 @@ class FeeService extends CommonService
                     'items_name'        => $v['items_name'],
                     'describe'          => $v['describe'],
                     'note'              => $v['note'],
-                    'expire_date'       => date('Y-m-d ',time()+3600*24*8),
+                    'effect_date'       => $input['effect_date'],
+                    'expire_date'       => $input['expire_date'],
                     'District'          => $rent_house_info->District,
                     'TA'                => $rent_house_info->TA,
                     'Region'            => $rent_house_info->Region,
@@ -3540,7 +3544,8 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 //
                 $model->where('fee_sn',$fee_sn)->increment('is_print');
             }
-            return $this->success('get pdf success',$mpdf->Output());
+            $data['res'] = $mpdf->Output();
+            return $this->success('get pdf success',$data);
         }else{
             $contract_id = $model->where('fee_sn',$fee_sn)->pluck('contract_id')->first();
             $landlord_id = RentContract::where('id',$contract_id)->pluck('landlord_id')->first();
@@ -3613,7 +3618,8 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 }
                 //
             }
-            return $this->success('get pdf success',$mpdf->Output());
+            $data['res'] = $mpdf->Output();
+            return $this->success('get pdf success',$data);
         }
 
     }
@@ -3694,7 +3700,8 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 //
                 $model->where('invoice_sn',$invoice_sn)->increment('is_print');
             }
-            return $this->success('get pdf success',$mpdf->Output());
+            $data['res'] = $mpdf->Output();
+            return $this->success('get pdf success',$data);
         }else{
             $order_id = $model->where('invoice_sn',$invoice_sn)->pluck('order_id')->first();
             $providers_id = LandlordOrder::where('id',$order_id)->pluck('providers_id')->first();
@@ -3758,7 +3765,8 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 }
 
             }
-            return $this->success('get pdf success',$mpdf->Output());
+            $data['res'] = $mpdf->Output();
+            return $this->success('get pdf success',$data);
         }
 
     }
