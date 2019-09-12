@@ -3587,13 +3587,13 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $mpdf->WriteText('30','126',$landlord_info->landlord_mobile_phone);
                     $mpdf->WriteText('29','133',$landlord_info->landlord_e_mail);
                     foreach ($fee_list as $k => $v){
-                        $mpdf->WriteText(16,155+$k*10,$v->items_name);
-                        $mpdf->WriteText(42,155+$k*10,$v->describe);
-                        $mpdf->WriteText(92,155+$k*10,$v->unit_price);
+                        $mpdf->WriteText(16,155+$k*10,(string)$v->items_name);
+                        $mpdf->WriteText(42,155+$k*10,(string)$v->describe);
+                        $mpdf->WriteText(92,155+$k*10,(string)$v->unit_price);
                         $mpdf->WriteText(118,155+$k*10,(string)$v->number);
                         $mpdf->WriteText(138,155+$k*10,(string)round($v->unit_price*$v->number*$v->discount,2));
-                        $mpdf->WriteText(158,155+$k*10,$v->tex);
-                        $mpdf->WriteText(175,155+$k*10,$v->arrears_fee);
+                        $mpdf->WriteText(158,155+$k*10,(string)$v->tex);
+                        $mpdf->WriteText(175,155+$k*10,(string)$v->arrears_fee);
                         $subtotal += $v->unit_price*$v->number;
                         $discount += $v->unit_price*$v->number*$v->discount/100;
                         $gts += round(($v->unit_price*$v->number)*(100-$v->discount)/100*($v->tex)/100,2);
@@ -3601,7 +3601,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $total = $subtotal-$discount+$gts;
                     $mpdf->WriteText(175,214,(string)$subtotal);
                     $mpdf->WriteText(175,222,(string)$discount);
-                    $mpdf->WriteText(175,230,$gts);
+                    $mpdf->WriteText(175,230,(string)$gts);
                     $mpdf->WriteText(175,238,(string)$total);
                     $mpdf->WriteText(35,266,(string)$bank);
                     $mpdf->WriteText(157,266,(string)$bank_account);
