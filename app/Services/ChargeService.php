@@ -95,6 +95,7 @@ class ChargeService extends CommonService
             'free_fee'      => $free,
             'charge_type'   => 1,
             'charge_status' => 1,
+            'created_at'    => date('Y-m-d H:i:s',time()),
         ];
         $res = DB::table('charge_list')->insert($charge_data);
         //生成订单操作
@@ -167,6 +168,7 @@ class ChargeService extends CommonService
             'free_fee'      => $free,
             'charge_type'   => $vip_type+1,
             'charge_status' => 1,
+            'created_at'    => date('Y-m-d H:i:s',time()),
         ];
         $res = DB::table('charge_list')->insert($charge_data);
         //生成订单操作
@@ -449,7 +451,7 @@ class ChargeService extends CommonService
     public function couponUse(array $input)
     {
         $coupon = $input['coupon'];
-        $res = DB::table('couon_list')->where('coupon_sn',$coupon)->first();
+        $res = DB::table('coupon_list')->where('coupon_sn',$coupon)->first();
         if(!$res){
             return $this->error('2','is not right coupon sn');
         }
