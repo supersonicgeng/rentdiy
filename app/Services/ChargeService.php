@@ -437,4 +437,70 @@ class ChargeService extends CommonService
             return $this->success('get bond list success',$data);
         }
     }
+
+    /**
+     * @description:优惠券消券
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function couponUse(array $input)
+    {
+        $coupon = $input['coupon'];
+        $res = DB::table('couon_list')->where('coupon_sn',$coupon)->first();
+        if(!$res){
+            return $this->error('2','is not right coupon sn');
+        }
+        $is_used = $res->is_activated;
+        if($is_used == 1){
+            return $this->error('2','this coupon sn is used');
+        }
+        if($res->coupon_type == 1){
+            // 激活折扣卷
+            $coupon_data = [
+                'is_activated'  => 1,
+                'activated_at'  => time(),
+                'out_time'      => time()+$res->expens_time*3600*24,
+                'used_user_id'  => $input['user_id'],
+            ];
+            $res->update($coupon_data);
+        }else{
+            // 添加赠送余额
+            $coupon_data = [
+                'is_activated'  => 1,
+                'activated_at'  => time(),
+                'is_used'       => 1,
+                'used_user_id'  => $input['user_id'],
+            ];
+            $res->update($coupon_data);
+            \App\Model\User::where('id',$input['user_id'])->increament('free_balance');
+        }
+    }
+
+
+    /**
+     * @description:充值页面共通数据
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function commonData(array $input)
+    {
+       $user_id = $input['user_id'];
+       $user_info =  \App\Model\User::where('id',$input['user_id'])->first();
+       $total_amount = $user_info->balance+$user_info->free_balance;
+       $free_balance = $user_info->free_balance;
+       $discount =  $discount = DB::table('coupon_list')->where('used_user_id',$input['user_id'])->where('coupon_type',1)
+           ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+           ->orderByDesc('discount')->first();
+       $data['total_amount'] = $total_amount;
+       $data['free_balance'] = $free_balance;
+       $data['discount'] = $discount->discount;
+       $data['discount_out_time'] = $discount->out_time;
+       return $this->success('get data success',$data);
+    }
 }

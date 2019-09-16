@@ -114,4 +114,30 @@ class ChargeController extends CommonController
     {
         return service('Charge')->expenseList($request->all());
     }
+
+    /**
+     * @description:优惠券消券
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function couponUse(Request $request)
+    {
+        return service('Charge')->couponUse($request->all());
+    }
+
+    /**
+     * @description:充值页面共通数据
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function commonData(Request $request)
+    {
+        return service('Charge')->commonData($request->all());
+    }
 }

@@ -415,6 +415,8 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('chargedList', 'ChargeController@chargedList'); // 充值结果列表 4.10
         $router->post('vipChargedList', 'ChargeController@vipChargedList'); // VIP充值结果列表 4.10
         $router->post('expenseList', 'ChargeController@expenseList'); // 扣费列表 4.10
+        $router->post('couponUse', 'ChargeController@couponUse'); // 优惠券消券 4.10
+        $router->post('commonData', 'ChargeController@commonData'); // 充值页面共通数据 4.10
     });
 });
 
