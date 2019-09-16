@@ -463,8 +463,8 @@ class ChargeService extends CommonService
             // 激活折扣卷
             $coupon_data = [
                 'is_activated'  => 1,
-                'activated_at'  => time(),
-                'out_time'      => time()+$res->expens_time*3600*24,
+                'activated_at'  => date('Y-m-d',time()),
+                'out_time'      => date('Y-m-d',time()+$res->expens_time*3600*24),
                 'used_user_id'  => $input['user_id'],
             ];
             DB::table('coupon_list')->where('coupon_sn',$coupon)->update($coupon_data);
@@ -477,7 +477,7 @@ class ChargeService extends CommonService
                 'used_user_id'  => $input['user_id'],
             ];
             DB::table('coupon_list')->where('coupon_sn',$coupon)->update($coupon_data);
-            \App\Model\User::where('id',$input['user_id'])->increament('free_balance');
+            \App\Model\User::where('id',$input['user_id'])->increment('free_balance');
         }
         return $this->success('coupon use success');
     }
