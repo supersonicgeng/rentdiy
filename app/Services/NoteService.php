@@ -1010,8 +1010,89 @@ Please contact with us if you have any questions, thank you.
         }
         // 发送短信
         if($input['msg_send'] == 1){
-            $url = 'http://ngrok.zhan2345.com:8083/sms/'.$input['send_phone'].'/We have send you a email to'.$input['send_email'].', please check it. thank you ';
-            curlGet($url);
+            $url = 'http://200000.frp.zhan2345.com/sms/'.$input['send_phone'].'/We have send you a email to'.$input['send_email'].', please check it. thank you ';
+            $http = new \GuzzleHttp\Client();
+            $response = $http->get($url);
+            // 短信扣费
+            $cost_fee = DB::table('sys_config')->where('code','SMF')->pluck('value')->first();
+            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+            if($cost_fee > $user_free_balance){ // 扣费大于抵扣卷
+                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($cost_fee-$user_free_balance)); // 余额扣款
+                // 添加到花费表
+                $expense_data = [
+                    'user_id'   => $input['user_id'],
+                    'expense_type'  => 1,
+                    'expense_cost'  => $cost_fee,
+                    'discount'      => 0,
+                    'total_cost'    => $cost_fee,
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('expense')->insert($expense_data);
+            }else{
+                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$cost_fee); // 抵扣券扣款
+                // 添加到花费表
+                $expense_data = [
+                    'user_id'   => $input['user_id'],
+                    'expense_type'  => 1,
+                    'expense_cost'  => $cost_fee,
+                    'discount'      => 0,
+                    'total_cost'    => $cost_fee,
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('expense')->insert($expense_data);
+            }
+        }
+
+        // 信件代发
+        if($input['paper_send'] == 1){
+            if($input['msg_type'] > 12){
+                $landlord_order_id = $input['contract_id'];
+                $landlord_user_id = LandlordOrder::where('id',$landlord_order_id)->pluck('user_id')->first();
+                $post_address = Landlord::where('user_id',$landlord_user_id)->pluck('mail_address')->first();
+                $post_code = Landlord::where('user_id',$landlord_user_id)->pluck('mail_code')->first();
+            }else{
+                $contract_id = $input['contract_id'];
+                $post_address = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
+                $post_code = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
+            }
+            // 添加到邮寄列表
+            $post_data = [
+                'send_msg'  => $input['content'],
+                'send_address'  => $post_address,
+                'send_code'     => $post_code,
+                'created_at'    => date('Y-m-d H:i:s',time())
+            ];
+            DB::table('paper_send')->insert($post_data);
+            // 邮件扣费
+            $cost_fee = DB::table('sys_config')->where('code','PMF')->pluck('value')->first();
+            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+            if($cost_fee > $user_free_balance){ // 扣费大于抵扣卷
+                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($cost_fee-$user_free_balance)); // 余额扣款
+                // 添加到花费表
+                $expense_data = [
+                    'user_id'   => $input['user_id'],
+                    'expense_type'  => 2,
+                    'expense_cost'  => $cost_fee,
+                    'discount'      => 0,
+                    'total_cost'    => $cost_fee,
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('expense')->insert($expense_data);
+            }else{
+                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$cost_fee); // 抵扣券扣款
+                // 添加到花费表
+                $expense_data = [
+                    'user_id'   => $input['user_id'],
+                    'expense_type'  => 2,
+                    'expense_cost'  => $cost_fee,
+                    'discount'      => 0,
+                    'total_cost'    => $cost_fee,
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('expense')->insert($expense_data);
+            }
         }
         return $this->success('get message success');
     }

@@ -62,6 +62,8 @@ use http\Env\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Mpdf\Mpdf;
+use setasign\Fpdi\PdfParser\StreamReader;
 
 class RentService extends CommonService
 {
@@ -208,7 +210,7 @@ You have received a new tenancy application from above, please deal with it in t
             $model = new OtherRentApplication();
             $res = $model->insert($application_data);
             if($res){
-                return $this->success('application add success');
+                return $this->success('application add success',$res);
             } else{
                 return $this->error('3','application add failed');
             }
@@ -2510,7 +2512,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
     {
         $District = $input['District'];
         $property_type = $input['property_type'];
-        $time = date('Y-m',strtotime('-3 month'));
+        $time = date('Y-m',strtotime('-24 month'));
         $token = 'c2839b211876bdd05c6511edfd198eeb';
         $header = [
             'headers' => [
@@ -2518,13 +2520,49 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 'Authorization' => 'Bearer ' . $token
             ]
         ];
-        $url = "https://api.business.govt.nz/services/v1/tenancy-services/market-rent/statistics?
-        period-ending=$time&num-months=24&area-definition=AU2016&include-aggregates=false
-        &statistics=nLodged%2Cmed%2Clq%2Cuq%2Cbrr
-        &dwelling-type=$property_type&num-bedrooms=1%2C2%2C3%2C4%2C5%2B
-        &area-codes=$District";
+        $url = "https://api.business.govt.nz/services/v1/tenancy-services/market-rent/statistics?period-ending=$time&num-months=24&area-definition=AU2016&include-aggregates=false&statistics=nLodged%2Cmed%2Clq%2Cuq%2Cbrr&dwelling-type=$property_type&num-bedrooms=1%2C2%2C3%2C4%2C5%2B&area-codes=$District";
         $http = new \GuzzleHttp\Client();
         $response = $http->request('get',$url,$header);
-        dd($response);
+        $response = json_decode($response->getBody());
+        if(isset($response->status) ){
+            $data = [];
+            return $this->error('2','get market rent information failed');
+        }else{
+            $data = $response->items;
+            return $this->success('get market rent information success',$data);
+        }
+
+    }
+
+    /**
+     * @description:租户租房申请（非本平台）打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function rentApplicationOutPrint(array $input)
+    {
+        //dd($input);
+        $outApplication = $input['outApplication_id'];
+        $res = OtherRentApplication::where('id', $outApplication)->first();
+        // PDF
+        $ip = "{$_SERVER['SERVER_NAME']}";
+        $dashboard_pdf_file = "http://" . $ip . "/pdf/PreTenancyApplicaitonForm.pdf";
+        $fileContent = file_get_contents($dashboard_pdf_file, 'rb');
+        $mpdf = new Mpdf();
+        $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+        for ($i = 1; $i <= $pagecount; $i++) {
+            $import_page = $mpdf->importPage($i);
+            $mpdf->useTemplate($import_page);
+            if ($i == 1) {
+                $mpdf->WriteText('42', 35, 1);
+
+            }
+            if ($i < $pagecount) {
+                $mpdf->AddPage();
+            }
+        }
     }
 }

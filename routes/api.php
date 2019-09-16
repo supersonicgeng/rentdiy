@@ -79,6 +79,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->get('fee/invoicePrint', 'FeeController@invoicePrint'); // 发票打印 4.10
     $router->get('rent/contractPrint', 'RentController@contractPrint'); // 租约打印 5.13
     $router->post('rent/marketRentFee', 'RentController@marketRentFee'); // 市场租金 5.13
+    $router->get('rent/rentApplicationOutPrint', 'RentController@rentApplicationOutPrint'); // 租户租房申请（非本平台）打印 5.13
 });
 
 
@@ -413,6 +414,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('vipChargeList', 'ChargeController@vipChargeList'); // VIP充值列表 4.10
         $router->post('chargedList', 'ChargeController@chargedList'); // 充值结果列表 4.10
         $router->post('vipChargedList', 'ChargeController@vipChargedList'); // VIP充值结果列表 4.10
+        $router->post('expenseList', 'ChargeController@expenseList'); // 扣费列表 4.10
     });
 });
 

@@ -752,6 +752,81 @@ class FeeService extends CommonService
                 }
                 // 修改余额
                 $pay_money -= $need_pay->need_pay_fee;
+                // 扣服务费用
+                if($need_pay->arrears_type == 1){
+
+                }else{
+                    // 查看有无VIP
+                    $contract_type = RentContract::where('id',$need_pay->contract_id)->pluck('contract_type')->first();
+                    $vip = DB::table('vip_list')->where('user_id',$input['user_id'])->where('vip_type',$contract_type)
+                        ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
+                    if($vip){ // 有VIP
+                        $expense_data = [
+                            'user_id'   => $input['user_id'],
+                            'expense_type'  => $contract_type+2,
+                            'expense_cost'  => 0,
+                            'discount'      => 0,
+                            'total_cost'    => 0,
+                            'created_at'    => date('Y-m-d H:i:s',time())
+                        ];
+                        DB::table('expense')->insert($expense_data);
+                    }else{
+                        // 查看是否有折扣券
+                        $discount = DB::table('coupon_list')->where('user_id',$input['user_id'])->where('coupon_type',1)
+                            ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+                            ->orderByDesc('discount')->first();
+                       if($contract_type == 1){
+                           $expense_rate = DB::table('sys_config')->where('code','RSF')->pluck('value')->first();
+                       }elseif ($contract_type == 2){
+                           $expense_rate = DB::table('sys_config')->where('code','BSF')->pluck('value')->first();
+                       }elseif ($contract_type == 3){
+                           $expense_rate = DB::table('sys_config')->where('code','FSF')->pluck('value')->first();
+                       }else{
+                           $expense_rate = DB::table('sys_config')->where('code','CSF')->pluck('value')->first();
+                       }
+                        $expense_cost = $need_pay->arrears_fee*$expense_rate;
+                        if($discount){
+                            $expense_data = [
+                                'user_id'   => $input['user_id'],
+                                'expense_type'  => $contract_type+2,
+                                'expense_cost'  => $expense_cost,
+                                'discount'      => $expense_cost*$discount/100,
+                                'total_cost'    => $expense_cost*(100-$discount)/100,
+                                'created_at'    => date('Y-m-d H:i:s',time())
+                            ];
+                            DB::table('expense')->insert($expense_data);
+                            // 扣费用
+                            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                            if($expense_cost*(100-$discount)/100 > $user_free_balance){ // 扣费大于抵扣卷
+                                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                            }else{
+                                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                            }
+                        }else{
+                            $expense_data = [
+                                'user_id'   => $input['user_id'],
+                                'expense_type'  => $contract_type+2,
+                                'expense_cost'  => $expense_cost,
+                                'discount'      => 0,
+                                'total_cost'    => $expense_cost,
+                                'created_at'    => date('Y-m-d H:i:s',time())
+                            ];
+                            DB::table('expense')->insert($expense_data);
+                            // 扣费用
+                            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                            if($expense_cost > $user_free_balance){ // 扣费大于抵扣卷
+                                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                            }else{
+                                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                            }
+                        }
+
+                    }
+                }
             }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
                 // 更改此次费用
                 $change_arrears_data = [
@@ -1419,7 +1494,83 @@ class FeeService extends CommonService
                     'updated_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 RentArrears::where('id',$bank_check_data->match_arrears_id)->update($change_arrears_data);
+                // 扣服务费用
+                if($arrears_data->arrears_type == 1){
+
+                }else{
+                    // 查看有无VIP
+                    $contract_type = RentContract::where('id',$arrears_data->contract_id)->pluck('contract_type')->first();
+                    $vip = DB::table('vip_list')->where('user_id',$input['user_id'])->where('vip_type',$contract_type)
+                        ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
+                    if($vip){ // 有VIP
+                        $expense_data = [
+                            'user_id'   => $input['user_id'],
+                            'expense_type'  => $contract_type+2,
+                            'expense_cost'  => 0,
+                            'discount'      => 0,
+                            'total_cost'    => 0,
+                            'created_at'    => date('Y-m-d H:i:s',time())
+                        ];
+                        DB::table('expense')->insert($expense_data);
+                    }else{
+                        // 查看是否有折扣券
+                        $discount = DB::table('coupon_list')->where('user_id',$input['user_id'])->where('coupon_type',1)
+                            ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+                            ->orderByDesc('discount')->first();
+                        if($contract_type == 1){
+                            $expense_rate = DB::table('sys_config')->where('code','RSF')->pluck('value')->first();
+                        }elseif ($contract_type == 2){
+                            $expense_rate = DB::table('sys_config')->where('code','BSF')->pluck('value')->first();
+                        }elseif ($contract_type == 3){
+                            $expense_rate = DB::table('sys_config')->where('code','FSF')->pluck('value')->first();
+                        }else{
+                            $expense_rate = DB::table('sys_config')->where('code','CSF')->pluck('value')->first();
+                        }
+                        $expense_cost = $arrears_data->arrears_fee*$expense_rate;
+                        if($discount){
+                            $expense_data = [
+                                'user_id'   => $input['user_id'],
+                                'expense_type'  => $contract_type+2,
+                                'expense_cost'  => $expense_cost,
+                                'discount'      => $expense_cost*$discount/100,
+                                'total_cost'    => $expense_cost*(100-$discount)/100,
+                                'created_at'    => date('Y-m-d H:i:s',time())
+                            ];
+                            DB::table('expense')->insert($expense_data);
+                            // 扣费用
+                            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                            if($expense_cost*(100-$discount)/100 > $user_free_balance){ // 扣费大于抵扣卷
+                                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                            }else{
+                                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                            }
+                        }else{
+                            $expense_data = [
+                                'user_id'   => $input['user_id'],
+                                'expense_type'  => $contract_type+2,
+                                'expense_cost'  => $expense_cost,
+                                'discount'      => 0,
+                                'total_cost'    => $expense_cost,
+                                'created_at'    => date('Y-m-d H:i:s',time())
+                            ];
+                            DB::table('expense')->insert($expense_data);
+                            // 扣费用
+                            $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                            if($expense_cost > $user_free_balance){ // 扣费大于抵扣卷
+                                DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                            }else{
+                                DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                            }
+                        }
+
+                    }
+                }
             }
+
         }
         $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',3)->get();
         foreach ($un_confirm as $k => $v){
@@ -1543,6 +1694,81 @@ class FeeService extends CommonService
                     RentContract::where('id',$contract_id)->decrement('balance',$pay_money);
                     if(!$receive_res){
                         $error += 1;
+                    }
+                    // 扣服务费用
+                    if($need_pay->arrears_type == 1){
+
+                    }else{
+                        // 查看有无VIP
+                        $contract_type = RentContract::where('id',$need_pay->contract_id)->pluck('contract_type')->first();
+                        $vip = DB::table('vip_list')->where('user_id',$input['user_id'])->where('vip_type',$contract_type)
+                            ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
+                        if($vip){ // 有VIP
+                            $expense_data = [
+                                'user_id'   => $input['user_id'],
+                                'expense_type'  => $contract_type+2,
+                                'expense_cost'  => 0,
+                                'discount'      => 0,
+                                'total_cost'    => 0,
+                                'created_at'    => date('Y-m-d H:i:s',time())
+                            ];
+                            DB::table('expense')->insert($expense_data);
+                        }else{
+                            // 查看是否有折扣券
+                            $discount = DB::table('coupon_list')->where('user_id',$input['user_id'])->where('coupon_type',1)
+                                ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+                                ->orderByDesc('discount')->first();
+                            if($contract_type == 1){
+                                $expense_rate = DB::table('sys_config')->where('code','RSF')->pluck('value')->first();
+                            }elseif ($contract_type == 2){
+                                $expense_rate = DB::table('sys_config')->where('code','BSF')->pluck('value')->first();
+                            }elseif ($contract_type == 3){
+                                $expense_rate = DB::table('sys_config')->where('code','FSF')->pluck('value')->first();
+                            }else{
+                                $expense_rate = DB::table('sys_config')->where('code','CSF')->pluck('value')->first();
+                            }
+                            $expense_cost = $need_pay->arrears_fee*$expense_rate;
+                            if($discount){
+                                $expense_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'expense_type'  => $contract_type+2,
+                                    'expense_cost'  => $expense_cost,
+                                    'discount'      => $expense_cost*$discount/100,
+                                    'total_cost'    => $expense_cost*(100-$discount)/100,
+                                    'created_at'    => date('Y-m-d H:i:s',time())
+                                ];
+                                DB::table('expense')->insert($expense_data);
+                                // 扣费用
+                                $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                                if($expense_cost*(100-$discount)/100 > $user_free_balance){ // 扣费大于抵扣卷
+                                    DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                    DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                                }else{
+                                    DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                                }
+                            }else{
+                                $expense_data = [
+                                    'user_id'   => $input['user_id'],
+                                    'expense_type'  => $contract_type+2,
+                                    'expense_cost'  => $expense_cost,
+                                    'discount'      => 0,
+                                    'total_cost'    => $expense_cost,
+                                    'created_at'    => date('Y-m-d H:i:s',time())
+                                ];
+                                DB::table('expense')->insert($expense_data);
+                                // 扣费用
+                                $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                                if($expense_cost > $user_free_balance){ // 扣费大于抵扣卷
+                                    DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                                    DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                                }else{
+                                    DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                                }
+                            }
+
+                        }
                     }
                 }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
                     // 更改此次费用
@@ -2913,6 +3139,53 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     'updated_at'    => date('Y-m-d H:i:s',time()),
                 ];
                 OrderArrears::where('id',$bank_check_data->match_order_id)->update($change_order_data);
+                // 扣服务费用
+                $order_type = LandlordOrder::where('id',$order_data->order_id)->pluck('order_type')->first();
+                // 查看是否有折扣券
+                $discount = DB::table('coupon_list')->where('user_id',$input['user_id'])->where('coupon_type',1)
+                    ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+                    ->orderByDesc('discount')->first();
+                $expense_rate = DB::table('sys_config')->where('code','PSF')->pluck('value')->first();
+                $expense_cost = $order_data->arrears_fee*$expense_rate;
+                if($discount){
+                    $expense_data = [
+                        'user_id'   => $input['user_id'],
+                        'expense_type'  => $order_type+6,
+                        'expense_cost'  => $expense_cost,
+                        'discount'      => $expense_cost*$discount/100,
+                        'total_cost'    => $expense_cost*(100-$discount)/100,
+                        'created_at'    => date('Y-m-d H:i:s',time())
+                    ];
+                    DB::table('expense')->insert($expense_data);
+                    // 扣费用
+                    $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                    if($expense_cost*(100-$discount)/100 > $user_free_balance){ // 扣费大于抵扣卷
+                        DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                        DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                    }else{
+                        DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                    }
+                }else{
+                    $expense_data = [
+                        'user_id'   => $input['user_id'],
+                        'expense_type'  => $order_type+6,
+                        'expense_cost'  => $expense_cost,
+                        'discount'      => 0,
+                        'total_cost'    => $expense_cost,
+                        'created_at'    => date('Y-m-d H:i:s',time())
+                    ];
+                    DB::table('expense')->insert($expense_data);
+                    // 扣费用
+                    $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                    if($expense_cost > $user_free_balance){ // 扣费大于抵扣卷
+                        DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                        DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                    }else{
+                        DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                    }
+                }
             }
         }
         $un_confirm = BankCheck::where('check_id',$input['check_id'])->where('is_checked',3)->get();
@@ -3040,6 +3313,53 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     LandlordOrder::where('id',$order_id)->decrement('balance',$pay_money);
                     if(!$receive_res){
                         $error += 1;
+                    }
+                    // 扣服务费用
+                    $order_type = LandlordOrder::where('id',$need_pay->order_id)->pluck('order_type')->first();
+                    // 查看是否有折扣券
+                    $discount = DB::table('coupon_list')->where('user_id',$input['user_id'])->where('coupon_type',1)
+                        ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+                        ->orderByDesc('discount')->first();
+                    $expense_rate = DB::table('sys_config')->where('code','PSF')->pluck('value')->first();
+                    $expense_cost = $need_pay->arrears_fee*$expense_rate;
+                    if($discount){
+                        $expense_data = [
+                            'user_id'   => $input['user_id'],
+                            'expense_type'  => $order_type+6,
+                            'expense_cost'  => $expense_cost,
+                            'discount'      => $expense_cost*$discount/100,
+                            'total_cost'    => $expense_cost*(100-$discount)/100,
+                            'created_at'    => date('Y-m-d H:i:s',time())
+                        ];
+                        DB::table('expense')->insert($expense_data);
+                        // 扣费用
+                        $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                        if($expense_cost*(100-$discount)/100 > $user_free_balance){ // 扣费大于抵扣卷
+                            DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                            DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                        }else{
+                            DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                        }
+                    }else{
+                        $expense_data = [
+                            'user_id'   => $input['user_id'],
+                            'expense_type'  => $order_type+6,
+                            'expense_cost'  => $expense_cost,
+                            'discount'      => 0,
+                            'total_cost'    => $expense_cost,
+                            'created_at'    => date('Y-m-d H:i:s',time())
+                        ];
+                        DB::table('expense')->insert($expense_data);
+                        // 扣费用
+                        $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+                        if($expense_cost > $user_free_balance){ // 扣费大于抵扣卷
+                            DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
+                            DB::table('user')->where('id',$input['user_id'])->decrement('balance',($expense_cost-$user_free_balance)); // 余额扣款
+
+                        }else{
+                            DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$expense_cost); // 抵扣券扣款
+                        }
                     }
                 }elseif ($need_pay->need_pay_fee > $pay_money && $pay_money >0){ //
                     // 更改此次费用

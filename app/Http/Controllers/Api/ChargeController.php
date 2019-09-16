@@ -89,7 +89,7 @@ class ChargeController extends CommonController
 
 
     /**
-     * @description:VI[充值列表
+     * @description:VIP充值列表
      * @author: syg <13971394623@163.com>
      * @param $code
      * @param $message
@@ -99,5 +99,19 @@ class ChargeController extends CommonController
     public function vipChargedList(Request $request)
     {
         return service('Charge')->vipChargedList($request->all());
+    }
+
+
+    /**
+     * @description:VIP充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseList(Request $request)
+    {
+        return service('Charge')->expenseList($request->all());
     }
 }

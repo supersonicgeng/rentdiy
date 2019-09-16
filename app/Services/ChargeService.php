@@ -42,7 +42,7 @@ class ChargeService extends CommonService
      */
     public function chargeList(array $input)
     {
-        $res = DB::table('charge')->get();
+        $res = DB::table('charge')->where('is_use',1)->orderBy('sort')->get();
 
         return $this->success('get bond list success',$res);
     }
@@ -413,4 +413,28 @@ class ChargeService extends CommonService
         }
     }
 
+
+    /**
+     * @description:充值列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function expenseList(array $input)
+    {
+        $page = $input['page'];
+        $user_id = $input['user_id'];
+        $count = DB::table('expense')->where('user_id',$user_id)->count();
+        if($count < ($page-1)*10){
+            return $this->error('2','no more information');
+        }else{
+            $res =  DB::table('charge_list')->where('user_id',$user_id)->offset(($page-1)*10)->limit(10)->get();
+            $data['expense_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/10);
+            return $this->success('get bond list success',$data);
+        }
+    }
 }
