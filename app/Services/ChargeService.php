@@ -467,7 +467,7 @@ class ChargeService extends CommonService
                 'out_time'      => time()+$res->expens_time*3600*24,
                 'used_user_id'  => $input['user_id'],
             ];
-            $res->update($coupon_data);
+            DB::table('coupon_list')->where('coupon_sn',$coupon)->update($coupon_data);
         }else{
             // 添加赠送余额
             $coupon_data = [
