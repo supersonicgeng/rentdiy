@@ -762,6 +762,7 @@ class FeeService extends CommonService
                         ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
                     if($vip){ // 有VIP
                         $expense_data = [
+                            'expense_sn'    => expenseSn(),
                             'user_id'   => $input['user_id'],
                             'expense_type'  => $contract_type+2,
                             'expense_cost'  => 0,
@@ -787,6 +788,7 @@ class FeeService extends CommonService
                         $expense_cost = $need_pay->arrears_fee*$expense_rate;
                         if($discount){
                             $expense_data = [
+                                'expense_sn'    => expenseSn(),
                                 'user_id'   => $input['user_id'],
                                 'expense_type'  => $contract_type+2,
                                 'expense_cost'  => $expense_cost,
@@ -806,6 +808,7 @@ class FeeService extends CommonService
                             }
                         }else{
                             $expense_data = [
+                                'expense_sn'    => expenseSn(),
                                 'user_id'   => $input['user_id'],
                                 'expense_type'  => $contract_type+2,
                                 'expense_cost'  => $expense_cost,
@@ -1504,6 +1507,7 @@ class FeeService extends CommonService
                         ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
                     if($vip){ // 有VIP
                         $expense_data = [
+                            'expense_sn'    => expenseSn(),
                             'user_id'   => $input['user_id'],
                             'expense_type'  => $contract_type+2,
                             'expense_cost'  => 0,
@@ -1529,6 +1533,7 @@ class FeeService extends CommonService
                         $expense_cost = $arrears_data->arrears_fee*$expense_rate;
                         if($discount){
                             $expense_data = [
+                                'expense_sn'    => expenseSn(),
                                 'user_id'   => $input['user_id'],
                                 'expense_type'  => $contract_type+2,
                                 'expense_cost'  => $expense_cost,
@@ -1548,6 +1553,7 @@ class FeeService extends CommonService
                             }
                         }else{
                             $expense_data = [
+                                'expense_sn'    => expenseSn(),
                                 'user_id'   => $input['user_id'],
                                 'expense_type'  => $contract_type+2,
                                 'expense_cost'  => $expense_cost,
@@ -1705,6 +1711,7 @@ class FeeService extends CommonService
                             ->where('vip_start_date','<=',date('Y-m-d',time()))->where('vip_end_date','>=',date('Y-m-d',time()))->first();
                         if($vip){ // 有VIP
                             $expense_data = [
+                                'expense_sn'    => expenseSn(),
                                 'user_id'   => $input['user_id'],
                                 'expense_type'  => $contract_type+2,
                                 'expense_cost'  => 0,
@@ -1730,6 +1737,7 @@ class FeeService extends CommonService
                             $expense_cost = $need_pay->arrears_fee*$expense_rate;
                             if($discount){
                                 $expense_data = [
+                                    'expense_sn'    => expenseSn(),
                                     'user_id'   => $input['user_id'],
                                     'expense_type'  => $contract_type+2,
                                     'expense_cost'  => $expense_cost,
@@ -1749,6 +1757,7 @@ class FeeService extends CommonService
                                 }
                             }else{
                                 $expense_data = [
+                                    'expense_sn'    => expenseSn(),
                                     'user_id'   => $input['user_id'],
                                     'expense_type'  => $contract_type+2,
                                     'expense_cost'  => $expense_cost,
@@ -3162,6 +3171,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 $expense_cost = $order_data->arrears_fee*$expense_rate;
                 if($discount){
                     $expense_data = [
+                        'expense_sn'    => expenseSn(),
                         'user_id'   => $input['user_id'],
                         'expense_type'  => $order_type+6,
                         'expense_cost'  => $expense_cost,
@@ -3181,6 +3191,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     }
                 }else{
                     $expense_data = [
+                        'expense_sn'    => expenseSn(),
                         'user_id'   => $input['user_id'],
                         'expense_type'  => $order_type+6,
                         'expense_cost'  => $expense_cost,
@@ -3347,6 +3358,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                     $expense_cost = $need_pay->arrears_fee*$expense_rate;
                     if($discount){
                         $expense_data = [
+                            'expense_sn'    => expenseSn(),
                             'user_id'   => $input['user_id'],
                             'expense_type'  => $order_type+6,
                             'expense_cost'  => $expense_cost,
@@ -3366,6 +3378,7 @@ The above work has been completed, you can issue an invoice to the landlord..",
                         }
                     }else{
                         $expense_data = [
+                            'expense_sn'    => expenseSn(),
                             'user_id'   => $input['user_id'],
                             'expense_type'  => $order_type+6,
                             'expense_cost'  => $expense_cost,

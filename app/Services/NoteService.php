@@ -1021,6 +1021,7 @@ Please contact with us if you have any questions, thank you.
                 DB::table('user')->where('id',$input['user_id'])->decrement('balance',($cost_fee-$user_free_balance)); // 余额扣款
                 // 添加到花费表
                 $expense_data = [
+                    'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
                     'expense_type'  => 1,
                     'expense_cost'  => $cost_fee,
@@ -1033,6 +1034,7 @@ Please contact with us if you have any questions, thank you.
                 DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$cost_fee); // 抵扣券扣款
                 // 添加到花费表
                 $expense_data = [
+                    'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
                     'expense_type'  => 1,
                     'expense_cost'  => $cost_fee,
@@ -1072,6 +1074,7 @@ Please contact with us if you have any questions, thank you.
                 DB::table('user')->where('id',$input['user_id'])->decrement('balance',($cost_fee-$user_free_balance)); // 余额扣款
                 // 添加到花费表
                 $expense_data = [
+                    'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
                     'expense_type'  => 2,
                     'expense_cost'  => $cost_fee,
@@ -1084,6 +1087,7 @@ Please contact with us if you have any questions, thank you.
                 DB::table('user')->where('id',$input['user_id'])->decrement('free_balance',$cost_fee); // 抵扣券扣款
                 // 添加到花费表
                 $expense_data = [
+                    'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
                     'expense_type'  => 2,
                     'expense_cost'  => $cost_fee,
