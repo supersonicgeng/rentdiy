@@ -380,7 +380,16 @@ class ChargeService extends CommonService
         if($count < ($page-1)*10){
             return $this->error('2','no more information');
         }else{
+            $total_charge = 0;
+            $total_free = 0;
+            $total_amount = 0;
             $res =  DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type',1)->offset(($page-1)*10)->limit(10)->get();
+            foreach ($res as $k => $v){
+                $res[$k]->amount = $v->charge_fee+$v->free_fee;
+                $total_charge += $v->charge_fee;
+                $total_free += $v->free_fee;
+                $total_amount += $res[$k]->amount;
+            }
             $data['charged_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
@@ -413,13 +422,10 @@ class ChargeService extends CommonService
                     $code = 'RVF';
                 }elseif ($v->vip_type == 2){
                     $code = 'BVF';
-                    $free_code = 'BVB';
                 }elseif ($v->vip_type == 3){
                     $code = 'FVF';
-                    $free_code = 'FVB';
                 }elseif ($v->vip_type == 4){
                     $code = 'CVF';
-                    $free_code = 'CFB';
                 }
                 $res[$k]->value = DB::table('sys_config')->where('code',$code)->pluck('value')->first();
             }
@@ -447,7 +453,15 @@ class ChargeService extends CommonService
         if($count < ($page-1)*10){
             return $this->error('2','no more information');
         }else{
+            $total_charge = 0;
+            $total_free = 0;
+            $total_amount = 0;
             $res =  DB::table('expense')->where('user_id',$user_id)->offset(($page-1)*10)->limit(10)->get();
+            foreach ($res as $k => $v){
+                $total_charge += $v->expense_cost;
+                $total_free += $v->discount;
+                $total_amount += $v->total_cost;
+            }
             $data['expense_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
