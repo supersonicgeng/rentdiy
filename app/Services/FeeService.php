@@ -1920,6 +1920,9 @@ class FeeService extends CommonService
                 $balance = RentContract::where('id',$contract_id)->first();
                 $balance->balance += $bank_check_res->amount;
                 $balance->update();
+                // 删除这个金额
+                $bank_check_res->amount = 0;
+                $bank_check_res->update();
             }
             // 将此条数据变为已核对
             $bank_check_res->is_checked = 2;
@@ -3603,6 +3606,9 @@ The above work has been completed, you can issue an invoice to the landlord..",
                 $balance = LandlordOrder::where('id',$contract_id)->first();
                 $balance->balance += $bank_check_res->amount;
                 $balance->update();
+                // 删除这个金额
+                $bank_check_res->amount = 0;
+                $bank_check_res->update();
             }
             // 将此条数据变为已核对
             $bank_check_res->is_checked = 2;
