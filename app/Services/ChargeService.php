@@ -403,12 +403,27 @@ class ChargeService extends CommonService
     {
         $page = $input['page'];
         $user_id = $input['user_id'];
-        $count = DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type','!=',1)->count();
+        $count = DB::table('vip_list')->where('user_id',$user_id)->count();
         if($count < ($page-1)*10){
             return $this->error('2','no more information');
         }else{
-            $res =  DB::table('charge_list')->where('user_id',$user_id)->where('charge_status',2)->where('charge_type','!=',1)->offset(($page-1)*10)->limit(10)->get();
-            $data['charged_list'] = $res;
+            $res =  DB::table('vip_list')->where('user_id',$user_id)->offset(($page-1)*10)->limit(10)->get();
+            foreach ($res as $k => $v){
+                if($v->vip_type == 1){
+                    $code = 'RVF';
+                }elseif ($v->vip_type == 2){
+                    $code = 'BVF';
+                    $free_code = 'BVB';
+                }elseif ($v->vip_type == 3){
+                    $code = 'FVF';
+                    $free_code = 'FVB';
+                }elseif ($v->vip_type == 4){
+                    $code = 'CVF';
+                    $free_code = 'CFB';
+                }
+                $res[$k]->value = DB::table('sys_config')->where('code',$code)->pluck('value')->first();
+            }
+            $data['vip_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
             return $this->success('get bond list success',$data);
