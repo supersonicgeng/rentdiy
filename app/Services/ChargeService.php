@@ -393,6 +393,9 @@ class ChargeService extends CommonService
             $data['charged_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
+            $data['total_charge'] = $total_charge;
+            $data['total_free'] = $total_free;
+            $data['total_amount'] = $total_amount;
             return $this->success('get bond list success',$data);
         }
 
@@ -465,6 +468,9 @@ class ChargeService extends CommonService
             $data['expense_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
+            $data['total_charge'] = $total_charge;
+            $data['total_free'] = $total_free;
+            $data['total_amount'] = $total_amount;
             return $this->success('get bond list success',$data);
         }
     }
