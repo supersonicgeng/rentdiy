@@ -129,4 +129,17 @@ class OperatorController extends Controller
         return service('Operator')->getOrderList($request->all());
     }
 
+
+    /**
+     * @description: 服务商检查操作员获取列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOperatorHouseList(Request $request)
+    {
+        return service('Operator')->getOperatorHouseList($request->all());
+    }
 }

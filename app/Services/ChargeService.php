@@ -432,12 +432,36 @@ class ChargeService extends CommonService
         if($count < ($page-1)*10){
             return $this->error('2','no more information');
         }else{
-            $res =  DB::table('charge_list')->where('user_id',$user_id)->offset(($page-1)*10)->limit(10)->get();
+            $res =  DB::table('expense')->where('user_id',$user_id)->offset(($page-1)*10)->limit(10)->get();
             $data['expense_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/10);
             return $this->success('get bond list success',$data);
         }
+    }
+
+
+    /**
+     * @description:优惠券展示
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function couponShow(array $input)
+    {
+        $coupon = $input['coupon'];
+        $res = DB::table('coupon_list')->where('coupon_sn',$coupon)->first();
+        if(!$res){
+            return $this->error('2','is not right coupon sn');
+        }
+        $is_used = $res->is_activated;
+        if($is_used == 1){
+            return $this->error('2','this coupon sn is used');
+        }
+
+        return $this->success('coupon use success',$res);
     }
 
     /**
@@ -494,16 +518,23 @@ class ChargeService extends CommonService
     public function commonData(array $input)
     {
        $user_id = $input['user_id'];
+
        $user_info =  \App\Model\User::where('id',$input['user_id'])->first();
        $total_amount = $user_info->balance+$user_info->free_balance;
        $free_balance = $user_info->free_balance;
-       $discount =  $discount = DB::table('coupon_list')->where('used_user_id',$input['user_id'])->where('coupon_type',1)
-           ->where('activated_at','<=',date('Y-m-d',time()))->where('out_time','<=',date('Y-m-d',time()))
+       $discount = DB::table('coupon_list')->where('used_user_id',$input['user_id'])->where('coupon_type',1)
+           ->where('is_activated',1)
+           ->where('activated_at','<=',date('Y-m-d H:i:s',time()))->where('out_time','<=',date('Y-m-d H:i:s',time()))
            ->orderByDesc('discount')->first();
        $data['total_amount'] = $total_amount;
        $data['free_balance'] = $free_balance;
-       $data['discount'] = $discount->discount;
-       $data['discount_out_time'] = $discount->out_time;
+       if($discount){
+           $data['discount'] = $discount->discount;
+           $data['discount_out_time'] = $discount->out_time;
+       }else{
+           $data['discount'] = '';
+           $data['discount_out_time'] = '';
+       }
        return $this->success('get data success',$data);
     }
 }

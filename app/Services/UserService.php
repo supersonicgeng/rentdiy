@@ -775,7 +775,6 @@ class UserService extends CommonService
         $client = new \Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
         $token = $input['token'];
         $payload = $client->verifyIdToken($token);
-
         $google_id = $payload['sub'];
         $res = \App\Model\User::where('google_id',$google_id)->first();
         if($res){ // 查找有这个facebookid

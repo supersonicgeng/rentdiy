@@ -205,6 +205,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('changeOperatorStatus', 'OperatorController@changeOperatorStatus'); // 修改操作员是否禁用 3.29
         $router->post('getHouseList', 'OperatorController@getHouseList'); // 房东检查操作员获取列表 4.10
         $router->post('getOrderList', 'OperatorController@getOrderList'); // 服务商检查操作员获取列表 4.10
+        $router->post('getOperatorHouseList', 'OperatorController@getOperatorHouseList'); // 服务商检查操作员获取房屋列表 4.10
     });
     // 服务商市场
     $router->group(['prefix' => 'providersMarket'], function (Router $router) {
@@ -415,6 +416,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('chargedList', 'ChargeController@chargedList'); // 充值结果列表 4.10
         $router->post('vipChargedList', 'ChargeController@vipChargedList'); // VIP充值结果列表 4.10
         $router->post('expenseList', 'ChargeController@expenseList'); // 扣费列表 4.10
+        $router->post('couponShow', 'ChargeController@couponShow'); // 优惠券展示 4.10
         $router->post('couponUse', 'ChargeController@couponUse'); // 优惠券消券 4.10
         $router->post('commonData', 'ChargeController@commonData'); // 充值页面共通数据 4.10
     });

@@ -430,4 +430,20 @@ class OperatorService extends CommonService
             return $this->error('3','get house list failed');
         }
     }
+
+    /**
+     * @description:服务商检查操作员获取列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOperatorHouseList(array $input)
+    {
+        $providers_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
+        $rent_house_ids = LandlordOrder::whereIn('providers_id',$providers_ids)->pluck('rent_house_id');
+        $res = RentHouse::whereIn('id',$rent_house_ids)->select('id','property_name','room_name')->get();
+        return $this->success('get house list success',$res);
+    }
 }
