@@ -2609,23 +2609,87 @@ The bond can only refund if you satisfied with above or agree the amount with th
             }
             if ($i == 2){
                 if($res->work_situation == 1){
-                    $mpdf->WriteText(62, 29, (string)'√');
+                    $mpdf->WriteText(38, 29, (string)'√');
                 } elseif ($res->work_situation == 2){
                     $mpdf->WriteText(61, 29, (string)'√');
                 } elseif ($res->work_situation == 3){
-
+                    $mpdf->WriteText(87, 29, (string)'√');
                 }elseif ($res->work_situation == 4){
-
+                    $mpdf->WriteText(105, 29, (string)'√');
                 }elseif ($res->work_situation == 5){
-
+                    $mpdf->WriteText(133, 29, (string)'√');
                 }elseif ($res->work_situation == 6){
-
+                    $mpdf->WriteText(174, 29, (string)'√');
                 }
+                $mpdf->WriteText(40, 44, (string)$res->company_name);
+                $mpdf->WriteText(125, 44, (string)$res->job_title);
+                $mpdf->WriteText(41, 50, (string)$res->employer_name);
+                $mpdf->WriteText(118, 50, (string)$res->company_address);
+                $mpdf->WriteText(26, 58, (string)$res->company_phone);
+                $mpdf->WriteText(116, 58, (string)$res->company_email);
+                if($res->inform_company == 1){
+                    $mpdf->WriteText(13, 64, (string)'√');
+                }
+                $mpdf->WriteText(49, 72, (string)$res->income);
+                $mpdf->WriteText(24, 94, (string)$res->contact_name);
+                $mpdf->WriteText(119, 94, (string)$res->contact_address);
+                $mpdf->WriteText(38, 101, (string)$res->contact_phone);
+                $mpdf->WriteText(127, 101, (string)$res->contact_mobile);
+                $mpdf->WriteText(25, 109, (string)$res->contact_mobile);
             }
             if ($i < $pagecount) {
                 $mpdf->AddPage();
             }
         }
         return $this->success('get pdf success',$mpdf->Output());
+    }
+
+    /**
+     * @description:租约打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function marketRentFeeAdjust(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+        $rent_house_info = DB::table('rent_house')->where('id',$rent_house_id)->first();
+        $District = $rent_house_info->District;
+        if($rent_house_info->property_type == 1){
+            $property_type = 'Apartment';
+        }elseif ($rent_house_info->property_type == 2){
+            $property_type = 'House';
+        }elseif ($rent_house_info->property_type == 3){
+            $property_type = 'NA';
+        } elseif ($rent_house_info->property_type == 4){
+            $property_type = 'Flat';
+        } elseif ($rent_house_info->property_type == 5){
+            $property_type = 'Room';
+        }elseif ($rent_house_info->property_type == 6){
+            $property_type = 'Boarding House';
+        }
+        $time = date('Y-m',strtotime('-24 month'));
+        $token = 'c2839b211876bdd05c6511edfd198eeb';
+        $header = [
+            'headers' => [
+                'Accept'        => 'application/json',
+                'Authorization' => 'Bearer ' . $token
+            ]
+        ];
+        $url = "https://api.business.govt.nz/services/v1/tenancy-services/market-rent/statistics?period-ending=$time&num-months=24&area-definition=AU2016&include-aggregates=false&statistics=nLodged%2Cmed%2Clq%2Cuq%2Cbrr&dwelling-type=$property_type&num-bedrooms=1%2C2%2C3%2C4%2C5%2B&area-codes=$District";
+        $http = new \GuzzleHttp\Client();
+        $response = $http->request('get',$url,$header);
+        $response = json_decode($response->getBody());
+        if(isset($response->status) ){
+            $data = [];
+            return $this->error('2','get market rent information failed');
+        }else{
+            $data = $response->items;
+            return $this->success('get market rent information success',$data);
+        }
+
     }
 }

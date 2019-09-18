@@ -344,6 +344,20 @@ class RentController extends CommonController
     }
 
     /**
+     * @description:市场租金
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function marketRentFeeAdjust(Request $request)
+    {
+        return service('Rent')->marketRentFeeAdjust($request->all());
+    }
+
+
+    /**
      * @description:租户租房申请（非本平台）打印
      * @author: syg <13971394623@163.com>
      * @param $code
