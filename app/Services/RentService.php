@@ -2557,12 +2557,75 @@ The bond can only refund if you satisfied with above or agree the amount with th
             $import_page = $mpdf->importPage($i);
             $mpdf->useTemplate($import_page);
             if ($i == 1) {
-                $mpdf->WriteText('42', 35, 1);
+                $mpdf->WriteText(43, 63, (string)$res->apply_house_address);
+                $mpdf->WriteText(66, 72, (string)$res->apply_start_time);
+                $mpdf->WriteText(112, 72, (string)$res->apply_end_time);
+                $mpdf->WriteText(32, 95, (string)$res->tenement_name);
+                $mpdf->WriteText(125, 95, (string)$res->birthday);
+                $mpdf->WriteText(40, 102, (string)$res->phone);
+                $mpdf->WriteText(127, 102, (string)$res->mobile);
+                $mpdf->WriteText(24, 109, (string)$res->email);
+                $mpdf->WriteText(137, 109, (string)$res->welfare_no);
+                if($res->have_pets == 1){
+                    $mpdf->WriteText(13, 122, (string)'√');
+                    $mpdf->WriteText(38, 122, (string)$res->pets);
+                }else{
+                    $mpdf->WriteText(68, 122, (string)'√');
+                }
+                $mpdf->WriteText(40, 140, (string)$res->current_address);
+                $mpdf->WriteText(125, 140, (string)$res->current_rent_fee);
+                if($res->rent_way == 1){
+                    $mpdf->WriteText(113, 147, (string)$res->rent_times);
+                }elseif ($res->rent_way == 2){
+                    $mpdf->WriteText(113, 147, (string)$res->rent_times);
+                }
+                if($res->live_method == 1){
+                    $mpdf->WriteText(12, 153, (string)'√');
+                }elseif ($res->live_method == 2){
+                    $mpdf->WriteText(64, 153, (string)'√');
+                }elseif ($res->live_method == 3){
+                    $mpdf->WriteText(104, 153, (string)'√');
+                }elseif ($res->live_method == 4){
+                    $mpdf->WriteText(144, 153, (string)'√');
+                }else{
+                    $mpdf->WriteText(180, 153, (string)'√');
+                    $mpdf->WriteText(192, 153, (string)$res->other_method);
+                }
+                $mpdf->WriteText(77, 172, (string)$res->leave_reason);
+                $mpdf->WriteText(27, 192, (string)$res->current_landlord_name);
+                $mpdf->WriteText(152, 192, (string)$res->property_manager_name);
+                $mpdf->WriteText(25, 199, (string)$res->landlord_phone);
+                $mpdf->WriteText(117, 199, (string)$res->manager_phone);
+                if($res->inform_landlord == 1){
+                    $mpdf->WriteText(13, 206, (string)'√');
+                }
+                $mpdf->WriteText(52, 227, (string)$res->driving_license);
+                $mpdf->WriteText(148, 227, (string)$res->version_num);
+                $mpdf->WriteText(28, 244, (string)$res->passport);
+                $mpdf->WriteText(64, 251, (string)$res->vehicle);
+                $mpdf->WriteText(134, 251, (string)$res->model);
+                $mpdf->WriteText(40, 257, (string)$res->model);
+                $mpdf->WriteText(140, 257, (string)$res->alternative);
+            }
+            if ($i == 2){
+                if($res->work_situation == 1){
+                    $mpdf->WriteText(62, 29, (string)'√');
+                } elseif ($res->work_situation == 2){
+                    $mpdf->WriteText(61, 29, (string)'√');
+                } elseif ($res->work_situation == 3){
 
+                }elseif ($res->work_situation == 4){
+
+                }elseif ($res->work_situation == 5){
+
+                }elseif ($res->work_situation == 6){
+
+                }
             }
             if ($i < $pagecount) {
                 $mpdf->AddPage();
             }
         }
+        return $this->success('get pdf success',$mpdf->Output());
     }
 }
