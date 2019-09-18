@@ -160,6 +160,8 @@ You have received a new tenancy application from above, please deal with it in t
                 'email'                 => $input['email'],
                 'welfare_no'            => $input['welfare_no'],
                 'have_pets'             => $input['have_pets'],
+                'adult'                 => $input['adult'],
+                'children'              => $input['children'],
                 'pets'                  => @$input['pets'],
                 'current_address'       => $input['current_address'],
                 'current_rent_fee'      => $input['current_rent_fee'],
