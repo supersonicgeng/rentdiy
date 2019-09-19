@@ -17,6 +17,7 @@ use App\Model\CheckBuilding;
 use App\Model\Config;
 use App\Model\Driver;
 use App\Model\DriverTakeOver;
+use App\Model\Inspect;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
 use App\Model\Level;
@@ -162,7 +163,7 @@ class OperatorService extends CommonService
         $model = new Operator();
         $operator_info = $model->where('user_id',$user_id)->where('id',$operator_id)->first();
         $operator_data = [
-            'password'          => @$input['password']?$input['password']:$operator_info->password,
+            'password'          => @$input['password']==$operator_info->password?$operator_info->password:md5($input['password']),
             'role'              => @$input['role']?$input['role']:$operator_info->role,
             'start_date'        => @$input['start_date']?$input['start_date']:$operator_info->start_date,
             'end_date'          => @$input['end_date']?$input['end_date']:$operator_info->end_date,
@@ -175,14 +176,15 @@ class OperatorService extends CommonService
         if($res){
             // 删除已经存在的房屋列表
             OperatorRoom::where('operator_id',$operator_id)->update(['deleted_at'=>date('Y-m-d H:i:s',time())]);
-            foreach ($input['house_list'] as $k => $v)
+            foreach ($input['house_list'] as $k => $v){
                 $data = [
                     'operator_id'   => $operator_id,
                     'house_id'      => $v['house_id'],
                     'operator_way'  => $input['operator_way'],
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
-            $insert_res = OperatorRoom::insert($data);
+                $insert_res = OperatorRoom::insert($data);
+            }
             if(!$insert_res){
                 $error += 1;
             }
@@ -398,14 +400,14 @@ class OperatorService extends CommonService
     {
         $operator_id = $input['operator_id'];
         $user_id = $input['user_id'];
-        $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+        $room_list = OperatorRoom::where('operator_id',$operator_id)->where('deleted_at',null)->pluck('house_id');
         $service_ids = Providers::where('user_id',$user_id)->select('id')->get();
         $model = new LandlordOrder();
         $model = $model->whereIn('providers_id',$service_ids);
         $model = $model->where('order_type',3);
-        $model = $model->where('order_status',2);
+        /*$model = $model->where('order_status',2);*/
         $model = $model->whereIn('rent_house_id',$room_list);
-        $model = $model->groupBy('rent_house_id');
+        /*$model = $model->groupBy('rent_house_id');*/
         $page = $input['page'];
         $count = $model->get()->toArray();
         $count = count($count);
@@ -417,6 +419,7 @@ class OperatorService extends CommonService
             $house_info[$k] = RentHouse::where('id',$v['rent_house_id'])->select('id','rent_category','property_name','address','bedroom_no','bathroom_no','parking_no','garage_no','District','TA','Region','available_date','require_renter')->first()->toArray();
             $house_info[$k]['full_address'] = $house_info[$k]['address'].','.Region::getName($house_info[$k]['District']).','.Region::getName($house_info[$k]['TA']).','.Region::getName($house_info[$k]['Region']); //地址
             $house_info[$k]['inspect_info'] = Inspect::where('id',$v['inspect_id'])->first();
+            $house_info[$k]['house_pic'] =  RentPic::where('rent_house_id',$v['rent_house_id'])->where('deleted_at',null)->pluck('house_pic')->toArray();
         }
         if(!@$house_info){
             return $this->error('4','no data');

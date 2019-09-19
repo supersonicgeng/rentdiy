@@ -1,279 +1,526 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.admin.base')
+
+@section('content')
 
 
-<!-- Mirrored from www.zi-han.net/theme/hplus/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:16:41 GMT -->
-<head>
-    @include('layouts.admin.header')
-</head>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                仪表盘
+                <small>控制面板</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Dashboard</li>
+            </ol>
+        </section>
 
-<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
-<div id="wrapper">
-    <!--左侧导航开始-->
-    <nav class="navbar-default navbar-static-side" role="navigation">
-        <div class="nav-close"><i class="fa fa-times-circle"></i>
-        </div>
-        <div class="sidebar-collapse">
-            <ul class="nav" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element">
-                        <span><img alt="image" class="img-circle" src="/admin/img/user.jpg" /></span>
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
-                                <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
-                                </span>
-                        </a>
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                            <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
-                            </li>
-                            <li><a class="J_menuItem" href="profile.html">个人资料</a>
-                            </li>
-                            <li><a class="J_menuItem" href="contacts.html">联系我们</a>
-                            </li>
-                            <li><a class="J_menuItem" href="mailbox.html">信箱</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li><a href="{{url('manage/logoutAction')}}">安全退出</a>
-                            </li>
+        <!-- Main content -->
+        <section class="content">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>150</h3>
+
+                            <p>今日订单</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-green">
+                        <div class="inner">
+                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                            <p>Bounce Rate</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-yellow">
+                        <div class="inner">
+                            <h3>44</h3>
+
+                            <p>用户注册</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-red">
+                        <div class="inner">
+                            <h3>65</h3>
+
+                            <p>Unique Visitors</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-7 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="nav-tabs-custom">
+                        <!-- Tabs within a box -->
+                        <ul class="nav nav-tabs pull-right">
+                            <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
+                            <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
+                            <li class="pull-left header"><i class="fa fa-inbox"></i> Sales</li>
                         </ul>
+                        <div class="tab-content no-padding">
+                            <!-- Morris chart - Sales -->
+                            <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
+                            <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
+                        </div>
                     </div>
-                    <div class="logo-element">H+
+                    <!-- /.nav-tabs-custom -->
+
+                    <!-- Chat box -->
+                    <div class="box box-success">
+                        <div class="box-header">
+                            <i class="fa fa-comments-o"></i>
+
+                            <h3 class="box-title">Chat</h3>
+
+                            <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
+                                <div class="btn-group" data-toggle="btn-toggle">
+                                    <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body chat" id="chat-box">
+                            <!-- chat item -->
+                            <div class="item">
+                                <img src="dist/img/user4-128x128.jpg" alt="user image" class="online">
+
+                                <p class="message">
+                                    <a href="#" class="name">
+                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
+                                        Mike Doe
+                                    </a>
+                                    I would like to meet you to discuss the latest news about
+                                    the arrival of the new theme. They say it is going to be one the
+                                    best themes on the market
+                                </p>
+                                <div class="attachment">
+                                    <h4>Attachments:</h4>
+
+                                    <p class="filename">
+                                        Theme-thumbnail-image.jpg
+                                    </p>
+
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-primary btn-sm btn-flat">Open</button>
+                                    </div>
+                                </div>
+                                <!-- /.attachment -->
+                            </div>
+                            <!-- /.item -->
+                            <!-- chat item -->
+                            <div class="item">
+                                <img src="dist/img/user3-128x128.jpg" alt="user image" class="offline">
+
+                                <p class="message">
+                                    <a href="#" class="name">
+                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
+                                        Alexander Pierce
+                                    </a>
+                                    I would like to meet you to discuss the latest news about
+                                    the arrival of the new theme. They say it is going to be one the
+                                    best themes on the market
+                                </p>
+                            </div>
+                            <!-- /.item -->
+                            <!-- chat item -->
+                            <div class="item">
+                                <img src="dist/img/user2-160x160.jpg" alt="user image" class="offline">
+
+                                <p class="message">
+                                    <a href="#" class="name">
+                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
+                                        Susan Doe
+                                    </a>
+                                    I would like to meet you to discuss the latest news about
+                                    the arrival of the new theme. They say it is going to be one the
+                                    best themes on the market
+                                </p>
+                            </div>
+                            <!-- /.item -->
+                        </div>
+                        <!-- /.chat -->
+                        <div class="box-footer">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Type message...">
+
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </li>
-                <li>
-                    <a class="J_menuItem" href="{{url('manage/info')}}"><i class="fa fa-home"></i> <span class="nav-label">主页</span></a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">店铺管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/shop')}}">店铺列表</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/addShop')}}">新增店铺</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">商品管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/goods')}}">商品管理</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/addShop')}}">分类管理</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/addShop')}}">类型管理</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/addShop')}}">品牌管理</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/addShop')}}">规格管理</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">订单管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/shop')}}">订单列表</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">用户管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/shopUser')}}">用户列表</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">公众号管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/wxConfig')}}">公众号配置</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/wxMenu')}}">自定义菜单</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa fa-bar-chart-o"></i>
-                        <span class="nav-label">系统管理</span>
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/shopSet')}}">系统设置</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="{{url('manage/logistics')}}">物流管理</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <!--左侧导航结束-->
-    <!--右侧部分开始-->
-    <div id="page-wrapper" class="gray-bg dashbard-1">
-        <div class="row content-tabs">
-            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
-            </button>
-            <nav class="page-tabs J_menuTabs">
-                <div class="page-tabs-content">
-                    <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">首页</a>
-                </div>
-            </nav>
-            <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
-            </button>
-            <div class="btn-group roll-nav roll-right">
-                <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+                    <!-- /.box (chat box) -->
 
-                </button>
-                <ul role="menu" class="dropdown-menu dropdown-menu-right">
-                    <li class="J_tabShowActive"><a>定位当前选项卡</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
-                    </li>
-                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
-                    </li>
-                </ul>
+                    <!-- TO DO List -->
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <i class="ion ion-clipboard"></i>
+
+                            <h3 class="box-title">To Do List</h3>
+
+                            <div class="box-tools pull-right">
+                                <ul class="pagination pagination-sm inline">
+                                    <li><a href="#">&laquo;</a></li>
+                                    <li><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">&raquo;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
+                            <ul class="todo-list">
+                                <li>
+                                    <!-- drag handle -->
+                                    <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <!-- checkbox -->
+                                    <input type="checkbox" value="">
+                                    <!-- todo text -->
+                                    <span class="text">Design a nice theme</span>
+                                    <!-- Emphasis label -->
+                                    <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
+                                    <!-- General tools such as edit or delete-->
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                                <li>
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <input type="checkbox" value="">
+                                    <span class="text">Make the theme responsive</span>
+                                    <small class="label label-info"><i class="fa fa-clock-o"></i> 4 hours</small>
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                                <li>
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <input type="checkbox" value="">
+                                    <span class="text">Let theme shine like a star</span>
+                                    <small class="label label-warning"><i class="fa fa-clock-o"></i> 1 day</small>
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                                <li>
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <input type="checkbox" value="">
+                                    <span class="text">Let theme shine like a star</span>
+                                    <small class="label label-success"><i class="fa fa-clock-o"></i> 3 days</small>
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                                <li>
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <input type="checkbox" value="">
+                                    <span class="text">Check your messages and notifications</span>
+                                    <small class="label label-primary"><i class="fa fa-clock-o"></i> 1 week</small>
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                                <li>
+                      <span class="handle">
+                        <i class="fa fa-ellipsis-v"></i>
+                        <i class="fa fa-ellipsis-v"></i>
+                      </span>
+                                    <input type="checkbox" value="">
+                                    <span class="text">Let theme shine like a star</span>
+                                    <small class="label label-default"><i class="fa fa-clock-o"></i> 1 month</small>
+                                    <div class="tools">
+                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-trash-o"></i>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix no-border">
+                            <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
+                        </div>
+                    </div>
+                    <!-- /.box -->
+
+                    <!-- quick email widget -->
+                    <div class="box box-info">
+                        <div class="box-header">
+                            <i class="fa fa-envelope"></i>
+
+                            <h3 class="box-title">Quick Email</h3>
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip"
+                                        title="Remove">
+                                    <i class="fa fa-times"></i></button>
+                            </div>
+                            <!-- /. tools -->
+                        </div>
+                        <div class="box-body">
+                            <form action="#" method="post">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" name="emailto" placeholder="Email to:">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="subject" placeholder="Subject">
+                                </div>
+                                <div>
+                  <textarea class="textarea" placeholder="Message"
+                            style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="box-footer clearfix">
+                            <button type="button" class="pull-right btn btn-default" id="sendEmail">Send
+                                <i class="fa fa-arrow-circle-right"></i></button>
+                        </div>
+                    </div>
+
+                </section>
+                <!-- /.Left col -->
+                <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                <section class="col-lg-5 connectedSortable">
+
+                    <!-- Map box -->
+                    <div class="box box-solid bg-light-blue-gradient">
+                        <div class="box-header">
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip"
+                                        title="Date range">
+                                    <i class="fa fa-calendar"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse"
+                                        data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
+                                    <i class="fa fa-minus"></i></button>
+                            </div>
+                            <!-- /. tools -->
+
+                            <i class="fa fa-map-marker"></i>
+
+                            <h3 class="box-title">
+                                Visitors
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div id="world-map" style="height: 250px; width: 100%;"></div>
+                        </div>
+                        <!-- /.box-body-->
+                        <div class="box-footer no-border">
+                            <div class="row">
+                                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                    <div id="sparkline-1"></div>
+                                    <div class="knob-label">Visitors</div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                    <div id="sparkline-2"></div>
+                                    <div class="knob-label">Online</div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-xs-4 text-center">
+                                    <div id="sparkline-3"></div>
+                                    <div class="knob-label">Exists</div>
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+                    <!-- /.box -->
+
+                    <!-- solid sales graph -->
+                    <div class="box box-solid bg-teal-gradient">
+                        <div class="box-header">
+                            <i class="fa fa-th"></i>
+
+                            <h3 class="box-title">Sales Graph</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body border-radius-none">
+                            <div class="chart" id="line-chart" style="height: 250px;"></div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer no-border">
+                            <div class="row">
+                                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                    <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
+                                           data-fgColor="#39CCCC">
+
+                                    <div class="knob-label">Mail-Orders</div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
+                                    <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
+                                           data-fgColor="#39CCCC">
+
+                                    <div class="knob-label">Online</div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-xs-4 text-center">
+                                    <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
+                                           data-fgColor="#39CCCC">
+
+                                    <div class="knob-label">In-Store</div>
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.box -->
+
+                    <!-- Calendar -->
+                    <div class="box box-solid bg-green-gradient">
+                        <div class="box-header">
+                            <i class="fa fa-calendar"></i>
+
+                            <h3 class="box-title">Calendar</h3>
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <!-- button with a dropdown -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-bars"></i></button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Add new event</a></li>
+                                        <li><a href="#">Clear events</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">View calendar</a></li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            <!-- /. tools -->
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <!--The calendar -->
+                            <div id="calendar" style="width: 100%"></div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-black">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- Progress bars -->
+                                    <div class="clearfix">
+                                        <span class="pull-left">Task #1</span>
+                                        <small class="pull-right">90%</small>
+                                    </div>
+                                    <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: 90%;"></div>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <span class="pull-left">Task #2</span>
+                                        <small class="pull-right">70%</small>
+                                    </div>
+                                    <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: 70%;"></div>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-6">
+                                    <div class="clearfix">
+                                        <span class="pull-left">Task #3</span>
+                                        <small class="pull-right">60%</small>
+                                    </div>
+                                    <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: 60%;"></div>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <span class="pull-left">Task #4</span>
+                                        <small class="pull-right">40%</small>
+                                    </div>
+                                    <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: 40%;"></div>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+                    <!-- /.box -->
+
+                </section>
+                <!-- right col -->
             </div>
-            <a href="{{url('manage/logoutAction')}}" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
-        </div>
-        <div class="row J_mainContent" id="content-main">
-            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="{{url('manage/info')}}" frameborder="0" data-id="admin_info.html" seamless></iframe>
-        </div>
-        <div class="footer">
-            <div class="pull-right">&copy; 2014-2015 <a href="http://www.zi-han.net/" target="_blank">zihan's blog</a>
-            </div>
-        </div>
+            <!-- /.row (main row) -->
+
+        </section>
+        <!-- /.content -->
     </div>
-    <!--右侧部分结束-->
-    <!--mini聊天窗口开始-->
-    <div class="small-chat-box fadeInRight animated">
-
-        <div class="heading" draggable="true">
-            <small class="chat-date pull-right">
-                2015.9.1
-            </small> 与 Beau-zihan 聊天中
-        </div>
-
-        <div class="content">
-
-            <div class="left">
-                <div class="author-name">
-                    Beau-zihan <small class="chat-date">
-                        10:02
-                    </small>
-                </div>
-                <div class="chat-message active">
-                    你好
-                </div>
-
-            </div>
-            <div class="right">
-                <div class="author-name">
-                    游客
-                    <small class="chat-date">
-                        11:24
-                    </small>
-                </div>
-                <div class="chat-message">
-                    你好，请问H+有帮助文档吗？
-                </div>
-            </div>
-            <div class="left">
-                <div class="author-name">
-                    Beau-zihan
-                    <small class="chat-date">
-                        08:45
-                    </small>
-                </div>
-                <div class="chat-message active">
-                    有，购买的H+源码包中有帮助文档，位于docs文件夹下
-                </div>
-            </div>
-            <div class="right">
-                <div class="author-name">
-                    游客
-                    <small class="chat-date">
-                        11:24
-                    </small>
-                </div>
-                <div class="chat-message">
-                    那除了帮助文档还提供什么样的服务？
-                </div>
-            </div>
-            <div class="left">
-                <div class="author-name">
-                    Beau-zihan
-                    <small class="chat-date">
-                        08:45
-                    </small>
-                </div>
-                <div class="chat-message active">
-                    1.所有源码(未压缩、带注释版本)；
-                    <br> 2.说明文档；
-                    <br> 3.终身免费升级服务；
-                    <br> 4.必要的技术支持；
-                    <br> 5.付费二次开发服务；
-                    <br> 6.授权许可；
-                    <br> ……
-                    <br>
-                </div>
-            </div>
 
 
-        </div>
-        <div class="form-chat">
-            <div class="input-group input-group-sm">
-                <input type="text" class="form-control"> <span class="input-group-btn"> <button
-                            class="btn btn-primary" type="button">发送
-                    </button> </span>
-            </div>
-        </div>
-
-    </div>
-    <div id="small-chat">
-        <span class="badge badge-warning pull-right">5</span>
-        <a class="open-small-chat">
-            <i class="fa fa-comments"></i>
-
-        </a>
-    </div>
-</div>
-<script src="/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-<script src="/admin/js/hplus.min.js?v=4.1.0"></script>
-<script src="/admin/js/plugins/pace/pace.min.js"></script>
-</body>
-</html>
+@endsection

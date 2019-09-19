@@ -1,1 +1,0 @@
-* * * * * php /home/vagrant/Code/shop_hisums/artisan schedule:run >> /dev/null 2>&1

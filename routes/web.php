@@ -1,80 +1,92 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
-Route::get('/', 'Admin\LoginController@showLoginForm'); //网站根目录
-/*后台路由*/
-$route = Service('Route')->getAdminRoutes();
-foreach ($route as $item) {
-    if ($item['pid'] == \App\Permission::$TOP_CATE_PID) {
-        continue;
-    }
-    if ($item['type'] == \App\Permission::$TYPE_ANY) {
-        Route::any($item['name'], $item['module'] . '\\' . $item['method']);
-    }
-    if ($item['type'] == \App\Permission::$TYPE_GET) {
-        Route::get($item['name'], $item['module'] . '\\' . $item['method']);
-    }
-    if ($item['type'] == \App\Permission::$TYPE_POST) {
-        Route::post($item['name'], $item['module'] . '\\' . $item['method']);
-    }
-    if ($item['type'] == \App\Permission::$TYPE_PUT) {
-        Route::put($item['name'], $item['module'] . '\\' . $item['method']);
-    }
-    if ($item['type'] == \App\Permission::$TYPE_DELETE) {
-        Route::delete($item['name'], $item['module'] . '\\' . $item['method']);
-    }
-}
 
-/*后台其他路由*/
-Route::group(['prefix' => 'manage', 'namespace' => 'Admin'], function () {
-    Route::get('/', 'IndexController@index2');
-    Route::get('/index', 'IndexController@index');
-    Route::get('/index2', 'IndexController@index2');
-    Route::get('/info', 'IndexController@info');
-    //登录页面
-    Route::get('/login', 'LoginController@showLoginForm');
-    Route::get('/test', 'LoginController@test');
-    //登录方法
-    Route::post('/loginAction', 'LoginController@login');
-    //登出方法
-    Route::get('/logoutAction', 'LoginController@logout');
-    //修改密码
-    Route::get('/editPassword', 'IndexController@editPassword');
-    Route::post('/editPwdAction', 'IndexController@editPwdAction');
+/***
+ * 后台路由
+ */
+Route::prefix('admin')->group(function () {
+
+    Auth::routes();
+
+    Route::middleware('auth')->namespace('Admin')->group(function () {
+        //锁屏操作
+        Route::post('editorUpload', 'PhotoController@editorUpload')->name('photo.editorUpload');//编辑器图片上传
+        Route::get('lock', 'LockController@lock')->name('admin.lock');
+        Route::post('/lock/login', 'LockController@login')->name('admin.lock.login');//锁屏后登陆
+        Route::get('lockView', 'LockController@lockView')->name('admin.lockView');//锁定展示页
+    });
+
+    Route::middleware(['auth', 'sidebar', 'role'])->namespace('Admin')->group(function () {
+
+        //后台首页
+        Route::get('/', 'HomeController@index')->name('admin.index');
+
+        //清除缓存
+        Route::get('clear', 'HomeController@clear')->name('admin.clear');
+
+
+        //上传图片和上传视频
+        Route::post('photo', 'PhotoController@store')->name('photo.store');
+        Route::post('video', 'PhotoController@video')->name('photo.video');
+
+
+        //系统管理
+        require 'admin/system.php';
+        //管理员操作记录
+        require 'admin/action_log.php';
+
+        //平台设置
+        require 'admin/config.php';
+
+        //优惠券管理
+        require 'admin/coupon.php';
+        //商品管理
+   //     require 'admin/shop.php';
+
+        //公共查询
+   //     require 'admin/common.php';
+
+        //订单管理
+    //    require 'admin/order.php';
+
+        //平台用户管理
+     //   require 'admin/platform.php';
+
+        //分佣管理
+    //    require 'admin/profit.php';
+
+        //物料管理
+    //    require 'admin/material.php';
+
+        //首页配置管理
+     //   require 'admin/home.php';
+
+        //搜索管理
+     //   require 'admin/search.php';
+
+        //消息推送
+    //    require 'admin/message.php';
+
+        //反馈和公告
+     //   require 'admin/notice.php';
+
+        //统计分析
+//        require 'admin/statistical.php';
+
+        //客服专区
+     //   require 'admin/service.php';
+
+        //运营位管理
+    //    require 'admin/operate.php';
+
+        //财务管理
+     //   require 'admin/finance.php';
+
+
+
+
+    });
+
 });
-
-//Route::any('/imgGenerate', 'ToolsController@imgGenerate');
-//Route::any('/water', 'ToolsController@water');
-/*微信路由*/
-Route::any('/wechat', 'WechatController@serve');
-Route::any('/wechat/demo', 'WechatController@demo');
-
-/*微信端*/
-Route::group(['prefix' => 'wap'], function () {
-    Route::get('/', 'Wap\IndexController@index'); //移动端首页
-    Route::any('/test','Wap\IndexController@test');
-    Route::get('/game/loading/{share_passport_id?}','Wap\GameController@loading'); // 游戏登录页面
-    Route::get('/game/showloading/{share_passport_id}/{passport_id}','Wap\GameController@showloading'); // 游戏登录页面
-    Route::any('/game/{share_passport_id?}/{passport_id}','Wap\GameController@index'); // 游戏开始 发送游戏初始设置给H5页面发送初始设置信息
-    Route::any('/game/gameCount/{share_passport_id?}/{passport_id}','Wap\GameController@gameCount'); // 游戏倒计时
-    Route::any('/game/gamepage/{share_passport_id?}/{passport_id}','Wap\GameController@game'); // 游戏开始 发送游戏初始设置给H5页面发送初始设置信息
-    Route::any('/game/commit/{score}/{passport_id}/{share_passport_id}','Wap\GameController@commit'); // 游戏结束 推送信息
-    Route::any('/gameInfo/{passport_id}/{user_id}','Wap\GameController@scoreInfo'); //游戏积分详情
-    Route::any('/gameInfo/shared','Wap\GameController@shared'); //游戏积分详情
-    Route::any('/game/rank','Wap\GameController@rank'); //游戏积分
-});
-
-Route::get('/test', 'TestController@index'); //测试路由
-Route::get('/index/index', 'Index\IndexController@index');// 中间件跳转
-
-/*游戏路由*/

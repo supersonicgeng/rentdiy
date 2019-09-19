@@ -1,1 +1,0 @@
-<script src="/js/laravel-sms.js"></script>s

@@ -2639,6 +2639,29 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 $mpdf->WriteText(127, 101, (string)$res->contact_mobile);
                 $mpdf->WriteText(25, 108, (string)$res->contact_email);
                 $mpdf->WriteText(125, 108, (string)$res->contact_relation);
+                $mpdf->WriteText(40, 173, (string)$res->recommend_name1);
+                $mpdf->WriteText(26, 181, (string)$res->recommend_tel1);
+                $mpdf->WriteText(25, 188, (string)$res->recommend_email1);
+                $mpdf->WriteText(48, 194, (string)$res->recommend_relation1);
+                $mpdf->WriteText(136, 173, (string)$res->recommend_name2);
+                $mpdf->WriteText(122, 181, (string)$res->recommend_tel2);
+                $mpdf->WriteText(121, 188, (string)$res->recommend_email2);
+                $mpdf->WriteText(144, 194, (string)$res->recommend_relation2);
+            }
+            if ($i == 3){
+                $imageName = "25220_".date("His",time())."_".rand(1111,9999).'.png';
+                if (strstr($res->sign,",")){
+                    $image = explode(',',$res->sign);
+                    $image = $image[1];
+                }
+                $path = "./".date("Ymd",time());
+                if (!is_dir($path)){ //判断目录是否存在 不存在就创建
+                    mkdir($path,0777,true);
+                }
+                $imageSrc= $path."/". $imageName; //图片名字
+                dd($imageSrc);
+                $r = file_put_contents($imageSrc, base64_decode($image));//返回的是字节数
+                $mpdf->Image($imageSrc, 0, 0, 210, 297, 'png', '', true, false);
             }
             if ($i < $pagecount) {
                 $mpdf->AddPage();
