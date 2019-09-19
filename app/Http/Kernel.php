@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckLogin;
+use App\Http\Middleware\CheckOperatorLogin;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -64,6 +66,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'sidebar' => \App\Http\Middleware\Sidebar::class,
         'role' => \App\Http\Middleware\Role::class,
+        'CheckLogin'            => CheckLogin::class,
+        'CheckOperatorLogin'    => CheckOperatorLogin::class,
     ];
 
     /**
