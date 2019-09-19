@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Intervention\Image\Exception\NotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($this->isHttpException($exception)){
+            if($exception instanceof NotFoundException){
+                return response()->view('admin.errors.404',[],404);
+            }
+        }
         return parent::render($request, $exception);
     }
 }
