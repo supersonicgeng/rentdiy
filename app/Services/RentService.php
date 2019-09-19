@@ -160,8 +160,8 @@ You have received a new tenancy application from above, please deal with it in t
                 'email'                 => $input['email'],
                 'welfare_no'            => $input['welfare_no'],
                 'have_pets'             => $input['have_pets'],
-                'adult'                 => $input['adult'],
-                'children'              => $input['children'],
+                'adult'                 => @$input['adult'],
+                'children'              => @$input['children'],
                 'pets'                  => @$input['pets'],
                 'current_address'       => $input['current_address'],
                 'current_rent_fee'      => $input['current_rent_fee'],
@@ -210,7 +210,7 @@ You have received a new tenancy application from above, please deal with it in t
                 'created_at'            => date('Y-m-d H:i:s',time())
             ];
             $model = new OtherRentApplication();
-            $res = $model->insert($application_data);
+            $res = $model->insertGetId($application_data);
             if($res){
                 return $this->success('application add success',$res);
             } else{
@@ -2637,7 +2637,8 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 $mpdf->WriteText(119, 94, (string)$res->contact_address);
                 $mpdf->WriteText(38, 101, (string)$res->contact_phone);
                 $mpdf->WriteText(127, 101, (string)$res->contact_mobile);
-                $mpdf->WriteText(25, 109, (string)$res->contact_mobile);
+                $mpdf->WriteText(25, 108, (string)$res->contact_email);
+                $mpdf->WriteText(125, 108, (string)$res->contact_relation);
             }
             if ($i < $pagecount) {
                 $mpdf->AddPage();

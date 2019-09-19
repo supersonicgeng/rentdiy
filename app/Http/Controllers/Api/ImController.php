@@ -151,7 +151,7 @@ class ImController extends Controller
                 }
             }
             if(!isset($to)){
-                return $this->error('2','no msg list to you');
+                return $this->error('0','no msg list to you');
             }
             foreach ($to as $k=> $v){
                 if(Im::where('to',$user)->where('from',$v['im_id'])->where('is_read',0)->first()){
