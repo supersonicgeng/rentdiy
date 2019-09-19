@@ -94,7 +94,7 @@
 
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <span class="input-group-addon">Providers Look</span>
+                                                        <span class="input-group-addon">服务商看房费率</span>
                                                         <input type="number" min="0" max="100" step="1" data-id="PSFL"
                                                                name="PSFL"
                                                                value="{{$res["PSFL"]*100}}"
@@ -110,7 +110,7 @@
 
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <span class="input-group-addon">Providers Research</span>
+                                                        <span class="input-group-addon">服务商租户调查费率</span>
                                                         <input type="number" min="0" max="100" step="1" data-id="PSFR"
                                                                name="PSFR"
                                                                value="{{$res["PSFR"]*100}}"
@@ -124,7 +124,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <span class="input-group-addon">Providers Inspect</span>
+                                                        <span class="input-group-addon">服务商房屋检查费率</span>
                                                         <input type="number" min="0" max="100" step="1" data-id="PSFI"
                                                                name="PSFI"
                                                                value="{{$res["PSFI"]*100}}"
@@ -139,7 +139,7 @@
 
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <span class="input-group-addon">Providers Maintain</span>
+                                                        <span class="input-group-addon">服务商维修费率</span>
                                                         <input type="number" min="0" max="100" step="1" data-id="PSFM"
                                                                name="PSFM"
                                                                value="{{$res["PSFM"]*100}}"
@@ -155,7 +155,7 @@
 
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <span class="input-group-addon">Providers Litigation</span>
+                                                        <span class="input-group-addon">服务商诉讼费率</span>
                                                         <input type="number" min="0" max="100" step="1" data-id="PSFLI"
                                                                name="PSFLI"
                                                                value="{{$res["PSFLI"]*100}}"
