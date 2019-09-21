@@ -19,6 +19,7 @@ use App\Model\RentContact;
 use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
+use App\Model\Tenement;
 use App\Model\Verify;
 use App\User;
 use Carbon\Carbon;
@@ -1362,6 +1363,11 @@ class HouseService extends CommonService
             return $this->error('2','no more score info');
         }else{
             $res = $model->where('rent_house_id',$rent_house_id)->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get();
+            foreach ($res as $k => $v){
+                $tenement_info = Tenement::where('user_id',$v->user_id)->first();
+                $res[$k]->headimg = $tenement_info->headimg;
+                $res[$k]->tenement_name = $tenement_info->first_name.'.'.$tenement_info->middle_name.'.'.$tenement_info->last_name;
+            }
             $data['score_list'] = $res;
             $data['current_page'] = $page;
             $data['total_page'] = ceil($count/5);
