@@ -834,4 +834,47 @@ Good news! Your tender has been accepted by the landlord please go to view the d
         $week_end = date('Y-m-d H:i:s', strtotime("$week_start +7 days")-1);
         return array("week_start" => $week_start, "week_end" => $week_end);
     }
+
+    /**
+     * @description:日历计数
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function taskNum(array $input)
+    {
+        $day = date('Y-m-d');
+        $note_task_type = [2,4,5,7,8,9,10,12,13,17,19,20,21];
+        $inspect_task_type = [3,11];
+        $bond_task_type = [15,16];
+        $arrears_task_type = [14,18];
+        $increase_task_type = [6];
+        $application_task_type = [1];
+        $new_type = [25];
+        $input['task_role'] = 1;
+        $note_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$note_task_type)->where('task_status',0)->count();
+        $inspect_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$inspect_task_type)->where('task_status',0)->count();
+        $bond_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$bond_task_type)->where('task_status',0)->count();
+        $arrears_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$arrears_task_type)->where('task_status',0)->count();
+        $increase_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$increase_task_type)->where('task_status',0)->count();
+        $application_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$application_task_type)->where('task_status',0)->count();
+        $new_res =  Task::whereBetween('task_start_time',[date('Y-m-d 00:00:00',strtotime($day)), date('Y-m-d 23:59:59',strtotime($day))])
+            ->where('user_id',$input['user_id'])->where('task_role',$input['task_role'])->whereIn('task_type',$new_type)->where('task_status',0)->count();
+        $data['note_res'] = $note_res;
+        $data['inspect_res'] = $inspect_res;
+        $data['bond_res'] = $bond_res;
+        $data['arrears_res'] = $arrears_res;
+        $data['increase_res'] = $increase_res;
+        $data['application_res'] = $application_res;
+        $data['new_res'] = $new_res;
+        return $this->success('get task num success',$data);
+    }
 }

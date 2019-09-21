@@ -141,6 +141,32 @@ class OperatorService extends CommonService
             $res->login_token = $token; //生成token
             $res->login_expire_time = date('Y-m-d H:i:s',time()+7200);
             $res->update();
+            $res1 = Landlord::where('user_id',$res->user_id)->where('deleted_at',null)->select('id as landlord_id','landlord_name')->get()->toArray();
+            $res2 = Tenement::where('user_id',$res->user_id)->where('deleted_at',null)->select('id as tenement_id')->get()->toArray();
+            $res3 = Providers::where('user_id',$res->user_id)->where('deleted_at',null)->select('id as service_id','service_name')->get()->toArray();
+            if(!$res1){
+                $res['landlord_info'] = [
+                    'landlord_id'   => '',
+                    'landlord_name' => '',
+                ];
+            }else{
+                $res['landlord_info'] = $res1;
+            }
+            if(!$res2){
+                $res['tenement_info'] = [
+                    'tenement_id'   => '',
+                ];
+            }else{
+                $res['tenement_info'] = $res2;
+            }
+            if(!$res3){
+                $res['providers_info'] = [
+                    'providers_id'   => '',
+                    'providers_name' => '',
+                ];
+            }else{
+                $res['providers_info'] = $res3;
+            }
             $res = $res->toArray();
             $res['user_token'] = $user_token;
             return $this->success('login OK',$res);

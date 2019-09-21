@@ -294,4 +294,18 @@ class LandlordController extends CommonController
     {
         return service('Landlord')->arrearsSend($request->all());
     }
+
+
+    /**
+     * @description:日历计数
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function taskNum(Request $request)
+    {
+        return service('Landlord')->taskNum($request->all());
+    }
 }

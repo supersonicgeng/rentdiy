@@ -93,6 +93,7 @@ class ChargeService extends CommonService
             'charge_sn' => $charge_sn,
             'charge_fee'    => $amount,
             'free_fee'      => $free,
+            'charge_role'   => $input['charge_role'],
             'charge_type'   => 1,
             'charge_status' => 1,
             'created_at'    => date('Y-m-d H:i:s',time()),

@@ -223,4 +223,17 @@ class HouseController extends CommonController
         return service('House')->getRoomName($request->all());
     }
 
+
+    /**
+     * @description:获取房间评论
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseScore(Request $request)
+    {
+        return service('House')->getHouseScore($request->all());
+    }
 }

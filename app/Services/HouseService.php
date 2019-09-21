@@ -11,6 +11,7 @@ namespace App\Services;
 
 
 use App\Lib\Util\QueryPager;
+use App\Model\HouseScore;
 use App\Model\HouseWatchList;
 use App\Model\Region;
 use App\Model\RentApplication;
@@ -1341,5 +1342,32 @@ class HouseService extends CommonService
         }else{
             return $this->error('2','get house list failed');
         }
+    }
+
+    /**
+     * @description:获取房间名称
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseScore(array $input)
+    {
+        $model = new HouseScore();
+        $rent_house_id = $input['rent_house_id'];
+        $page = $input['page'];
+        $count = $model->where('rent_house_id',$rent_house_id)->where('deleted_at',null)->count();
+        if($count < ($page-1)*5){
+            return $this->error('2','no more score info');
+        }else{
+            $res = $model->where('rent_house_id',$rent_house_id)->where('deleted_at',null)->offset(($page-1)*5)->limit(5)->get();
+            $data['score_list'] = $res;
+            $data['current_page'] = $page;
+            $data['total_page'] = ceil($count/5);
+            return $this->success('get house score success',$data);
+        }
+
+
     }
 }

@@ -42,6 +42,9 @@ Route::prefix('admin')->group(function () {
 
         //优惠券管理
         require 'admin/coupon.php';
+
+        //报表管理
+        require 'admin/report.php';
         //商品管理
    //     require 'admin/shop.php';
 

@@ -1016,6 +1016,11 @@ Please contact with us if you have any questions, thank you.
             // 短信扣费
             $cost_fee = DB::table('sys_config')->where('code','SMF')->pluck('value')->first();
             $user_free_balance = DB::table('user')->where('id',$input['user_id'])->pluck('free_balance')->first();
+            if($input['msg_type'] > 12){
+                $user_cost_role = 2;
+            }else{
+                $user_cost_role = 1;
+            }
             if($cost_fee > $user_free_balance){ // 扣费大于抵扣卷
                 DB::table('user')->where('id',$input['user_id'])->update(['free_balance'=>0,'updated_at'=>date('Y-m-d H:i:s',time())]); // 清零抵扣券
                 DB::table('user')->where('id',$input['user_id'])->decrement('balance',($cost_fee-$user_free_balance)); // 余额扣款
@@ -1023,9 +1028,10 @@ Please contact with us if you have any questions, thank you.
                 $expense_data = [
                     'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
+                    'user_cost_role'    => $user_cost_role,
                     'expense_type'  => 1,
-                    'expense_cost'  => $cost_fee,
-                    'discount'      => 0,
+                    'expense_cost'  => $cost_fee-$user_free_balance,
+                    'discount'      => $user_free_balance,
                     'total_cost'    => $cost_fee,
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
@@ -1036,9 +1042,10 @@ Please contact with us if you have any questions, thank you.
                 $expense_data = [
                     'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
+                    'user_cost_role'    => $user_cost_role,
                     'expense_type'  => 1,
-                    'expense_cost'  => $cost_fee,
-                    'discount'      => 0,
+                    'expense_cost'  => 0,
+                    'discount'      => $cost_fee,
                     'total_cost'    => $cost_fee,
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
@@ -1053,10 +1060,12 @@ Please contact with us if you have any questions, thank you.
                 $landlord_user_id = LandlordOrder::where('id',$landlord_order_id)->pluck('user_id')->first();
                 $post_address = Landlord::where('user_id',$landlord_user_id)->pluck('mail_address')->first();
                 $post_code = Landlord::where('user_id',$landlord_user_id)->pluck('mail_code')->first();
+                $user_cost_role = 2;
             }else{
                 $contract_id = $input['contract_id'];
                 $post_address = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
                 $post_code = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
+                $user_cost_role = 1;
             }
             // 添加到邮寄列表
             $post_data = [
@@ -1076,9 +1085,10 @@ Please contact with us if you have any questions, thank you.
                 $expense_data = [
                     'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
+                    'user_cost_role'    => $user_cost_role,
                     'expense_type'  => 2,
-                    'expense_cost'  => $cost_fee,
-                    'discount'      => 0,
+                    'expense_cost'  => $cost_fee-$user_free_balance,
+                    'discount'      => $user_free_balance,
                     'total_cost'    => $cost_fee,
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];
@@ -1089,9 +1099,10 @@ Please contact with us if you have any questions, thank you.
                 $expense_data = [
                     'expense_sn'    => expenseSn(),
                     'user_id'   => $input['user_id'],
+                    'user_cost_role'    => $user_cost_role,
                     'expense_type'  => 2,
-                    'expense_cost'  => $cost_fee,
-                    'discount'      => 0,
+                    'expense_cost'  => 0,
+                    'discount'      => $cost_fee,
                     'total_cost'    => $cost_fee,
                     'created_at'    => date('Y-m-d H:i:s',time())
                 ];

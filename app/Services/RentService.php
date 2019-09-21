@@ -2659,9 +2659,9 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     mkdir($path,0777,true);
                 }
                 $imageSrc= $path."/". $imageName; //图片名字
-                dd($imageSrc);
-                $r = file_put_contents($imageSrc, base64_decode($image));//返回的是字节数
-                $mpdf->Image($imageSrc, 0, 0, 210, 297, 'png', '', true, false);
+                /*dd($imageSrc);*/
+               /* $r = file_put_contents($imageSrc, base64_decode($image));//返回的是字节数
+                $mpdf->Image($imageSrc, 0, 0, 210, 297, 'png', '', true, false);*/
             }
             if ($i < $pagecount) {
                 $mpdf->AddPage();
