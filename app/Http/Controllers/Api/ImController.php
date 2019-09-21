@@ -188,6 +188,7 @@ class ImController extends Controller
         $owner_username = 'user_'.$request->user_id;
         $friend_res = $easemob->showFriends($owner_username);
         $friend_res = $friend_res['data'];
+        $friend_res = array_push($friend_res,$owner_username);
         if($res){
             $res = User::where('nickname','like','%'.$nickname.'%')->get()->toArray();
             foreach ($res as $k => $v){
