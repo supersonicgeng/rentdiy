@@ -21,7 +21,7 @@ return [
     | AppKey 后，会得到一个 xxxx#xxxx 格式的字符串，org_name 对应#前面部分
     */
 
-    'org_name' => env('ORG_NAME', '1119190612042407'),
+    'org_name' => env('1119190612042407', '1119190612042407'),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ return [
     | AppKey 后，会得到一个 xxxx#xxxx 格式的字符串，app_name 对应#后面部分
     */
 
-    'app_name'       => env('APP_NAME', 'rentdiy'),
+    'app_name'       => env('rentdiy', 'rentdiy'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'client_id'       => env('CLIENT_ID', 'YXA6u4kDgIzsEem2hJ0vO7obdg'),
+    'client_id'       => env('YXA6u4kDgIzsEem2hJ0vO7obdg', 'YXA6u4kDgIzsEem2hJ0vO7obdg'),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,6 +50,6 @@ return [
     |
     */
 
-    'client_secret'       => env('CLIENT_SECRET', 'YXA6zdVDKDYewzQAskvhgbqPIALnnSk'),
+    'client_secret'       => env('YXA6zdVDKDYewzQAskvhgbqPIALnnSk', 'YXA6zdVDKDYewzQAskvhgbqPIALnnSk'),
 
 ];
