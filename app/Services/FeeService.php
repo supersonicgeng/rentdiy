@@ -680,6 +680,10 @@ class FeeService extends CommonService
     public function cashDetail(array $input)
     {
         $model = new RentArrears();
+        $fee_data =  $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->where('is_pay','!=',2)->first();
+        if(!$fee_data){
+            return $this->error('2','no data');
+        }
         $fee_data = $model->where('user_id',$input['user_id'])->where('contract_id',$input['contract_id'])->whereIn('arrears_type',[1,2,3])->where('is_pay','!=',2)->get()->toArray();
         static $bond_arrears = 0;
         static $rent_arrears = 0;
