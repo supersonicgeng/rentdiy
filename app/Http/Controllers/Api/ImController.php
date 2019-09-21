@@ -194,7 +194,7 @@ class ImController extends Controller
                 $search_res[$k]['nickname'] = $v['nickname'];
                 $search_res[$k]['headimg'] = $v['head_img'];
                 $search_res[$k]['im_id'] = 'user_'.$v['id'];
-                if(in_array($v['id'],$friend_res)){
+                if(in_array($search_res[$k]['im_id'],$friend_res)){
                     $search_res[$k]['is_friend'] = 1;
                 }else{
                     $search_res[$k]['is_friend'] = 0;
