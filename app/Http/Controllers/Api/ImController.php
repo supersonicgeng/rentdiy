@@ -184,12 +184,21 @@ class ImController extends Controller
     {
         $nickname = $request->nickname;
         $res = User::where('nickname','like','%'.$nickname.'%')->first();
+        $easemob = new Easemob();
+        $owner_username = 'user_'.$request->user_id;
+        $friend_res = $easemob->showFriends($owner_username);
+        $friend_res = $friend_res['data'];
         if($res){
             $res = User::where('nickname','like','%'.$nickname.'%')->get()->toArray();
             foreach ($res as $k => $v){
                 $search_res[$k]['nickname'] = $v['nickname'];
                 $search_res[$k]['headimg'] = $v['head_img'];
                 $search_res[$k]['im_id'] = 'user_'.$v['id'];
+                if(in_array($v['id'],$friend_res)){
+                    $search_res[$k]['is_friend'] = 1;
+                }else{
+                    $search_res[$k]['is_friend'] = 0;
+                }
             }
             $data['search_res'] = $search_res;
             return $this->success('search success',$data);
