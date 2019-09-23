@@ -190,7 +190,7 @@ class ChargeService extends CommonService
                 'CurrencyCode' => 'NZD',
                 'MerchantReference' => $charge_sn,//唯一订单号  前面生成
                 'MerchantHomepageURL' => 'https://rent-diy.com/',
-                'SuccessURL' => 'http://renting.zhan2345.com/vue/index.html#/Five/indent/FeeDeduction',//支付成功用户跳往地址
+                'SuccessURL' => 'http://localhost:8080/#/Five/indent/FeeDeduction',//支付成功用户跳往地址
                 'FailureURL' => '',//用户在银行支付失败跳往网站地址
                 'CancellationURL' => '',//用户支付取消跳往地址
                 'NotificationURL' => 'https://renting.zhan2345.com/api/charge/notify'//异步回调地址
