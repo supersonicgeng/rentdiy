@@ -28,6 +28,7 @@ use App\Model\InspectChattel;
 use App\Model\InspectCheck;
 use App\Model\Level;
 use App\Model\LookHouse;
+use App\Model\OperatorRoom;
 use App\Model\Order;
 use App\Model\OtherRentApplication;
 use App\Model\Passport;
