@@ -328,9 +328,9 @@ class ReportService extends CommonService
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
             //房屋搜索
-            if (@$input['property_name'] and @$input['property_name'] != '') {
-                $property_name = @$input['property_name'];
-                $query->where('h.property_name','like', '%'.$property_name.'%');
+            if (@$input['rent_house_id'] and @$input['rent_house_id'] != '') {
+                $rent_house_id = @$input['rent_house_id'];
+                $query->where('h.id',$rent_house_id);
             }
             //状态
             if (@$input['bond_status'] and @$input['bond_status'] != '') {
@@ -418,9 +418,9 @@ class ReportService extends CommonService
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
             //房屋搜索
-            if (@$input['property_name'] and @$input['property_name'] != '') {
-                $property_name = @$input['property_name'];
-                $query->where('h.property_name','like', '%'.$property_name.'%');
+            if (@$input['rent_house_id'] and @$input['rent_house_id'] != '') {
+                $rent_house_id = @$input['rent_house_id'];
+                $query->where('h.id',$rent_house_id);
             }
             //状态
             if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
@@ -485,9 +485,9 @@ class ReportService extends CommonService
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
             //房屋搜索
-            if (@$input['property_name'] and @$input['property_name'] != '') {
-                $property_name = @$input['property_name'];
-                $query->where('h.property_name','like', '%'.$property_name.'%');
+            if (@$input['rent_house_id'] and @$input['rent_house_id'] != '') {
+                $rent_house_id = @$input['rent_house_id'];
+                $query->where('h.id',$rent_house_id);
             }
             //状态
             if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
@@ -590,6 +590,11 @@ class ReportService extends CommonService
                 $tenement_name = @$input['tenement_name'];
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
+            // 房屋筛选
+            if (@$input['rent_house_id'] and @$input['rent_house_id'] != '') {
+                $rent_house_id = @$input['rent_house_id'];
+                $query->where('h.id',$rent_house_id);
+            }
             //状态
             if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
                 $arrears_type = @$input['arrears_type'];
@@ -660,6 +665,11 @@ class ReportService extends CommonService
                 $tenement_name = @$input['tenement_name'];
                 $query->where('ct.tenement_full_name','like', '%'.$tenement_name.'%');
             }
+            // 房屋筛选
+            if (@$input['rent_house_id'] and @$input['rent_house_id'] != '') {
+                $rent_house_id = @$input['rent_house_id'];
+                $query->where('h.id',$rent_house_id);
+            }
             //状态
             if (@$input['arrears_type'] and @$input['arrears_type'] != '') {
                 $arrears_type = @$input['arrears_type'];
@@ -725,7 +735,13 @@ class ReportService extends CommonService
     public function getHouseList(array $input)
     {
         $user_id = $input['user_id'];
-        $res = RentHouse::where('user_id',$user_id)->get();
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $res = RentHouse::whereIn('rent_house_id',$room_list)->get();
+        }else{
+            $res = RentHouse::where('user_id',$user_id)->get();
+        }
         foreach ($res as $k => $v){
             $data[$k]['rent_house_id'] = $v->id;
             $data[$k]['house_name'] = $v->property_name.$v->room_name;
