@@ -387,6 +387,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementArrearsReport', 'ReportController@tenementArrearsReport'); // 租客账单列表 4.10
         $router->post('tenementReportDetail', 'ReportController@tenementReportDetail'); // 租客行为记录详情 4.10
         $router->post('businessArrearsReport', 'ReportController@businessArrearsReport'); // 商业费用单 4.10
+        $router->post('getHouseList','ReportController@getHouseList');// 房屋选择
     });
     // 通知管理
     $router->group(['prefix' => 'note'], function (Router $router) {

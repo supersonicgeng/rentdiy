@@ -714,4 +714,23 @@ class ReportService extends CommonService
         }
     }
 
+    /**
+     * @description:获取房屋列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseList(array $input)
+    {
+        $user_id = $input['user_id'];
+        $res = RentHouse::where('user_id',$user_id)->get();
+        foreach ($res as $k => $v){
+            $data[$k]['rent_house_id'] = $v->id;
+            $data[$k]['house_name'] = $v->property_name.$v->room_name;
+        }
+        return $this->success('get tenement note success',$data);
+    }
+
 }

@@ -140,4 +140,17 @@ class ReportController extends CommonController
     {
         return service('Report')->businessArrearsReport($request->all());
     }
+
+    /**
+     * @description:房屋选择
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHouseList(Request $request)
+    {
+        return service('Report')->getHouseList($request->all());
+    }
 }
