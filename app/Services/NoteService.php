@@ -1060,19 +1060,33 @@ Please contact with us if you have any questions, thank you.
                 $landlord_user_id = LandlordOrder::where('id',$landlord_order_id)->pluck('user_id')->first();
                 $post_address = Landlord::where('user_id',$landlord_user_id)->pluck('mail_address')->first();
                 $post_code = Landlord::where('user_id',$landlord_user_id)->pluck('mail_code')->first();
+                $post_user_name = Landlord::where('user_id',$landlord_user_id)->pluck('first_name')->first().Landlord::where('user_id',$landlord_user_id)->pluck('middle_name')->first().Landlord::where('user_id',$landlord_user_id)->pluck('last_name')->first();
+                $providers_id = LandlordOrder::where('id',$landlord_order_id)->pluck('providers_id')->first();
+                $send_code = Providers::where('id',$providers_id)->pluck('mail_code')->first();
+                $send_address = Providers::where('id',$providers_id)->pluck('mail_address')->first();
+                $send_user_name = Providers::where('id',$providers_id)->pluck('first_name')->first().Providers::where('id',$providers_id)->pluck('middle_name')->first().Providers::where('id',$providers_id)->pluck('last_name')->first();
                 $user_cost_role = 2;
             }else{
                 $contract_id = $input['contract_id'];
                 $post_address = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
                 $post_code = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_post_address')->first();
+                $post_user_name = ContractTenement::where('contract_id',$input['contract_id'])->pluck('tenement_full_name')->first();
+                $landlord_user_id = RentContract::where('id',$input['contract_id'])->pluck('user_id')->first();
+                $send_code = Landlord::where('user_id',$landlord_user_id)->pluck('mail_code')->first();
+                $send_address = Landlord::where('user_id',$landlord_user_id)->pluck('mail_address')->first();
+                $send_user_name = RentContract::where('id',$input['contract_id'])->pluck('landlord_full_name')->first();
                 $user_cost_role = 1;
             }
             // 添加到邮寄列表
             $post_data = [
-                'send_msg'  => $input['content'],
-                'send_address'  => $post_address,
-                'send_code'     => $post_code,
-                'created_at'    => date('Y-m-d H:i:s',time())
+                'send_msg'          => $input['content'],
+                'send_name'         => $send_user_name,
+                'send_address'      => $send_address,
+                'send_code'         => $send_code,
+                'receive_name'      => $post_user_name,
+                'receive_address'   => $post_address,
+                'receive_code'      => $post_code,
+                'created_at'        => date('Y-m-d H:i:s',time())
             ];
             DB::table('paper_send')->insert($post_data);
             // 邮件扣费
