@@ -739,7 +739,7 @@ class ReportService extends CommonService
         if(isset($input['operator_id'])){
             $operator_id = $input['operator_id'];
             $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
-            $res = RentHouse::whereIn('rent_house_id',$room_list)->get();
+            $res = RentHouse::whereIn('id',$room_list)->get();
         }else{
             $res = RentHouse::where('user_id',$user_id)->get();
         }
