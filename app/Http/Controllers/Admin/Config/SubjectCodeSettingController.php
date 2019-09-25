@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class subjectCodeSettingController extends Controller
+class SubjectCodeSettingController extends Controller
 {
     //特征码配置展示页
     public function index()
