@@ -82,6 +82,7 @@ Route::group(['namespace' => 'Api'], function (Router $router) {
     $router->post('rent/marketRentFee', 'RentController@marketRentFee'); // 市场租金 5.13
     $router->post('rent/marketRentFeeAdjust', 'RentController@marketRentFeeAdjust'); // 市场租金 5.13
     $router->get('rent/rentApplicationOutPrint', 'RentController@rentApplicationOutPrint'); // 租户租房申请（非本平台）打印 5.13
+    $router->post('fee/getSubjectCode','FeeController@getSubjectCode'); // 获得财务码
 });
 
 
@@ -329,7 +330,6 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
         $router->post('feeListBatch', 'FeeController@feeListBatch'); // 费用单列表 4.10
         $router->post('feeDelete', 'FeeController@feeDelete'); // 费用单删除 4.10
-        $router->post('getSubjectCode','FeeController@getSubjectCode'); // 获得财务码
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
