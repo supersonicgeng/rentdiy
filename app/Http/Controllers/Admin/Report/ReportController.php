@@ -240,4 +240,26 @@ class ReportController extends Controller
         }
         return view("admin.report.landlordRunAnalyze.index", compact("res"));
     }
+
+    public function userAdd(Request $request)
+    {
+
+        $where = function ($query) use ($request) {
+            //按管理员名称搜索
+            if ($request->has('dateRange') and $request->dateRange != '') {
+                $arr = explode(" - ", $request->dateRange);
+                $dateStart = $arr[0];
+                $dateEnd = $arr[1];
+
+
+                $query->whereBetween('u.created_at', [$dateStart, $dateEnd]);
+
+            }
+        };
+        $res['landlord_add'] = DB::table('user as u')->where($where)->whereIn('user_role',[1,3,5,7])->count();
+        $res['tenement_add'] = DB::table('user as u')->where($where)->whereIn('user_role',[4,5,6,7])->count();
+        $res['provider_add'] = DB::table('user as u')->where($where)->whereIn('user_role',[2,3,6,7])->count();
+        $res['total'] = $res['landlord_add']+$res['tenement_add']+$res['provider_add'];
+        return view("admin.report.userAdd.index", compact("res"));
+    }
 }

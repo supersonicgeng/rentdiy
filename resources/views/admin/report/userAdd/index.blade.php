@@ -22,17 +22,20 @@
                             </div>
                             <div class="search-form-inline form-inline pull-left">
                                 <form>
-                                    <div class="input-group input-group-sm">
 
 
-                                        <input type="text" name="userName" class="form-control pull-right"
-                                               value="{{Request::input('userName')}}"
-                                               placeholder="Username Search">
+                                    <div class="input-daterange input-group input-group-sm">
+                                        <input class="form-control" id="_time_from" name="dateRange"
+                                               value="{{Request::input('dateRange')}}"
+                                               placeholder="Date Range Search" type="text" style="width: 200px">
 
+                                        {{--<input class="form-control" id="_time_to" name="end_time"--}}
+                                        {{--value="{{Request::input('end_time')}}"--}}
+                                        {{--placeholder="End Date" type="text">--}}
                                     </div>
 
                                     <button type="submit" class="btn btn-default btn-sm">确定</button>
-                                    <a href="/admin/report/landlordRunAnalyze" class="btn btn-default btn-sm">重置</a>
+                                    <a href="/admin/report/userAdd" class="btn btn-default btn-sm">重置</a>
                                 </form>
                             </div>
 
@@ -44,43 +47,27 @@
                             <table class="table table-bordered table-hover">
                                 <tbody>
                                 <tr>
-                                    <th>user nickname</th>
-                                    <th>phone</th>
-                                    <th>email</th>
-                                    <th>house quantity</th>
-                                    <th>un rent rate</th>
-                                    <th>arrears rate</th>
-                                    <th>inspect rate</th>
-                                    <th>service fee</th>
-                                    <th>short message fee</th>
-                                    <th>mail send fee</th>
-                                    <th>total income</th>
-                                    <th>total arrears</th>
-
+                                    <th>landlord add</th>
+                                    <th>tenement add</th>
+                                    <th>provider add</th>
+                                    <th>total</th>
 
                                 </tr>
-                                @foreach($res as $item)
-                                    <tr>
-                                        <td>{{$item->nickname}}</td>
-                                        <td>{{$item->phone}}</td>
-                                        <td>{{$item->e_mail}}</td>
-                                        <td>{{$item->house_num}}</td>
-                                        <td>{{$item->empty_rate}}</td>
-                                        <td>{{$item->arrears_rate}}</td>
-                                        <td>{{$item->inspect_rate}}</td>
-                                        <td>{{$item->service_income}}</td>
-                                        <td>{{$item->msg_income}}</td>
-                                        <td>{{$item->paper_income}}</td>
-                                        <td>{{$item->total_income}}</td>
-                                        <td>{{$item->total_arrears}}</td>
 
+                                    <tr>
+
+                                        <td>{{$res['landlord_add']}}</td>
+                                        <td>{{$res['tenement_add']}}</td>
+
+                                        <td>{{$res['provider_add']}}</td>
+                                        <td>{{$res['total']}}</td>
                                     </tr>
-                                @endforeach
+
                                 </tbody>
                             </table>
                             <div class="pull-right">
                                 <div class="search-form-inline form-inline pull-left" style="margin-left:10px;">
-                                    <form>
+                                   {{-- <form>
                                         <div class="input-daterange input-group input-group-sm">
                                             共{{$res->total()}}条&nbsp
                                         </div>
@@ -88,7 +75,7 @@
                                             {{$res->appends(Request::all())->links()}}
                                         </div>
 
-                                    </form>
+                                    </form>--}}
                                 </div>
 
                             </div>
