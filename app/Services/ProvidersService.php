@@ -922,7 +922,7 @@ Property:房屋地址
 Tradesman: 供应商名称
 Tender number: 订单号
 Your tender work has been completed by the above tradesman, please go to view the details and confirm this work.",
-                        'order_id'          => $input['order_id'],
+                        'order_id'          => $v,
                         'task_role'         => 2,
                         'created_at'        => date('Y-m-d H:i:s',time()),
                     ];
