@@ -7,6 +7,7 @@ Route::prefix('config')->namespace('config')->name('config.')->group(function ()
     Route::resource('rechargeSetting', 'rechargeSettingController');
     Route::patch('/config/sysSetting/change_value', 'sysSettingController@change_value')->name('sysSetting.change_value');
     Route::resource('sysSetting', 'sysSettingController');
+    Route::resource('subjectCodeSetting', 'subjectCodeSettingController');
 
 
 });
