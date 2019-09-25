@@ -22,6 +22,7 @@ use App\Model\EntireContract;
 use App\Model\FeeReceive;
 use App\Model\Landlord;
 use App\Model\LandlordOrder;
+use App\Model\Operator;
 use App\Model\OperatorRoom;
 use App\Model\OrderArrears;
 use App\Model\Providers;
@@ -139,6 +140,25 @@ class FeeService extends CommonService
             }
         }
         if(!$res){
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 4,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 11,
+                    'operator_information'  => 'add bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->error('2','add rent fee failed');
         }else{
             return $this->success('add rent fee success');
@@ -263,6 +283,25 @@ class FeeService extends CommonService
         if(!$res){
             return $this->error('2','add rent fee failed');
         }else{
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 4,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 11,
+                    'operator_information'  => 'lodged bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->success('add rent fee success');
         }
     }
@@ -894,6 +933,25 @@ class FeeService extends CommonService
         if($error){
             return $this->error('2','balance adjust failed');
         }else{
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 5,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 10,
+                    'operator_information'  => 'add bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->success('balance adjust success');
         }
     }
@@ -913,6 +971,18 @@ class FeeService extends CommonService
         $excel = new Excel();
         $data = $excel::toArray(new UsersImport(), $file);
         $data = $data[0];
+        if(isset($input['operator_id'])){
+            $operator_res = Operator::where('id',$input['operator_id'])->first();
+            $operator_data = [
+                'user_id'   => $input['user_id'],
+                'operator_id'   => $input['operator_id'],
+                'operator_name' => $operator_res->operator_name,
+                'operator_type' => 8,
+                'operator_information'  => 'add bond',
+                'created_at'    => date('Y-m-d H:i:s',time())
+            ];
+            DB::table('operator_record')->insert($operator_data);
+        }
         if($input['bank_type'] == 'ANZ'){
             if($data[0][0] != 'Type' || $data[0][1] != 'Details' || $data[0][2] != 'Particulars' || $data[0][3] != 'Code' || $data[0][4] != 'Reference' || $data[0][5] != 'Amount' || $data[0][6] != 'Date' || $data[0][7] != 'ForeignCurrencyAmount' || $data[0][8] != 'ConversionCharge'){
                 return $this->error('3','the csv file is not the select bank');
@@ -1887,6 +1957,7 @@ class FeeService extends CommonService
             $data['arrears_un_confirm'] = $arrears_un_confirm;
         }
         // 返回数据
+
         return $this->success('get balance data success',$data);
     }
 
@@ -1984,6 +2055,13 @@ class FeeService extends CommonService
             $bank_check_res->update();
         }
         // 返回数据
+        // 用户操作节点
+        $log_data = [
+            'user_id'           => $input['user_id'],
+            'opeartor_method'   => 5,
+            'created_at'        => date('Y-m-d H:i:s',time()),
+        ];
+        DB::table('user_opeart_log')->insert($log_data);
         return $this->success('balance adjust success');
     }
 
@@ -4240,6 +4318,20 @@ The above work has been completed, you can issue an invoice to the landlord..",
         $data['amount_price'] = round($amount_price,2);
         $data['discount'] = round($discount,2);
         $data['gts'] = round($gts,2);
+        return $this->success('get invoice list success',$data);
+    }
+
+    /**
+     * @description:服务商费用单列表
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSubjectCode(array $input)
+    {
+        $data = DB::table('subject_code')->get();
         return $this->success('get invoice list success',$data);
     }
 }

@@ -329,6 +329,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('tenementArrearsPrint', 'FeeController@tenementArrearsPrint'); // 租户账单下载 4.10
         $router->post('feeListBatch', 'FeeController@feeListBatch'); // 费用单列表 4.10
         $router->post('feeDelete', 'FeeController@feeDelete'); // 费用单删除 4.10
+        $router->post('getSubjectCode','FeeController@getSubjectCode'); // 获得财务码
     });
     // im系统
     $router->group(['prefix' => 'im'], function (Router $router) {
