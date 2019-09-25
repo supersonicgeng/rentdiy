@@ -315,12 +315,20 @@ class BondService extends CommonService
         }
         if($res){
             // 用户操作节点
-            $log_data = [
-                'user_id'           => $input['user_id'],
-                'opeartor_method'   => 6,
-                'created_at'        => date('Y-m-d H:i:s',time()),
-            ];
-            DB::table('user_opeart_log')->insert($log_data);
+            if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                $log_data = [
+                    'opeartor_method'   => 6,
+                    'updated_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+            }else{
+                $log_data = [
+                    'user_id'           => $input['user_id'],
+                    'opeartor_method'   => 6,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->insert($log_data);
+            }
             if(isset($input['operator_id'])){
                 $operator_res = Operator::where('id',$input['operator_id'])->first();
                 $operator_data = [
@@ -411,12 +419,20 @@ class BondService extends CommonService
         if(!$error){
             RentArrears::where('id',$input['bond_id'])->update([ 'bond_status'   => 4, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
             // 用户操作节点
-            $log_data = [
-                'user_id'           => $input['user_id'],
-                'opeartor_method'   => 6,
-                'created_at'        => date('Y-m-d H:i:s',time()),
-            ];
-            DB::table('user_opeart_log')->insert($log_data);
+            if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                $log_data = [
+                    'opeartor_method'   => 6,
+                    'updated_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+            }else{
+                $log_data = [
+                    'user_id'           => $input['user_id'],
+                    'opeartor_method'   => 6,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->insert($log_data);
+            }
             if(isset($input['operator_id'])){
                 $operator_res = Operator::where('id',$input['operator_id'])->first();
                 $operator_data = [
@@ -592,12 +608,20 @@ class BondService extends CommonService
         $res = $model->where('id',$bond_id)->update($lodged_data);
         if($res){
             // 用户操作节点
-            $log_data = [
-                'user_id'           => $input['user_id'],
-                'opeartor_method'   => 6,
-                'created_at'        => date('Y-m-d H:i:s',time()),
-            ];
-            DB::table('user_opeart_log')->insert($log_data);
+            if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                $log_data = [
+                    'opeartor_method'   => 6,
+                    'updated_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+            }else{
+                $log_data = [
+                    'user_id'           => $input['user_id'],
+                    'opeartor_method'   => 6,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->insert($log_data);
+            }
             if(isset($input['operator_id'])){
                 $operator_res = Operator::where('id',$input['operator_id'])->first();
                 $operator_data = [

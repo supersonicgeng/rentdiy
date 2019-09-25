@@ -138,12 +138,21 @@ class HouseService extends CommonService
                 }
                 if($rent_house_id && !$error){
                     // 用户操作节点
-                    $log_data = [
-                        'user_id'           => $input['user_id'],
-                        'opeartor_method'   => 1,
-                        'created_at'        => date('Y-m-d H:i:s',time()),
-                    ];
-                    DB::table('user_opeart_log')->insert($log_data);
+                    if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                        $log_data = [
+                            'opeartor_method'   => 1,
+                            'updated_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->where('user_id',$user_id)->update($log_data);
+                    }else{
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 1,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
+                    }
+
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');
@@ -254,12 +263,20 @@ class HouseService extends CommonService
                 }
                 if(!$error){
                     // 用户操作节点
-                    $log_data = [
-                        'user_id'           => $input['user_id'],
-                        'opeartor_method'   => 1,
-                        'created_at'        => date('Y-m-d H:i:s',time()),
-                    ];
-                    DB::table('user_opeart_log')->insert($log_data);
+                    if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                        $log_data = [
+                            'opeartor_method'   => 1,
+                            'updated_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->where('user_id',$user_id)->update($log_data);
+                    }else{
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 1,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
+                    }
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');
@@ -330,12 +347,20 @@ class HouseService extends CommonService
                 }
                 if($rent_house_id && !$error){
                     // 用户操作节点
-                    $log_data = [
-                        'user_id'           => $input['user_id'],
-                        'opeartor_method'   => 1,
-                        'created_at'        => date('Y-m-d H:i:s',time()),
-                    ];
-                    DB::table('user_opeart_log')->insert($log_data);
+                    if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                        $log_data = [
+                            'opeartor_method'   => 1,
+                            'updated_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->where('user_id',$user_id)->update($log_data);
+                    }else{
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 1,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
+                    }
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');

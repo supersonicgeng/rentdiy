@@ -175,12 +175,20 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     }
                     if ($res && !$error) {
                         // 用户操作节点
-                        $log_data = [
-                            'user_id'           => $input['user_id'],
-                            'opeartor_method'   => 3,
-                            'created_at'        => date('Y-m-d H:i:s',time()),
-                        ];
-                        DB::table('user_opeart_log')->insert($log_data);
+                        if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                            $log_data = [
+                                'opeartor_method'   => 3,
+                                'updated_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+                        }else{
+                            $log_data = [
+                                'user_id'           => $input['user_id'],
+                                'opeartor_method'   => 3,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            DB::table('user_opeart_log')->insert($log_data);
+                        }
                         return $this->success('inspect add success');
                     } else {
                         return $this->error('3', 'inspect add failed');
@@ -310,11 +318,20 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     }
                     if ($res && !$error) {
                         // 用户操作节点
-                        $log_data = [
-                            'user_id'           => $input['user_id'],
-                            'opeartor_method'   => 3,
-                            'created_at'        => date('Y-m-d H:i:s',time()),
-                        ];
+                        if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                            $log_data = [
+                                'opeartor_method'   => 3,
+                                'updated_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+                        }else{
+                            $log_data = [
+                                'user_id'           => $input['user_id'],
+                                'opeartor_method'   => 3,
+                                'created_at'        => date('Y-m-d H:i:s',time()),
+                            ];
+                            DB::table('user_opeart_log')->insert($log_data);
+                        }
                         DB::table('user_opeart_log')->insert($log_data);
                         return $this->success('inspect add success');
                     } else {
@@ -449,11 +466,20 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     }
                 if(!$error){
                     // 用户操作节点
-                    $log_data = [
-                        'user_id'           => $input['user_id'],
-                        'opeartor_method'   => 3,
-                        'created_at'        => date('Y-m-d H:i:s',time()),
-                    ];
+                    if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                        $log_data = [
+                            'opeartor_method'   => 3,
+                            'updated_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+                    }else{
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 3,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
+                    }
                     DB::table('user_opeart_log')->insert($log_data);
                     return $this->success('inspect add success');
                 }else{

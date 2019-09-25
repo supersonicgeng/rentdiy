@@ -2142,11 +2142,20 @@ Your property required the first inspection for the tenancy record. Please to cr
             ];
             $task_res = Task::insert($task_data);
             // 用户操作节点
-            $log_data = [
-                'user_id'           => $input['user_id'],
-                'opeartor_method'   => 2,
-                'created_at'        => date('Y-m-d H:i:s',time()),
-            ];
+            if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                $log_data = [
+                    'opeartor_method'   => 2,
+                    'updated_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+            }else{
+                $log_data = [
+                    'user_id'           => $input['user_id'],
+                    'opeartor_method'   => 2,
+                    'created_at'        => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('user_opeart_log')->insert($log_data);
+            }
             DB::table('user_opeart_log')->insert($log_data);
             return $this->success('contract effect success');
         }else{
@@ -2387,12 +2396,20 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 ];
                 $task_res = Task::insert($task_data1);
                 // 用户操作节点
-                $log_data = [
-                    'user_id'           => $input['user_id'],
-                    'opeartor_method'   => 7,
-                    'created_at'        => date('Y-m-d H:i:s',time()),
-                ];
-                DB::table('user_opeart_log')->insert($log_data);
+                if(DB::table('user_opeart_log')->where('user_id',$input['user_id'])->first()){
+                    $log_data = [
+                        'opeartor_method'   => 7,
+                        'updated_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('user_opeart_log')->where('user_id',$input['user_id'])->update($log_data);
+                }else{
+                    $log_data = [
+                        'user_id'           => $input['user_id'],
+                        'opeartor_method'   => 7,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('user_opeart_log')->insert($log_data);
+                }
                 return $this->success('suspend contract success');
             }else{
                 return $this->error('2','suspend contract failed');
