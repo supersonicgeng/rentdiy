@@ -15,6 +15,7 @@ use App\Model\Bond;
 use App\Model\BondRefund;
 use App\Model\BondTransfer;
 use App\Model\ContractTenement;
+use App\Model\Operator;
 use App\Model\OperatorRoom;
 use App\Model\Region;
 use App\Model\RentArrears;
@@ -105,6 +106,11 @@ class BondService extends CommonService
             $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
             $model = $model->whereIn('rent_house_id',$room_list);
         }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
+        }
         $page = $input['page'];
         $count = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->count();
         if($count < ($page-1)*10){
@@ -139,6 +145,11 @@ class BondService extends CommonService
         }
         if($input['end_date']){
             $model = $model->where('created_at','<',$input['end_date']);
+        }
+        if(isset($input['operator_id'])){
+            $operator_id = $input['operator_id'];
+            $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$room_list);
         }
         if(isset($input['operator_id'])){
             $operator_id = $input['operator_id'];
@@ -303,6 +314,25 @@ class BondService extends CommonService
             $model = $model->whereIn('rent_house_id',$room_list);
         }
         if($res){
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 6,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 13,
+                    'operator_information'  => 'lodged bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->success('add bond sn success');
         }else{
             return $this->error('2','add bond sn failed');
@@ -380,6 +410,25 @@ class BondService extends CommonService
         }
         if(!$error){
             RentArrears::where('id',$input['bond_id'])->update([ 'bond_status'   => 4, 'updated_at'    => date('Y-m-d H:i:s',time()),]);
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 6,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 14,
+                    'operator_information'  => 'lodged bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->success('bond refund info add success');
         }else{
             return $this->error('2','bond refund info add failed');
@@ -542,6 +591,25 @@ class BondService extends CommonService
         ];
         $res = $model->where('id',$bond_id)->update($lodged_data);
         if($res){
+            // 用户操作节点
+            $log_data = [
+                'user_id'           => $input['user_id'],
+                'opeartor_method'   => 6,
+                'created_at'        => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('user_opeart_log')->insert($log_data);
+            if(isset($input['operator_id'])){
+                $operator_res = Operator::where('id',$input['operator_id'])->first();
+                $operator_data = [
+                    'user_id'   => $input['user_id'],
+                    'operator_id'   => $input['operator_id'],
+                    'operator_name' => $operator_res->operator_name,
+                    'operator_type' => 15,
+                    'operator_information'  => 'lodged bond',
+                    'created_at'    => date('Y-m-d H:i:s',time())
+                ];
+                DB::table('operator_record')->insert($operator_data);
+            }
             return $this->success('bond transfer date update success');
         }else{
             return $this->error('2','bond transfer date update failed');

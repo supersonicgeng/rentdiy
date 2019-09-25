@@ -174,6 +174,13 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         }
                     }
                     if ($res && !$error) {
+                        // 用户操作节点
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 3,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
                         return $this->success('inspect add success');
                     } else {
                         return $this->error('3', 'inspect add failed');
@@ -302,6 +309,13 @@ An inspection has been scheduled about date, please communicate with the tenant 
                         }
                     }
                     if ($res && !$error) {
+                        // 用户操作节点
+                        $log_data = [
+                            'user_id'           => $input['user_id'],
+                            'opeartor_method'   => 3,
+                            'created_at'        => date('Y-m-d H:i:s',time()),
+                        ];
+                        DB::table('user_opeart_log')->insert($log_data);
                         return $this->success('inspect add success');
                     } else {
                         return $this->error('3', 'inspect add failed');
@@ -434,6 +448,13 @@ An inspection has been scheduled about date, please communicate with the tenant 
                     }
                     }
                 if(!$error){
+                    // 用户操作节点
+                    $log_data = [
+                        'user_id'           => $input['user_id'],
+                        'opeartor_method'   => 3,
+                        'created_at'        => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('user_opeart_log')->insert($log_data);
                     return $this->success('inspect add success');
                 }else{
                     return $this->error('3', 'inspect add failed');
@@ -465,7 +486,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
             if($count < ($page-1)*3){
                 return $this->error('3','no more inspect info');
             }
-            $res = $model->where('rent_house_id',$input['rent_house_id'])->offset(($page-1)*3)->limit(3)->get()->toArray();
+            $res = $model->where('rent_house_id',$input['rent_house_id'])->orderByDesc('id')->offset(($page-1)*3)->limit(3)->get()->toArray();
             if($res){
                 $data['inspect_list'] = $res;
                 $data['house_info'] = RentHouse::where('id',$input['rent_house_id'])->select('District','TA','Region','bedroom_no','bathroom_no','parking_no','garage_no','require_renter','address')->first();
