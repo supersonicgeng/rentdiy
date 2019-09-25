@@ -187,26 +187,28 @@ class ReportController extends Controller
 
     public function landlordAnalyze(Request $request)
     {
+
         $where = function ($query) use ($request) {
             //按管理员名称搜索
-            if ($request->has('userName') and $request->userName != '') {
-                $search = "%".$request->userName."%";
-                $query->where("u.nickname","like",$search);
+            if ($request->has('opeartor_method') and $request->opeartor_method != '') {
+                $search = $request->opeartor_method;
+                $query->where("uo.opeartor_method",$search);
+            }
+            if ($request->has('login_time') and $request->login_time != ''){
+                $search = $request->login_time;
+                $query->where('u.login_expire_time','<',date('Y-m-d H:i:s',strtotime('-'.$search.'days')));
             }
             $query->whereIn('u.user_role',[1,3,5,7]);
         };
-        $res = DB::table('user as u')->where($where)->paginate(20);
+        $res = DB::table('user as u')->leftJoin('user_opeart_log as uo','u.id','uo.user_id')
+            ->where($where)->paginate(20);
         foreach ($res as $k => $v){
-            $house_ids = RentHouse::where('user_id',$v->id)->pluck('id');
-            $res[$k]->house_num = RentHouse::where('user_id',$v->id)->count();
-            $res[$k]->empty_rate = RentHouse::where('user_id',$v->id)->where('rent_category','<',4)->count()?round(RentHouse::where('user_id',$v->id)->where('rent_category','<',4)->where('rent_status','!=',4)->count()/RentHouse::where('user_id',$v->id)->where('rent_category','<',4)->count(),4)*100:100;
-            $res[$k]->inspect_rate = Inspect::whereIn('rent_house_id',$house_ids)->count()?round(Inspect::whereIn('rent_house_id',$house_ids)->where('inspect_status','>',3)->count()/Inspect::whereIn('rent_house_id',$house_ids)->count(),4)*100:100;
-            $res[$k]->msg_income = DB::table('expense')->where('user_id',$v->id)->where('expense_type',1)->where('user_cost_role',1)->sum('total_cost') ;
-            $res[$k]->paper_income = DB::table('expense')->where('user_id',$v->id)->where('expense_type',2)->where('user_cost_role',1)->sum('total_cost') ;
-            $res[$k]->service_income = DB::table('expense')->where('user_id',$v->id)->whereIn('expense_type',[3,4,5,6])->sum('total_cost') ;
-            $res[$k]->arrears_rate = RentArrears::where('user_id',$v->id)->where('arrears_type','!=',4)->sum('arrears_fee')?round(RentArrears::where('user_id',$v->id)->where('arrears_type','!=',4)->sum('need_pay_fee')/RentArrears::where('user_id',$v->id)->where('arrears_type','!=',4)->sum('arrears_fee'),4)*100:100;;
-            $res[$k]->total_income = DB::table('expense')->where('user_id',$v->id)->sum('total_cost');
-            $res[$k]->total_arrears =  DB::table('user')->where('id',$v->id)->where('balance','>',0)->sum('balance')?DB::table('user')->where('id',$v->id)->where('balance','>',0)->sum('balance'):0;
+            $res[$k]->house_num = DB::table('rent_house')->where('user_id',$v->id)->count();
+            $un_logint_day = floor((time()-strtotime($v->login_expire_time))/3600/24);
+            if($un_logint_day < 0){
+                $un_logint_day = 0;
+            }
+            $res[$k]->un_logint_day = $un_logint_day;
         }
         return view("admin.report.landlordAnalyze.index", compact("res"));
     }

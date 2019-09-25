@@ -25,9 +25,25 @@
                                     <div class="input-group input-group-sm">
 
 
-                                        <input type="text" name="userName" class="form-control pull-right"
-                                               value="{{Request::input('userName')}}"
-                                               placeholder="Username Search">
+                                        <input type="text" name="login_time" class="form-control pull-right"
+                                               value="{{Request::input('login_time')}}"
+                                               placeholder="un login time Search">
+
+                                    </div>
+                                    <div class="input-daterange input-group input-group-sm">
+
+
+                                        <select class="form-control" name="opeartor_method" id="">
+                                            <option value="" selected="selected">All</option>
+                                            <option value="1">add house</option>
+                                            <option value="2">add contract</option>
+                                            <option value="3">inspect</option>
+                                            <option value="4">add fee list</option>
+                                            <option value="5">bank checke</option>
+                                            <option value="6">cash pay</option>
+                                            <option value="7">stop contract</option>
+
+                                        </select>
 
                                     </div>
                                     <button type="submit" class="btn btn-default btn-sm">确定</button>
@@ -46,15 +62,11 @@
                                     <th>user nickname</th>
                                     <th>phone</th>
                                     <th>email</th>
-                                    <th>house quantity</th>
-                                    <th>un rent rate</th>
-                                    <th>arrears rate</th>
-                                    <th>inspect rate</th>
-                                    <th>service fee</th>
-                                    <th>short message fee</th>
-                                    <th>mail send fee</th>
-                                    <th>total income</th>
-                                    <th>total arrears</th>
+                                    <th>last operate</th>
+                                    <th>last login time</th>
+                                    <th>un login day</th>
+                                    <th>house number</th>
+
 
                                 </tr>
                                 @foreach($res as $item)
@@ -62,15 +74,28 @@
                                         <td>{{$item->nickname}}</td>
                                         <td>{{$item->phone}}</td>
                                         <td>{{$item->e_mail}}</td>
+                                        <td>@if($item->opeartor_method == 1)
+                                                add house
+                                            @elseif($item->opeartor_method == 2)
+                                                add contract
+                                            @elseif($item->opeartor_method == 3)
+                                                inspect
+                                            @elseif($item->opeartor_method == 4)
+                                                add fee list
+                                            @elseif($item->opeartor_method == 5)
+                                                bank check
+                                            @elseif($item->opeartor_method == 6)
+                                                cash pay
+                                            @elseif($item->opeartor_method == 7)
+                                                stop contract
+                                            @else
+                                                null
+                                            @endif
+                                        </td>
+                                        <td>{{$item->login_expire_time}}</td>
+                                        <td>{{$item->un_logint_day}}</td>
                                         <td>{{$item->house_num}}</td>
-                                        <td>{{$item->empty_rate}}</td>
-                                        <td>{{$item->arrears_rate}}</td>
-                                        <td>{{$item->inspect_rate}}</td>
-                                        <td>{{$item->service_income}}</td>
-                                        <td>{{$item->msg_income}}</td>
-                                        <td>{{$item->paper_income}}</td>
-                                        <td>{{$item->total_income}}</td>
-                                        <td>{{$item->total_arrears}}</td>
+
                                     </tr>
                                 @endforeach
                                 </tbody>
