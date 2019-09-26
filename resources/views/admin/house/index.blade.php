@@ -66,7 +66,13 @@
                                         <td>{{$item->id}}</td>
                                         <td>{{$item->property_name}}</td>
                                         <td>@if($item->rent_category == 1)
-                                                
+                                                Residential
+                                            @elseif($item->rent_category == 2)
+                                                Boarding
+                                            @elseif($item->rent_category == 3)
+                                                Flatmate
+                                            @elseif($item->rent_category == 4)
+                                                Commercial
                                             @endif
                                         </td>
                                         <td>{!! is_something('is_banner',$item) !!}</td>
