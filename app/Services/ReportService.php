@@ -116,7 +116,7 @@ class ReportService extends CommonService
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','tenement_mobile','h.property_name','c.house_id','c.contract_id','c.contract_type','c.contract_status','c.rent_start_date','c.rent_end_date','c.id')
                 ->get();
             foreach ($res as $k => $v){
-                $inspect_id = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->orderByDesc('updated_at')->pluck('id')->first();
+                $inspect_id = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->orderByDesc('id')->pluck('id')->first();
                 if($inspect_id){
                     $res[$k]->inspect_date = Inspect::where('rent_house_id',$v->house_id)->where('inspect_status',4)->pluck('inspect_completed_date')->first();
                     $res[$k]->total_chattel = InspectChattel::where('inspect_id',$inspect_id)->sum('chattel_num');
