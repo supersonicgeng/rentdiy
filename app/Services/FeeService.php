@@ -133,7 +133,7 @@ class FeeService extends CommonService
                     'District' => $rent_house_info->District,
                     'TA' => $rent_house_info->TA,
                     'Region' => $rent_house_info->Region,
-                    'upload_url' => $input['upload_url'],
+                    'upload_url' => $v['upload_url'],
                     'created_at' => date('Y-m-d H:i:s', time()),
                 ];
                 $res = $model->insert($fee_data);
