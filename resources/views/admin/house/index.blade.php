@@ -30,6 +30,14 @@
                                                placeholder="Username Search">
 
                                     </div>
+                                    <div class="input-group input-group-sm">
+
+
+                                        <input type="text" name="property_name" class="form-control pull-right"
+                                               value="{{Request::input('property_name')}}"
+                                               placeholder="property  Search">
+
+                                    </div>
 
                                     {{--<div class="input-daterange input-group input-group-sm">
                                         <input class="form-control" id="_time_from" name="dateRange"
