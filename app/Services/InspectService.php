@@ -17,7 +17,10 @@ use App\Model\InspectChattel;
 use App\Model\InspectCheck;
 use App\Model\InspectRoom;
 use App\Model\Key;
+use App\Model\Landlord;
 use App\Model\LandlordOrder;
+use App\Model\Operator;
+use App\Model\Providers;
 use App\Model\Region;
 use App\Model\RentContact;
 use App\Model\RentHouse;
@@ -1105,9 +1108,19 @@ An inspection has been scheduled about date, please communicate with the tenant 
             // 更改状态
             $inspect_method = Inspect::where('id',$input['inspect_id'])->first();
             if($inspect_method->inspect_method == 2){
-                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                if(isset($input['operator_id'])){
+                    $check_name = Operator::where('id',$input['operator_id'])->pluck('operator_name')->first();
+                }else{
+                    $check_name = Providers::where('user_id',$input['user_id'])->pluck('first_name')->first();
+                }
+                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>3,'inspect_completed_date'=>date('Y-m-d',time()),'check_name'=>$check_name,'updated_at'=>date('Y-m-d H:i:s',time())]);
             }else{
-                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+                if(isset($input['operator_id'])){
+                    $check_name = Operator::where('id',$input['operator_id'])->pluck('operator_name')->first();
+                }else{
+                    $check_name = Landlord::where('user_id',$input['user_id'])->pluck('first_name')->first();
+                }
+                Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'inspect_completed_date'=>date('Y-m-d',time()),'check_name'=>$check_name,'updated_at'=>date('Y-m-d H:i:s',time())]);
             }
             return $this->success('inspect confirm success');
         }else{
