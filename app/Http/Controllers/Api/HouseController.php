@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class HouseController extends CommonController
 {
@@ -235,5 +236,9 @@ class HouseController extends CommonController
     public function getHouseScore(Request $request)
     {
         return service('House')->getHouseScore($request->all());
+    }
+
+    public function index(Request $request){
+        return service('House')->index($request->all());
     }
 }

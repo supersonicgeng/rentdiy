@@ -1422,4 +1422,19 @@ class HouseService extends CommonService
 
 
     }
+
+    public function index()
+    {
+        $res = DB::table('rent_house')->where('is_banner',1)->first();
+        if(!$res){
+            return $this->error('2','get banner failed');
+        }else{
+            $res = DB::table('rent_house')->where('is_banner',1)->pluck('id');
+            foreach ($res as $k => $v){
+                $data[$k]['id'] = $v;
+                $data[$k]['img'] = DB::table('rent_pic')->where('rent_house_id',$v)->pluck('house_pic')->first();
+            }
+            return $this->success('get banner success',$data);
+        }
+    }
 }
