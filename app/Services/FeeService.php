@@ -389,6 +389,16 @@ class FeeService extends CommonService
         if($input['Region']){
             $model = $model->where('Region',$input['Region']);
         }
+        // 租约状态
+        if (@$input['contract_type'] && @$input['contract_type'] != ''){
+            if($input['contract_type'] == 1){
+                $contract_type = 2;
+            }else{
+                $contract_type = 3;
+            }
+            $contract_ids = RentContract::where('contract_type',$contract_type)->where('user_id',$input['user_id'])->pluck('id');
+            $model = $model->whereIn('contract_id',$contract_ids);
+        }
         if(isset($input['operator_id'])){
             $operator_id = $input['operator_id'];
             $room_list = OperatorRoom::where('operator_id',$operator_id)->pluck('house_id');
@@ -415,6 +425,8 @@ class FeeService extends CommonService
                 $fee_list[$k]['contract_sn'] = $fee_res[0]['contract_sn'];
                 $fee_list[$k]['contract_id'] = $fee_res[0]['contract_id'];
                 $fee_list[$k]['rent_per_week'] = RentHouse::where('id',$fee_res[0]['rent_house_id'])->pluck('rent_fee_pre_week')->first();
+                $fee_list[$k]['rent_start_date'] = RentContract::where('id',$v['contract_id'])->pluck('rent_start_date');
+                $fee_list[$k]['rent_end_date'] = RentContract::where('id',$v['contract_id'])->pluck('rent_end_date');
                 $fee_list[$k]['expire_date'] = $fee_res[$fee_count-1]['expire_date'];
                 $total_arrears = 0;
                 $total_rent = 0;
