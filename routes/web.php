@@ -48,6 +48,9 @@ Route::prefix('admin')->group(function () {
 
         //房屋管理
         require 'admin/house.php';
+
+        //邮寄管理
+        require 'admin/paper.php';
         //商品管理
    //     require 'admin/shop.php';
 
