@@ -556,7 +556,7 @@ class ChargeService extends CommonService
        $user_id = $input['user_id'];
 
        $user_info =  \App\Model\User::where('id',$input['user_id'])->first();
-       $total_amount = $user_info->balance+$user_info->free_balance;
+       $total_amount = $user_info->balance;
        $free_balance = $user_info->free_balance;
        $discount = DB::table('coupon_list')->where('used_user_id',$input['user_id'])->where('coupon_type',1)
            ->where('is_activated',1)
