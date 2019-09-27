@@ -432,6 +432,15 @@ class ReportService extends CommonService
             if (@$input['start_time'] && @$input['end_time'] && @$input['start_time'] != '' && @$input['end_time'] != '') {
                $query->whereBetween('r.created_at',[$input['start_time'],$input['end_time']]);
             }
+            // 租约状态
+            if (@$input['contract_type'] && @$input['contract_type'] != ''){
+                if($input['contract_type'] == 1){
+                    $contract_type = 2;
+                }else{
+                    $contract_type = 3;
+                }
+                $query->where('c.contract_type',$contract_type);
+            }
             $query->where('c.user_id',$input['user_id']);
         };
         $count = DB::table('rent_arrears as r')
