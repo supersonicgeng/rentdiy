@@ -1173,16 +1173,11 @@ An inspection has been scheduled about date, please communicate with the tenant 
     {
         $inspect_id = $input['inspect_id'];
         $model = new InspectRoom();
-        $res = $model->where('inspect_id',$inspect_id)/*->where('accept',2)*/->get()->toArray();
+        $res = $model->where('inspect_id',$inspect_id)->where('accept',2)->get()->toArray();
         $data['issues_res'] = $res;
         $data['confirm_res'] = InspectCheck::where('inspect_id',$inspect_id)->first()->toArray();
         $data['house_res'] = RentHouse::where('id',$input['rent_house_id'])->first()->toArray();
-        if($res){
-            return $this->success('get record success',$data);
-        }else{
-            return $this->error('2','no record');
-        }
-
+        return $this->success('get record success',$data);
     }
 
 
