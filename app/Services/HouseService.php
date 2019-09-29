@@ -152,7 +152,14 @@ class HouseService extends CommonService
                         ];
                         DB::table('user_opeart_log')->insert($log_data);
                     }
-
+                    // 房屋操作节点
+                    $house_log_data = [
+                        'user_id'   => $input['user_id'],
+                        'rent_house_id' => $rent_house_id,
+                        'log_type'      => 1,
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('house_log')->insert($house_log_data);
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');
@@ -277,6 +284,14 @@ class HouseService extends CommonService
                         ];
                         DB::table('user_opeart_log')->insert($log_data);
                     }
+                    // 房屋操作节点
+                    $house_log_data = [
+                        'user_id'   => $input['user_id'],
+                        'rent_house_id' => $rent_house_id,
+                        'log_type'      => 1,
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('house_log')->insert($house_log_data);
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');
@@ -361,6 +376,14 @@ class HouseService extends CommonService
                         ];
                         DB::table('user_opeart_log')->insert($log_data);
                     }
+                    // 房屋操作节点
+                    $house_log_data = [
+                        'user_id'   => $input['user_id'],
+                        'rent_house_id' => $rent_house_id,
+                        'log_type'      => 1,
+                        'created_at'    => date('Y-m-d H:i:s',time()),
+                    ];
+                    DB::table('house_log')->insert($house_log_data);
                     return $this->success('rent_house_list add succcess');
                 }else{
                     return $this->error('2','rent_house_list add failed, Pls try again');
@@ -1359,6 +1382,7 @@ class HouseService extends CommonService
                 if(RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',3)->first() || RentContract::where('house_id',$v['rent_house_id'])->where('contract_status',5)->first()){
                     $res[$k]['house_status'] = 5;
                 }
+                $res[$k]['house_log'] = DB::table('house_log')->where('rent_house_id',$v['rent_house_id'])->get();
             }
             $data['house_list'] = $res;
             $data['current_page'] = $page;

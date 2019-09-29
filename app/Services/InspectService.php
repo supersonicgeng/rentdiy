@@ -1122,6 +1122,14 @@ An inspection has been scheduled about date, please communicate with the tenant 
                 }
                 Inspect::where('id',$input['inspect_id'])->update(['inspect_status'=>4,'inspect_completed_date'=>date('Y-m-d',time()),'check_name'=>$check_name,'updated_at'=>date('Y-m-d H:i:s',time())]);
             }
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => DB::table('inspect_list')->where('id',$input['inspect_id'])->pluck('rent_house_id')->first(),
+                'log_type'      => 4,
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
             return $this->success('inspect confirm success');
         }else{
             return $this->error('2','inspect confirm failed');

@@ -553,6 +553,14 @@ You have received a new tenancy application from above, please deal with it in t
             $res = $model->where('id',$input['application_id'])->update(['application_status'=>8,'updated_at'=>date('Y:m:d h:i:s',time())]);
             RentHouse::where('id',$rent_house_id)->update(['rent_status'=>3,'updated_at'=>date('Y-m-d H:i:s',time())]);
             if($res){
+                // 房屋操作节点
+                $house_log_data = [
+                    'user_id'   => $input['user_id'],
+                    'rent_house_id' => $rent_house_id,
+                    'log_type'      => 2,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('house_log')->insert($house_log_data);
                 return $this->success('application agree success',$res);
             } else{
                 return $this->error('3','application agree failed');
@@ -2157,6 +2165,14 @@ Your property required the first inspection for the tenancy record. Please to cr
                 DB::table('user_opeart_log')->insert($log_data);
             }
             DB::table('user_opeart_log')->insert($log_data);
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => $contract_data->house_id,
+                'log_type'      => 3,
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
             return $this->success('contract effect success');
         }else{
             return $this->error('2','contact effect failed');
@@ -2410,6 +2426,14 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     ];
                     DB::table('user_opeart_log')->insert($log_data);
                 }
+                // 房屋操作节点
+                $house_log_data = [
+                    'user_id'   => $input['user_id'],
+                    'rent_house_id' => $rent_house_id,
+                    'log_type'      => 9,
+                    'created_at'    => date('Y-m-d H:i:s',time()),
+                ];
+                DB::table('house_log')->insert($house_log_data);
                 return $this->success('suspend contract success');
             }else{
                 return $this->error('2','suspend contract failed');

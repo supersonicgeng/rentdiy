@@ -341,6 +341,14 @@ class BondService extends CommonService
                 ];
                 DB::table('operator_record')->insert($operator_data);
             }
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => $res->rent_house_id,
+                'log_type'      => 6,
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
             return $this->success('add bond sn success');
         }else{
             return $this->error('2','add bond sn failed');
@@ -445,6 +453,14 @@ class BondService extends CommonService
                 ];
                 DB::table('operator_record')->insert($operator_data);
             }
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => $res->rent_house_id,
+                'log_type'      => 7,
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
             return $this->success('bond refund info add success');
         }else{
             return $this->error('2','bond refund info add failed');
@@ -622,6 +638,14 @@ class BondService extends CommonService
                 ];
                 DB::table('user_opeart_log')->insert($log_data);
             }
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => $res->rent_house_id,
+                'log_type'      => 8,
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
             if(isset($input['operator_id'])){
                 $operator_res = Operator::where('id',$input['operator_id'])->first();
                 $operator_data = [
