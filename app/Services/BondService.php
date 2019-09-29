@@ -344,7 +344,7 @@ class BondService extends CommonService
             // 房屋操作节点
             $house_log_data = [
                 'user_id'   => $input['user_id'],
-                'rent_house_id' => $res->rent_house_id,
+                'rent_house_id' => $model->where('id',$bond_id)->pluck('rent_house_id')->first(),
                 'log_type'      => 6,
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
@@ -456,7 +456,7 @@ class BondService extends CommonService
             // 房屋操作节点
             $house_log_data = [
                 'user_id'   => $input['user_id'],
-                'rent_house_id' => $res->rent_house_id,
+                'rent_house_id' => $model->where('id',$input['bond_id'])->pluck('rent_house_id')->first(),,
                 'log_type'      => 7,
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
@@ -641,7 +641,7 @@ class BondService extends CommonService
             // 房屋操作节点
             $house_log_data = [
                 'user_id'   => $input['user_id'],
-                'rent_house_id' => $res->rent_house_id,
+                'rent_house_id' => $model->where('id',$bond_id)->pluck('rent_house_id')->first(),,
                 'log_type'      => 8,
                 'created_at'    => date('Y-m-d H:i:s',time()),
             ];
