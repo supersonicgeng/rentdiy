@@ -999,7 +999,20 @@ Please contact with us if you have any questions, thank you.
             'msg_type'          => $input['msg_type'],
             'created_at'        => date('Y-m-d H:i:s',time()),
         ];
-        $res = SendMessage::insert($data);
+        $res = SendMessage::insertGetId($data);
+        if($input['msg_type'] <= 12){
+            $rent_house_id = RentContract::where('id',$input['contract_id'])->pluck('house_id')->first();
+            // 房屋操作节点
+            $house_log_data = [
+                'user_id'   => $input['user_id'],
+                'rent_house_id' => $rent_house_id,
+                'log_type'      => 5,
+                'note_id'       => $res,
+                'note_type'     => $input['msg_type'],
+                'created_at'    => date('Y-m-d H:i:s',time()),
+            ];
+            DB::table('house_log')->insert($house_log_data);
+        }
         // 发送email
         if($input['email_send'] == 1){
             $mail_to = $input['send_email'];
