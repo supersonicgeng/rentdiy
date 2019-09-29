@@ -457,7 +457,7 @@ class ReportService extends CommonService
                 ->leftJoin('rent_house as h','h.id','c.house_id')
                 ->where($where)->limit(10)->offset(($input['page']-1)*10)
                 ->select('ct.tenement_full_name','ct.tenement_e_mail','ct.tenement_mobile','h.property_name','c.contract_id','c.contract_type',
-                    'c.rent_start_date','c.rent_end_date','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.id')
+                    'c.rent_start_date','c.rent_end_date','r.pay_fee','r.need_pay_fee','r.arrears_fee','r.effect_date','r.updated_at','r.id')
                 ->get();
             $total_arrears = 0;
             $total_pay_fee = 0;
