@@ -1851,6 +1851,7 @@ An inspection has been scheduled about date, please communicate with the tenant 
     {
         $inspect_id = $input['inspect_id'];
         $res = Inspect::where('id',$inspect_id)->first();
+        $res->contract_id = RentContract::where('house_id',$res->rent_house_id)->where('contract_status','>',1)->pluck('id')->last();
         $data['inspect_name'] =$res->check_name;
         if($res->inspect_method == 2){
             $providers_id = LandlordOrder::where('inspect_id',$inspect_id)->pluck('providers_id')->first();
