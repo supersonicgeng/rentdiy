@@ -2529,32 +2529,213 @@ The bond can only refund if you satisfied with above or agree the amount with th
         $model = new RentContract();
         $contract_type = $model->where('id',$contract_id)->pluck('contract_type')->first();
         if($contract_type == 1){
+            $contract_res = $model->where('id',$contract_id)->first();
+            $tenement_res = ContractTenement::where('contract_id',$contract_id)->first();
+            $entire_res = EntireContract::where('contract_id',$contract_id)->first();
+            $rent_house_res = RentHouse::where('id',$contract_res->house_id)->first();
+            // PDF
+            $ip = "{$_SERVER['SERVER_NAME']}";
+            $dashboard_pdf_file = "http://".$ip."/pdf/entirecontract-unlocked.pdf";
+            $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+            $mpdf = new Mpdf();
+            $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+            for($i=1; $i<=$pagecount;$i++){
+                $import_page = $mpdf->importPage($i);
+                $mpdf->useTemplate($import_page);
+                if($i == 7){
+                    $mpdf->WriteText(28,41,(string)$contract_res->landlord_full_name);
+                    $mpdf->WriteText(55,57,(string)$contract_res->house_address);
+                    $mpdf->WriteText(23,63,(string)$contract_res->landlord_e_mail);
+                    $mpdf->WriteText(25,73,(string)$contract_res->landlord_telephone);
+                    $mpdf->WriteText(70,73,(string)$contract_res->landlord_mobile_phone);
+                    $mpdf->WriteText(110,73,(string)$contract_res->landlord_hm);
+                    $mpdf->WriteText(155,73,(string)$contract_res->landlord_wk);
+                    $mpdf->WriteText(52,79,(string)$contract_res->landlord_other_address);
+                    $mpdf->WriteText(15,91,(string)$contract_res->landlord_additional_address);
+                    $mpdf->WriteText(28,119,(string)$tenement_res->tenement_full_name);
+                    if($tenement_res->identification_type == 1){
+                        $mpdf->WriteText(46,124,(string)'√');
+                    }elseif($tenement_res->identification_type == 2){
+                        $mpdf->WriteText(79,124,(string)'√');
+                    }elseif($tenement_res->identification_type == 3){
+                        $mpdf->WriteText(106,124,(string)'√');
+                    }
+                    $mpdf->WriteText(144,125,(string)$tenement_res->identification_no);
+                    $mpdf->WriteText(55,142,(string)$tenement_res->service_physical_address);
+                    $mpdf->WriteText(23,148,(string)$tenement_res->tenement_e_mail);
+                    $mpdf->WriteText(25,158,(string)$tenement_res->tenement_phone);
+                    $mpdf->WriteText(70,158,(string)$tenement_res->tenement_mobile);
+                    $mpdf->WriteText(110,158,(string)$tenement_res->tenement_hm);
+                    $mpdf->WriteText(155,158,(string)$tenement_res->tenement_wk);
+                    $mpdf->WriteText(52,164,(string)$tenement_res->other_contact_address);
+                    $mpdf->WriteText(15,177,(string)$tenement_res->additional_address);
+                    if($tenement_res->is_child == 0){
+                        $mpdf->WriteText(28,189,(string)'∨');
+                    }else{
+                        $mpdf->WriteText(15,189,(string)'∨');
+                    }
+                    $mpdf->WriteText(15,213,(string)$entire_res->tenancy_address);
+                    $mpdf->WriteText(38,226,(string)$entire_res->rent_per_week);
+                    if($entire_res->to_be_paid == 1){
+                        $mpdf->WriteText(78,225,(string)'∨');
+                    }
+                    if($entire_res->rent_to_be_paid_at == 1){
+                        $mpdf->WriteText(133,225,(string)'∨');
+                    }else{
+                        $mpdf->WriteText(152,225,(string)'∨');
+                    }
+                    $mpdf->WriteText(38,226,(string)$entire_res->rent_per_week);
+                    $mpdf->WriteText(38,232,(string)$entire_res->bond_amount);
+                    $mpdf->WriteText(42,239,(string)$entire_res->rent_to_be_paid_at);
+                    $bank_count = str_split($entire_res->bank_account);
+                    foreach ($bank_count as $k => $v){
+                        if($k < 2){
+                            $mpdf->WriteText(60+$k*4,246,(string)$v);
+                        }elseif($k <9){
+                            $mpdf->WriteText(60+$k*5,246,(string)$v);
+                        }else{
+                            $mpdf->WriteText(59+$k*5,246,(string)$v);
+                        }
+                    }
+                    $mpdf->WriteText(36,255,(string)$entire_res->account_name);
+                    $mpdf->WriteText(24,262,(string)$entire_res->bank);
+                    $mpdf->WriteText(70,262,(string)$entire_res->branch);
+                }
+                if($i == 8){
+                    $day = $entire_res->effective_date;
+                    $day = explode('-',$day);
+                    $mpdf->WriteText(70,38,(string)$day[2]);
+                    $mpdf->WriteText(110,38,(string)$day[1]);
+                    $mpdf->WriteText(150,38,(string)substr($day[0],2));
+                    $mpdf->WriteText(26,113,(string)$entire_res->rule);
+                    $mpdf->Image($entire_res->landlord_signature, 160, 180, 20, 20, 'png', '', true, true);
+                    $mpdf->Image($entire_res->tenement_signature, 160, 200, 20, 20, 'png', '', true, false);
+                }
+                if($i == 9){
+                    if($entire_res->is_ceiling_insulation == 1){
+                        $mpdf->WriteText(26,55,(string)'∨');
+                    }else{
+                        $mpdf->WriteText(43,55,(string)'∨');
+                    }
+                    $mpdf->WriteText(26,73,(string)$entire_res->ceiling_insulation_detail);
+                    if($entire_res->is_insulation_underfloor_insulation == 1){
+                        $mpdf->WriteText(26,90,(string)'∨');
+                    }else{
+                        $mpdf->WriteText(43,90,(string)'∨');
+                    }
+                    $mpdf->WriteText(26,108,(string)$entire_res->insulation_underfloor_insulation_detail);
+                    if($entire_res->location_ceiling_insulation == 1){
+                        $mpdf->WriteText(49,129,(string)'∨');
+                    }elseif ($entire_res->location_ceiling_insulation == 2){
+                        $mpdf->WriteText(49,134,(string)'∨');
+                        $mpdf->WriteText(54,136,(string)$entire_res->location_ceiling_insulation_detail);
+                    }elseif ($entire_res->location_ceiling_insulation == 3){
+                        $mpdf->WriteText(49,142,(string)'∨');
+                    }elseif ($entire_res->location_ceiling_insulation == 4){
+                        $mpdf->WriteText(49,147,(string)'∨');
+                        $mpdf->WriteText(54,151,(string)$entire_res->location_ceiling_insulation_detail);
+                    }
+                    if($entire_res->ceiling_insulation_type == 1){
+                        $mpdf->WriteText(49,156,(string)'∨');
+                    }elseif ($entire_res->ceiling_insulation_type == 2){
+                        $mpdf->WriteText(49,161,(string)'∨');
+                    }elseif ($entire_res->ceiling_insulation_type == 3){
+                        $mpdf->WriteText(49,166,(string)'∨');
+                        $mpdf->WriteText(60,166,(string)$entire_res->ceiling_insulation_type_detail);
+                    }elseif ($entire_res->ceiling_insulation_type == 4){
+                        $mpdf->WriteText(49,171,(string)'∨');
+                    }
+                    $mpdf->WriteText(87,177,(string)$entire_res->R_value);
+                    $mpdf->WriteText(161,177,(string)$entire_res->minimum_thickness);
+                    $mpdf->WriteText(95,183,(string)$entire_res->ceiling_insulation_age);
+                    if($entire_res->ceiling_insulation_condition == 1){
+                        $mpdf->WriteText(49,190,(string)'∨');
+                        $mpdf->WriteText(60,195,(string)$entire_res->ceiling_insulation_condition_reason);
+                    }elseif ($entire_res->ceiling_insulation_condition == 2){
+                        $mpdf->WriteText(49,200,(string)'∨');
+                    }elseif ($entire_res->ceiling_insulation_condition == 3){
+                        $mpdf->WriteText(49,208,(string)'∨');
+                    }
+                    if($entire_res->location_underfloor_insulation == 1){
+                        $mpdf->WriteText(49,219,(string)'∨');
+                    }elseif ($entire_res->location_underfloor_insulation == 2){
+                        $mpdf->WriteText(49,224,(string)'∨');
+                        $mpdf->WriteText(54,226,(string)$entire_res->location_underfloor_insulation_detail);
+                    }elseif ($entire_res->location_underfloor_insulation == 3){
+                        $mpdf->WriteText(49,232,(string)'∨');
+                    }elseif ($entire_res->location_underfloor_insulation == 4){
+                        $mpdf->WriteText(49,237,(string)'∨');
+                        $mpdf->WriteText(54,246,(string)$entire_res->location_underfloor_insulation_detail);
+                    }
+                    if($entire_res->underfloor_insulation_type == 1){
+                        $mpdf->WriteText(49,253,(string)'∨');
+                    }elseif ($entire_res->underfloor_insulation_type == 2){
+                        $mpdf->WriteText(49,258,(string)'∨');
+                    }elseif ($entire_res->underfloor_insulation_type == 3){
+                        $mpdf->WriteText(49,263,(string)'∨');
+                    }elseif ($entire_res->underfloor_insulation_type == 4){
+                        $mpdf->WriteText(49,268,(string)'∨');
+                    }elseif ($entire_res->underfloor_insulation_type == 5){
+                        $mpdf->WriteText(49,273,(string)'∨');
+                        $mpdf->WriteText(74,273,(string)$entire_res->underfloor_insulation_type_detail);
+                    }
+                }
+                if($i == 10){
+                    if($entire_res->underfloor_insulation_type == 6){
+                        $mpdf->WriteText(49,33,(string)'∨');
+                    }
+                    $mpdf->WriteText(87,39,(string)$entire_res->underfloor_R_value);
+                    $mpdf->WriteText(161,39,(string)$entire_res->underfloor_minimum_thickness);
+                    if($entire_res->condition == 1){
+                        $mpdf->WriteText(49,53,(string)'∨');
+                        $mpdf->WriteText(54,58,(string)$entire_res->condition_detail);
+                    }elseif ($entire_res->condition == 2){
+                        $mpdf->WriteText(49,63,(string)'∨');
+                    }elseif ($entire_res->condition == 3){
+                        $mpdf->WriteText(49,68,(string)'∨');
+                    }
+                    if($entire_res->condition == 1){
+                        $mpdf->WriteText(49,53,(string)'∨');
+                        $mpdf->WriteText(54,58,(string)$entire_res->condition_detail);
+                    }elseif ($entire_res->condition == 2){
+                        $mpdf->WriteText(49,63,(string)'∨');
+                    }elseif ($entire_res->condition == 3){
+                        $mpdf->WriteText(49,68,(string)'∨');
+                    }
+                    if($entire_res->wall_insulation == 1){
+                        $mpdf->WriteText(49,80,(string)'∨');
+                    }elseif ($entire_res->wall_insulation == 2){
+                        $mpdf->WriteText(49,85,(string)'∨');
+                        $mpdf->WriteText(54,82,(string)$entire_res->wall_insulation_detail);
+                    }elseif ($entire_res->wall_insulation == 3){
+                        $mpdf->WriteText(49,93,(string)'∨');
+                    }elseif ($entire_res->wall_insulation == 4){
+                        $mpdf->WriteText(49,98,(string)'∨');
+                    }
+                    $mpdf->WriteText(49,112,(string)$entire_res->supplementary_information);
+                    if($entire_res->install_insulation == 1){
+                        $mpdf->WriteText(49,53,(string)'∨');
+                        $mpdf->WriteText(54,58,(string)$entire_res->condition_detail);
+                    }elseif ($entire_res->install_insulation == 2){
+                        $mpdf->WriteText(49,63,(string)'∨');
+                    }elseif ($entire_res->install_insulation == 3){
+                        $mpdf->WriteText(49,68,(string)'∨');
+                    }
+                   
+                }
+                if($i < $pagecount){
+                    $mpdf->AddPage();
+                }
+                //
 
+            }
+            return $this->success('get pdf success',$mpdf->Output());
         }elseif ($contract_type == 2 || $contract_type == 3){
 
         }else{
 
         }
-        // PDF
-        $ip = "{$_SERVER['SERVER_NAME']}";
-        $dashboard_pdf_file = "http://".$ip."/pdf/test.pdf";
-        $fileContent = file_get_contents($dashboard_pdf_file,'rb');
-        $mpdf = new Mpdf();
-        $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
-        for($i=1; $i<=$pagecount;$i++){
-            $import_page = $mpdf->importPage($i);
-            $mpdf->useTemplate($import_page);
-            if($i == 1){
 
-
-            }
-            if($i < $pagecount){
-                $mpdf->AddPage();
-            }
-            //
-
-        }
-        return $this->success('get pdf success',$mpdf->Output());
     }
 
     /**
