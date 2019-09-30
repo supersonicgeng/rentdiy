@@ -1886,10 +1886,10 @@ An inspection has been scheduled about date, please communicate with the tenant 
         $data['lease_end_date'] = RentContract::where('id',$res->contract_id)->pluck('rent_end_date')->first();
         $data['tenement_name'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_full_name')->first();
         $data['tenement_phone'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_phone')->first();
-        $data['tenement_email'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_email')->first();
+        $data['tenement_email'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_e_mail')->first();
         $data['landlord_name'] = RentContract::where('id',$res->contract_id)->pluck('landlord_full_name')->first();
         $data['landlord_phone'] = RentContract::where('id',$res->contract_id)->pluck('landlord_phone')->first();
-        $data['landlord_email'] = RentContract::where('id',$res->contract_id)->pluck('landlord_email')->first();
+        $data['landlord_email'] = RentContract::where('id',$res->contract_id)->pluck('landlord_e_mail')->first();
         return $this->success('get message success',$data);
     }
 }
