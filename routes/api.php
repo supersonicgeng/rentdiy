@@ -259,6 +259,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('unPlatInspectCheck','InspectController@unPlatInspectCheck'); // 非平台服务商开始检查 5.9
         $router->post('unPlatInspectConfirm','InspectController@unPlatInspectConfirm'); // 非平台服务商确认 5.10
         $router->post('unPlanInspectRecord','InspectController@unPlanInspectRecord'); // 非平台服务商确认记录 5.10
+        $router->post('reviewInfo','InspectController@reviewInfo'); // review信息
     });
     // 押金管理
     $router->group(['prefix' => 'bond'], function (Router $router) {

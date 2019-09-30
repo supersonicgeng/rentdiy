@@ -390,4 +390,17 @@ class InspectController extends Controller
     {
         return service('Inspect')->unPlanInspectRecord($request->all());
     }
+
+    /**
+     * @description:review信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reviewInfo(Request $request)
+    {
+        return service('Inspect')->reviewInfo($request->all());
+    }
 }

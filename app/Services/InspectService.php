@@ -23,6 +23,7 @@ use App\Model\Operator;
 use App\Model\Providers;
 use App\Model\Region;
 use App\Model\RentContact;
+use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\Task;
@@ -1838,4 +1839,57 @@ An inspection has been scheduled about date, please communicate with the tenant 
 
     }
 
+    /**
+     * @description:review信息
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reviewInfo(array $input)
+    {
+        $inspect_id = $input['inspect_id'];
+        $res = Inspect::where('id',$inspect_id)->first();
+        $data['inspect_name'] =$res->check_name;
+        if($res->inspect_method == 2){
+            $providers_id = LandlordOrder::where('inspect_id',$inspect_id)->pluck('providers_id')->first();
+            $data['company'] = Providers::where('id',$providers_id)->pluck('service_name')->first();
+            if(!$res->check_operator_id){
+                $data['headimg'] = '';
+                $data['phone'] = Operator::where('id',$res->check_operator_id)->pluck('phone')->first();
+                $data['email'] = Operator::where('id',$res->check_operator_id)->pluck('email')->first();
+            }else{
+                $data['headimg'] = Providers::where('id',$providers_id)->pluck('headimg')->first();
+                $data['phone'] = Providers::where('id',$providers_id)->pluck('phone')->first();
+                $data['email'] = Providers::where('id',$providers_id)->pluck('email')->first();
+            }
+            $data['address'] = Providers::where('id',$providers_id)->pluck('mail_address')->first();
+        }else{
+            $data['company'] = '';
+            if(!$res->check_operator_id){
+                $data['headimg'] = '';
+                $data['phone'] = Operator::where('id',$res->check_operator_id)->pluck('phone')->first();
+                $data['email'] = Operator::where('id',$res->check_operator_id)->pluck('email')->first();
+            }else{
+                $data['headimg'] = landlord::where('user_id',$input['user_id'])->pluck('headimg')->first();
+                $data['phone'] = landlord::where('user_id',$input['user_id'])->pluck('phone')->first();
+                $data['email'] = landlord::where('user_id',$input['user_id'])->pluck('email')->first();
+            }
+            $data['address'] = landlord::where('user_id',$input['user_id'])->pluck('property_address')->first();
+        }
+        $data['fax'] = '';
+        $data['inspect_date'] = $res->inspect_completed_date;
+        $next_day = DB::table('sys_config')->where('code','HCR')->pluck('value')->first();
+        $data['next_inspect_date'] = date('Y-m-d',strtotime($res->inspect_completed_date. '+'.$next_day.'days'));
+        $data['lease_start_date'] = RentContract::where('id',$res->contract_id)->pluck('rent_start_date')->first();
+        $data['lease_end_date'] = RentContract::where('id',$res->contract_id)->pluck('rent_end_date')->first();
+        $data['tenement_name'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_full_name')->first();
+        $data['tenement_phone'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_phone')->first();
+        $data['tenement_email'] = ContractTenement::where('contract_id',$res->contract_id)->pluck('tenement_email')->first();
+        $data['landlord_name'] = RentContract::where('id',$res->contract_id)->pluck('landlord_full_name')->first();
+        $data['landlord_phone'] = RentContract::where('id',$res->contract_id)->pluck('landlord_phone')->first();
+        $data['landlord_email'] = RentContract::where('id',$res->contract_id)->pluck('landlord_email')->first();
+        return $this->success('get message success',$data);
+    }
 }
