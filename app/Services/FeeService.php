@@ -33,6 +33,7 @@ use App\Model\RentContract;
 use App\Model\RentHouse;
 use App\Model\RentPic;
 use App\Model\SeparateContract;
+use App\Model\Task;
 use App\Model\Tenement;
 use App\Model\TenementNote;
 use App\Model\Verify;
