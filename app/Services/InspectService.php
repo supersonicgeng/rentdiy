@@ -1856,11 +1856,13 @@ An inspection has been scheduled about date, please communicate with the tenant 
         if($res->inspect_method == 2){
             $providers_id = LandlordOrder::where('inspect_id',$inspect_id)->pluck('providers_id')->first();
             $data['company'] = Providers::where('id',$providers_id)->pluck('service_name')->first();
-            if(!$res->check_operator_id){
+            if($res->check_operator_id){
+
                 $data['headimg'] = '';
                 $data['phone'] = Operator::where('id',$res->check_operator_id)->pluck('phone')->first();
                 $data['email'] = Operator::where('id',$res->check_operator_id)->pluck('email')->first();
             }else{
+
                 $data['headimg'] = Providers::where('id',$providers_id)->pluck('headimg')->first();
                 $data['phone'] = Providers::where('id',$providers_id)->pluck('phone')->first();
                 $data['email'] = Providers::where('id',$providers_id)->pluck('email')->first();
@@ -1868,11 +1870,12 @@ An inspection has been scheduled about date, please communicate with the tenant 
             $data['address'] = Providers::where('id',$providers_id)->pluck('mail_address')->first();
         }else{
             $data['company'] = '';
-            if(!$res->check_operator_id){
+            if($res->check_operator_id){
                 $data['headimg'] = '';
                 $data['phone'] = Operator::where('id',$res->check_operator_id)->pluck('phone')->first();
                 $data['email'] = Operator::where('id',$res->check_operator_id)->pluck('email')->first();
             }else{
+               
                 $data['headimg'] = landlord::where('user_id',$input['user_id'])->pluck('headimg')->first();
                 $data['phone'] = landlord::where('user_id',$input['user_id'])->pluck('phone')->first();
                 $data['email'] = landlord::where('user_id',$input['user_id'])->pluck('email')->first();
