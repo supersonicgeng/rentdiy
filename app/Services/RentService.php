@@ -2569,17 +2569,17 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     $mpdf->WriteText(155,158,(string)$tenement_res->tenement_wk);
                     $mpdf->WriteText(52,164,(string)$tenement_res->other_contact_address);
                     $mpdf->WriteText(15,177,(string)$tenement_res->additional_address);
-                    if($tenement_res->is_child == 0){
+                    if($tenement_res->is_child == 1){
                         $mpdf->WriteText(28,189,(string)'∨');
                     }else{
                         $mpdf->WriteText(15,189,(string)'∨');
                     }
                     $mpdf->WriteText(15,213,(string)$entire_res->tenancy_address);
                     $mpdf->WriteText(38,226,(string)$entire_res->rent_per_week);
-                    if($entire_res->to_be_paid == 1){
+                    if($entire_res->to_be_paid == 0){
                         $mpdf->WriteText(78,225,(string)'∨');
                     }
-                    if($entire_res->rent_to_be_paid_at == 1){
+                    if($entire_res->pay_method == 2){
                         $mpdf->WriteText(133,225,(string)'∨');
                     }else{
                         $mpdf->WriteText(152,225,(string)'∨');
@@ -2607,7 +2607,16 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     $mpdf->WriteText(70,38,(string)$day[2]);
                     $mpdf->WriteText(110,38,(string)$day[1]);
                     $mpdf->WriteText(150,38,(string)substr($day[0],2));
+                    if($entire_res->can_periodic_tenancy == 2){
+                        $end_day = $entire_res->end_date;
+                        $end_day = explode('-',$end_day);
+                        $mpdf->WriteText(85,62,(string)$end_day[2]);
+                        $mpdf->WriteText(125,62,(string)$end_day[1]);
+                        $mpdf->WriteText(165,62,(string)substr($end_day[0],2));
+                    }
                     $mpdf->WriteText(26,113,(string)$entire_res->rule);
+                    $mpdf->WriteText(80,190,(string)$contract_res->landlord_full_name);
+                    $mpdf->WriteText(80,210,(string)$tenement_res->tenement_full_name);
                     $mpdf->Image($entire_res->landlord_signature, 160, 180, 20, 20, 'png', '', true, true);
                     $mpdf->Image($entire_res->tenement_signature, 160, 200, 20, 20, 'png', '', true, false);
                 }
@@ -2730,6 +2739,13 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     $mpdf->WriteText(26,230,(string)$entire_res->plan);
                     $mpdf->WriteText(26,254,(string)$entire_res->landlord_state);
                     $mpdf->Image($entire_res->landlord_signature, 160, 266, 15, 15, 'png', '', true, true);
+                }
+                if($i == 12){
+                    $mpdf->WriteText(125,195,(string)$contract_res->landlord_full_name);
+                    $mpdf->WriteText(125,215,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($entire_res->landlord_signature, 180, 180, 20, 20, 'png', '', true, true);
+                    $mpdf->Image($entire_res->tenement_signature, 180, 200, 20, 20, 'png', '', true, false);
+                    $mpdf->WriteText(152,245,(string)$entire_res->bond_amount);
                 }
                 if($i < $pagecount){
                     $mpdf->AddPage();
