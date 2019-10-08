@@ -537,7 +537,8 @@ class ChargeService extends CommonService
                 'used_user_id'  => $input['user_id'],
             ];
             DB::table('coupon_list')->where('coupon_sn',$coupon)->update($coupon_data);
-            \App\Model\User::where('id',$input['user_id'])->increment('free_balance');
+            $free_balance =  DB::table('coupon_list')->where('coupon_sn',$coupon)->pluck('deductions')->first();
+            \App\Model\User::where('id',$input['user_id'])->increment('free_balance',$free_balance);
         }
         return $this->success('coupon use success');
     }
