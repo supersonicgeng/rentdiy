@@ -44,7 +44,13 @@
                                         </div>
                                     </div>
 
+                                <div class="form-group">
+                                    <label for="inputName" class="col-sm-2 control-label">Effect time</label>
 
+                                    <div class="col-sm-10">
+                                        <input type="number" min="1" max="1000000" step="1" class="form-control" id="inputName" placeholder="Time"  name="discountTime">
+                                    </div>
+                                </div>
 
                             </div>
                             <!-- /.tab-pane -->

@@ -54,6 +54,7 @@ class IssueCouponController extends Controller
                 $data["coupon_sn"] = time() . rand(100000, 999999);
                 $data["coupon_type"] = 1;
                 $data["discount"] = $request->discount;
+                $data['expens_time'] = $request->discountTime;
                 $data["is_used"] = 0;
                 $data["used_user_id"] = $request->id;
                 $data["is_activated"] = 0;
