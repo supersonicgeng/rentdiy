@@ -1875,7 +1875,6 @@ An inspection has been scheduled about date, please communicate with the tenant 
                 $data['phone'] = Operator::where('id',$res->check_operator_id)->pluck('phone')->first();
                 $data['email'] = Operator::where('id',$res->check_operator_id)->pluck('email')->first();
             }else{
-               
                 $data['headimg'] = landlord::where('user_id',$input['user_id'])->pluck('headimg')->first();
                 $data['phone'] = landlord::where('user_id',$input['user_id'])->pluck('phone')->first();
                 $data['email'] = landlord::where('user_id',$input['user_id'])->pluck('email')->first();

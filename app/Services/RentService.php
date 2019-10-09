@@ -2901,7 +2901,142 @@ The bond can only refund if you satisfied with above or agree the amount with th
             }
             return $this->success('get pdf success',$mpdf->Output());
         }else{
+            $contract_res = $model->where('id',$contract_id)->first();
+            $tenement_res = ContractTenement::where('contract_id',$contract_id)->first();
+            $business_res = BusinessContract::where('contract_id',$contract_id)->first();
+            $rent_house_res = RentHouse::where('id',$contract_res->house_id)->first();
+            $service_res = ContractService::where('contract_id',$contract_id)->get();
+            // PDF
+            $ip = "{$_SERVER['SERVER_NAME']}";
+            $dashboard_pdf_file = "http://".$ip."/pdf/businesscontract.pdf";
+            $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+            $mpdf = new Mpdf();
+            $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+            for($i=1; $i<=$pagecount;$i++){
+                $import_page = $mpdf->importPage($i);
+                $mpdf->useTemplate($import_page);
+                /*if($i == 2){
+                    $mpdf->WriteText(31,31,(string)$contract_res->landlord_full_name);
+                    $mpdf->WriteText(23,52,(string)$contract_res->house_address);
+                    $mpdf->WriteText(27,59,(string)$contract_res->landlord_e_mail);
+                    $mpdf->WriteText(28,69,(string)$contract_res->landlord_telephone);
+                    $mpdf->WriteText(73,69,(string)$contract_res->landlord_mobile_phone);
+                    $mpdf->WriteText(113,69,(string)$contract_res->landlord_hm);
+                    $mpdf->WriteText(158,69,(string)$contract_res->landlord_wk);
+                    $mpdf->WriteText(23,82,(string)$contract_res->landlord_other_address);
+                    $mpdf->WriteText(23,93,(string)$contract_res->landlord_additional_address);
+                    $mpdf->WriteText(29,205,(string)$tenement_res->tenement_full_name);
+                    if($tenement_res->identification_type == 1){
+                        $mpdf->WriteText(45,218,(string)'√');
+                    }elseif($tenement_res->identification_type == 2){
+                        $mpdf->WriteText(78,218,(string)'√');
+                    }elseif($tenement_res->identification_type == 3){
+                        $mpdf->WriteText(105,218,(string)'√');
+                    }
+                    $mpdf->WriteText(147,219,(string)$tenement_res->identification_no);
+                    $mpdf->WriteText(57,235,(string)$tenement_res->service_physical_address);
+                    $mpdf->WriteText(32,248,(string)$tenement_res->tenement_e_mail);
+                    $mpdf->WriteText(27,258,(string)$tenement_res->tenement_phone);
+                    $mpdf->WriteText(71,258,(string)$tenement_res->tenement_mobile);
+                    $mpdf->WriteText(110,258,(string)$tenement_res->tenement_hm);
+                    $mpdf->WriteText(155,258,(string)$tenement_res->tenement_wk);
+                    $mpdf->WriteText(56,264,(string)$tenement_res->other_contact_address);
+                }*/
+                /*if($i == 3){
+                    $mpdf->WriteText(17,32,(string)$tenement_res->additional_address);
+                    if($tenement_res->is_child == 0){
+                        $mpdf->WriteText(30,42,(string)'∨');
+                    }else{
+                        $mpdf->WriteText(17,42,(string)'∨');
+                    }
+                    $mpdf->WriteText(17,68,(string)$business_res->tenancy_address);
+                    if($business_res->is_house_rule == 1){
+                        $mpdf->WriteText(18,83,(string)'∨');
+                    }
+                    if($business_res->is_fire == 1){
+                        $mpdf->WriteText(18,89,(string)'∨');
+                    }
+                    if($business_res->is_body == 1){
+                        $mpdf->WriteText(18,95,(string)'∨');
+                    }
+                    if($business_res->to_be_paid == 1){
+                        $mpdf->WriteText(93,103,(string)'∨');
+                    }elseif($business_res->pay_method == 2){
+                        $mpdf->WriteText(123,103,(string)'∨');
+                    }elseif ($business_res->pay_method == 3){
+                        $mpdf->WriteText(148,103,(string)'∨');
+                    }
+                    $mpdf->WriteText(40,104,(string)$business_res->rent_per_week);
+                    $mpdf->WriteText(40,110,(string)$business_res->bond_amount);
+                    $mpdf->WriteText(45,116,(string)$business_res->rent_to_be_paid_at);
+                    $bank_count = str_split($business_res->bank_account);
+                    foreach ($bank_count as $k => $v){
+                        if($k < 2){
+                            $mpdf->WriteText(62+$k*4,125,(string)$v);
+                        }elseif($k <6){
+                            $mpdf->WriteText(62+$k*5,125,(string)$v);
+                        }elseif($k <9){
+                            $mpdf->WriteText(63+$k*5,125,(string)$v);
+                        }elseif($k <13){
+                            $mpdf->WriteText(72+$k*4,125,(string)$v);
+                        }else{
+                            $mpdf->WriteText(61+$k*5,125,(string)$v);
+                        }
+                    }
+                    $mpdf->WriteText(38,132,(string)$business_res->account_name);
+                    $mpdf->WriteText(26,140,(string)$business_res->bank);
+                    $mpdf->WriteText(72,140,(string)$business_res->branch);
+                    $day = $business_res->agree_date;
+                    $day = explode('-',$day);
+                    $mpdf->WriteText(90,156,(string)$day[2]);
+                    $mpdf->WriteText(130,156,(string)$day[1]);
+                    $mpdf->WriteText(170,156,(string)substr($day[0],2));
+                    if($business_res->intended == 1){
+                        $mpdf->WriteText(23,164,(string)'∨');
+                    }elseif ($business_res->intended == 1){
+                        $mpdf->WriteText(23,172,(string)'∨');
+                    }
+                    if($business_res->is_joint_tenancy == 1){
+                        $mpdf->WriteText(23,182,(string)'∨');
+                        $mpdf->WriteText(100,182,(string)$business_res->is_joint_tenancy_detail);
+                    }elseif ($business_res->is_joint_tenancy == 2){
+                        $mpdf->WriteText(23,188,(string)'∨');
+                    }
+                    if($business_res->is_not_share == 1){
+                        $mpdf->WriteText(23,198,(string)'∨');
+                    }elseif ($business_res->is_not_share == 2){
+                        $mpdf->WriteText(23,204,(string)'∨');
+                        $mpdf->WriteText(50,210,(string)$business_res->is_share_people);
+                    }
+                    foreach ($service_res as $k => $v){
+                        if($k < 2){
+                            $mpdf->WriteText(25,228+$k*7,(string)$v->service_name);
+                            $mpdf->WriteText(130,228+$k*7,(string)$v->service_price);
+                        }
+                    }
+                    $mpdf->WriteText(25,260,(string)$business_res->allow_service);
+                }*/
+                /*if($i == 5){
+                    $mpdf->WriteText(70,120,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($business_res->landlord_signature, 170, 105, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,165,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($business_res->landlord_signature, 170, 150, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,188,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($business_res->tenement_signature, 180, 173, 20, 20, 'png', '', true, false);
+                }
+                if($i == 6){
+                    $mpdf->WriteText(70,230,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($business_res->landlord_signature, 170, 215, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,250,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($business_res->tenement_signature, 180, 235, 20, 20, 'png', '', true, false);
+                }*/
+                if($i < $pagecount){
+                    $mpdf->AddPage();
+                }
+                //
 
+            }
+            return $this->success('get pdf success',$mpdf->Output());
         }
 
     }

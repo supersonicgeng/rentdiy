@@ -359,6 +359,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $start_date = $input['start_date'];
             if($start_date){
@@ -409,6 +413,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',1);
             $model = $model->where('order_status',2);
@@ -458,6 +466,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',2);
             $model = $model->where('order_status',2);
@@ -507,6 +519,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',3);
             $model = $model->where('order_status',2);
@@ -556,6 +572,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
             $model = $model->where('order_status',2);
@@ -606,6 +626,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',5);
             $model = $model->where('order_status',2);
@@ -654,6 +678,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',1);
             $model = $model->where('order_status',2);
@@ -702,6 +730,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',2);
             $model = $model->where('order_status',2);
@@ -750,6 +782,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',4);
             /*$model = $model->where('order_status',2);*/
@@ -789,6 +825,10 @@ class ProvidersService extends CommonService
         }else{
             $service_ids = Providers::where('user_id',$input['user_id'])->select('id')->get();
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $model = $model->whereIn('providers_id',$service_ids);
             $model = $model->where('order_type',5);
             $model = $model->where('order_status',2);

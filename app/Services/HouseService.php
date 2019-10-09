@@ -1030,6 +1030,10 @@ class HouseService extends CommonService
         $model = new RentHouse();
         $user_id = $input['user_id'];
         $page = $input['page'];
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $model = $model->whereIn('id',$rent_house_ids);
+        }
         $count = $model->where('user_id',$user_id)->where('deleted_at',null)->groupBy('group_id')->get()->toArray();
         $count = count($count,0);
         if($count < ($page-1)*9){
@@ -1359,6 +1363,10 @@ class HouseService extends CommonService
         $rent_status = @$input['rent_status'];
         if($rent_status){
             $model = $model->where('rent_status',$rent_status);
+        }
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $model = $model->whereIn('id',$rent_house_ids);
         }
         $count = $model->where('user_id',$user_id)->where('deleted_at',null)->get()->toArray();
         $count = count($count,0);

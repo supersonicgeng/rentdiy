@@ -253,6 +253,10 @@ class LandlordService extends CommonService
             return $this->error('2','this account is not a landlord role');
         }else{
             $model = new LandlordOrder();
+            if(isset($input['operator_id'])){
+                $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+                $model = $model->whereIn('rent_house_id',$rent_house_ids);
+            }
             $page = $input['page'];
             $count = $model->where('user_id',$input['user_id'])->count();
             if($count < ($page-1)*10){

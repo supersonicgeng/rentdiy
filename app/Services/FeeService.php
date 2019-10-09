@@ -2434,6 +2434,11 @@ class FeeService extends CommonService
         if($invoice_sn){
             $model = $model->where('invoice_sn','like','%'.$invoice_sn.'%');
         }
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $order_ids = LandlordOrder::whereIn('rent_house_id',$rent_house_ids)->pluck('id');
+            $model = $model->whereIn('order_id',$order_ids);
+        }
         $page = $input['page'];
         $count = $model->count();
         if($count <($page-1)*10){
@@ -2542,6 +2547,11 @@ The above work has been completed, you can issue an invoice to the landlord..",
     {
         $service_ids = Providers::where('user_id',$input['user_id'])->pluck('id');
         $model = new LandlordOrder();
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $order_ids = LandlordOrder::whereIn('rent_house_id',$rent_house_ids)->pluck('id');
+            $model = $model->whereIn('order_id',$order_ids);
+        }
         $res = $model->whereIn('providers_id',$service_ids)->first();
         if(!$res){
             return $this->error('2','no order doing');
@@ -2589,6 +2599,11 @@ The above work has been completed, you can issue an invoice to the landlord..",
         }
         if($landlord_name){
             $model = $model->where('landlord_name','like','%'.$landlord_name.'%');
+        }
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $order_ids = LandlordOrder::whereIn('rent_house_id',$rent_house_ids)->pluck('id');
+            $model = $model->whereIn('order_id',$order_ids);
         }
         $page = $input['page'];
         $count = $model->count();
@@ -3986,6 +4001,10 @@ The above work has been completed, you can issue an invoice to the landlord..",
     {
         $model = new RentArrears();
         $page = $input['page'];
+        if(isset($input['operator_id'])){
+            $rent_house_ids = OperatorRoom::where('operator_id',$input['operator_id'])->pluck('house_id');
+            $model = $model->whereIn('rent_house_id',$rent_house_ids);
+        }
         $count = $model->where('contract_id',$input['contract_id'])->groupBy('fee_sn')->count();
         if($count < ($page-1)*10){
             return $this->error('2','get fee list failed');
