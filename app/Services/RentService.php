@@ -2880,139 +2880,19 @@ The bond can only refund if you satisfied with above or agree the amount with th
                     $mpdf->WriteText(25,260,(string)$separate_res->allow_service);
                 }
                 if($i == 5){
-                    $mpdf->WriteText(100,120,(string)$contract_res->landlord_full_name);
-                    $mpdf->Image($separate_res->landlord_signature, 170, 100, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,120,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($separate_res->landlord_signature, 170, 105, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,165,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($separate_res->landlord_signature, 170, 150, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,188,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($separate_res->tenement_signature, 180, 173, 20, 20, 'png', '', true, false);
                 }
-                /*if($i == 8){
-                    $day = $separate_res->effective_date;
-                    $day = explode('-',$day);
-                    $mpdf->WriteText(70,38,(string)$day[2]);
-                    $mpdf->WriteText(110,38,(string)$day[1]);
-                    $mpdf->WriteText(150,38,(string)substr($day[0],2));
-                    $mpdf->WriteText(26,113,(string)$separate_res->rule);
-                    $mpdf->Image($separate_res->landlord_signature, 160, 180, 20, 20, 'png', '', true, true);
-                    $mpdf->Image($separate_res->tenement_signature, 160, 200, 20, 20, 'png', '', true, false);
+                if($i == 6){
+                    $mpdf->WriteText(70,230,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($separate_res->landlord_signature, 170, 215, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,250,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($separate_res->tenement_signature, 180, 235, 20, 20, 'png', '', true, false);
                 }
-                if($i == 9){
-                    if($separate_res->is_ceiling_insulation == 1){
-                        $mpdf->WriteText(26,55,(string)'∨');
-                    }else{
-                        $mpdf->WriteText(43,55,(string)'∨');
-                    }
-                    $mpdf->WriteText(26,73,(string)$separate_res->ceiling_insulation_detail);
-                    if($separate_res->is_insulation_underfloor_insulation == 1){
-                        $mpdf->WriteText(26,90,(string)'∨');
-                    }else{
-                        $mpdf->WriteText(43,90,(string)'∨');
-                    }
-                    $mpdf->WriteText(26,108,(string)$separate_res->insulation_underfloor_insulation_detail);
-                    if($separate_res->location_ceiling_insulation == 1){
-                        $mpdf->WriteText(49,129,(string)'∨');
-                    }elseif ($separate_res->location_ceiling_insulation == 2){
-                        $mpdf->WriteText(49,134,(string)'∨');
-                        $mpdf->WriteText(54,136,(string)$separate_res->location_ceiling_insulation_detail);
-                    }elseif ($separate_res->location_ceiling_insulation == 3){
-                        $mpdf->WriteText(49,142,(string)'∨');
-                    }elseif ($separate_res->location_ceiling_insulation == 4){
-                        $mpdf->WriteText(49,147,(string)'∨');
-                        $mpdf->WriteText(54,151,(string)$separate_res->location_ceiling_insulation_detail);
-                    }
-                    if($separate_res->ceiling_insulation_type == 1){
-                        $mpdf->WriteText(49,156,(string)'∨');
-                    }elseif ($separate_res->ceiling_insulation_type == 2){
-                        $mpdf->WriteText(49,161,(string)'∨');
-                    }elseif ($separate_res->ceiling_insulation_type == 3){
-                        $mpdf->WriteText(49,166,(string)'∨');
-                        $mpdf->WriteText(60,166,(string)$separate_res->ceiling_insulation_type_detail);
-                    }elseif ($separate_res->ceiling_insulation_type == 4){
-                        $mpdf->WriteText(49,171,(string)'∨');
-                    }
-                    $mpdf->WriteText(87,177,(string)$separate_res->R_value);
-                    $mpdf->WriteText(161,177,(string)$separate_res->minimum_thickness);
-                    $mpdf->WriteText(95,183,(string)$separate_res->ceiling_insulation_age);
-                    if($separate_res->ceiling_insulation_condition == 1){
-                        $mpdf->WriteText(49,190,(string)'∨');
-                        $mpdf->WriteText(60,195,(string)$separate_res->ceiling_insulation_condition_reason);
-                    }elseif ($separate_res->ceiling_insulation_condition == 2){
-                        $mpdf->WriteText(49,200,(string)'∨');
-                    }elseif ($separate_res->ceiling_insulation_condition == 3){
-                        $mpdf->WriteText(49,208,(string)'∨');
-                    }
-                    if($separate_res->location_underfloor_insulation == 1){
-                        $mpdf->WriteText(49,219,(string)'∨');
-                    }elseif ($separate_res->location_underfloor_insulation == 2){
-                        $mpdf->WriteText(49,224,(string)'∨');
-                        $mpdf->WriteText(54,226,(string)$separate_res->location_underfloor_insulation_detail);
-                    }elseif ($separate_res->location_underfloor_insulation == 3){
-                        $mpdf->WriteText(49,232,(string)'∨');
-                    }elseif ($separate_res->location_underfloor_insulation == 4){
-                        $mpdf->WriteText(49,237,(string)'∨');
-                        $mpdf->WriteText(54,246,(string)$separate_res->location_underfloor_insulation_detail);
-                    }
-                    if($separate_res->underfloor_insulation_type == 1){
-                        $mpdf->WriteText(49,253,(string)'∨');
-                    }elseif ($separate_res->underfloor_insulation_type == 2){
-                        $mpdf->WriteText(49,258,(string)'∨');
-                    }elseif ($separate_res->underfloor_insulation_type == 3){
-                        $mpdf->WriteText(49,263,(string)'∨');
-                    }elseif ($separate_res->underfloor_insulation_type == 4){
-                        $mpdf->WriteText(49,268,(string)'∨');
-                    }elseif ($separate_res->underfloor_insulation_type == 5){
-                        $mpdf->WriteText(49,273,(string)'∨');
-                        $mpdf->WriteText(74,273,(string)$separate_res->underfloor_insulation_type_detail);
-                    }
-                }
-                if($i == 10){
-                    if($separate_res->underfloor_insulation_type == 6){
-                        $mpdf->WriteText(49,33,(string)'∨');
-                    }
-                    $mpdf->WriteText(87,39,(string)$separate_res->underfloor_R_value);
-                    $mpdf->WriteText(161,39,(string)$separate_res->underfloor_minimum_thickness);
-                    if($separate_res->condition == 1){
-                        $mpdf->WriteText(49,53,(string)'∨');
-                        $mpdf->WriteText(54,58,(string)$separate_res->condition_detail);
-                    }elseif ($separate_res->condition == 2){
-                        $mpdf->WriteText(49,63,(string)'∨');
-                    }elseif ($separate_res->condition == 3){
-                        $mpdf->WriteText(49,68,(string)'∨');
-                    }
-                    if($separate_res->condition == 1){
-                        $mpdf->WriteText(49,53,(string)'∨');
-                        $mpdf->WriteText(54,58,(string)$separate_res->condition_detail);
-                    }elseif ($separate_res->condition == 2){
-                        $mpdf->WriteText(49,63,(string)'∨');
-                    }elseif ($separate_res->condition == 3){
-                        $mpdf->WriteText(49,68,(string)'∨');
-                    }
-                    if($separate_res->wall_insulation == 1){
-                        $mpdf->WriteText(49,80,(string)'∨');
-                    }elseif ($separate_res->wall_insulation == 2){
-                        $mpdf->WriteText(49,85,(string)'∨');
-                        $mpdf->WriteText(54,82,(string)$separate_res->wall_insulation_detail);
-                    }elseif ($separate_res->wall_insulation == 3){
-                        $mpdf->WriteText(49,93,(string)'∨');
-                    }elseif ($separate_res->wall_insulation == 4){
-                        $mpdf->WriteText(49,98,(string)'∨');
-                    }
-                    $mpdf->WriteText(49,112,(string)$separate_res->supplementary_information);
-                    if($separate_res->install_insulation == 1){
-                        $mpdf->WriteText(26,138,(string)'∨');
-                    }elseif ($separate_res->install_insulation == 2){
-                        $mpdf->WriteText(43,138,(string)'∨');
-                        $mpdf->WriteText(26,148,(string)$separate_res->install_insulation_detail);
-                    }
-                    if($separate_res->underfloor_insulation == 1){
-                        $mpdf->WriteText(26,176,(string)'∨');
-                    }elseif ($separate_res->underfloor_insulation == 2){
-                        $mpdf->WriteText(43,176,(string)'∨');
-                        $mpdf->WriteText(26,186,(string)$separate_res->install_insulation_detail);
-                    }
-                    $mpdf->WriteText(95,208,(string)$separate_res->last_upgraded);
-                    $mpdf->WriteText(95,216,(string)$separate_res->professionally_assessed);
-                    $mpdf->WriteText(26,230,(string)$separate_res->plan);
-                    $mpdf->WriteText(26,254,(string)$separate_res->landlord_state);
-                    $mpdf->Image($separate_res->landlord_signature, 160, 266, 15, 15, 'png', '', true, true);
-                }*/
                 if($i < $pagecount){
                     $mpdf->AddPage();
                 }
