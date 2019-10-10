@@ -710,6 +710,7 @@ class FeeService extends CommonService
             if($input['pay_date']){
                 $model = $model->where('created_at','>',date('Y-m-d H:i:s',strtotime($input['expire_date'])))->where('created_at','<',date('Y-m-d H:i:s',strtotime($input['expire_date'])+3600*24));
             }
+            $model = $model->where('need_pay_fee','>',0);
             $count = $model->where('user_id',$input['user_id'])->pluck('contract_id')->groupBy('contract_id');
             $count = count($count);
             if($count <= ($input['page']-1)*10){
