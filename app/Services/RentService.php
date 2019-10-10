@@ -2976,6 +2976,10 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 if($i == 18){
                     $mpdf->WriteText(28,45,(string)$business_res->premises_condition);
                 }
+                if($i == 19){
+                    $mpdf->Image($business_res->landlord_signature, 120, 25, 30, 30, 'png', '', true, true);
+                    $mpdf->Image($business_res->tenement_signature, 120, 65, 30, 30, 'png', '', true, true);
+                }
                 if($i < $pagecount){
                     $mpdf->AddPage();
                 }
