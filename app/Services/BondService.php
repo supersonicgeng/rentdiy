@@ -45,13 +45,13 @@ class BondService extends CommonService
     {
         $model = new RentArrears();
         if($input['bond_status'] == 2){
-            $model = $model->whereIn('bond_status',[1,2,3]);
+            $model = $model->whereIn('bond_status',[1,2,3])->where('is_pay','>',1);
         }elseif ($input['bond_status'] == 3){
-            $model = $model->whereIn('bond_status',[3,4,5,6]);
+            $model = $model->whereIn('bond_status',[2,3,4,5,6]);
         }elseif ($input['bond_status'] == 4){
             $model = $model->whereIn('bond_status',[3,7,8,9]);
         }else{
-            $model = $model->where('bond_status',1);
+            $model = $model->where('bond_status',1)->where('is_pay','!=',2);
         }
         if($input['property_name']){
             $model = $model->where('property_name','like', '%'.$input['property_name'].'%');
@@ -73,6 +73,9 @@ class BondService extends CommonService
             return $this->error('3','no more information');
         }
         $res = $model->where('user_id',$input['user_id'])->where('arrears_type',1)->offset(($page-1)*10)->limit(10)->get()->toArray();
+        foreach ($res as $k => $v){
+            $res[$k]['contract_status'] = RentContract::where('id',$v['contract_id'])->pluck('contract_type')->first();
+        }
         $data['bondList'] = $res;
         $data['total_page'] = ceil($count/10);
         $data['current_page'] = $page;
