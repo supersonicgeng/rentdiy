@@ -2754,7 +2754,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
 
             }
             return $this->success('get pdf success',$mpdf->Output());
-        }elseif ($contract_type == 2 || $contract_type == 3){
+        }elseif ($contract_type == 2){
             $contract_res = $model->where('id',$contract_id)->first();
             $tenement_res = ContractTenement::where('contract_id',$contract_id)->first();
             $separate_res = SeparateContract::where('contract_id',$contract_id)->first();
@@ -2898,6 +2898,58 @@ The bond can only refund if you satisfied with above or agree the amount with th
                 }
                 //
 
+            }
+            return $this->success('get pdf success',$mpdf->Output());
+        }elseif ($contract_type == 3){
+            $contract_res = $model->where('id',$contract_id)->first();
+            $tenement_res = ContractTenement::where('contract_id',$contract_id)->first();
+            $separate_res = SeparateContract::where('contract_id',$contract_id)->first();
+            $rent_house_res = RentHouse::where('id',$contract_res->house_id)->first();
+            $service_res = ContractService::where('contract_id',$contract_id)->get();
+            // PDF
+            $ip = "{$_SERVER['SERVER_NAME']}";
+            $dashboard_pdf_file = "http://".$ip."/pdf/flatcontract.pdf";
+            $fileContent = file_get_contents($dashboard_pdf_file,'rb');
+            $mpdf = new Mpdf();
+            $pagecount = $mpdf->setSourceFile(StreamReader::createByString($fileContent));
+            for($i=1; $i<=$pagecount;$i++){
+                $import_page = $mpdf->importPage($i);
+                $mpdf->useTemplate($import_page);
+                if($i == 1){
+                    $mpdf->WriteText(45,72,(string)$contract_res->landlord_full_name);
+                    $mpdf->WriteText(145,72,(string)$tenement_res->tenement_full_name);
+                    $mpdf->WriteText(30,85,(string)$contract_res->landlord_additional_address);
+                    $mpdf->WriteText(120,85,(string)$tenement_res->other_contact_address);
+                    $mpdf->WriteText(35,118,(string)$contract_res->landlord_mobile_phone);
+                    $mpdf->WriteText(120,118,(string)$tenement_res->tenement_mobile);
+                    $mpdf->WriteText(35,125,(string)$contract_res->landlord_e_mail);
+                    $mpdf->WriteText(120,125,(string)$tenement_res->tenement_e_mail);
+                    $mpdf->WriteText(52,176,(string)$separate_res->rent_per_week);
+                    $mpdf->WriteText(50,186,(string)$separate_res->bond_amount);
+                    $day = $contract_res->rent_start_date;
+                    $day = explode('-',$day);
+                    $mpdf->WriteText(80,169,(string)$day[2]);
+                    $mpdf->WriteText(87,169,(string)$day[1]);
+                    $mpdf->WriteText(95,169,(string)substr($day[0],2));
+                    $mpdf->WriteText(35,140,(string)$rent_house_res->address);
+                    $district = Region::getName($rent_house_res->District);
+                    $city = Region::getName($rent_house_res->TA);
+                    $mpdf->WriteText(120,140,(string)$district);
+                    $mpdf->WriteText(35,148,(string)$city);
+                }
+                if($i == 3){
+                    $mpdf->WriteText(70,100,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($separate_res->landlord_signature, 170, 85, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,120,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($separate_res->tenement_signature, 180, 105, 20, 20, 'png', '', true, false);
+                    $mpdf->WriteText(70,165,(string)$contract_res->landlord_full_name);
+                    $mpdf->Image($separate_res->landlord_signature, 170, 150, 20, 20, 'png', '', true, true);
+                    $mpdf->WriteText(70,185,(string)$tenement_res->tenement_full_name);
+                    $mpdf->Image($separate_res->tenement_signature, 180, 170, 20, 20, 'png', '', true, false);
+                }
+                if($i < $pagecount){
+                    $mpdf->AddPage();
+                }
             }
             return $this->success('get pdf success',$mpdf->Output());
         }else{
