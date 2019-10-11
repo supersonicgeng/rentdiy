@@ -1150,7 +1150,9 @@ An inspection has been scheduled about date, please communicate with the tenant 
     {
         $inspect_id = $input['inspect_id'];
         $model = new InspectRoom();
-        $res = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res1 = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res2 = InspectChattel::where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res = array_merge($res1,$res2);
         $data['res'] = $res;
         $data['inspect_method'] = Inspect::where('id',$inspect_id)->pluck('inspect_method')->first();
         if($res){
@@ -1828,7 +1830,9 @@ An inspection has been scheduled about date, please communicate with the tenant 
     {
         $inspect_id = $input['inspect_id'];
         $model = new UnPlatInspectRoom();
-        $res = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res1 = $model->where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res2 = UnPlatInspectChattel::where('inspect_id',$inspect_id)->where('accept','>',1)->get()->toArray();
+        $res = array_merge($res1,$res2);
         $data['res'] = $res;
         $data['inspect_method'] = Inspect::where('id',$inspect_id)->pluck('inspect_method')->first();
         if($res){
