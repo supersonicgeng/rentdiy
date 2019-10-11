@@ -13,6 +13,7 @@ namespace App\Services;
 use App\Lib\Util\QueryPager;
 use App\Model\HouseScore;
 use App\Model\HouseWatchList;
+use App\Model\OperatorRoom;
 use App\Model\Region;
 use App\Model\RentApplication;
 use App\Model\RentContact;
