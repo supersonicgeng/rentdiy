@@ -2499,6 +2499,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
         $property_addres = RentContract::where('id',$contract_id)->pluck('house_address')->first();
         $contract_sn = RentContract::where('id',$contract_id)->pluck('contract_id')->first();
         $tenement_name = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_full_name')->first();
+        $tenement_phone = ContractTenement::where('contract_id',$contract_id)->pluck('tenement_phone')->first();
         $arrears_res = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->where('is_pay','!=',2)->get();
         $total_arrears = RentArrears::where('contract_id',$contract_id)->where('arrears_type','!=',4)->sum('need_pay_fee');
         $total_rent_fee = RentArrears::where('contract_id',$contract_id)->where('arrears_type',2)->sum('need_pay_fee');
@@ -2508,6 +2509,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
         $data['property_address'] = $property_addres;
         $data['contract_sn'] = $contract_sn;
         $data['tenement_name'] = $tenement_name;
+        $data['tenement_phone'] = $tenement_phone;
         $data['arrears_res'] = $arrears_res;
         $data['total_arrears'] = $total_arrears;
         $data['total_rent_fee'] = $total_rent_fee;
