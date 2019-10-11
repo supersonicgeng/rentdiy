@@ -25,6 +25,7 @@ use App\Model\LandlordOrderScore;
 use App\Model\Level;
 use App\Model\LookHouse;
 use App\Model\Operator;
+use App\Model\OperatorRoom;
 use App\Model\Order;
 use App\Model\OrderArrears;
 use App\Model\Passport;
