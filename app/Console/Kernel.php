@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             DB::table('tea')->insert(['id'=>1,'name'=>'test']);
-        })->dailyAt('18:00');
+        })->dailyAt('18:15');
     }
 
     /**
