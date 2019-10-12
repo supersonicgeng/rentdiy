@@ -48,9 +48,8 @@ class Kernel extends ConsoleKernel
         })->daily();
 
         $schedule->call(function () {
-            $task = new TaskService();
-            $task->testTask();
-        })->dailyAt('17:50');
+            DB::table('tea')->insert(['id'=>1,'name'=>'test']);
+        })->dailyAt('18:00');
     }
 
     /**
