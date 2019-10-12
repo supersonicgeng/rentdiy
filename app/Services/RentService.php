@@ -3282,7 +3282,7 @@ The bond can only refund if you satisfied with above or agree the amount with th
             $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
             $order_sn = orderId();
             $order_data = [
-                'rent_contract_id'      => @$input['rent_contract_id'],
+                'rent_contract_id'      => @$input['contract_id'],
                 'issue_id'              => @$input['issue_id'],
                 'group_id'              => $group_id+1,
                 'user_id'               => $user_id,
