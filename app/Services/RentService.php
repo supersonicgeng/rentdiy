@@ -25,6 +25,7 @@ use App\Model\DriverTakeOver;
 use App\Model\EntireContract;
 use App\Model\Inspect;
 use App\Model\InspectCheck;
+use App\Model\LandlordOrder;
 use App\Model\Level;
 use App\Model\LookHouse;
 use App\Model\Order;
@@ -3260,5 +3261,51 @@ The bond can only refund if you satisfied with above or agree the amount with th
             return $this->success('get market rent information success',$data);
         }
 
+    }
+
+    /**
+     * @description:租约打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function litigationStart(array $input)
+    {
+        $contract_id = $input['contract_id'];
+        $user_id= $input['user_id'];
+        if($input['is_negotiation'] == 1){// 发服务市场
+            $rent_house_id = RentContract::where('id',$contract_id)->pluck('house_id')->first();
+            $room_info = RentHouse::where('id',$rent_house_id)->first();
+            $model = new LandlordOrder();
+            $group_id = $model->max('group_id'); // 获得目前存入的最大group_id
+            $order_sn = orderId();
+            $order_data = [
+                'rent_contract_id'      => @$input['rent_contract_id'],
+                'issue_id'              => @$input['issue_id'],
+                'group_id'              => $group_id+1,
+                'user_id'               => $user_id,
+                'tenement_id'           => @$input['tenement_id'],
+                'order_sn'              => $order_sn,
+                'rent_house_id'         => $rent_house_id,
+                'District'              => $room_info->District,
+                'TA'                    => $room_info->TA,
+                'Region'                => $room_info->Region,
+                'order_type'            => 5,
+                'start_time'            => $input['start_time'],
+                'end_time'              => $input['end_time'],
+                'requirement'           => $input['requirement'],
+                'budget'                => $input['budget'],
+                'created_at'            => date('Y-m-d H:i:s',time()),
+            ];
+            $res = $model->insert($order_data);
+            // 修改租约状态
+            RentContract::where('id',$contract_id)->update(['contract_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+        }else{
+            // 修改租约状态
+            RentContract::where('id',$contract_id)->update(['contract_status'=>4,'updated_at'=>date('Y-m-d H:i:s',time())]);
+        }
+        return $this->success('litigation success');
     }
 }
