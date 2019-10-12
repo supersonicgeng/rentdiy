@@ -3308,4 +3308,50 @@ The bond can only refund if you satisfied with above or agree the amount with th
         }
         return $this->success('litigation success');
     }
+
+
+    /**
+     * @description:租约打印
+     * @author: syg <13971394623@163.com>
+     * @param $code
+     * @param $message
+     * @param array|null $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function litigationList(array $input)
+    {
+        $where = function ($query) use($input){
+            //搜索词查询
+            if (@$input['tenement_id'] and @$input['tenement_id'] != '') {
+                $tenement_id = @$input['tenement_id'];
+                $query->where('t.tenement_id','like', '%'.$tenement_id.'%');
+            }
+            //房屋搜索
+            if (@$input['property_name'] and @$input['property_name'] != '') {
+                $property_name = @$input['property_name'];
+                $query->where('h.property_name','like','%'.$property_name.'%');
+            }
+
+            $query->where('r.user_id',$input['user_id'])->where('r.contract_status',4);
+        };
+        $page = $input['page'];
+        $count = DB::table('rent_contract as r')
+            ->leftJoin('rent_house as h','r.house_id','h.id')
+            ->leftJoin('contract_tenement as ct','ct.contract_id','r.id')
+            ->leftJoin('tenement_information as t','t.id','ct.tenement_id')
+            ->where($where)->count();
+        if($count < ($page-1)*10){
+            return $this->error('2','no more data');
+        }
+        $litigation_contract_res = DB::table('rent_contract as r')
+            ->leftJoin('rent_house as h','r.house_id','h.id')
+            ->leftJoin('contract_tenement as ct','ct.contract_id','r.id')
+            ->leftJoin('tenement_information as t','t.id','ct.tenement_id')
+            ->where($where)->limit(10)->offset(($page-1)*10)
+            ->select('r.id','t.tenement_id','h.property_name','ct.tenement_phone','ct.tenement_e_mail','r.rent_start_date','r.rent_end_date')->get();
+        $data['res'] = $litigation_contract_res;
+        $data['current_page'] = $page;
+        $data['total_page'] = ceil($count/10);
+        return $this->success('get litigation list success',$data);
+    }
 }

@@ -143,6 +143,7 @@ Route::group(['namespace' => 'Api','middleware' => 'CheckLogin',], function (Rou
         $router->post('rentSuspendSure', 'RentController@rentSuspendSure'); // 租金中止确认 5.13
         $router->post('rentLitigation', 'RentController@rentLitigation'); // 租约诉讼 5.13
         $router->post('litigationStart', 'RentController@litigationStart'); // 发起诉讼 5.13
+        $router->post('litigationList', 'RentController@litigationList'); // 诉讼列表 5.13
     });
     // 租户系统
     $router->group(['prefix' => 'tenement'], function (Router $router) {
