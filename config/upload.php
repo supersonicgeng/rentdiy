@@ -11,8 +11,6 @@ return [
         'city' => '硅谷',
         'networkType' => '经典网络',
         'isInternal' => false,
-        'accessId' => 'LTAI20EtYk31ZJLS',
-        'accessKey' => 'Yrn3I1j1iB9qvWPMJvzZF8kgmbNRpr',
         'bucket' => 'rentdi',
         'imgUrl' => 'http://rentdi.oss-us-west-1.aliyuncs.com',
     ],
